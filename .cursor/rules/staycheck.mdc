@@ -10,5 +10,5 @@ alwaysApply: true
 - Niemals geheime Schlüssel (service_role/secret) in den Code schreiben.
 - Neue Tabellen immer mit Row Level Security und passenden Policies anlegen, Migrationen in `supabase/migrations/` ablegen.
 - Texte in der App sind auf Deutsch, du-Form.
-- Farben nur über die Tailwind-Theme-Farben aus `globals.css` (sand, paper, ink, muted, line, pine, coral).
+- Design „Sonnenpass“, Mobile first (max-w-md). Farben nur über die Theme-Farben aus `globals.css` (sand, paper, tan, line, ink, muted, sun, sun-dark, peach, peach-ink). Haupt-Knöpfe mit `btn-chunky`.
 - Kleine, verständliche Änderungen; der Projektinhaber ist kein Profi-Programmierer, erkläre Änderungen kurz.

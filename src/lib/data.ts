@@ -12,6 +12,8 @@ export type District = {
   slug: string;
   name: string;
   short_description: string | null;
+  lat: number | null;
+  lng: number | null;
   scores: Record<string, number>;
 };
 
@@ -32,6 +34,8 @@ type DistrictRow = {
   slug: string;
   name: string;
   short_description: string | null;
+  lat: number | null;
+  lng: number | null;
   district_scores: { criterion_key: string; score: number }[];
 };
 
@@ -40,7 +44,7 @@ export async function getDistricts(citySlug = "berlin"): Promise<District[]> {
   const { data, error } = await supabase
     .from("districts")
     .select(
-      "id, slug, name, short_description, cities!inner(slug), district_scores(criterion_key, score)",
+      "id, slug, name, short_description, lat, lng, cities!inner(slug), district_scores(criterion_key, score)",
     )
     .eq("cities.slug", citySlug)
     .order("name");
@@ -51,6 +55,8 @@ export async function getDistricts(citySlug = "berlin"): Promise<District[]> {
     slug: d.slug,
     name: d.name,
     short_description: d.short_description,
+    lat: d.lat,
+    lng: d.lng,
     scores: Object.fromEntries(d.district_scores.map((s) => [s.criterion_key, s.score])),
   }));
 }

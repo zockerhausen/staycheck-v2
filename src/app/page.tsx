@@ -1,43 +1,49 @@
 import Link from "next/link";
 
-const steps = [
-  { n: "1", title: "Sag uns, was dir wichtig ist", text: "Budget, Nachtleben, Ruhe, Sicherheit und mehr, jeweils von egal bis sehr wichtig." },
-  { n: "2", title: "Bekomm deine Kiez-Rangliste", text: "Wir berechnen für jeden Bezirk, wie gut er zu dir passt, in Prozent." },
-  { n: "3", title: "Vergleiche und merke dir Favoriten", text: "Stell zwei Kieze nebeneinander und speichere die besten in deinem Konto." },
-];
+const kieze = ["Kreuzberg", "Neukölln", "Friedrichshain", "Prenzlauer Berg", "Wedding", "Mitte"];
 
 export default function Home() {
   return (
-    <div className="space-y-14">
-      <section className="pt-8 sm:pt-14">
-        <p className="mb-3 text-sm font-medium uppercase tracking-widest text-coral">Jetzt für Berlin</p>
-        <h1 className="font-display text-5xl leading-[1.05] sm:text-6xl">
-          Nicht nur die richtige Stadt.
+    <div className="flex min-h-[calc(100dvh-9rem)] flex-col">
+      <p className="font-display text-2xl font-extrabold text-sun">StayCheck</p>
+
+      <section className="mt-10">
+        <span className="inline-block rounded-full bg-peach px-3 py-1 text-sm font-semibold text-peach-ink">
+          📍 Jetzt für Berlin
+        </span>
+        <h1 className="mt-4 font-display text-[2.6rem] font-extrabold leading-[1.02] tracking-tight">
+          Welcher Kiez
           <br />
-          <span className="text-pine">Der richtige Kiez.</span>
+          passt zu <span className="text-sun">dir?</span>
         </h1>
-        <p className="mt-5 max-w-xl text-lg text-muted">
-          StayCheck zeigt dir in einer Minute, in welchem Bezirk du als Backpacker oder Reisende:r am besten wohnst.
+        <p className="mt-4 text-lg text-muted">
+          7 schnelle Fragen. Danach weißt du, wo du in Berlin am besten wohnst.
         </p>
-        <div className="mt-8 flex flex-wrap gap-3">
-          <Link href="/finden" className="rounded-full bg-pine px-6 py-3 font-medium text-white hover:bg-pine-dark">
-            Meinen Kiez finden
-          </Link>
-          <Link href="/vergleich" className="rounded-full border border-line bg-paper px-6 py-3 font-medium hover:border-pine">
-            Kieze vergleichen
-          </Link>
-        </div>
       </section>
 
-      <section className="grid gap-4 sm:grid-cols-3">
-        {steps.map((s) => (
-          <div key={s.n} className="rounded-2xl border border-line bg-paper p-5">
-            <div className="font-display text-3xl text-coral">{s.n}</div>
-            <h2 className="mt-2 font-semibold">{s.title}</h2>
-            <p className="mt-1 text-sm text-muted">{s.text}</p>
-          </div>
-        ))}
-      </section>
+      <div className="-mx-4 mt-8 overflow-hidden">
+        <div className="flex gap-2 px-4">
+          {kieze.map((k, i) => (
+            <span
+              key={k}
+              className="shrink-0 rounded-full border-2 border-line bg-paper px-4 py-2 text-sm font-semibold"
+              style={{ transform: `rotate(${i % 2 ? 2 : -2}deg)` }}
+            >
+              {k}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      <div className="mt-auto space-y-3 pt-10">
+        <Link href="/quiz" className="btn-chunky w-full text-lg">
+          Los geht&apos;s
+        </Link>
+        <Link href="/duell" className="btn-chunky btn-chunky-light w-full">
+          Zwei Kieze vergleichen
+        </Link>
+        <p className="text-center text-xs text-muted">Dauert unter einer Minute. Kein Konto nötig.</p>
+      </div>
     </div>
   );
 }

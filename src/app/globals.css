@@ -1,24 +1,103 @@
 @import "tailwindcss";
 
+/* Design „Sonnenpass“: warm, satt, ein bisschen abenteuerlich */
 @theme {
-  --color-sand: #f6f1e7;
-  --color-paper: #fffdf8;
-  --color-ink: #1d2b26;
-  --color-muted: #5f6b66;
-  --color-line: #e3dccd;
-  --color-pine: #1f5c4a;
-  --color-pine-dark: #164536;
-  --color-coral: #e4572e;
-  --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-dm-serif), Georgia, serif;
+  --color-sand: #fbf3e4;
+  --color-paper: #fffaf1;
+  --color-tan: #f3e3c8;
+  --color-line: #ecdcc2;
+  --color-ink: #2a1a10;
+  --color-muted: #7a5f4c;
+  --color-sun: #f2662f;
+  --color-sun-dark: #b8461b;
+  --color-peach: #ffe2cc;
+  --color-peach-ink: #8a3510;
+  --font-sans: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-head), ui-sans-serif, system-ui, sans-serif;
 }
 
+html,
 body {
   background: var(--color-sand);
   color: var(--color-ink);
+  -webkit-tap-highlight-color: transparent;
 }
 
-/* Schieberegler */
-input[type="range"] {
-  accent-color: var(--color-pine);
+/* Dicke Knöpfe, die sich beim Tippen „eindrücken“ (wie bei Duolingo) */
+.btn-chunky {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 1.1rem;
+  padding: 1rem 1.25rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.05rem;
+  background: var(--color-sun);
+  color: #fff;
+  border-bottom: 5px solid var(--color-sun-dark);
+  transition: transform 80ms ease, border-width 80ms ease;
+}
+.btn-chunky:active {
+  transform: translateY(3px);
+  border-bottom-width: 2px;
+}
+.btn-chunky-light {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  border: 2px solid var(--color-line);
+  border-bottom: 5px solid var(--color-line);
+}
+
+/* Antwort-Kacheln im Quiz */
+.tile {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 0.9rem;
+  border-radius: 1.1rem;
+  padding: 1rem 1.1rem;
+  text-align: left;
+  background: var(--color-paper);
+  border: 2px solid var(--color-line);
+  border-bottom-width: 5px;
+  transition: transform 80ms ease, border-width 80ms ease;
+}
+.tile:active {
+  transform: translateY(3px);
+  border-bottom-width: 2px;
+}
+.tile[data-selected="true"] {
+  background: var(--color-peach);
+  border-color: var(--color-sun);
+}
+
+/* Horizontal wischbare Karten */
+.snap-row {
+  display: flex;
+  gap: 0.75rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  padding-bottom: 0.25rem;
+}
+.snap-row::-webkit-scrollbar {
+  display: none;
+}
+.snap-row > * {
+  scroll-snap-align: start;
+  flex: 0 0 82%;
+}
+
+@keyframes pop-in {
+  0% { transform: scale(0.85); opacity: 0; }
+  70% { transform: scale(1.04); opacity: 1; }
+  100% { transform: scale(1); }
+}
+.pop-in {
+  animation: pop-in 520ms cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .pop-in { animation: none; }
 }

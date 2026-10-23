@@ -19,14 +19,15 @@ export default function FavoriteButton({
       disabled={pending}
       onClick={() =>
         startTransition(async () => {
+          if ("vibrate" in navigator) navigator.vibrate(10);
           setFav(!fav);
           await toggleFavorite(districtId, fav);
         })
       }
       aria-pressed={fav}
       aria-label={fav ? "Aus Favoriten entfernen" : "Zu Favoriten hinzufügen"}
-      className={`rounded-full border px-3 py-1 text-sm transition ${
-        fav ? "border-coral bg-coral text-white" : "border-line hover:border-coral hover:text-coral"
+      className={`rounded-full border-2 px-3.5 py-1.5 text-sm font-bold transition active:scale-95 ${
+        fav ? "border-sun bg-sun text-white" : "border-line bg-paper text-ink"
       }`}
     >
       {fav ? "♥ Gemerkt" : "♡ Merken"}

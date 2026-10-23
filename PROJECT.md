@@ -4,11 +4,24 @@
 StayCheck hilft Backpackern und Reisenden, den **passenden Bezirk (Kiez)** in einer Stadt zu finden
 und Bezirke miteinander zu **vergleichen**. Start: **Berlin**.
 
-## Kernfunktionen
-1. **Finden** (`/finden` → `/ergebnisse`): Nutzer gewichtet 7 Kriterien von 0 (egal) bis 5 (unverzichtbar).
-   Jeder Bezirk bekommt einen Match in Prozent.
-2. **Vergleichen** (`/vergleich`): zwei Bezirke nebeneinander, Kriterium für Kriterium.
-3. **Konto** (`/login`): Anmelden/Registrieren per E-Mail + Passwort. Gespeichert werden Präferenzen und Favoriten (`/favoriten`).
+## Kernfunktionen (Mobile first)
+1. **Quiz** (`/quiz`): 7 Fragen, eine pro Bildschirm, große Antwort-Kacheln, Fortschrittsbalken (Duolingo-Prinzip).
+   Jede Antwort setzt ein Gewicht 0–5 (siehe `src/lib/quiz.ts`).
+2. **Ergebnis** (`/ergebnis`): großer Reveal-Moment (Zahl zählt hoch, Konfetti), Berlin-Karte mit allen Kiezen,
+   wischbare Karten, „Ergebnis teilen“ als Story-Bild (`/api/teilen`), „Ergebnis speichern“.
+3. **Duell** (`/duell`): zwei Kieze im VS-Modus, 7 Runden, Sieger nach persönlichem Match.
+4. **Konto** (`/login`, `/konto`, `/favoriten`): E-Mail + Passwort. Gespeichert werden Präferenzen und gemerkte Kieze.
+
+## Produkt-Prinzipien
+- Erst den Erfolgsmoment liefern, dann um etwas bitten (Konto, später App-Bewertung). Inspiriert von @ayoships.
+- Keine Dark Patterns: Ergebnisse sind ehrlich berechnet, keine manipulierten Bewertungen.
+- Teilbar machen (Spotify-Wrapped-Prinzip).
+
+## Design „Sonnenpass“
+Warm, satt, elegant, ein bisschen abenteuerlich. Farben in `src/app/globals.css`:
+sand (Hintergrund), paper (Karten), tan, line, ink (Text), muted, sun (Orange, Hauptfarbe), sun-dark, peach, peach-ink.
+Schriften: Bricolage Grotesque (Überschriften), DM Sans (Text). Dicke „eindrückbare“ Knöpfe: Klasse `btn-chunky`.
+Karte: MapLibre mit kostenlosen OpenFreeMap-Kacheln (kein API-Schlüssel).
 
 ## Kriterien
 budget, nightlife, quiet, safety, transit, food, nature – Bewertung je Bezirk 1–10.
@@ -36,6 +49,5 @@ budget, nightlife, quiet, safety, transit, food, nature – Bewertung je Bezirk 
 
 ## Nächste Schritte (Ideen)
 - Bewertungen der Berliner Bezirke überprüfen und verfeinern
-- Karte mit den Bezirken
 - Zweite Stadt
 - Detailseite pro Bezirk (Tipps, Hostels, Anbindung)

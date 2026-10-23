@@ -5,6 +5,11 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 
+function safeNext(v: FormDataEntryValue | null) {
+  const n = String(v || "/");
+  return n.startsWith("/") && !n.startsWith("//") ? n : "/";
+}
+
 export type FormState = { error?: string; message?: string } | undefined;
 
 export async function login(_prev: FormState, formData: FormData): Promise<FormState> {
@@ -14,8 +19,8 @@ export async function login(_prev: FormState, formData: FormData): Promise<FormS
     password: String(formData.get("password") ?? ""),
   });
   if (error) return { error: "E-Mail oder Passwort ist falsch." };
-  const next = String(formData.get("next") || "/finden");
-  redirect(next.startsWith("/") ? next : "/finden");
+  const next = String(formData.get("next") || "/");
+  redirect(next.startsWith("/") && !next.startsWith("//") ? next : "/");
 }
 
 export async function signup(_prev: FormState, formData: FormData): Promise<FormState> {
@@ -27,10 +32,10 @@ export async function signup(_prev: FormState, formData: FormData): Promise<Form
   const { data, error } = await supabase.auth.signUp({
     email: String(formData.get("email") ?? ""),
     password,
-    options: { emailRedirectTo: `${origin}/auth/callback?next=/finden` },
+    options: { emailRedirectTo: `${origin}/auth/callback?next=${encodeURIComponent(safeNext(formData.get("next")))}` },
   });
   if (error) return { error: error.message };
-  if (data.session) redirect("/finden");
+  if (data.session) redirect(safeNext(formData.get("next")));
   return { message: "Fast geschafft! Bestätige deine E-Mail über den Link, den wir dir geschickt haben." };
 }
 
@@ -53,6 +58,20 @@ export async function savePreferences(weights: Record<string, number>) {
     updated_at: new Date().toISOString(),
   }));
   await supabase.from("user_preferences").upsert(rows);
+}
+
+/** Speichert Präferenzen und merkt sich den Top-Kiez. */
+export async function saveResult(weights: Record<string, number>, districtId: string) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+  await savePreferences(weights);
+  await supabase
+    .from("favorites")
+    .upsert({ user_id: user.id, district_id: districtId }, { onConflict: "user_id,district_id", ignoreDuplicates: true });
+  revalidatePath("/", "layout");
 }
 
 export async function toggleFavorite(districtId: string, isFavorite: boolean) {
