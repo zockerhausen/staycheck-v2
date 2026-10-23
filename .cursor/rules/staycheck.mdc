@@ -1,0 +1,14 @@
+---
+description: Grundregeln für das StayCheck-Projekt
+alwaysApply: true
+---
+
+- Lies zuerst PROJECT.md, dort stehen Ziel, Funktionen und Datenbank.
+- Stack: Next.js 15 App Router + TypeScript, Tailwind CSS 4, Supabase (@supabase/ssr). Keine anderen UI-Frameworks einführen.
+- Daten aus Supabase werden serverseitig geladen (Server Components, `src/lib/data.ts`). Schreibende Aktionen sind Server Actions in `src/app/actions.ts`.
+- Supabase-Client im Server immer über `createClient()` aus `src/lib/supabase/server.ts`.
+- Niemals geheime Schlüssel (service_role/secret) in den Code schreiben.
+- Neue Tabellen immer mit Row Level Security und passenden Policies anlegen, Migrationen in `supabase/migrations/` ablegen.
+- Texte in der App sind auf Deutsch, du-Form.
+- Farben nur über die Tailwind-Theme-Farben aus `globals.css` (sand, paper, ink, muted, line, pine, coral).
+- Kleine, verständliche Änderungen; der Projektinhaber ist kein Profi-Programmierer, erkläre Änderungen kurz.

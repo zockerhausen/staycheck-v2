@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+@theme {
+  --color-sand: #f6f1e7;
+  --color-paper: #fffdf8;
+  --color-ink: #1d2b26;
+  --color-muted: #5f6b66;
+  --color-line: #e3dccd;
+  --color-pine: #1f5c4a;
+  --color-pine-dark: #164536;
+  --color-coral: #e4572e;
+  --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-dm-serif), Georgia, serif;
+}
+
+body {
+  background: var(--color-sand);
+  color: var(--color-ink);
+}
+
+/* Schieberegler */
+input[type="range"] {
+  accent-color: var(--color-pine);
+}
