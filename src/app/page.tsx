@@ -23,7 +23,7 @@ export default function Home() {
       <div className="mt-8 space-y-3">
         <Link href="/check" className="group flex items-center gap-4 rounded-3xl border-2 border-b-[6px] border-sun-dark bg-sun p-5 text-white transition active:translate-y-[3px] active:border-b-2">
           <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white/20">
-            <Icon name="check" size={34} fill="#ffffff" />
+            <Icon name="check" size={34} fill="#ffffff55" />
           </span>
           <span className="min-w-0 flex-1">
             <span className="block font-display text-xl font-extrabold">Ich hab schon ein Hotel</span>
