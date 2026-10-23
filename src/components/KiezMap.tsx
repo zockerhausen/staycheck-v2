@@ -5,15 +5,21 @@ import "maplibre-gl/dist/maplibre-gl.css";
 
 export type MapPoint = { slug: string; name: string; lat: number; lng: number; match: number };
 
-/** Berlin-Karte: je höher der Match, desto größer und kräftiger der Punkt. */
+/** Karte mit Match-Punkten: je höher der Match, desto größer und kräftiger der Punkt. */
 export default function KiezMap({
   points,
   highlight,
   onSelect,
+  center = [13.405, 52.51],
+  zoom = 10.3,
+  height = "h-64",
 }: {
   points: MapPoint[];
   highlight?: string;
   onSelect?: (slug: string) => void;
+  center?: [number, number];
+  zoom?: number;
+  height?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const onSelectRef = useRef(onSelect);
@@ -30,8 +36,8 @@ export default function KiezMap({
         container: ref.current,
         // Kostenlose Karte ohne API-Schlüssel (OpenFreeMap / OpenStreetMap)
         style: "https://tiles.openfreemap.org/styles/positron",
-        center: [13.405, 52.51],
-        zoom: 10.3,
+        center,
+        zoom,
         attributionControl: { compact: true },
         dragRotate: false,
       });
@@ -67,7 +73,8 @@ export default function KiezMap({
       cancelled = true;
       map?.remove();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [points, highlight]);
 
-  return <div ref={ref} className="h-64 w-full overflow-hidden rounded-3xl border-2 border-line bg-tan" />;
+  return <div ref={ref} className={`${height} w-full overflow-hidden rounded-3xl border-2 border-line bg-tan`} />;
 }

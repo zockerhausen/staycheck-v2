@@ -2,6 +2,7 @@
 
 import { useOptimistic, useTransition } from "react";
 import { toggleFavorite } from "@/app/actions";
+import Icon from "@/components/Icon";
 
 export default function FavoriteButton({
   districtId,
@@ -26,11 +27,12 @@ export default function FavoriteButton({
       }
       aria-pressed={fav}
       aria-label={fav ? "Aus Favoriten entfernen" : "Zu Favoriten hinzufügen"}
-      className={`rounded-full border-2 px-3.5 py-1.5 text-sm font-bold transition active:scale-95 ${
+      className={`flex items-center gap-1.5 rounded-full border-2 px-3.5 py-1.5 text-sm font-bold transition active:scale-95 ${
         fav ? "border-sun bg-sun text-white" : "border-line bg-paper text-ink"
       }`}
     >
-      {fav ? "♥ Gemerkt" : "♡ Merken"}
+      <Icon name="heart" size={16} fill={fav ? "#ffffff" : undefined} />
+      {fav ? "Gemerkt" : "Merken"}
     </button>
   );
 }

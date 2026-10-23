@@ -88,3 +88,40 @@ export async function toggleFavorite(districtId: string, isFavorite: boolean) {
   }
   revalidatePath("/", "layout");
 }
+
+export type PlaceInput = {
+  name: string;
+  subtitle?: string;
+  lat: number;
+  lon: number;
+  kind: string;
+  match?: number;
+};
+
+/** Hotel oder Adresse merken bzw. wieder entfernen. Gibt den neuen Zustand zurück. */
+export async function togglePlace(place: PlaceInput, isSaved: boolean): Promise<boolean> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  if (isSaved) {
+    await supabase.from("saved_places").delete().eq("user_id", user.id).eq("lat", place.lat).eq("lon", place.lon);
+  } else {
+    await supabase.from("saved_places").upsert(
+      {
+        user_id: user.id,
+        name: place.name.slice(0, 120),
+        subtitle: place.subtitle?.slice(0, 200) ?? null,
+        lat: place.lat,
+        lon: place.lon,
+        kind: place.kind.slice(0, 20),
+        match: place.match ?? null,
+      },
+      { onConflict: "user_id,lat,lon", ignoreDuplicates: true },
+    );
+  }
+  revalidatePath("/favoriten");
+  return !isSaved;
+}

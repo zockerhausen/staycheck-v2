@@ -7,10 +7,14 @@ export default function Reveal({
   name,
   match,
   celebrate,
+  eyebrow = "Dein Kiez in Berlin",
+  caption = "passt zu dir",
 }: {
   name: string;
   match: number;
   celebrate: boolean;
+  eyebrow?: string;
+  caption?: string;
 }) {
   const [shown, setShown] = useState(celebrate ? 0 : match);
 
@@ -48,13 +52,13 @@ export default function Reveal({
 
   return (
     <div className="pop-in">
-      <p className="text-sm font-semibold text-peach-ink">Dein Kiez in Berlin</p>
-      <h1 className="font-display text-[2.7rem] font-extrabold leading-[1.02] tracking-tight">{name}</h1>
+      <p className="text-sm font-semibold text-peach-ink">{eyebrow}</p>
+      <h1 className="font-display text-[2.7rem] font-extrabold leading-[1.02] tracking-tight [overflow-wrap:anywhere]">{name}</h1>
       <p className="font-display text-6xl font-extrabold leading-none text-sun tabular-nums">
         {shown}
         <span className="text-4xl">%</span>
       </p>
-      <p className="mt-1 text-sm text-muted">passt zu dir</p>
+      <p className="mt-1 text-sm text-muted">{caption}</p>
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import type { Criterion } from "@/lib/data";
-import { CRITERION_EMOJI } from "@/lib/quiz";
+import { CRITERION_ICON } from "@/lib/icons";
+import Icon from "@/components/Icon";
 
 export default function ScoreBars({
   criteria,
@@ -14,8 +15,8 @@ export default function ScoreBars({
         const s = scores[c.key] ?? 0;
         return (
           <div key={c.key} className="flex items-center gap-2 text-sm">
-            <dt className="w-28 shrink-0 truncate text-muted">
-              <span aria-hidden>{CRITERION_EMOJI[c.key]}</span> {c.label}
+            <dt className="flex w-32 shrink-0 items-center gap-1.5 truncate text-muted">
+              <Icon name={CRITERION_ICON[c.key]} size={18} /> {c.label}
             </dt>
             <dd className="h-2.5 flex-1 overflow-hidden rounded-full bg-tan">
               <div className="h-full rounded-full bg-sun" style={{ width: `${s * 10}%` }} />

@@ -1,6 +1,8 @@
-import { getCriteria, getDistricts, getSavedWeights, weightsFromParams } from "@/lib/data";
+import Link from "next/link";
+import { getCriteria, getDistricts, getSavedWeights, weightsFromParams, weightsToQuery } from "@/lib/data";
 import { matchScore } from "@/lib/matching";
-import { CRITERION_EMOJI } from "@/lib/quiz";
+import { CRITERION_ICON } from "@/lib/icons";
+import Icon from "@/components/Icon";
 
 export const dynamic = "force-dynamic";
 
@@ -63,14 +65,16 @@ export default async function DuellPage({
             ))}
           </select>
         </div>
-        <button className="btn-chunky mt-3 w-full">⚔️ Duell starten</button>
+        <button className="btn-chunky mt-3 w-full">
+          <Icon name="duel" size={22} fill="#ffffff55" /> Duell starten
+        </button>
       </form>
 
       <section className="mt-6 rounded-3xl border-2 border-b-[5px] border-line bg-paper p-5">
         <div className="pop-in text-center">
           {winner ? (
             <>
-              <p className="text-sm font-semibold text-peach-ink">🏆 Sieger{weights ? " für dich" : ""}</p>
+              <p className="flex items-center justify-center gap-1.5 text-sm font-semibold text-peach-ink"><Icon name="star" size={18} fill="#f2662f" /> Sieger{weights ? " für dich" : ""}</p>
               <p className="font-display text-3xl font-extrabold">{winner.name}</p>
             </>
           ) : (
@@ -93,8 +97,8 @@ export default async function DuellPage({
             const sb = b.scores[c.key] ?? 0;
             return (
               <div key={c.key}>
-                <p className="mb-1 text-center text-xs font-semibold text-muted">
-                  {CRITERION_EMOJI[c.key]} {c.label}
+                <p className="mb-1 flex items-center justify-center gap-1 text-xs font-semibold text-muted">
+                  <Icon name={CRITERION_ICON[c.key]} size={16} /> {c.label}
                 </p>
                 <div className="grid grid-cols-2 items-center gap-2">
                   <Bar value={sa} win={sa > sb} side="left" />
@@ -105,6 +109,15 @@ export default async function DuellPage({
           })}
         </div>
       </section>
+
+      <div className="mt-4 grid grid-cols-2 gap-2">
+        <Link href={`/kiez/${a.slug}${weights ? `?${weightsToQuery(weights)}` : ""}`} className="flex items-center justify-center gap-1.5 rounded-xl bg-tan py-2.5 text-sm font-bold">
+          <Icon name="hotel" size={18} /> Hotels {a.name}
+        </Link>
+        <Link href={`/kiez/${b.slug}${weights ? `?${weightsToQuery(weights)}` : ""}`} className="flex items-center justify-center gap-1.5 rounded-xl bg-tan py-2.5 text-sm font-bold">
+          <Icon name="hotel" size={18} /> Hotels {b.name}
+        </Link>
+      </div>
 
       {!weights && (
         <p className="mt-4 text-center text-sm text-muted">

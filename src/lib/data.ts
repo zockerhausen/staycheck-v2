@@ -108,3 +108,36 @@ export async function getFavoriteIds(): Promise<Set<string>> {
   const { data } = await supabase.from("favorites").select("district_id").eq("user_id", user.id);
   return new Set((data ?? []).map((r) => r.district_id as string));
 }
+
+export type SavedPlace = {
+  id: string;
+  name: string;
+  subtitle: string | null;
+  lat: number;
+  lon: number;
+  kind: string;
+  match: number | null;
+};
+
+export async function getSavedPlaces(): Promise<SavedPlace[]> {
+  const supabase = await createClient();
+  const user = await getUser();
+  if (!user) return [];
+  const { data } = await supabase
+    .from("saved_places")
+    .select("id, name, subtitle, lat, lon, kind, match")
+    .eq("user_id", user.id)
+    .order("created_at", { ascending: false });
+  return (data ?? []) as SavedPlace[];
+}
+
+/** Gewichte aus URL, sonst gespeicherte, sonst null */
+export async function resolveWeights(
+  params: Record<string, string | string[] | undefined>,
+  criteria: Criterion[],
+): Promise<{ weights: Weights | null; source: "url" | "saved" | null }> {
+  const fromUrl = weightsFromParams(params, criteria);
+  if (Object.keys(fromUrl).length > 0) return { weights: fromUrl, source: "url" };
+  const saved = await getSavedWeights();
+  return saved ? { weights: saved, source: "saved" } : { weights: null, source: null };
+}

@@ -9,7 +9,8 @@ import {
   weightsToQuery,
 } from "@/lib/data";
 import { rankDistricts, topReasons } from "@/lib/matching";
-import { CRITERION_EMOJI } from "@/lib/quiz";
+import { CRITERION_ICON } from "@/lib/icons";
+import Icon from "@/components/Icon";
 import Reveal from "@/components/Reveal";
 import KiezMap from "@/components/KiezMap";
 import ScoreBars from "@/components/ScoreBars";
@@ -52,8 +53,8 @@ export default async function ErgebnisPage({
         <Link href="/" className="font-display text-xl font-extrabold text-sun">
           StayCheck
         </Link>
-        <Link href="/quiz" className="text-sm font-semibold text-muted">
-          ↻ Quiz neu
+        <Link href="/quiz" className="flex items-center gap-1 text-sm font-semibold text-muted">
+          <Icon name="refresh" size={18} /> Quiz neu
         </Link>
       </div>
 
@@ -61,8 +62,8 @@ export default async function ErgebnisPage({
         <Reveal name={top.name} match={top.match} celebrate={params.neu === "1"} />
         <div className="mt-4 flex flex-wrap gap-2">
           {reasons.map((k) => (
-            <span key={k} className="rounded-full bg-peach px-3 py-1.5 text-sm font-semibold text-peach-ink">
-              {CRITERION_EMOJI[k]} {labelOf[k]}
+            <span key={k} className="inline-flex items-center gap-1.5 rounded-full bg-peach px-3 py-1.5 text-sm font-semibold text-peach-ink">
+              <Icon name={CRITERION_ICON[k]} size={18} fill="#fff" /> {labelOf[k]}
             </span>
           ))}
         </div>
@@ -70,7 +71,10 @@ export default async function ErgebnisPage({
       </section>
 
       <div className="space-y-3">
-        <ShareButton name={top.name} match={top.match} tags={reasons.map((k) => labelOf[k])} />
+        <Link href={`/kiez/${top.slug}?${query}`} className="btn-chunky w-full">
+          <Icon name="hotel" size={22} fill="#ffffff55" /> Hotels in {top.name} finden
+        </Link>
+        <ShareButton name={top.name} match={top.match} tags={reasons.map((k) => labelOf[k])} light />
         <SaveButton
           loggedIn={Boolean(user)}
           weights={weights}
@@ -108,12 +112,17 @@ export default async function ErgebnisPage({
               <p className="mb-4 mt-1 text-sm text-muted">{d.short_description}</p>
               <ScoreBars criteria={criteria} scores={d.scores} />
               <div className="mt-auto flex items-center justify-between gap-2 pt-4">
-                <Link
-                  href={`/duell?a=${top.slug === d.slug ? d.slug : top.slug}&b=${top.slug === d.slug ? rest[0]?.slug ?? d.slug : d.slug}&${query}`}
-                  className="text-sm font-bold text-sun"
-                >
-                  ⚔️ Ins Duell
-                </Link>
+                <div className="flex items-center gap-4">
+                  <Link href={`/kiez/${d.slug}?${query}`} className="flex items-center gap-1 text-sm font-bold text-sun">
+                    <Icon name="hotel" size={18} /> Hotels
+                  </Link>
+                  <Link
+                    href={`/duell?a=${top.slug === d.slug ? d.slug : top.slug}&b=${top.slug === d.slug ? rest[0]?.slug ?? d.slug : d.slug}&${query}`}
+                    className="flex items-center gap-1 text-sm font-bold text-muted"
+                  >
+                    <Icon name="duel" size={18} /> Duell
+                  </Link>
+                </div>
                 {user && <FavoriteButton districtId={d.id} isFavorite={favorites.has(d.id)} />}
               </div>
             </article>

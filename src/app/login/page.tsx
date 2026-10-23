@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { getUser } from "@/lib/data";
 import AuthForm from "@/components/AuthForm";
+import Icon from "@/components/Icon";
 
 export const dynamic = "force-dynamic";
 
@@ -15,9 +16,9 @@ export default async function LoginPage({
 
   return (
     <div className="pt-4">
-      <p className="text-5xl" aria-hidden>
-        🎒
-      </p>
+      <span className="flex h-16 w-16 items-center justify-center rounded-3xl bg-peach text-sun">
+        <Icon name="user" size={40} fill="#ffffff" />
+      </span>
       <h1 className="mt-3 font-display text-4xl font-extrabold leading-tight">
         Dein Reise&shy;pass für Kieze
       </h1>

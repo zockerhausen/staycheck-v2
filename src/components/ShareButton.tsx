@@ -1,9 +1,20 @@
 "use client";
 
 import { useState } from "react";
+import Icon from "@/components/Icon";
 
 /** Teilt das Ergebnis als Bild im Story-Format (wie Spotify Wrapped). */
-export default function ShareButton({ name, match, tags }: { name: string; match: number; tags: string[] }) {
+export default function ShareButton({
+  name,
+  match,
+  tags,
+  light = false,
+}: {
+  name: string;
+  match: number;
+  tags: string[];
+  light?: boolean;
+}) {
   const [busy, setBusy] = useState(false);
 
   async function share() {
@@ -31,8 +42,9 @@ export default function ShareButton({ name, match, tags }: { name: string; match
   }
 
   return (
-    <button type="button" onClick={share} disabled={busy} className="btn-chunky w-full">
-      {busy ? "Bild wird erstellt…" : "📸 Ergebnis teilen"}
+    <button type="button" onClick={share} disabled={busy} className={`btn-chunky w-full ${light ? "btn-chunky-light" : ""}`}>
+      <Icon name="share" size={22} fill={light ? undefined : "#ffffff55"} />
+      {busy ? "Bild wird erstellt…" : "Ergebnis teilen"}
     </button>
   );
 }

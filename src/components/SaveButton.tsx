@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { saveResult } from "@/app/actions";
+import Icon from "@/components/Icon";
 
 /** Erst nach dem Erfolgsmoment um ein Konto bitten. */
 export default function SaveButton({
@@ -24,7 +25,7 @@ export default function SaveButton({
 
   if (saved) {
     return (
-      <p className="rounded-2xl bg-peach py-3 text-center font-semibold text-peach-ink">♥ In deinem Konto gespeichert</p>
+      <p className="flex items-center justify-center gap-2 rounded-2xl bg-peach py-3 font-semibold text-peach-ink"><Icon name="heart" size={20} fill="#f2662f" /> In deinem Konto gespeichert</p>
     );
   }
 
@@ -45,7 +46,8 @@ export default function SaveButton({
         });
       }}
     >
-      {pending ? "Speichere…" : loggedIn ? "♡ Ergebnis speichern" : "♡ Ergebnis speichern (kostenloses Konto)"}
+      <Icon name="heart" size={22} />
+      {pending ? "Speichere…" : loggedIn ? "Ergebnis speichern" : "Ergebnis speichern (kostenlos)"}
     </button>
   );
 }

@@ -12,3 +12,5 @@ alwaysApply: true
 - Texte in der App sind auf Deutsch, du-Form.
 - Design „Sonnenpass“, Mobile first (max-w-md). Farben nur über die Theme-Farben aus `globals.css` (sand, paper, tan, line, ink, muted, sun, sun-dark, peach, peach-ink). Haupt-Knöpfe mit `btn-chunky`.
 - Kleine, verständliche Änderungen; der Projektinhaber ist kein Profi-Programmierer, erkläre Änderungen kurz.
+- Keine Emojis in der App. Icons nur über `<Icon name=… />` aus dem eigenen Set (`src/lib/icons.ts`); neue Icons im gleichen Stil (24er Raster, Linie 2.2, runde Enden, Akzentfläche).
+- Externe Kartendienste (Photon, Overpass) nur serverseitig über `src/lib/geo.ts` aufrufen und zwischenspeichern.

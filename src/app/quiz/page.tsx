@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { QUIZ } from "@/lib/quiz";
+import { CRITERION_ICON } from "@/lib/icons";
+import Icon from "@/components/Icon";
 
 function buzz() {
   // Kurzes Vibrieren (funktioniert auf Android, iPhone ignoriert es)
@@ -52,7 +54,7 @@ export default function QuizPage() {
           className="text-2xl text-muted"
           aria-label="Zurück"
         >
-          ←
+          <Icon name="back" size={26} />
         </button>
         <div className="h-4 flex-1 overflow-hidden rounded-full bg-tan">
           <div
@@ -79,8 +81,12 @@ export default function QuizPage() {
             data-selected={picked === i}
             onClick={() => choose(i)}
           >
-            <span className="text-3xl" aria-hidden>
-              {a.emoji}
+            <span
+              className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl ${
+                a.weight >= 4 ? "bg-sun text-white" : a.weight >= 2 ? "bg-peach text-sun" : "bg-tan text-muted"
+              }`}
+            >
+              <Icon name={CRITERION_ICON[q.key]} size={30} fill={a.weight >= 4 ? "#ffffff55" : "#ffffff"} />
             </span>
             <span className="text-lg font-semibold">{a.text}</span>
           </button>
