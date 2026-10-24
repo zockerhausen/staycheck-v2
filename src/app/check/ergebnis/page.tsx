@@ -137,7 +137,10 @@ export default async function CheckErgebnisPage({
               <Icon name="flag" size={16} /> Dein Muss fehlt: {EXTRA_LABEL[pm.mustMissing]}
             </b>
             <p className="mt-1 text-muted">
-              {mustDetail.reasons[0]}. Darum höchstens {MUST_CAP} Punkte für dich (ohne Muss wären es {pm.uncapped}).
+              {mustDetail.reasons[0]}.{" "}
+              {pm.uncapped > MUST_CAP
+                ? `Darum höchstens ${MUST_CAP} Punkte für dich (ohne diese Grenze wären es ${pm.uncapped}).`
+                : "Das zieht deinen Match deutlich nach unten."}
             </p>
           </div>
         )}
@@ -198,7 +201,7 @@ export default async function CheckErgebnisPage({
         coverage={analysis.coverage}
         personal={Boolean(pm)}
         must={extras.must}
-        capped={pm?.mustMissing ? pm.uncapped : null}
+        capped={pm?.mustMissing && pm.uncapped > MUST_CAP ? pm.uncapped : null}
       />
 
       {city && <ArrivalCard hubs={HUBS[city.slug]} lat={lat} lon={lon} nearestRail={analysis.nearestRail} />}

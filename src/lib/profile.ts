@@ -104,24 +104,23 @@ export function persona(weights: Weights, extras: Extras): Persona {
     text: "Dir ist eine gute Mischung wichtig",
     icon: "discover" as IconName,
   };
-  // Zusatz: Extra-Muss, sonst Extras, sonst Reisebegleitung
+  // Zusatz: ein markantes Extra, sonst die Reisebegleitung
   const extraMod: Partial<Record<ExtraKey, string>> = {
     cafe: "mit Laptop",
     strand: "mit Strandtuch",
     fitness: "mit Sportschuhen",
     sehenswert: "mit Kamera",
-    supermarkt: "mit Selbstversorger-Plan",
-    waschsalon: "auf Langzeit-Tour",
   };
   const werMod: Record<TravelWith, string> = { allein: "auf Solo-Tour", paar: "zu zweit", freunde: "mit Crew", business: "auf Geschäftsreise" };
-  const first = extras.must ?? extras.items[0];
-  const mod = (first && extraMod[first]) || (extras.wer ? werMod[extras.wer] : "");
-  // Zweiter Satzteil: was sonst noch zählt
+  const ordered = [extras.must, ...extras.items].filter((k): k is ExtraKey => Boolean(k && extraMod[k]));
+  const mod = (ordered[0] && extraMod[ordered[0]]) || (extras.wer ? werMod[extras.wer] : "");
+  // Was sonst noch zählt, als kurze Satzteile
   const also: string[] = [];
-  if (main.name !== "Sparfuchs" && w("budget") >= 4) also.push("nicht viel zahlen");
-  if (main.name !== "Ruhesucher:in" && w("quiet") >= 4) also.push("ruhig schlafen");
-  if (extras.items.includes("cafe")) also.push("tagsüber arbeiten");
-  if (main.name !== "Stadtentdecker:in" && w("transit") >= 4) also.push("schnell mit der Bahn los");
-  const text = `${main.text}${also.length ? ` und willst ${also.slice(0, 2).join(" und ")}` : ""}.`;
+  if (main.name !== "Sparfuchs" && w("budget") >= 4) also.push("zahlst nicht gern viel");
+  if (main.name !== "Ruhesucher:in" && w("quiet") >= 4) also.push("schläfst gern ruhig");
+  if (extras.items.includes("cafe")) also.push("arbeitest tagsüber gern im Café");
+  if (main.name !== "Stadtentdecker:in" && w("transit") >= 4) also.push("bist gern schnell mit der Bahn unterwegs");
+  const parts = also.slice(0, 2);
+  const text = parts.length === 0 ? `${main.text}.` : parts.length === 1 ? `${main.text} und ${parts[0]}.` : `${main.text}, ${parts[0]} und ${parts[1]}.`;
   return { name: mod ? `${main.name} ${mod}` : main.name, text, icon: main.icon };
 }
