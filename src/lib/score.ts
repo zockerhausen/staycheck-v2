@@ -78,17 +78,35 @@ const step = (value: number, table: [number, number][], fallback: number) => {
   return fallback;
 };
 const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
+/** Lesbarer Name: erst Deutsch, dann Englisch, dann Originalschrift (z. B. Thai) */
+const nameOf = (t: Tags) => t["name:de"] ?? t["name:en"] ?? t.name;
+
+/** Fläche des Umriss-Rechtecks in m² (grob, reicht um Mini-Grünflächen auszusortieren) */
+function bboxArea(p: Poi) {
+  if (!p.bbox) return 0;
+  const [minLat, minLon, maxLat, maxLon] = p.bbox;
+  const h = (maxLat - minLat) * 110540;
+  const w = (maxLon - minLon) * 111320 * Math.cos((((minLat + maxLat) / 2) * Math.PI) / 180);
+  return Math.max(0, h * w);
+}
 
 // ---------- Kategorien ----------
 
 const isBar = (t: Tags) => /^(bar|pub|biergarten)$/.test(t.amenity ?? "");
 const isClub = (t: Tags) => t.amenity === "nightclub";
 const isFood = (t: Tags) => /^(restaurant|cafe|fast_food|food_court)$/.test(t.amenity ?? "");
+const isBoat = (t: Tags) => t.amenity === "ferry_terminal" || t.ferry === "yes";
 const isTrainStation = (t: Tags) =>
-  /^(station|halt)$/.test(t.railway ?? "") || (t.public_transport === "station" && t.railway !== "tram_stop");
+  !isBoat(t) &&
+  (/^(station|halt)$/.test(t.railway ?? "") ||
+    (t.public_transport === "station" && t.railway !== "tram_stop" && t.bus !== "yes" && t.highway !== "bus_stop"));
 const isTram = (t: Tags) => t.railway === "tram_stop";
 const isBus = (t: Tags) => t.highway === "bus_stop";
-const isGreen = (t: Tags) => /^(park|garden|nature_reserve)$/.test(t.leisure ?? "") || t.natural === "water" || t.natural === "beach";
+const isGreen = (t: Tags) =>
+  /^(park|garden|nature_reserve)$/.test(t.leisure ?? "") || /^(water|beach|wood)$/.test(t.natural ?? "") || t.landuse === "forest";
+// Mini-Flächen (Verkehrsinsel, Vorgarten, Tiergehege) zählen nicht: mindestens 0,5 ha, Strände immer
+const MIN_GREEN_M2 = 5_000;
+const BIG_GREEN_M2 = 50_000;
 const isBudgetStay = (t: Tags) => /^(hostel|guest_house)$/.test(t.tourism ?? "");
 const isMainRoad = (t: Tags) => /^(motorway|trunk|primary)$/.test(t.highway ?? "");
 const isSecondaryRoad = (t: Tags) => t.highway === "secondary";
@@ -109,6 +127,7 @@ export function scoreFromData(lat: number, lon: number, pois: Poi[], lines: Line
   // Anbindung: nächster Bahnhof (S-/U-Bahn, Zug, Metro). Straßenbahn zählt etwas weniger, Bus nur als Notlösung.
   const train = near(900, isTrainStation)[0];
   const tram = near(600, isTram)[0];
+  const boat = near(600, isBoat)[0];
   const buses = near(400, isBus).length;
   {
     const reasons: string[] = [];
@@ -116,13 +135,20 @@ export function scoreFromData(lat: number, lon: number, pois: Poi[], lines: Line
     if (train) {
       const min = walkMinutes(train.d);
       score = step(min, [[3, 10], [5, 9], [7, 8], [9, 7], [12, 5]], 4);
-      reasons.push(`${train.p.tags.name ?? "Bahnhof"}: ca. ${min} Min. zu Fuß`);
+      reasons.push(`${nameOf(train.p.tags) ?? "Bahnhof"}: ca. ${min} Min. zu Fuß`);
     } else score = 0;
     if (tram) {
       const min = walkMinutes(tram.d);
       const tramScore = step(min, [[3, 7], [6, 6]], 5);
       if (tramScore > score) score = tramScore;
-      reasons.push(`Straßenbahn ${tram.p.tags.name ?? ""}: ca. ${min} Min.`.replace("  ", " "));
+      reasons.push(`Straßenbahn ${nameOf(tram.p.tags) ?? ""}: ca. ${min} Min.`.replace("  ", " "));
+    }
+    if (boat) {
+      // Boote fahren seltener und kürzer als Bahnen: zählen höchstens wie eine Straßenbahn
+      const min = walkMinutes(boat.d);
+      const boatScore = step(min, [[4, 6], [8, 5]], 4);
+      if (boatScore > score) score = boatScore;
+      reasons.push(`Bootsanleger ${nameOf(boat.p.tags) ?? ""}: ca. ${min} Min. (zählt weniger als Bahn)`.replace("  ", " "));
     }
     if (buses > 0) {
       if (score < 3) score = 3;
@@ -161,16 +187,22 @@ export function scoreFromData(lat: number, lon: number, pois: Poi[], lines: Line
   }
 
   // Grün & Wasser: Abstand zum Rand des nächsten Parks / Gewässers
-  const green = near(800, isGreen)[0];
+  const greens = near(800, isGreen).filter((g) => g.p.tags.natural === "beach" || bboxArea(g.p) >= MIN_GREEN_M2);
+  const bigGreen = greens.find((g) => bboxArea(g.p) >= BIG_GREEN_M2 || g.p.tags.natural === "beach");
+  const green = greens[0];
   {
+    const label = (g: { p: Poi }) => nameOf(g.p.tags) ?? (g.p.tags.natural === "water" ? "Gewässer" : "Park");
+    const where = (g: { p: Poi; d: number }) => (g.d < 20 ? `Direkt an ${label(g)}` : `${label(g)}: ca. ${walkMinutes(g.d)} Min. zu Fuß`);
     if (green) {
-      const min = walkMinutes(green.d);
-      details.nature = {
-        score: step(green.d, [[150, 10], [300, 9], [450, 8], [600, 6]], 5),
-        source: "messung",
-        reasons: [green.d < 20 ? `Direkt an ${green.p.tags.name ?? "einem Park oder Gewässer"}` : `${green.p.tags.name ?? "Park oder Gewässer"}: ca. ${min} Min. zu Fuß`],
-      };
-    } else details.nature = { score: 2, source: "messung", reasons: ["Kein Park und kein Wasser in 800 m"] };
+      const reasons: string[] = [];
+      // Großer Park zählt voll; kleine Grünfläche höchstens 7
+      const bigScore = bigGreen ? step(bigGreen.d, [[150, 10], [300, 9], [450, 8], [600, 7]], 6) : 0;
+      const smallScore = Math.min(7, step(green.d, [[150, 7], [300, 6], [600, 5]], 4));
+      const score = Math.max(bigScore, smallScore);
+      if (bigGreen) reasons.push(`${where(bigGreen)} (großer Park oder Wasser)`);
+      if (!bigGreen || (green !== bigGreen && green.d < bigGreen.d - 100)) reasons.push(`${where(green)} (kleinere Grünfläche)`);
+      details.nature = { score, source: "messung", reasons };
+    } else details.nature = { score: 2, source: "messung", reasons: ["Kein Park und kein Wasser (ab 0,5 ha) in 800 m"] };
   }
 
   // Ruhe: Lärmquellen nach Entfernung gewichtet. Je näher, desto lauter.
@@ -250,7 +282,11 @@ export function scoreFromData(lat: number, lon: number, pois: Poi[], lines: Line
     highlights,
     coverage,
     counts: { bars: bars.length, clubs: clubs.length, food: food.length, hostels },
-    nearestRail: train ? { name: train.p.tags.name ?? "Bahnhof", dist: Math.round(train.d) } : tram ? { name: tram.p.tags.name ?? "Straßenbahn", dist: Math.round(tram.d) } : null,
+    nearestRail: train
+      ? { name: nameOf(train.p.tags) ?? "Bahnhof", dist: Math.round(train.d) }
+      : tram
+        ? { name: nameOf(tram.p.tags) ?? "Straßenbahn", dist: Math.round(tram.d) }
+        : null,
   };
 }
 

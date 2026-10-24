@@ -136,7 +136,9 @@ function poiQuery(lat: number, lon: number, extra = 0) {
   node(${a(900)})[public_transport=station];
   node(${a(400)})[highway=bus_stop];
   nwr(${a(800)})[leisure~"^(park|garden|nature_reserve)$"];
-  nwr(${a(800)})[natural~"^(water|beach)$"];
+  nwr(${a(800)})[natural~"^(water|beach|wood)$"];
+  nwr(${a(800)})[landuse=forest];
+  node(${a(600)})[amenity=ferry_terminal];
   nwr(${a(800)})[tourism~"^(hostel|guest_house)$"];
   nwr(${a(500)})[shop];
 );
