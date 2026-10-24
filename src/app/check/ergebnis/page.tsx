@@ -5,6 +5,7 @@ import {
   getCriteria,
   getDistricts,
   getSavedPlaces,
+  getExtras,
   getUser,
   resolveWeights,
   weightsToQuery,
@@ -23,6 +24,7 @@ import { RememberCheck } from "@/components/RecentChecks";
 import ScoreExplain from "@/components/ScoreExplain";
 import { HUBS, cityForPoint } from "@/lib/arrival";
 import { getTipsNear } from "@/lib/tips";
+import { EXTRA_LABEL, MUST_CAP, NO_EXTRAS, fullWeights, personalMatch } from "@/lib/profile";
 
 // Dynamisch durch Cookies/Suchparameter; Kartendaten-Abfragen werden 1 Tag zwischengespeichert.
 export const fetchCache = "default-cache";
@@ -85,7 +87,17 @@ export default async function CheckErgebnisPage({
     );
   }
 
-  const match = locationMatch(analysis.scores, weights);
+  // Zwei Zahlen: „Lage allgemein“ (für alle gleich) und – mit Reise-Profil – „Dein Match“ inkl. Extras und Muss
+  const general = locationMatch(analysis.scores, DEFAULT_WEIGHTS);
+  const extras = resolved ? await getExtras() : NO_EXTRAS;
+  const pm = resolved ? personalMatch(analysis.scores, weights, extras) : null;
+  const match = pm ? pm.match : general;
+  const usedWeights = resolved ? fullWeights(weights, extras) : DEFAULT_WEIGHTS;
+  const usedKeys = Object.entries(usedWeights)
+    .filter(([k, w]) => w > 0 && analysis.details[k])
+    .map(([k]) => k);
+  const measured = usedKeys.filter((k) => ["messung", "gemischt"].includes(analysis.details[k].source)).length;
+  const mustDetail = extras.must ? analysis.details[extras.must] : null;
   const v = verdict(match);
   const query = source === "url" ? weightsToQuery(weights) : "";
   const amp = query ? `&${query}` : "";
@@ -112,7 +124,28 @@ export default async function CheckErgebnisPage({
       </div>
 
       <section>
-        <Reveal name={name} match={match} celebrate={match >= 64} eyebrow={v.label} caption={source ? "Match für dich" : "Lage-Score"} sub={sub} />
+        <Reveal name={name} match={match} celebrate={match >= 64} eyebrow={v.label} caption={pm ? "Dein Match" : "Lage-Score"} sub={sub} />
+        <div className="mt-3 flex flex-wrap justify-center gap-2 text-[13px] font-semibold">
+          {pm && <span className="rounded-full bg-tan px-3 py-1.5">Lage allgemein {general}</span>}
+          <span className="rounded-full bg-tan px-3 py-1.5 text-muted">
+            {measured} von {usedKeys.length} Werten gemessen
+          </span>
+        </div>
+        {pm?.mustMissing && mustDetail && (
+          <div className="mt-4 rounded-[18px] border border-[#ffb547]/25 bg-[#ffb547]/10 p-4 text-sm">
+            <b className="flex items-center gap-2 text-[#ffb547]">
+              <Icon name="flag" size={16} /> Dein Muss fehlt: {EXTRA_LABEL[pm.mustMissing]}
+            </b>
+            <p className="mt-1 text-muted">
+              {mustDetail.reasons[0]}. Darum höchstens {MUST_CAP} Punkte für dich (ohne Muss wären es {pm.uncapped}).
+            </p>
+          </div>
+        )}
+        {pm && extras.must && !pm.mustMissing && mustDetail && (
+          <p className="mt-3 flex items-center justify-center gap-1.5 text-sm font-semibold text-[#3ecf8e]">
+            <Icon name="check" size={16} /> Dein Muss passt: {mustDetail.reasons[0]}
+          </p>
+        )}
         <div className="mt-4 flex flex-wrap justify-center gap-2">
           {strengths.map((c) => (
             <span key={c.key} className="inline-flex items-center gap-1.5 rounded-full bg-peach px-3 py-1.5 text-sm font-bold text-peach-ink">
@@ -160,10 +193,12 @@ export default async function CheckErgebnisPage({
       <ScoreExplain
         criteria={criteria}
         details={analysis.details}
-        weights={weights}
+        weights={usedWeights}
         match={match}
         coverage={analysis.coverage}
-        personal={Boolean(source)}
+        personal={Boolean(pm)}
+        must={extras.must}
+        capped={pm?.mustMissing ? pm.uncapped : null}
       />
 
       {city && <ArrivalCard hubs={HUBS[city.slug]} lat={lat} lon={lon} nearestRail={analysis.nearestRail} />}

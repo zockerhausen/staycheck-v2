@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getCities, getCriteria, getDistricts, getFavoriteIds, getSavedPlaces, getUser, resolveWeights, weightsToQuery } from "@/lib/data";
+import { getCities, getCriteria, getDistricts, getExtras, getFavoriteIds, getSavedPlaces, getUser, resolveWeights, weightsToQuery } from "@/lib/data";
 import { after } from "next/server";
 import { DEFAULT_WEIGHTS, hotelsNearCached, verdict, withDeadline, type HotelResult } from "@/lib/geo";
 import StillLoading from "@/components/StillLoading";
 import { matchScore, topReasons } from "@/lib/matching";
 import FavoriteButton from "@/components/FavoriteButton";
+import { personalMatch } from "@/lib/profile";
 import { characterOf, traitsOf } from "@/lib/character";
 import Icon from "@/components/Icon";
 import KiezMap from "@/components/KiezMap";
@@ -72,6 +73,15 @@ export default async function KiezPage({
   if (slow) after(() => work.catch(() => undefined));
   else if (raced === null) failed = true;
   else hotels = raced;
+  // Persönlicher Match inkl. Extras und Muss (Liste neu sortieren)
+  if (resolved) {
+    const ex = await getExtras();
+    if (ex.items.length) {
+      hotels = hotels
+        .map((h) => ({ ...h, match: personalMatch(h.scores, weights, ex).match }))
+        .sort((a, b) => b.match - a.match);
+    }
+  }
   const shown = filter === "alle" ? hotels : hotels.filter((h) => h.kind === filter);
   const isSaved = (h: HotelResult) => saved.some((p) => Math.abs(p.lat - h.lat) < 1e-6 && Math.abs(p.lon - h.lon) < 1e-6);
   const checkUrl = (h: HotelResult) =>

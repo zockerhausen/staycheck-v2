@@ -49,6 +49,12 @@ const RULES: { icon: IconName; title: string; how: string; scale: string }[] = [
     how: "Preisniveau des Viertels (unsere Einschätzung, zählt doppelt) plus die Zahl der Hostels und Pensionen im Umkreis von 800 m. Echte Preise siehst du beim Buchungsportal.",
     scale: "Ohne Viertel-Bewertung nur nach Hostels und Pensionen",
   },
+  {
+    icon: "cart",
+    title: "Extras: Supermarkt, Cafés, Sehenswertes, Waschsalon, Fitness, Strand",
+    how: "Zählen nur, wenn du sie in deinem Reise-Profil gewählt hast. Wir messen den Fußweg zum Nächsten. Bei Cafés zählen auch Coworking-Spaces (ob es WLAN gibt, steht selten in der Karte).",
+    scale: "bis 3 Min. = 10 · bis 5 Min. = 9 · bis 8 Min. = 7 · bis 12 Min. = 5 · weiter = 3 · nichts gefunden = 1",
+  },
 ];
 
 export default function MethodePage() {
@@ -76,6 +82,14 @@ export default function MethodePage() {
           </li>
           <li>
             <b>2. Sieben Werte von 1 bis 10.</b> Nach festen Regeln (siehe unten). Entfernungen rechnen wir als Fußweg: Luftlinie plus 25 %, 80 m pro Minute.
+          </li>
+          <li>
+            <b>Zwei Zahlen.</b> „Lage allgemein“ ist für alle gleich (Standard-Gewichtung, ohne Extras). „Dein Match“ rechnet mit deinem Reise-Profil.
+            So siehst du, ob ein Ort generell gut liegt oder nur für dich passt – oder umgekehrt.
+          </li>
+          <li>
+            <b>Dein Muss.</b> Hast du ein Extra als Muss markiert und es liegt nicht in ca. 8 Minuten zu Fuß (Wert 3 oder weniger), ist dein
+            Match höchstens 60 – egal wie gut der Rest ist. Wir sagen dir dann genau, was fehlt.
           </li>
           <li>
             <b>3. Gewichten.</b> Dein Score ist der Durchschnitt der Werte, gewichtet nach deinem Reise-Profil. Ohne Profil zählt Anbindung etwas mehr und Grün

@@ -191,6 +191,12 @@ function poiQuery(lat: number, lon: number, extra = 0) {
   node(${a(600)})[amenity=ferry_terminal];
   nwr(${a(800)})[tourism~"^(hostel|guest_house)$"];
   ${extra === 0 ? `nwr(${a(500)})[shop];` : ""}
+  nwr(${a(600)})[shop~"^(supermarket|convenience|laundry)$"];
+  nwr(${a(600)})[amenity=coworking_space];
+  nwr(${a(600)})[office=coworking];
+  nwr(${a(800)})[leisure=fitness_centre];
+  nwr(${a(800)})[tourism~"^(attraction|museum|viewpoint|gallery|zoo)$"];
+  nwr(${a(800)})[historic~"^(monument|castle|ruins|city_gate|archaeological_site)$"];
 );
 out tags bb;
 (
@@ -234,7 +240,7 @@ const scoreCached = unstable_cache(
     const { pois, lines } = split(await overpass(poiQuery(lat, lon)));
     return scoreFromData(lat, lon, pois, lines, district);
   },
-  ["score-v1"],
+  ["score-v2"],
   { revalidate: 86400 },
 );
 
@@ -464,7 +470,7 @@ export const autoDistrictsCached = (lat: number, lon: number) => once(`auto:${la
 const hotelsNearStored = unstable_cache(
   async (center: { lat: number; lon: number }, district: District | null, weights: Weights, radius: number, areaName: string) =>
     hotelsNear(center, district, weights, radius, areaName),
-  ["hotels-v1"],
+  ["hotels-v2"],
   { revalidate: 86400 },
 );
 export const hotelsNearCached = (

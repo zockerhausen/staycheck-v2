@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { getCriteria, getProfile, getSavedPlaces, getUser } from "@/lib/data";
+import { getCriteria, getExtras, getProfile, getSavedPlaces, getUser } from "@/lib/data";
 import { after } from "next/server";
 import { autoDistrictsCached, DEFAULT_WEIGHTS, distance, hotelsNearCached, locationMatch, withDeadline, type HotelResult } from "@/lib/geo";
 import StillLoading from "@/components/StillLoading";
+import { personalMatch } from "@/lib/profile";
 import { parseZiel, zielQuery } from "@/lib/ziel";
 import { characterOf, characterTint, traitsOf } from "@/lib/character";
 import { CRITERION_ICON } from "@/lib/icons";
@@ -59,6 +60,15 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
   if (slow) after(() => work.catch(() => undefined));
   else if (raced === null) failed = true;
   else hotels = raced;
+  // Persönlicher Match inkl. Extras und Muss (Liste neu sortieren)
+  if (profile) {
+    const ex = await getExtras();
+    if (ex.items.length) {
+      hotels = hotels
+        .map((h) => ({ ...h, match: personalMatch(h.scores, weights, ex).match }))
+        .sort((a, b) => b.match - a.match);
+    }
+  }
   const shown = filter === "alle" ? hotels : hotels.filter((h) => h.kind === filter);
   const isSaved = (h: HotelResult) => saved.some((p) => Math.abs(p.lat - h.lat) < 1e-6 && Math.abs(p.lon - h.lon) < 1e-6);
   const checkUrl = (h: HotelResult) =>

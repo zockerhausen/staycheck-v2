@@ -3,7 +3,8 @@
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { CITY_COOKIE, PROFILE_COOKIE, encodeProfile } from "@/lib/data";
+import { CITY_COOKIE, EXTRAS_COOKIE, PROFILE_COOKIE, encodeProfile } from "@/lib/data";
+import { cleanExtras, decodeExtras, encodeExtras, type Extras } from "@/lib/profile";
 
 function safeNext(v: FormDataEntryValue | null) {
   const n = String(v || "/");
@@ -81,7 +82,7 @@ export async function savePreferences(weights: Record<string, number>) {
 const YEAR = 60 * 60 * 24 * 365;
 
 /** Reise-Profil dauerhaft speichern: im Browser (Cookie) und – falls eingeloggt – im Konto. */
-export async function storeProfile(weights: Record<string, number>, city?: string) {
+export async function storeProfile(weights: Record<string, number>, city?: string, extrasInput?: Partial<Extras>) {
   const clean = Object.fromEntries(
     Object.entries(weights)
       .filter(([k]) => /^[a-z_]{2,20}$/.test(k))
@@ -91,8 +92,21 @@ export async function storeProfile(weights: Record<string, number>, city?: strin
   jar.set(PROFILE_COOKIE, encodeProfile(clean), { maxAge: YEAR, path: "/", sameSite: "lax", secure: true, httpOnly: true });
   if (city && /^[a-z-]{2,40}$/.test(city)) jar.set(CITY_COOKIE, city, { maxAge: YEAR, path: "/", sameSite: "lax", secure: true, httpOnly: true });
   await savePreferences(clean);
+  if (extrasInput !== undefined) await storeExtras(extrasInput);
   // Kein revalidatePath("/"): das würde alle gespeicherten Kartendaten für alle Nutzer löschen.
   // Die Seiten lesen das Profil bei jedem Aufruf frisch aus dem Cookie.
+}
+
+/** Extras (mit wem, was in Laufweite, Muss) speichern: Cookie und – falls eingeloggt – Konto. */
+export async function storeExtras(input: Partial<Extras>) {
+  const e = cleanExtras(input);
+  (await cookies()).set(EXTRAS_COOKIE, encodeExtras(e), { maxAge: YEAR, path: "/", sameSite: "lax", secure: true, httpOnly: true });
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return;
+  await supabase.from("profiles").update({ travel_with: e.wer, extras: e.items, must_have: e.must }).eq("id", user.id);
 }
 
 /** Wer das Quiz ohne Konto gemacht hat, bekommt sein Profil beim Anmelden ins Konto übernommen. */
@@ -117,6 +131,10 @@ export async function syncProfileFromCookie() {
       .map(([k, v]) => [k, Math.min(5, Math.max(0, Math.round(Number(v))))]),
   );
   if (Object.keys(weights).length) await savePreferences(weights);
+  const extras = decodeExtras((await cookies()).get(EXTRAS_COOKIE)?.value);
+  if (extras.wer || extras.items.length) {
+    await supabase.from("profiles").update({ travel_with: extras.wer, extras: extras.items, must_have: extras.must }).eq("id", user.id);
+  }
 }
 
 export async function rememberCity(city: string) {

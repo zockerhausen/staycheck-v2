@@ -124,6 +124,14 @@ const BIG_GREEN_M2 = 50_000; // 5 ha echte Fläche
 const isBudgetStay = (t: Tags) => /^(hostel|guest_house)$/.test(t.tourism ?? "");
 const isMainRoad = (t: Tags) => /^(motorway|trunk|primary)$/.test(t.highway ?? "");
 const isSecondaryRoad = (t: Tags) => t.highway === "secondary";
+// Extras (nur wer sie im Reise-Profil wählt, bekommt sie in seinen Match eingerechnet)
+const isSupermarket = (t: Tags) => /^(supermarket|convenience)$/.test(t.shop ?? "");
+const isLaundry = (t: Tags) => t.shop === "laundry";
+const isCafe = (t: Tags) => t.amenity === "cafe" || t.amenity === "coworking_space" || t.office === "coworking";
+const isBeach = (t: Tags) => t.natural === "beach";
+const isGym = (t: Tags) => t.leisure === "fitness_centre";
+const isSight = (t: Tags) =>
+  /^(attraction|museum|viewpoint|gallery|zoo)$/.test(t.tourism ?? "") || /^(monument|castle|ruins|city_gate|archaeological_site)$/.test(t.historic ?? "");
 const isRailLine = (t: Tags) => /^(rail|light_rail|subway|tram)$/.test(t.railway ?? "") && t.tunnel !== "yes";
 
 // ---------- Berechnung ----------
@@ -274,6 +282,30 @@ export function scoreFromData(lat: number, lon: number, pois: Poi[], lines: Line
       ? { score: clamp((district.scores.budget * 2 + hostelScore) / 3), source: "gemischt", reasons }
       : { score: hostelScore, source: "messung", reasons };
   }
+
+  // Extras: Wie weit ist das Nächste zu Fuß? (bis 3 Min. = 10 … bis 12 Min. = 5, sonst „nicht gefunden“ = 1)
+  const extra = (key: string, test: (t: Tags) => boolean, radius: number, what: string, many: string) => {
+    const hits = near(radius, test);
+    const first = hits[0];
+    if (!first) {
+      details[key] = { score: 1, source: "messung", reasons: [`Kein ${what} in ${radius} m gefunden (oder nicht in OpenStreetMap eingetragen)`] };
+      return;
+    }
+    const min = walkMinutes(first.d);
+    const score = step(min, [[3, 10], [5, 9], [8, 7], [12, 5]], 3);
+    const name = nameOf(first.p.tags);
+    details[key] = {
+      score,
+      source: "messung",
+      reasons: [`${name ? `${name}: ` : `Nächster ${what}: `}ca. ${min} Min. zu Fuß`, ...(hits.length > 1 ? [`${hits.length} ${many} in ${radius} m`] : [])],
+    };
+  };
+  extra("supermarkt", isSupermarket, 600, "Supermarkt", "Supermärkte und Läden");
+  extra("waschsalon", isLaundry, 600, "Waschsalon", "Waschsalons");
+  extra("cafe", isCafe, 500, "Café", "Cafés und Coworking-Spaces");
+  extra("strand", isBeach, 800, "Strand", "Strände");
+  extra("fitness", isGym, 800, "Fitnessstudio", "Fitnessstudios");
+  extra("sehenswert", isSight, 800, "Ort zum Anschauen", "Sehenswürdigkeiten");
 
   // Datenlage: Wie viel weiß OpenStreetMap über diese Gegend?
   const known = near(500, (t) => Boolean(t.amenity || t.shop || t.tourism || t.railway || t.public_transport)).length;

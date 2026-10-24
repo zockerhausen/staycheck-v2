@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import { cleanExtras, decodeExtras, type Extras } from "@/lib/profile";
 import { createClient } from "@/lib/supabase/server";
 
 export type Criterion = {
@@ -34,6 +35,7 @@ export type Weights = Record<string, number>;
 /** Cookie-Namen für Reise-Profil und zuletzt gewählte Stadt (funktioniert auch ohne Konto) */
 export const PROFILE_COOKIE = "sc_profil";
 export const CITY_COOKIE = "sc_stadt";
+export const EXTRAS_COOKIE = "sc_extra";
 
 export async function getCriteria(): Promise<Criterion[]> {
   const supabase = await createClient();
@@ -212,4 +214,17 @@ export async function getLastCity(): Promise<string> {
 export async function getChosenCity(): Promise<string | null> {
   const v = (await cookies()).get(CITY_COOKIE)?.value;
   return v && /^[a-z-]{2,40}$/.test(v) ? v : null;
+}
+
+/** Extras des Reise-Profils (mit wem, was in Laufweite, Muss): zuerst Konto, sonst Cookie. */
+export async function getExtras(): Promise<Extras> {
+  const user = await getUser();
+  if (user) {
+    const supabase = await createClient();
+    const { data } = await supabase.from("profiles").select("travel_with, extras, must_have").eq("id", user.id).maybeSingle();
+    if (data && (data.travel_with || (data.extras as string[] | null)?.length || data.must_have)) {
+      return cleanExtras({ wer: data.travel_with, items: data.extras, must: data.must_have });
+    }
+  }
+  return decodeExtras((await cookies()).get(EXTRAS_COOKIE)?.value);
 }

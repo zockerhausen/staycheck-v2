@@ -102,6 +102,38 @@ export const ICONS = {
   chevron: [{ d: "M9.2 5l7 7-7 7", s: true }],
   down: [{ d: "M6 9.5l6 6 6-6", s: true }],
   sliders: [{ d: "M4 7h16M7 12h10M10 17h4", s: true }],
+  cart: [
+    { d: "M7.5 15h10l2-8H6.2", f: true },
+    { d: "M3 4h2.5l2 11h10l2-8H6.2M9 19.2h.01M16 19.2h.01", s: true },
+  ],
+  wash: [
+    { d: "M12 8.5a4.5 4.5 0 1 1 0 9a4.5 4.5 0 1 1 0-9z", f: true, s: true },
+    { d: "M6.5 3h11A2.5 2.5 0 0 1 20 5.5v13a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 18.5v-13A2.5 2.5 0 0 1 6.5 3zM7.5 6.5h.01M10.5 6.5h3", s: true },
+  ],
+  cup: [
+    { d: "M4.5 9h11v5a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5z", f: true, s: true },
+    { d: "M15.5 10.5h1.5a2.5 2.5 0 0 1 0 5h-1.8M8 3.5c-.6.8-.6 1.7 0 2.5M11.5 3.5c-.6.8-.6 1.7 0 2.5", s: true },
+  ],
+  wave: [
+    { d: "M16 4a3 3 0 1 1 0 6a3 3 0 1 1 0-6z", f: true, s: true },
+    { d: "M2.5 15c2 0 2-2 4-2s2 2 4 2 2-2 4-2 2 2 4 2 2-2 3-2M2.5 19.5c2 0 2-2 4-2s2 2 4 2 2-2 4-2 2 2 4 2 2-2 3-2", s: true },
+  ],
+  gym: [
+    { d: "M5 8.5h2v7H5zM17 8.5h2v7h-2z", f: true },
+    { d: "M6 8v8M18 8v8M3.5 10v4M20.5 10v4M6 12h12", s: true },
+  ],
+  eye: [
+    { d: "M12 9a3 3 0 1 1 0 6a3 3 0 1 1 0-6z", f: true, s: true },
+    { d: "M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z", s: true },
+  ],
+  users: [
+    { d: "M9 5.5a3.5 3.5 0 1 1 0 7a3.5 3.5 0 1 1 0-7z", f: true, s: true },
+    { d: "M3 20c.8-3 3.2-4.6 6-4.6s5.2 1.6 6 4.6M16.5 7.2a2.8 2.8 0 1 1 0 5.6M17.5 15.4c1.8.3 3.2 1.6 3.8 4", s: true },
+  ],
+  briefcase: [
+    { d: "M4.5 7.5h15a1.5 1.5 0 0 1 1.5 1.5v9a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 18V9a1.5 1.5 0 0 1 1.5-1.5z", f: true, s: true },
+    { d: "M9 7.5V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5v2M3 12.5h18", s: true },
+  ],
   link: [
     { d: "M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1", s: true },
   ],
@@ -118,4 +150,11 @@ export const CRITERION_ICON: Record<string, IconName> = {
   transit: "transit",
   food: "food",
   nature: "nature",
+  // Extras
+  supermarkt: "cart",
+  waschsalon: "wash",
+  cafe: "cup",
+  strand: "wave",
+  fitness: "gym",
+  sehenswert: "eye",
 };

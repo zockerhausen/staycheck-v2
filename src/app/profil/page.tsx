@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getCriteria, getProfile, getUser } from "@/lib/data";
+import { getCriteria, getExtras, getProfile, getUser } from "@/lib/data";
 import ProfileEditor from "@/components/ProfileEditor";
 import Icon from "@/components/Icon";
 
@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 
 export default async function ProfilPage() {
   const criteria = await getCriteria();
-  const [{ weights }, user] = await Promise.all([getProfile(criteria), getUser()]);
+  const [{ weights }, user, extras] = await Promise.all([getProfile(criteria), getUser(), getExtras()]);
 
   return (
     <div className="pt-2">
@@ -21,13 +21,13 @@ export default async function ProfilPage() {
       </p>
 
       {weights ? (
-        <ProfileEditor criteria={criteria} initial={weights} />
+        <ProfileEditor criteria={criteria} initial={weights} initialExtras={extras} />
       ) : (
         <div className="mt-8 rounded-3xl border border-dashed border-raised p-8 text-center">
           <Icon name="star" size={48} className="mx-auto text-sun" />
           <p className="mt-2 font-semibold">Noch kein Profil</p>
           <p className="mt-1 text-sm text-muted">Mach einmal das Quiz, dann kannst du es hier anpassen.</p>
-          <Link href="/reise" className="btn-chunky mt-5 w-full">
+          <Link href="/quiz" className="btn-chunky mt-5 w-full">
             Quiz starten
           </Link>
         </div>

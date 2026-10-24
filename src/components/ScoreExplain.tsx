@@ -3,6 +3,7 @@ import Icon from "@/components/Icon";
 import { CRITERION_ICON } from "@/lib/icons";
 import type { Criterion } from "@/lib/data";
 import { matchBreakdown, type Coverage, type Detail, type Source } from "@/lib/score";
+import { EXTRA_LABEL, MUST_CAP } from "@/lib/profile";
 
 const SOURCE: Record<Source, string> = {
   messung: "gemessen",
@@ -30,6 +31,8 @@ export default function ScoreExplain({
   match,
   coverage,
   personal,
+  must = null,
+  capped = null,
 }: {
   criteria: Criterion[];
   details: Record<string, Detail>;
@@ -37,10 +40,12 @@ export default function ScoreExplain({
   match: number;
   coverage: Coverage;
   personal: boolean;
+  must?: string | null;
+  capped?: number | null; // ungedeckelter Wert, wenn das Muss fehlt
 }) {
   const scores = Object.fromEntries(Object.entries(details).map(([k, d]) => [k, d.score]));
   const { rows, ignored } = matchBreakdown(scores, weights);
-  const label = (k: string) => criteria.find((c) => c.key === k)?.label ?? k;
+  const label = (k: string) => criteria.find((c) => c.key === k)?.label ?? EXTRA_LABEL[k] ?? k;
   const order = rows.map((r) => r.key).filter((k) => details[k]);
 
   return (
@@ -72,11 +77,16 @@ export default function ScoreExplain({
                   <span className="bar-grow block h-full rounded-full bg-sun-soft/70" style={{ width: `${r.share}%` }} />
                 </span>
                 <span className="w-24 text-right text-xs text-muted">
-                  zählt {r.share} % · <b className="text-ink">{r.score}</b>/10
+                  {r.key === must ? "Muss · " : ""}zählt {r.share} % · <b className="text-ink">{r.score}</b>/10
                 </span>
               </li>
             ))}
         </ul>
+        {capped !== null && (
+          <p className="mt-3 text-xs font-semibold text-[#ffb547]">
+            Gerechnet wären es {capped}. Weil dein Muss fehlt, zählen höchstens {MUST_CAP}.
+          </p>
+        )}
         {ignored.length > 0 && (
           <p className="mt-3 text-xs text-muted">Nicht eingerechnet, weil uns Daten fehlen: {ignored.map(label).join(", ")}.</p>
         )}

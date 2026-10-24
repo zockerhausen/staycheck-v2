@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { getCities, getCriteria, getDistricts, resolveWeights } from "@/lib/data";
-import { analyzeLocation, DEFAULT_WEIGHTS, locationMatch, verdict, type Place } from "@/lib/geo";
+import { getCities, getCriteria, getDistricts, getExtras, resolveWeights } from "@/lib/data";
+import { NO_EXTRAS, personalMatch } from "@/lib/profile";
+import { analyzeLocation, DEFAULT_WEIGHTS, verdict, type Place } from "@/lib/geo";
 import { HUBS, cityForPoint, estimateArrival } from "@/lib/arrival";
 import { CRITERION_ICON } from "@/lib/icons";
 import Icon from "@/components/Icon";
@@ -52,13 +53,14 @@ export default async function HotelDuellPage({
   const [criteria, districts, cities] = await Promise.all([getCriteria(), getDistricts(), getCities()]);
   const { weights: resolved, source } = await resolveWeights(params, criteria);
   const weights = resolved ?? DEFAULT_WEIGHTS;
+  const extras = resolved ? await getExtras() : NO_EXTRAS;
 
   // Parallel abfragen (max. 3), damit niemand lange warten muss
   type Result = { place: Place; analysis: Awaited<ReturnType<typeof analyzeLocation>> | null; match: number | null };
   const results: Result[] = await Promise.all(
     places.map(async (p) => {
       const analysis = await analyzeLocation(p.lat, p.lon, districts).catch(() => null);
-      return { place: p, analysis, match: analysis ? locationMatch(analysis.scores, weights) : null };
+      return { place: p, analysis, match: analysis ? personalMatch(analysis.scores, weights, extras).match : null };
     }),
   );
   const valid = results.filter((r) => r.analysis && r.match !== null);
