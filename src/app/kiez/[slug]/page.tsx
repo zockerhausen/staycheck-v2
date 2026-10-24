@@ -53,6 +53,7 @@ export default async function KiezPage({
   const district =
     districts.find((d) => d.slug === slug && (!wantedCity || d.city === wantedCity)) ?? districts.find((d) => d.slug === slug);
   if (!district || district.lat === null || district.lng === null) notFound();
+  const cityPool = districts.filter((d) => d.city === district.city).map((d) => d.scores);
   const cityName = cities.find((c) => c.slug === district.city)?.name ?? "";
 
   const { weights: resolved, source } = await resolveWeights(sp, criteria);
@@ -94,12 +95,12 @@ export default async function KiezPage({
           {user && <FavoriteButton districtId={district.id} isFavorite={favorites.has(district.id)} />}
         </div>
         <p className="mt-16 text-xs font-bold uppercase tracking-[0.08em] text-[#ffb08f]">
-          {cityName} · {resolved ? `${match} % Match` : characterOf(district.scores)}
+          {cityName} · {resolved ? `${match} % Match` : characterOf(district.scores, cityPool)}
         </p>
         <h1 className="mega mt-1 text-[clamp(2.4rem,12vw,3.3rem)] [overflow-wrap:anywhere]">{district.name.split(" (")[0]}</h1>
         <p className="mt-2 text-[15px] leading-relaxed text-[#c9c0bb]">{district.short_description}</p>
         <div className="mt-4 flex flex-wrap gap-2">
-          {traitsOf(district.scores).map((t) => (
+          {traitsOf(district.scores, cityPool).map((t) => (
             <span key={t.key} className="flex items-center gap-1.5 rounded-full bg-black/30 px-3 py-1.5 text-[13px] font-semibold">
               <Icon name={t.icon} size={14} /> {t.label}
             </span>

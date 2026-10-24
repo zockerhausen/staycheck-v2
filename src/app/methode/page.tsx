@@ -98,6 +98,18 @@ export default function MethodePage() {
       </section>
 
       <section className="card mt-7 p-5">
+        <h2 className="font-display text-[19px] font-extrabold">Viertel und ihr Charakter</h2>
+        <p className="mt-2 text-sm leading-relaxed">
+          Eigenschaften wie „Feiern“ oder „Ruhig“ bekommt ein Viertel, wenn sein Wert hoch ist (z. B. Ruhe ab 7, Nachtleben ab 8) und es damit zur
+          besseren Hälfte der Stadt gehört. Was in einer Stadt überall gilt, ist dort keine Besonderheit.
+        </p>
+        <p className="mt-2 text-sm leading-relaxed text-muted">
+          Geprüfte Städte (Berlin, Bangkok) haben von uns bewertete Viertel. In allen anderen Städten finden wir die Stadtteile automatisch in
+          OpenStreetMap und zählen rund um ihre Mitte Bahnhöfe, Bars, Restaurants, Parks und Hostels. Das ist gröber, Sicherheit fehlt dort.
+        </p>
+      </section>
+
+      <section className="card mt-7 p-5">
         <h2 className="font-display text-[19px] font-extrabold">Was wir nicht wissen</h2>
         <ul className="mt-3 space-y-2 text-sm leading-relaxed">
           <li>• Lärm im Gebäude: dünne Fenster, Zimmer zur Straße oder zum Hof.</li>

@@ -24,22 +24,33 @@ const TYPE: Record<TraitKey, string> = {
   zentral: "Mittendrin",
 };
 
-/** Eigenschaften eines Viertels, stärkste zuerst (höchster Wert über der Schwelle). */
-export function traitsOf(scores: Record<string, number | null>): Trait[] {
-  return TRAITS.filter((t) => (scores[t.criterion] ?? 0) >= t.min).sort(
-    (a, b) => (scores[b.criterion] ?? 0) - b.min - ((scores[a.criterion] ?? 0) - a.min),
-  );
+type Scores = Record<string, number | null>;
+
+/**
+ * Eigenschaften eines Viertels, stärkste zuerst.
+ * Mit pool (alle Viertel der Stadt) zählt eine Eigenschaft nur, wenn höchstens die Hälfte der Viertel
+ * mindestens genauso gut ist. Was in einer Stadt überall gilt (z. B. „Gutes Essen“ in Barcelona),
+ * ist dort keine Besonderheit – so unterscheiden sich die Viertel auch in sehr dichten Städten.
+ */
+export function traitsOf(scores: Scores, pool?: Scores[]): Trait[] {
+  return TRAITS.filter((t) => {
+    const v = scores[t.criterion] ?? 0;
+    if (v < t.min) return false;
+    if (!pool || pool.length < 4) return true;
+    const asGood = pool.filter((p) => (p[t.criterion] ?? 0) >= v).length;
+    return asGood / pool.length <= 0.5;
+  }).sort((a, b) => (scores[b.criterion] ?? 0) - b.min - ((scores[a.criterion] ?? 0) - a.min));
 }
 
 /** Kurzer Typ für die Karte, z. B. „Zum Ausgehen“. */
-export function characterOf(scores: Record<string, number | null>): string {
-  const [first] = traitsOf(scores);
+export function characterOf(scores: Scores, pool?: Scores[]): string {
+  const [first] = traitsOf(scores, pool);
   return first ? TYPE[first.key] : "Allrounder";
 }
 
 /** Dezenter Farbverlauf je Typ (dunkel, damit es ruhig bleibt). */
-export function characterTint(scores: Record<string, number | null>): string {
-  const key = traitsOf(scores)[0]?.key;
+export function characterTint(scores: Scores, pool?: Scores[]): string {
+  const key = traitsOf(scores, pool)[0]?.key;
   const tints: Record<TraitKey, string> = {
     feiern: "#4a1f10",
     essen: "#43260f",

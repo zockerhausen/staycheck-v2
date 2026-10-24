@@ -29,10 +29,12 @@ export default function DistrictExplorer({
   query?: string;
 }) {
   const [filter, setFilter] = useState<TraitKey | null>(null);
-  const available = TRAITS.filter((t) => districts.some((d) => traitsOf(d.scores).some((x) => x.key === t.key)));
+  const pool = districts.map((d) => d.scores); // Eigenschaften im Vergleich zur ganzen Stadt
+  const tr = (d: ExplorerDistrict) => traitsOf(d.scores, pool);
+  const available = TRAITS.filter((t) => districts.some((d) => tr(d).some((x) => x.key === t.key)));
   const shown = filter
     ? districts
-        .filter((d) => traitsOf(d.scores).some((t) => t.key === filter))
+        .filter((d) => tr(d).some((t) => t.key === filter))
         .sort((a, b) => {
           const c = TRAITS.find((t) => t.key === filter)!.criterion;
           return (b.scores[c] ?? 0) - (a.scores[c] ?? 0);
@@ -76,13 +78,13 @@ export default function DistrictExplorer({
               key={d.slug}
               href={href(d)}
               className="press flex h-[200px] w-[72%] max-w-[260px] shrink-0 snap-start flex-col justify-end rounded-[22px] p-4"
-              style={{ background: `linear-gradient(160deg, ${characterTint(d.scores)} 0%, #161618 85%)` }}
+              style={{ background: `linear-gradient(160deg, ${characterTint(d.scores, pool)} 0%, #161618 85%)` }}
             >
-              <span className="text-xs font-bold uppercase tracking-[0.06em] text-[#ffb08f]">{characterOf(d.scores)}</span>
+              <span className="text-xs font-bold uppercase tracking-[0.06em] text-[#ffb08f]">{characterOf(d.scores, pool)}</span>
               <b className="mt-1 font-display text-[22px] font-extrabold leading-tight tracking-tight">{d.name.split(" (")[0]}</b>
               <span className="mt-1 line-clamp-2 text-[13px] text-muted">{d.short}</span>
               <span className="mt-3 flex flex-wrap gap-1.5">
-                {traitsOf(d.scores)
+                {tr(d)
                   .slice(0, 3)
                   .map((t) => (
                     <span key={t.key} className="flex items-center gap-1 rounded-full bg-black/30 px-2 py-1 text-[11px] font-semibold">
@@ -103,14 +105,14 @@ export default function DistrictExplorer({
               <Link href={href(d)} className="flex items-center gap-3 py-3">
                 <span
                   className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl"
-                  style={{ background: characterTint(d.scores) }}
+                  style={{ background: characterTint(d.scores, pool) }}
                 >
-                  <Icon name={traitsOf(d.scores)[0]?.icon ?? "discover"} size={22} />
+                  <Icon name={tr(d)[0]?.icon ?? "discover"} size={22} />
                 </span>
                 <span className="min-w-0 flex-1">
                   <span className="block truncate text-[15px] font-bold">{d.name}</span>
                   <span className="block truncate text-[13px] text-muted">
-                    {traitsOf(d.scores)
+                    {tr(d)
                       .slice(0, 3)
                       .map((t) => t.label)
                       .join(" · ") || "Von allem etwas"}

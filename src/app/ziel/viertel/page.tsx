@@ -64,26 +64,27 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
   const checkUrl = (h: HotelResult) =>
     `/check/ergebnis?${new URLSearchParams({ lat: h.lat.toFixed(6), lon: h.lon.toFixed(6), name: h.name, sub: `${h.subtitle}, ${ziel.ort}`, kind: h.kind })}`;
   const scores = district?.scores ?? {};
+  const pool = districts.map((d) => d.scores);
   const match = district && profile ? locationMatch(district.scores, profile) : null;
 
   return (
     <div className="fade-up space-y-7">
       <section
         className="-mx-4 -mt-[max(1.25rem,env(safe-area-inset-top))] px-4 pb-2 pt-[max(1.25rem,env(safe-area-inset-top))]"
-        style={{ background: `linear-gradient(180deg, ${characterTint(scores)} 0%, #1a120e 55%, #0c0c0e 100%)` }}
+        style={{ background: `linear-gradient(180deg, ${characterTint(scores, pool)} 0%, #1a120e 55%, #0c0c0e 100%)` }}
       >
         <Link href={back} aria-label="Zurück" className="press flex h-11 w-11 items-center justify-center rounded-full bg-black/35 backdrop-blur">
           <Icon name="back" size={18} />
         </Link>
         <p className="mt-16 text-xs font-bold uppercase tracking-[0.08em] text-[#ffb08f]">
-          {ziel.ort} · {match !== null ? `${match} % Match` : district ? characterOf(scores) : "Viertel"}
+          {ziel.ort} · {match !== null ? `${match} % Match` : district ? characterOf(scores, pool) : "Viertel"}
         </p>
         <h1 className="mega mt-1 text-[clamp(2.2rem,11vw,3.1rem)] [overflow-wrap:anywhere]">{name}</h1>
         {district && (
           <p className="mt-2 text-[15px] text-[#c9c0bb]">{district.distKm < 1.5 ? "Im Zentrum" : `${String(district.distKm).replace(".", ",")} km vom Zentrum`}</p>
         )}
         <div className="mt-4 flex flex-wrap gap-2">
-          {traitsOf(scores).map((t) => (
+          {traitsOf(scores, pool).map((t) => (
             <span key={t.key} className="flex items-center gap-1.5 rounded-full bg-black/30 px-3 py-1.5 text-[13px] font-semibold">
               <Icon name={t.icon} size={14} /> {t.label}
             </span>
