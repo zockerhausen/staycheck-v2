@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import Icon from "@/components/Icon";
+import LegalLinks from "@/components/LegalLinks";
 import type { IconName } from "@/lib/icons";
 
 export const metadata: Metadata = { title: "So rechnen wir – StayCheck" };
@@ -138,6 +139,7 @@ export default function MethodePage() {
       <p className="mt-6 text-xs leading-relaxed text-muted">
         Kartendaten © OpenStreetMap-Mitwirkende (ODbL). Suche über Photon (Komoot), Umgebung über die Overpass API.
       </p>
+      <LegalLinks className="mt-10" />
     </div>
   );
 }

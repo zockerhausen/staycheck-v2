@@ -52,6 +52,24 @@ export async function signout() {
   redirect("/");
 }
 
+/** Konto endgültig löschen: Datenbank löscht alle Nutzerdaten mit, danach Cookies weg. */
+export async function deleteAccount(_prev: FormState, formData: FormData): Promise<FormState> {
+  if (String(formData.get("confirm") ?? "").trim().toUpperCase() !== "LÖSCHEN") {
+    return { error: "Tippe LÖSCHEN ein, um zu bestätigen." };
+  }
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/login?next=/konto");
+  const { error } = await supabase.rpc("delete_my_account");
+  if (error) return { error: "Das hat nicht geklappt. Versuche es später noch einmal." };
+  await supabase.auth.signOut().catch(() => undefined);
+  const jar = await cookies();
+  for (const c of [PROFILE_COOKIE, EXTRAS_COOKIE, CITY_COOKIE]) jar.delete(c);
+  redirect("/?geloescht=1");
+}
+
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const isCoord = (lat: unknown, lon: unknown) =>
   typeof lat === "number" && typeof lon === "number" && Number.isFinite(lat) && Number.isFinite(lon) && Math.abs(lat) <= 90 && Math.abs(lon) <= 180;

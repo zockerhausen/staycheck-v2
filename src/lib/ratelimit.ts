@@ -9,6 +9,8 @@ export function rateLimit(request: Request, key: string, limit: number, windowMs
   const recent = (hits.get(id) ?? []).filter((t) => now - t < windowMs);
   recent.push(now);
   hits.set(id, recent);
+  // Alte Einträge wegräumen: IP-Adressen bleiben nur so lange im Speicher, wie das Zeitfenster läuft
+  if (hits.size > 500) for (const [k, v] of hits) if (now - v[v.length - 1] >= windowMs) hits.delete(k);
   if (hits.size > 5000) hits.clear(); // Speicher begrenzen
   return recent.length <= limit;
 }

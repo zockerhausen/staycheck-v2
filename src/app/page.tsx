@@ -6,6 +6,7 @@ import Icon from "@/components/Icon";
 import RecentChecks from "@/components/RecentChecks";
 import DistrictExplorer from "@/components/DistrictExplorer";
 import DestinationSearch from "@/components/DestinationSearch";
+import LegalLinks from "@/components/LegalLinks";
 
 export const dynamic = "force-dynamic";
 
@@ -55,7 +56,14 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
           <DestinationSearch verified={ready.map((c) => ({ slug: c.slug, name: c.name, country: c.country }))} />
         </div>
 
+        {params.geloescht === "1" && (
+          <p className="mt-5 rounded-2xl bg-tan p-3.5 text-sm" role="status">
+            Dein Konto und alle Daten dazu sind gelöscht.
+          </p>
+        )}
+
         <RecentChecks />
+        <LegalLinks className="mt-12" />
       </div>
     );
   }
@@ -137,6 +145,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
           </Link>
         </section>
       )}
+      <LegalLinks className="mt-12" />
     </div>
   );
 }

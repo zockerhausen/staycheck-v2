@@ -2,6 +2,8 @@ import { redirect } from "next/navigation";
 import { getUser } from "@/lib/data";
 import AuthForm from "@/components/AuthForm";
 import Icon from "@/components/Icon";
+import Link from "next/link";
+import LegalLinks from "@/components/LegalLinks";
 
 export const dynamic = "force-dynamic";
 
@@ -27,6 +29,14 @@ export default async function LoginPage({
         </p>
       )}
       <AuthForm next={next} defaultMode={params.next ? "signup" : "login"} />
+      <p className="mt-5 text-center text-xs leading-relaxed text-muted">
+        Mit dem Konto speichern wir deine E-Mail und was du anlegst. Mehr in der{" "}
+        <Link href="/datenschutz" className="underline">
+          Datenschutzerklärung
+        </Link>
+        .
+      </p>
+      <LegalLinks className="mt-10" />
     </div>
   );
 }

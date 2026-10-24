@@ -3,6 +3,8 @@ import { redirect } from "next/navigation";
 import { getUser } from "@/lib/data";
 import { signout } from "@/app/actions";
 import Icon from "@/components/Icon";
+import DeleteAccount from "@/components/DeleteAccount";
+import LegalLinks from "@/components/LegalLinks";
 
 export const dynamic = "force-dynamic";
 
@@ -28,7 +30,9 @@ export default async function KontoPage() {
         <form action={signout}>
           <button className="w-full py-3 text-sm font-semibold text-muted">Abmelden</button>
         </form>
+        <DeleteAccount />
       </div>
+      <LegalLinks className="mt-12" />
     </div>
   );
 }
