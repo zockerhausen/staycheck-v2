@@ -25,7 +25,7 @@ export default function SaveButton({
 
   if (saved) {
     return (
-      <p className="flex items-center justify-center gap-2 rounded-2xl bg-peach py-3 font-semibold text-peach-ink"><Icon name="heart" size={20} fill="#f2662f" /> In deinem Konto gespeichert</p>
+      <p className="flex items-center justify-center gap-2 rounded-full bg-peach py-4 font-bold text-peach-ink"><Icon name="heart" size={20} fill="#f2662f" /> In deinem Konto gespeichert</p>
     );
   }
 
@@ -33,7 +33,7 @@ export default function SaveButton({
     <button
       type="button"
       disabled={pending}
-      className="btn-chunky btn-chunky-light w-full"
+      className="press flex w-full items-center justify-center gap-2 rounded-full bg-tan py-4 font-bold"
       onClick={() => {
         if (!loggedIn) {
           router.push(`/login?next=${encodeURIComponent(returnTo)}`);
@@ -46,7 +46,7 @@ export default function SaveButton({
         });
       }}
     >
-      <Icon name="heart" size={22} />
+      <Icon name="heart" size={18} />
       {pending ? "Speichere…" : loggedIn ? "Ergebnis speichern" : "Ergebnis speichern (kostenlos)"}
     </button>
   );

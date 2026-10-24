@@ -44,9 +44,14 @@ export default function ShareButton({
   }
 
   return (
-    <button type="button" onClick={share} disabled={busy} className={`btn-chunky w-full ${light ? "btn-chunky-light" : ""}`}>
-      <Icon name="share" size={22} fill={light ? undefined : "#ffffff55"} />
-      {busy ? "Bild wird erstellt…" : "Ergebnis teilen"}
+    <button
+      type="button"
+      onClick={share}
+      disabled={busy}
+      className={light ? "press flex w-full items-center justify-center gap-2 rounded-full bg-tan py-4 font-bold" : "btn-chunky w-full"}
+    >
+      <Icon name="share" size={light ? 18 : 22} fill={light ? undefined : "#ffffff55"} />
+      {busy ? "Bild …" : light ? "Teilen" : "Ergebnis teilen"}
     </button>
   );
 }

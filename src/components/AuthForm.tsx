@@ -4,7 +4,7 @@ import { useActionState, useState } from "react";
 import { login, signup } from "@/app/actions";
 
 const inputClass =
-  "mt-1 w-full rounded-2xl border-2 border-line bg-paper px-4 py-3.5 text-lg outline-none focus:border-sun";
+  "mt-1 w-full rounded-2xl bg-paper px-4 py-3.5 text-lg outline-none focus:border-sun";
 
 export default function AuthForm({ next, defaultMode = "login" }: { next: string; defaultMode?: "login" | "signup" }) {
   const [mode, setMode] = useState<"login" | "signup">(defaultMode);

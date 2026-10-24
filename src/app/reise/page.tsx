@@ -51,9 +51,9 @@ export default async function ReisePage() {
       </p>
 
       {weights && (
-        <section className="rounded-3xl border-2 border-b-[5px] border-line bg-paper p-5">
+        <section className="card p-5">
           <div className="flex items-center justify-between gap-2">
-            <h2 className="font-display text-xl font-bold">Dein Reise-Profil</h2>
+            <h2 className="font-display text-[19px] font-extrabold">Dein Reise-Profil</h2>
             <Link href="/profil" className="text-sm font-bold text-sun">
               Anpassen
             </Link>

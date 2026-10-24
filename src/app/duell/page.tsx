@@ -8,7 +8,7 @@ import Icon from "@/components/Icon";
 export const dynamic = "force-dynamic";
 
 const selectClass =
-  "w-full appearance-none rounded-2xl border-2 border-b-[5px] border-line bg-paper px-3 py-3 text-center font-display text-base font-bold";
+  "w-full appearance-none rounded-[18px] bg-paper px-3 py-3 text-center font-display text-base font-bold";
 
 export default async function DuellPage({
   searchParams,
@@ -49,7 +49,7 @@ export default async function DuellPage({
           <Link
             key={c.slug}
             href={`/duell?stadt=${c.slug}`}
-            className={`rounded-full border-2 px-4 py-1.5 text-sm font-bold ${c.slug === city?.slug ? "border-sun bg-sun text-white" : "border-line bg-paper"}`}
+            className={`press rounded-full px-4 py-2.5 text-sm font-semibold ${c.slug === city?.slug ? "bg-ink text-sand" : "bg-tan"}`}
           >
             {c.name}
           </Link>
@@ -85,7 +85,7 @@ export default async function DuellPage({
         </button>
       </form>
 
-      <section className="mt-6 rounded-3xl border-2 border-b-[5px] border-line bg-paper p-5">
+      <section className="mt-6 card p-5">
         <div className="pop-in text-center">
           {winner ? (
             <>
@@ -93,7 +93,7 @@ export default async function DuellPage({
               <p className="font-display text-3xl font-extrabold">{winner.name}</p>
             </>
           ) : (
-            <p className="font-display text-2xl font-extrabold">Unentschieden!</p>
+            <p className="font-display text-[22px] font-extrabold">Unentschieden!</p>
           )}
           <div className="mt-3 flex items-center justify-center gap-6 font-display text-xl font-extrabold">
             <span className={winner?.slug === a.slug ? "text-sun" : "text-muted"}>

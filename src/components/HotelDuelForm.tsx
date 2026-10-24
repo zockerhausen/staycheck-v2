@@ -63,12 +63,12 @@ export default function HotelDuelForm({ initial = [] }: { initial?: Place[] }) {
       {slots.map((s, i) => {
         const chosen = s.candidates[s.chosen];
         return (
-          <div key={i} className="rounded-3xl border-2 border-b-[5px] border-line bg-paper p-4">
+          <div key={i} className="card p-4">
             <p className="mb-2 flex items-center gap-2 text-sm font-bold text-muted">
               <span className="flex h-6 w-6 items-center justify-center rounded-full bg-ink text-xs text-sand">{i + 1}</span>
               Unterkunft {i + 1}
             </p>
-            <div className="flex items-center gap-2 rounded-2xl border-2 border-line bg-tan px-3 py-2.5 focus-within:border-sun">
+            <div className="flex items-center gap-2 rounded-2xl border border-line bg-tan px-3.5 py-3 focus-within:border-sun">
               <Icon name="hotel" size={22} className="text-sun" />
               <input
                 value={s.input}
@@ -83,7 +83,7 @@ export default function HotelDuelForm({ initial = [] }: { initial?: Place[] }) {
                 aria-label={`Unterkunft ${i + 1}`}
                 className="min-w-0 flex-1 bg-transparent outline-none placeholder:text-muted/70"
               />
-              {s.loading && <span className="h-4 w-4 animate-spin rounded-full border-2 border-sun border-t-transparent" />}
+              {s.loading && <span className="h-4 w-4 animate-spin rounded-full border-[3px] border-raised border-t-sun" />}
             </div>
 
             {s.error && <p className="mt-2 text-sm font-semibold text-peach-ink">{s.error}</p>}
@@ -99,7 +99,7 @@ export default function HotelDuelForm({ initial = [] }: { initial?: Place[] }) {
                     <select
                       value={s.chosen}
                       onChange={(e) => update(i, { chosen: Number(e.target.value) })}
-                      className="mt-1 w-full rounded-xl border-2 border-line bg-paper px-2 py-2"
+                      className="mt-1 w-full rounded-xl bg-paper px-2 py-2"
                     >
                       {s.candidates.map((c, j) => (
                         <option key={j} value={j}>
@@ -119,7 +119,7 @@ export default function HotelDuelForm({ initial = [] }: { initial?: Place[] }) {
         <button
           type="button"
           onClick={() => setSlots((s) => [...s, empty()])}
-          className="flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-line py-3 text-sm font-bold text-muted"
+          className="flex w-full items-center justify-center gap-2 rounded-2xl border border-dashed border-raised py-3 text-sm font-bold text-muted"
         >
           + Dritte Unterkunft
         </button>

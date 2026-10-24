@@ -27,11 +27,11 @@ export default function FavoriteButton({
       }
       aria-pressed={fav}
       aria-label={fav ? "Aus Favoriten entfernen" : "Zu Favoriten hinzufügen"}
-      className={`flex items-center gap-1.5 rounded-full border-2 px-3.5 py-1.5 text-sm font-bold transition active:scale-95 ${
-        fav ? "border-sun bg-sun text-white" : "border-line bg-paper text-ink"
+      className={`flex items-center gap-1.5 rounded-full px-3.5 py-2 text-sm font-bold transition active:scale-95 ${
+        fav ? "bg-sun text-white" : "bg-black/35 text-ink backdrop-blur"
       }`}
     >
-      <Icon name="heart" size={16} fill={fav ? "#ffffff" : undefined} />
+      <Icon name="heart" size={16} fill={fav ? "#ffffff" : "transparent"} />
       {fav ? "Gemerkt" : "Merken"}
     </button>
   );

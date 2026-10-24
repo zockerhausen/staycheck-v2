@@ -98,13 +98,13 @@ export default async function HotelDuellPage({
         </section>
       )}
 
-      <section className="rounded-3xl border-2 border-b-[5px] border-line bg-paper p-4">
+      <section className="card p-4">
         <div className={`grid ${cols} gap-2 text-center`}>
           {results.map((r, i) => (
             <div key={i} className={`rounded-2xl p-2 ${r === winner && !tie ? "bg-peach" : "bg-sand"}`}>
               <p className="text-xs font-bold text-muted">#{i + 1}</p>
               <p className="line-clamp-2 text-sm font-bold leading-tight [overflow-wrap:anywhere]">{r.place.name}</p>
-              <p className="mt-1 font-display text-2xl font-extrabold text-sun">{r.match ?? "–"}%</p>
+              <p className="mt-1 font-display text-[22px] font-extrabold text-sun">{r.match ?? "–"}%</p>
             </div>
           ))}
         </div>
@@ -146,7 +146,7 @@ export default async function HotelDuellPage({
         {results.map((r, i) => {
           const est = airport ? estimateArrival(airport, r.place.lat, r.place.lon) : null;
           return (
-            <article key={i} className="rounded-3xl border-2 border-line bg-paper p-4">
+            <article key={i} className="rounded-3xl bg-paper p-4">
               <div className="flex items-start gap-3">
                 <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-ink text-sm font-bold text-sand">
                   {i + 1}

@@ -23,7 +23,7 @@ export default async function ProfilPage() {
       {weights ? (
         <ProfileEditor criteria={criteria} initial={weights} />
       ) : (
-        <div className="mt-8 rounded-3xl border-2 border-dashed border-line p-8 text-center">
+        <div className="mt-8 rounded-3xl border border-dashed border-raised p-8 text-center">
           <Icon name="star" size={48} className="mx-auto text-sun" />
           <p className="mt-2 font-semibold">Noch kein Profil</p>
           <p className="mt-1 text-sm text-muted">Mach einmal das Quiz, dann kannst du es hier anpassen.</p>

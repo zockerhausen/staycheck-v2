@@ -22,28 +22,28 @@ export async function GET(request: Request) {
           height: "100%",
           display: "flex",
           flexDirection: "column",
-          background: "#fbf3e4",
-          color: "#2a1a10",
+          background: "radial-gradient(circle at 50% 30%, #6a2c12 0%, #0c0c0e 60%)",
+          color: "#f5f5f5",
           padding: "120px 90px",
           fontFamily: "sans-serif",
         }}
       >
-        <div style={{ display: "flex", fontSize: 56, fontWeight: 800, color: "#f2662f" }}>StayCheck</div>
-        <div style={{ display: "flex", marginTop: 260, fontSize: 52, color: "#8a3510" }}>Mein Kiez in {stadt}</div>
+        <div style={{ display: "flex", fontSize: 56, fontWeight: 800, color: "#ff8a5c" }}>StayCheck</div>
+        <div style={{ display: "flex", marginTop: 260, fontSize: 52, color: "#ffb08f" }}>Mein Viertel in {stadt}</div>
         <div style={{ display: "flex", fontSize: 150, fontWeight: 800, lineHeight: 1, marginTop: 20 }}>{kiez}</div>
         <div style={{ display: "flex", alignItems: "flex-end", marginTop: 40, color: "#f2662f", fontWeight: 800 }}>
           <span style={{ fontSize: 300, lineHeight: 1 }}>{match}</span>
           <span style={{ fontSize: 140, lineHeight: 1.4 }}>%</span>
         </div>
-        <div style={{ display: "flex", fontSize: 48, color: "#7a5f4c" }}>passt zu mir</div>
+        <div style={{ display: "flex", fontSize: 48, color: "#9a9aa0" }}>passt zu mir</div>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 24, marginTop: 70 }}>
           {tags.map((t) => (
             <div
               key={t}
               style={{
                 display: "flex",
-                background: "#ffe2cc",
-                color: "#8a3510",
+                background: "#2a1810",
+                color: "#ff8a5c",
                 fontSize: 46,
                 fontWeight: 700,
                 padding: "18px 40px",
@@ -64,11 +64,10 @@ export async function GET(request: Request) {
             fontSize: 52,
             fontWeight: 800,
             padding: "40px",
-            borderRadius: 48,
-            borderBottom: "14px solid #b8461b",
+            borderRadius: 999,
           }}
         >
-          Welcher Kiez passt zu dir?
+          Welches Viertel passt zu dir?
         </div>
       </div>
     ),

@@ -10,18 +10,18 @@ export default function ScoreBars({
   scores: Record<string, number>;
 }) {
   return (
-    <dl className="space-y-1.5">
+    <dl className="space-y-1">
       {criteria.map((c) => {
         const s = scores[c.key] ?? 0;
         return (
-          <div key={c.key} className="flex items-center gap-2 text-sm">
-            <dt className="flex w-32 shrink-0 items-center gap-1.5 truncate text-muted">
+          <div key={c.key} className="flex items-center gap-3 py-1 text-sm">
+            <dt className="flex w-32 shrink-0 items-center gap-2 truncate font-semibold">
               <Icon name={CRITERION_ICON[c.key]} size={18} /> {c.label}
             </dt>
-            <dd className="h-2.5 flex-1 overflow-hidden rounded-full bg-tan">
-              <div className="h-full rounded-full bg-sun" style={{ width: `${s * 10}%` }} />
+            <dd className="h-2 flex-1 overflow-hidden rounded-full bg-raised">
+              <div className={`bar-grow h-full rounded-full ${s <= 4 ? "bg-faint" : "bg-sun"}`} style={{ width: `${s * 10}%` }} />
             </dd>
-            <span className="w-5 text-right font-semibold tabular-nums">{s}</span>
+            <span className="w-6 text-right font-extrabold tabular-nums">{s}</span>
           </div>
         );
       })}

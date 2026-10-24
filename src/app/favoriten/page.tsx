@@ -41,7 +41,7 @@ export default async function FavoritenPage() {
       <p className="mt-1 text-muted">Deine Kieze und Unterkünfte an einem Ort.</p>
 
       {empty && (
-        <div className="mt-8 rounded-3xl border-2 border-dashed border-line p-8 text-center">
+        <div className="mt-8 rounded-3xl border border-dashed border-raised p-8 text-center">
           <Icon name="map" size={48} className="mx-auto text-sun" />
           <p className="mt-2 font-semibold">Noch nichts gemerkt</p>
           <p className="mt-1 text-sm text-muted">Tippe bei einem Kiez oder Hotel auf das Herz.</p>
@@ -53,12 +53,12 @@ export default async function FavoritenPage() {
 
       {places.length > 0 && (
         <section className="mt-6">
-          <h2 className="flex items-center gap-2 font-display text-xl font-bold">
+          <h2 className="flex items-center gap-2 font-display text-[19px] font-extrabold">
             <Icon name="hotel" size={24} className="text-sun" /> Unterkünfte
           </h2>
           <ul className="mt-3 space-y-2">
             {places.map((p) => (
-              <li key={p.id} className="flex items-center gap-3 rounded-2xl border-2 border-line bg-paper p-3">
+              <li key={p.id} className="flex items-center gap-3 rounded-2xl bg-paper p-3">
                 <Link
                   href={`/check/ergebnis?${new URLSearchParams({
                     lat: String(p.lat),
@@ -92,14 +92,14 @@ export default async function FavoritenPage() {
 
       {favs.length > 0 && (
         <section className="mt-8">
-          <h2 className="flex items-center gap-2 font-display text-xl font-bold">
+          <h2 className="flex items-center gap-2 font-display text-[19px] font-extrabold">
             <Icon name="discover" size={24} className="text-sun" /> Kieze
           </h2>
           <ul className="mt-3 space-y-4">
             {favs.map((d) => (
-              <li key={d.id} className="rounded-3xl border-2 border-b-[5px] border-line bg-paper p-5">
+              <li key={d.id} className="card p-5">
                 <div className="flex items-start justify-between gap-2">
-                  <h3 className="font-display text-2xl font-extrabold">{d.name}</h3>
+                  <h3 className="font-display text-[22px] font-extrabold">{d.name}</h3>
                   {d.match !== null && (
                     <span className="rounded-2xl bg-sun px-3 py-1 font-display text-lg font-extrabold text-white">{d.match}%</span>
                   )}

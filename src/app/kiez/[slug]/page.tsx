@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getCities, getCriteria, getDistricts, getSavedPlaces, getUser, resolveWeights, weightsToQuery } from "@/lib/data";
+import { getCities, getCriteria, getDistricts, getFavoriteIds, getSavedPlaces, getUser, resolveWeights, weightsToQuery } from "@/lib/data";
 import { DEFAULT_WEIGHTS, hotelsNear, verdict, type HotelResult } from "@/lib/geo";
-import { matchScore } from "@/lib/matching";
+import { matchScore, topReasons } from "@/lib/matching";
+import FavoriteButton from "@/components/FavoriteButton";
 import Icon from "@/components/Icon";
 import KiezMap from "@/components/KiezMap";
 import ScoreBars from "@/components/ScoreBars";
@@ -24,6 +25,7 @@ const FILTERS = [
   { key: "hostel", label: "Hostels" },
   { key: "hotel", label: "Hotels" },
   { key: "guest_house", label: "Pensionen" },
+  { key: "apartment", label: "Apartments" },
 ];
 
 export default async function KiezPage({
@@ -35,12 +37,13 @@ export default async function KiezPage({
 }) {
   const { slug } = await params;
   const sp = await searchParams;
-  const [criteria, districts, user, saved, cities] = await Promise.all([
+  const [criteria, districts, user, saved, cities, favorites] = await Promise.all([
     getCriteria(),
     getDistricts(),
     getUser(),
     getSavedPlaces(),
     getCities(),
+    getFavoriteIds(),
   ]);
   const wantedCity = typeof sp.stadt === "string" ? sp.stadt : undefined;
   const district =
@@ -68,43 +71,59 @@ export default async function KiezPage({
   const checkUrl = (h: HotelResult) =>
     `/check/ergebnis?${new URLSearchParams({ lat: h.lat.toFixed(6), lon: h.lon.toFixed(6), name: h.name, sub: h.subtitle, kind: h.kind })}${amp}`;
 
-  return (
-    <div className="space-y-7">
-      <Link href={`/ergebnis?stadt=${district.city}${amp}`} className="flex items-center gap-1 text-sm font-semibold text-muted">
-        <Icon name="back" size={18} /> Zurück
-      </Link>
+  const match = matchScore(district, weights);
+  const tileKeys = [...topReasons(district, weights, 3), "quiet"].filter((k, i, all) => all.indexOf(k) === i).slice(0, 4);
+  const label = (k: string) => criteria.find((c) => c.key === k)?.label ?? k;
 
-      <section>
-        <p className="text-sm font-semibold text-peach-ink">Viertel in {cityName}</p>
-        <h1 className="font-display text-[2.6rem] font-extrabold leading-[1.02] tracking-tight">{district.name}</h1>
-        <p className="mt-1 text-muted">{district.short_description}</p>
-        <div className="mt-4 rounded-3xl border-2 border-b-[5px] border-line bg-paper p-5">
-          <div className="mb-3 flex items-center justify-between">
-            <span className="font-display text-lg font-bold">Dein Kiez-Match</span>
-            <span className="rounded-2xl bg-sun px-3 py-1 font-display text-lg font-extrabold text-white">
-              {matchScore(district, weights)}%
-            </span>
-          </div>
-          <ScoreBars criteria={criteria} scores={district.scores} />
+  return (
+    <div className="fade-up space-y-7">
+      <section className="hero-glow -mx-4 -mt-[max(1.25rem,env(safe-area-inset-top))] px-4 pb-2 pt-[max(1.25rem,env(safe-area-inset-top))]">
+        <div className="flex items-center justify-between">
+          <Link
+            href={`/ergebnis?stadt=${district.city}${amp}`}
+            aria-label="Zurück"
+            className="press flex h-11 w-11 items-center justify-center rounded-full bg-black/35 backdrop-blur"
+          >
+            <Icon name="back" size={18} />
+          </Link>
+          {user && <FavoriteButton districtId={district.id} isFavorite={favorites.has(district.id)} />}
         </div>
+        <p className="mt-16 text-xs font-bold uppercase tracking-[0.08em] text-[#ffb08f]">
+          {cityName} · {match} % Match
+        </p>
+        <h1 className="mega mt-1 text-[clamp(2.4rem,12vw,3.3rem)] [overflow-wrap:anywhere]">{district.name.split(" (")[0]}</h1>
+        <p className="mt-2 text-[15px] leading-relaxed text-[#c9c0bb]">{district.short_description}</p>
       </section>
 
-      <section>
-        <h2 className="flex items-center gap-2 font-display text-2xl font-extrabold">
-          <Icon name="hotel" size={28} className="text-sun" /> Unterkünfte mit bester Lage
-        </h2>
-        <p className="mt-1 text-sm text-muted">
-          Sortiert nach Lage-Score für dich: Bahn, Bars, Essen, Ruhe und Grün direkt vor der Tür.
-        </p>
+      <div className="grid grid-cols-4 gap-2">
+        {tileKeys.map((k) => (
+          <div key={k} className="rounded-[18px] bg-paper px-1 py-3 text-center">
+            <b className={`block font-display text-[22px] font-extrabold ${(district.scores[k] ?? 0) <= 4 ? "text-sun-soft" : ""}`}>
+              {district.scores[k]}
+            </b>
+            <span className="block truncate text-[11px] font-semibold text-muted">{label(k)}</span>
+          </div>
+        ))}
+      </div>
 
-        <nav className="-mx-4 mt-4 flex gap-2 overflow-x-auto px-4" aria-label="Unterkunftsart">
+      <div className="card p-5">
+        <ScoreBars criteria={criteria} scores={district.scores} />
+      </div>
+
+      <section>
+        <div className="flex items-baseline justify-between">
+          <h2 className="font-display text-[19px] font-extrabold">Beste Lage im Viertel</h2>
+          {!failed && <span className="text-sm text-muted">{shown.length} gefunden</span>}
+        </div>
+
+        <nav className="-mx-4 mt-3 flex gap-2 overflow-x-auto px-4 [scrollbar-width:none]" aria-label="Unterkunftsart">
           {FILTERS.map((f) => (
             <Link
               key={f.key}
               href={`/kiez/${slug}?stadt=${district.city}&typ=${f.key}${amp}`}
               scroll={false}
-              className={`shrink-0 rounded-full border-2 px-4 py-2 text-sm font-bold ${
-                filter === f.key ? "border-sun bg-sun text-white" : "border-line bg-paper"
+              className={`press shrink-0 rounded-full px-4 py-2.5 text-sm font-semibold ${
+                filter === f.key ? "bg-ink text-sand" : "bg-tan"
               }`}
             >
               {f.label}
@@ -113,14 +132,12 @@ export default async function KiezPage({
         </nav>
 
         {failed ? (
-          <p className="mt-5 rounded-2xl bg-tan p-4 text-sm font-semibold">
-            Die Kartendaten sind gerade überlastet. Lade die Seite in einer Minute neu.
-          </p>
+          <p className="card mt-4 p-4 text-sm text-muted">Die Kartendaten sind gerade überlastet. Lade die Seite in einer Minute neu.</p>
         ) : shown.length === 0 ? (
-          <p className="mt-5 rounded-2xl bg-tan p-4 text-sm font-semibold">Hier haben wir keine passenden Unterkünfte gefunden.</p>
+          <p className="card mt-4 p-4 text-sm text-muted">Hier haben wir keine passenden Unterkünfte gefunden.</p>
         ) : (
           <>
-            <div className="mt-5">
+            <div className="mt-4">
               <KiezMap
                 points={shown.slice(0, 25).map((h, i) => ({ slug: `h${i}`, name: h.name, lat: h.lat, lng: h.lon, match: h.match }))}
                 highlight="h0"
@@ -129,57 +146,34 @@ export default async function KiezPage({
                 height="h-60"
               />
             </div>
-            <ol className="mt-5 space-y-3">
-              {shown.slice(0, 25).map((h, i) => {
-                const v = verdict(h.match);
-                return (
-                  <li key={`${h.lat}-${h.lon}`} id={`kiez-h${i}`} className="rounded-3xl border-2 border-b-[5px] border-line bg-paper p-4">
-                    <div className="flex items-start gap-3">
-                      <div className="flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-2xl bg-sun text-white">
-                        <span className="font-display text-lg font-extrabold leading-none">{h.match}</span>
-                        <span className="text-[10px] font-semibold opacity-90">%</span>
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <p className="text-xs font-semibold text-muted">
-                          {KIND_LABEL[h.kind] ?? "Unterkunft"} · {v.label}
-                        </p>
-                        <h3 className="font-display text-lg font-extrabold leading-tight [overflow-wrap:anywhere]">{h.name}</h3>
-                        <p className="truncate text-sm text-muted">{h.subtitle}</p>
-                      </div>
-                      <PlaceSaveButton
-                        compact
-                        place={{ name: h.name, subtitle: h.subtitle, lat: h.lat, lon: h.lon, kind: h.kind, match: h.match }}
-                        initiallySaved={isSaved(h)}
-                        loggedIn={Boolean(user)}
-                        returnTo={`/kiez/${slug}?stadt=${district.city}${amp}`}
-                      />
-                    </div>
-                    <ul className="mt-3 space-y-1">
-                      {h.highlights.map((hl) => (
-                        <li key={hl.text} className="flex items-center gap-2 text-sm">
-                          <Icon name={hl.icon} size={18} className="text-sun" /> {hl.text}
-                        </li>
-                      ))}
-                    </ul>
-                    <div className="mt-4 grid grid-cols-2 gap-2">
-                      <Link href={checkUrl(h)} className="flex items-center justify-center gap-1.5 rounded-xl bg-tan py-2.5 text-sm font-bold">
-                        <Icon name="check" size={18} /> Lage-Details
-                      </Link>
-                      <a
-                        href={`https://www.booking.com/searchresults.html?ss=${encodeURIComponent(`${h.name}, ${cityName}`)}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center justify-center gap-1.5 rounded-xl bg-ink py-2.5 text-sm font-bold text-sand"
-                      >
-                        Preise <Icon name="external" size={16} />
-                      </a>
-                    </div>
-                  </li>
-                );
-              })}
+            <ol className="mt-2">
+              {shown.slice(0, 25).map((h, i) => (
+                <li key={`${h.lat}-${h.lon}`} id={`kiez-h${i}`} className="flex items-center gap-3 border-b border-line py-3 last:border-0">
+                  <span className="w-5 shrink-0 font-bold text-faint">{i + 1}</span>
+                  <Link href={checkUrl(h)} className="flex min-w-0 flex-1 items-center gap-3">
+                    <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-raised">
+                      <Icon name="hotel" size={22} />
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate text-[15px] font-bold">{h.name}</span>
+                      <span className="block truncate text-[13px] text-muted">
+                        {KIND_LABEL[h.kind] ?? "Unterkunft"} · {h.highlights[0]?.text ?? verdict(h.match).label}
+                      </span>
+                    </span>
+                    <span className="font-display text-[17px] font-extrabold tabular-nums text-sun-soft">{h.match}</span>
+                  </Link>
+                  <PlaceSaveButton
+                    compact
+                    place={{ name: h.name, subtitle: h.subtitle, lat: h.lat, lon: h.lon, kind: h.kind, match: h.match }}
+                    initiallySaved={isSaved(h)}
+                    loggedIn={Boolean(user)}
+                    returnTo={`/kiez/${slug}?stadt=${district.city}${amp}`}
+                  />
+                </li>
+              ))}
             </ol>
-            <p className="mt-4 text-xs text-muted">
-              Unterkünfte und Umgebung aus OpenStreetMap. Preise und Verfügbarkeit siehst du bei Booking.com.
+            <p className="mt-3 text-xs text-muted">
+              Unterkünfte und Umgebung aus OpenStreetMap. Tippe auf eine Unterkunft für Details, Anreise und Preise.
             </p>
           </>
         )}
@@ -192,7 +186,7 @@ export default async function KiezPage({
         placeName={district.name}
         districtId={district.id}
         returnTo={`/kiez/${slug}?stadt=${district.city}`}
-        title={`Tipps zu ${district.name}`}
+        title={`Tipps zu ${district.name.split(" (")[0]}`}
       />
     </div>
   );

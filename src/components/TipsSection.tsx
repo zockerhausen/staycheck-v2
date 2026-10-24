@@ -28,13 +28,13 @@ export default function TipsSection({
 
   return (
     <section>
-      <h2 className="flex items-center gap-2 font-display text-xl font-bold">
+      <h2 className="flex items-center gap-2 font-display text-[19px] font-extrabold">
         <Icon name="tip" size={24} className="text-sun" /> {title}
       </h2>
       <p className="mt-1 text-sm text-muted">Was andere vor Ort erlebt haben. Kurz, ehrlich, ohne Werbung.</p>
 
       {tips.length === 0 ? (
-        <p className="mt-3 rounded-2xl border-2 border-dashed border-line p-4 text-sm text-muted">
+        <p className="mt-3 rounded-2xl border border-dashed border-raised p-4 text-sm text-muted">
           Noch keine Tipps hier. Warst du schon mal da? Sei die oder der Erste.
         </p>
       ) : (
@@ -62,7 +62,7 @@ export default function TipsSection({
       ) : (
         <Link
           href={`/login?next=${encodeURIComponent(returnTo)}`}
-          className="mt-3 flex items-center justify-center gap-2 rounded-2xl border-2 border-line bg-paper py-3 text-sm font-bold"
+          className="mt-3 flex items-center justify-center gap-2 rounded-2xl bg-paper py-3 text-sm font-bold"
         >
           <Icon name="tip" size={18} /> Anmelden und Tipp schreiben
         </Link>

@@ -54,12 +54,12 @@ export default function QuizClient({ city, cityName }: { city: string; cityName:
             setStep(step - 1);
             setPicked(null);
           }}
-          className="text-2xl text-muted"
+          className="press flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-tan"
           aria-label="Zurück"
         >
-          <Icon name="back" size={26} />
+          <Icon name={step === 0 ? "close" : "back"} size={18} />
         </button>
-        <div className="h-4 flex-1 overflow-hidden rounded-full bg-tan">
+        <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-tan">
           <div
             className="h-full rounded-full bg-sun transition-all duration-300"
             style={{ width: `${Math.max(progress, 6)}%` }}
@@ -70,8 +70,11 @@ export default function QuizClient({ city, cityName }: { city: string; cityName:
         </span>
       </div>
 
-      <p className="mt-8 text-sm font-semibold text-peach-ink">Dein Reise-Profil · Ziel: {cityName}</p>
-      <h1 key={q.key} className="pop-in mt-2 font-display text-3xl font-extrabold leading-tight">
+      <span key={`i-${q.key}`} className="pop-in mt-8 flex h-16 w-16 items-center justify-center rounded-[20px] bg-peach text-sun-soft">
+        <Icon name={CRITERION_ICON[q.key]} size={34} />
+      </span>
+      <p className="mt-5 text-xs font-bold uppercase tracking-[0.08em] text-muted">Reise-Profil · Ziel: {cityName}</p>
+      <h1 key={q.key} className="pop-in mega mt-2 text-[1.9rem] leading-tight">
         {q.question}
       </h1>
 
@@ -80,19 +83,19 @@ export default function QuizClient({ city, cityName }: { city: string; cityName:
           <button
             key={a.text}
             type="button"
-            className="tile pop-in"
+            className="tile pop-in py-5"
             style={{ animationDelay: `${i * 60}ms` }}
             data-selected={picked === i}
             onClick={() => choose(i)}
           >
             <span
-              className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl ${
-                a.weight >= 4 ? "bg-sun text-white" : a.weight >= 2 ? "bg-peach text-sun" : "bg-tan text-muted"
+              className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-[1.5px] text-[13px] ${
+                picked === i ? "border-sun bg-sun text-white" : "border-raised text-muted"
               }`}
             >
-              <Icon name={CRITERION_ICON[q.key]} size={30} fill={a.weight >= 4 ? "#ffffff55" : "#ffffff"} />
+              {"ABC"[i]}
             </span>
-            <span className="text-lg font-semibold">{a.text}</span>
+            <span className="text-[17px] font-bold">{a.text}</span>
           </button>
         ))}
       </div>

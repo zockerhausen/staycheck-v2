@@ -15,10 +15,8 @@ import { CRITERION_ICON } from "@/lib/icons";
 import Icon from "@/components/Icon";
 import Reveal from "@/components/Reveal";
 import KiezMap from "@/components/KiezMap";
-import ScoreBars from "@/components/ScoreBars";
 import ShareButton from "@/components/ShareButton";
 import SaveButton from "@/components/SaveButton";
-import FavoriteButton from "@/components/FavoriteButton";
 
 export const dynamic = "force-dynamic";
 
@@ -55,38 +53,50 @@ export default async function ErgebnisPage({
     .map((d) => ({ slug: d.slug, name: d.name, lat: d.lat as number, lng: d.lng as number, match: d.match }));
 
   return (
-    <div className="space-y-7">
+    <div className="fade-up space-y-7">
       <div className="flex items-center justify-between">
-        <Link href="/" className="font-display text-xl font-extrabold text-sun">
-          StayCheck
+        <Link href="/" aria-label="Start" className="press flex h-11 w-11 items-center justify-center rounded-full bg-tan">
+          <Icon name="back" size={18} />
         </Link>
-        <div className="flex items-center gap-4">
-          <Link href="/reise" className="flex items-center gap-1 text-sm font-semibold text-muted">
-            <Icon name="map" size={18} /> Stadt
-          </Link>
-          <Link href="/profil" className="flex items-center gap-1 text-sm font-semibold text-muted">
-            <Icon name="user" size={18} /> Profil
-          </Link>
-        </div>
+        <Link href="/reise" className="press flex items-center gap-1.5 rounded-full bg-tan px-4 py-2.5 text-sm font-semibold">
+          {city.name} <Icon name="down" size={14} />
+        </Link>
+        <Link href="/profil" aria-label="Profil anpassen" className="press flex h-11 w-11 items-center justify-center rounded-full bg-tan">
+          <Icon name="sliders" size={18} />
+        </Link>
       </div>
 
       <section>
-        <Reveal name={top.name} match={top.match} celebrate={params.neu === "1"} eyebrow={`Dein Kiez in ${city.name}`} />
-        <div className="mt-4 flex flex-wrap gap-2">
+        <Reveal
+          name={top.name.split(" (")[0]}
+          match={top.match}
+          celebrate={params.neu === "1"}
+          eyebrow={`Dein Viertel in ${city.name}`}
+          caption="Prozent Match"
+          sub={top.short_description ?? undefined}
+        />
+        <div className="mt-4 flex flex-wrap justify-center gap-2">
           {reasons.map((k) => (
-            <span key={k} className="inline-flex items-center gap-1.5 rounded-full bg-peach px-3 py-1.5 text-sm font-semibold text-peach-ink">
-              <Icon name={CRITERION_ICON[k]} size={18} fill="rgba(242,102,47,.22)" /> {labelOf[k]}
+            <span key={k} className="inline-flex items-center gap-1.5 rounded-full bg-peach px-3 py-1.5 text-sm font-bold text-peach-ink">
+              <Icon name={CRITERION_ICON[k]} size={16} /> {labelOf[k]}
             </span>
           ))}
         </div>
-        <p className="mt-3 text-muted">{top.short_description}</p>
       </section>
 
-      <div className="space-y-3">
+      <div className="space-y-2.5">
         <Link href={`/kiez/${top.slug}${q("?")}`} className="btn-chunky w-full">
-          <Icon name="hotel" size={22} fill="#ffffff55" /> Hotels in {top.name} finden
+          Unterkünfte in {top.name.split(" (")[0]}
         </Link>
-        <ShareButton name={top.name} match={top.match} tags={reasons.map((k) => labelOf[k])} city={city.name} light />
+        <div className="grid grid-cols-2 gap-2.5">
+          <ShareButton name={top.name} match={top.match} tags={reasons.map((k) => labelOf[k])} city={city.name} light />
+          <Link
+            href={`/duell?stadt=${city.slug}&a=${top.slug}&b=${rest[0]?.slug ?? top.slug}${q("&")}`}
+            className="press flex items-center justify-center gap-2 rounded-full bg-tan py-4 font-bold"
+          >
+            <Icon name="duel" size={18} /> Duell
+          </Link>
+        </div>
         <SaveButton
           loggedIn={Boolean(user)}
           weights={weights}
@@ -97,49 +107,22 @@ export default async function ErgebnisPage({
       </div>
 
       <section>
-        <h2 className="font-display text-xl font-bold">Alle Kieze auf der Karte</h2>
-        <p className="mb-3 text-sm text-muted">Die Zahl ist dein Match. Tipp auf einen Punkt.</p>
-        <KiezMap points={points} highlight={top.slug} center={[city.lng, city.lat]} zoom={city.zoom} />
-      </section>
-
-      <section>
-        <h2 className="font-display text-xl font-bold">Weitere Kieze für dich</h2>
-        <p className="mb-3 text-sm text-muted">Wisch zur Seite</p>
-        <div className="snap-row -mx-4 px-4">
-          {[top, ...rest].map((d, i) => (
-            <article
-              key={d.id}
-              id={`kiez-${d.slug}`}
-              className="flex flex-col rounded-3xl border-2 border-b-[5px] border-line bg-paper p-5"
-            >
-              <div className="flex items-start justify-between gap-2">
-                <div>
-                  <p className="text-xs font-semibold text-muted">#{i + 1}</p>
-                  <h3 className="font-display text-2xl font-extrabold leading-tight">{d.name}</h3>
-                </div>
-                <span className="rounded-2xl bg-sun px-3 py-1.5 font-display text-lg font-extrabold text-white">
-                  {d.match}%
+        <h2 className="mb-3 font-display text-[19px] font-extrabold">Alle Viertel in {city.name}</h2>
+        <KiezMap points={points} highlight={top.slug} center={[city.lng, city.lat]} zoom={city.zoom} height="h-72" />
+        <ol className="mt-2">
+          {ranked.map((d, i) => (
+            <li key={d.id} id={`kiez-${d.slug}`} className="flex items-center gap-3 border-b border-line py-3 last:border-0">
+              <span className="w-5 shrink-0 font-bold text-faint">{i + 1}</span>
+              <Link href={`/kiez/${d.slug}${q("?")}`} className="min-w-0 flex-1">
+                <span className="block truncate text-[15px] font-bold">{d.name}</span>
+                <span className="block truncate text-[13px] text-muted">
+                  {topReasons(d, weights, 2).map((k) => labelOf[k]).join(" · ")}
                 </span>
-              </div>
-              <p className="mb-4 mt-1 text-sm text-muted">{d.short_description}</p>
-              <ScoreBars criteria={criteria} scores={d.scores} />
-              <div className="mt-auto flex items-center justify-between gap-2 pt-4">
-                <div className="flex items-center gap-4">
-                  <Link href={`/kiez/${d.slug}${q("?")}`} className="flex items-center gap-1 text-sm font-bold text-sun">
-                    <Icon name="hotel" size={18} /> Hotels
-                  </Link>
-                  <Link
-                    href={`/duell?stadt=${city.slug}&a=${top.slug === d.slug ? d.slug : top.slug}&b=${top.slug === d.slug ? rest[0]?.slug ?? d.slug : d.slug}${q("&")}`}
-                    className="flex items-center gap-1 text-sm font-bold text-muted"
-                  >
-                    <Icon name="duel" size={18} /> Duell
-                  </Link>
-                </div>
-                {user && <FavoriteButton districtId={d.id} isFavorite={favorites.has(d.id)} />}
-              </div>
-            </article>
+              </Link>
+              <span className="w-12 text-right font-display text-[17px] font-extrabold tabular-nums text-sun-soft">{d.match}%</span>
+            </li>
           ))}
-        </div>
+        </ol>
       </section>
     </div>
   );

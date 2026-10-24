@@ -34,7 +34,7 @@ export default function TipForm({
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="mt-3 flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-line bg-paper py-3 text-sm font-bold"
+        className="mt-3 flex w-full items-center justify-center gap-2 rounded-2xl bg-paper py-3 text-sm font-bold"
       >
         <Icon name="tip" size={18} /> Tipp schreiben
       </button>
@@ -43,7 +43,7 @@ export default function TipForm({
 
   return (
     <form
-      className="mt-3 space-y-3 rounded-2xl border-2 border-line bg-paper p-4"
+      className="mt-3 space-y-3 rounded-2xl bg-paper p-4"
       onSubmit={(e) => {
         e.preventDefault();
         if (!category) return setError("Wähl eine Kategorie.");
@@ -70,11 +70,11 @@ export default function TipForm({
                 setError("");
               }}
               aria-pressed={category === c.key}
-              className={`flex items-center gap-1.5 rounded-full border-2 px-3 py-1.5 text-sm font-bold ${
-                category === c.key ? "border-sun bg-sun text-white" : "border-line bg-tan"
+              className={`flex items-center gap-1.5 rounded-full px-3.5 py-2 text-sm font-semibold ${
+                category === c.key ? "bg-ink text-sand" : "bg-tan"
               }`}
             >
-              <Icon name={c.icon} size={16} fill={category === c.key ? "#ffffff55" : undefined} /> {c.label}
+              <Icon name={c.icon} size={16}  /> {c.label}
             </button>
           ))}
         </div>
@@ -89,7 +89,7 @@ export default function TipForm({
           }}
           rows={3}
           placeholder="z. B. Zimmer zur Straße sind laut, nach hinten raus ist es ruhig."
-          className="mt-1 w-full rounded-xl border-2 border-line bg-tan p-3 outline-none focus:border-sun"
+          className="mt-1 w-full rounded-2xl border border-line bg-tan p-3.5 outline-none focus:border-sun"
         />
         <span className="block text-right text-xs text-muted">{body.length}/280</span>
       </label>

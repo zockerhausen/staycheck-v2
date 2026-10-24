@@ -22,7 +22,7 @@ export default function ProfileEditor({ criteria, initial }: { criteria: Criteri
       {criteria.map((c) => {
         const v = weights[c.key] ?? 0;
         return (
-          <label key={c.key} className="block rounded-2xl border-2 border-line bg-paper p-4">
+          <label key={c.key} className="block rounded-2xl bg-paper p-4">
             <span className="flex items-center gap-3">
               <span className={`flex h-10 w-10 items-center justify-center rounded-xl ${v >= 4 ? "bg-sun text-white" : v >= 2 ? "bg-peach text-sun" : "bg-tan text-muted"}`}>
                 <Icon name={CRITERION_ICON[c.key]} size={24} fill={v >= 4 ? "#ffffff55" : "#ffffff"} />
