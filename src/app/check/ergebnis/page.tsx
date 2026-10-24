@@ -17,18 +17,12 @@ import KiezMap from "@/components/KiezMap";
 import PlaceSaveButton from "@/components/PlaceSaveButton";
 import ArrivalCard from "@/components/ArrivalCard";
 import TipsSection from "@/components/TipsSection";
+import { RememberCheck } from "@/components/RecentChecks";
 import { HUBS, cityForPoint } from "@/lib/arrival";
 import { getTipsNear } from "@/lib/tips";
 
 // Dynamisch durch Cookies/Suchparameter; Kartendaten-Abfragen werden 1 Tag zwischengespeichert.
 export const fetchCache = "default-cache";
-
-const TONE: Record<string, string> = {
-  top: "bg-sun text-white",
-  good: "bg-peach text-peach-ink",
-  ok: "bg-tan text-ink",
-  low: "bg-ink text-sand",
-};
 
 export default async function CheckErgebnisPage({
   searchParams,
@@ -86,62 +80,30 @@ export default async function CheckErgebnisPage({
   const weakness = [...weighted].filter((c) => c.score <= 4).sort((a, b) => b.w - a.w)[0];
 
   return (
-    <div className="space-y-7">
+    <div className="fade-up space-y-7">
+      <RememberCheck name={name} sub={sub} lat={lat} lon={lon} kind={kind} match={match} label={v.label} />
       <div className="flex items-center justify-between">
-        <Link href="/check" className="flex items-center gap-1 text-sm font-semibold text-muted">
-          <Icon name="back" size={18} /> Neue Suche
+        <Link href="/check" aria-label="Neue Suche" className="press flex h-11 w-11 items-center justify-center rounded-full bg-tan">
+          <Icon name="back" size={18} />
         </Link>
-        <span className={`rounded-full px-3 py-1 text-sm font-bold ${TONE[v.tone]}`}>{v.label}</span>
+        <span className="text-base font-bold">Lage-Check</span>
+        <span className="h-11 w-11" />
       </div>
 
       <section>
-        <Reveal name={name} match={match} celebrate={match >= 64} eyebrow="Lage-Check" caption={source ? "passt zu dir" : "Lage-Score"} />
-        {sub && <p className="mt-1 text-sm text-muted">{sub}</p>}
-        <div className="mt-4 flex flex-wrap gap-2">
+        <Reveal name={name} match={match} celebrate={match >= 64} eyebrow={v.label} caption={source ? "Match für dich" : "Lage-Score"} sub={sub} />
+        <div className="mt-4 flex flex-wrap justify-center gap-2">
           {strengths.map((c) => (
-            <span key={c.key} className="inline-flex items-center gap-1.5 rounded-full bg-peach px-3 py-1.5 text-sm font-semibold text-peach-ink">
-              <Icon name={CRITERION_ICON[c.key]} size={18} fill="#fff" /> {c.label}
+            <span key={c.key} className="inline-flex items-center gap-1.5 rounded-full bg-peach px-3 py-1.5 text-sm font-bold text-peach-ink">
+              <Icon name={CRITERION_ICON[c.key]} size={16} /> {c.label}
             </span>
           ))}
           {weakness && (
             <span className="inline-flex items-center gap-1.5 rounded-full bg-tan px-3 py-1.5 text-sm font-semibold text-muted">
-              <Icon name={CRITERION_ICON[weakness.key]} size={18} fill="#fffaf1" /> schwach: {weakness.label}
+              <Icon name={CRITERION_ICON[weakness.key]} size={16} /> schwach: {weakness.label}
             </span>
           )}
         </div>
-      </section>
-
-      <ul className="space-y-2">
-        {analysis.highlights.map((h) => (
-          <li key={h.text} className="flex items-center gap-3 rounded-2xl bg-paper px-4 py-3">
-            <Icon name={h.icon} size={26} className="text-sun" />
-            <span className="font-medium">{h.text}</span>
-          </li>
-        ))}
-      </ul>
-
-      <section className="rounded-3xl border-2 border-b-[5px] border-line bg-paper p-5">
-        <h2 className="font-display text-xl font-bold">Die Lage im Detail</h2>
-        <dl className="mt-3 space-y-2">
-          {criteria.map((c) => {
-            const s = analysis.scores[c.key];
-            return (
-              <div key={c.key} className="flex items-center gap-2 text-sm">
-                <dt className="flex w-32 shrink-0 items-center gap-1.5 text-muted">
-                  <Icon name={CRITERION_ICON[c.key]} size={18} /> {c.label}
-                </dt>
-                <dd className="h-2.5 flex-1 overflow-hidden rounded-full bg-tan">
-                  {s !== null && <div className="h-full rounded-full bg-sun" style={{ width: `${s * 10}%` }} />}
-                </dd>
-                <span className="w-12 text-right font-semibold tabular-nums">{s ?? "k. A."}</span>
-              </div>
-            );
-          })}
-        </dl>
-        <p className="mt-3 text-xs text-muted">
-          Quelle: OpenStreetMap im Umkreis von 500–900 m.
-          {district ? ` Sicherheit und Budget aus unserer Bewertung für ${district.name}.` : " Für Sicherheit haben wir hier noch keine Daten."}
-        </p>
       </section>
 
       <KiezMap
@@ -151,6 +113,52 @@ export default async function CheckErgebnisPage({
         zoom={14.5}
         height="h-56"
       />
+
+      <ul className="card px-4">
+        {analysis.highlights.map((h) => (
+          <li key={h.text} className="flex items-center gap-3.5 border-b border-line py-3.5 last:border-0">
+            <Icon name={h.icon} size={22} className="text-muted" />
+            <span className="text-[15px] font-semibold">{h.text}</span>
+          </li>
+        ))}
+      </ul>
+
+      {district && (
+        <Link href={`/kiez/${district.slug}?stadt=${district.city}${amp}`} className="card press flex items-center gap-3.5 p-4">
+          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-peach text-sun-soft">
+            <Icon name="map" size={22} />
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="block font-bold">Liegt in {district.name}</span>
+            <span className="block truncate text-sm text-muted">Bessere Unterkünfte im Viertel ansehen</span>
+          </span>
+          <Icon name="chevron" size={16} className="text-faint" />
+        </Link>
+      )}
+
+      <section>
+        <h2 className="mb-3 font-display text-[19px] font-extrabold">Alle Werte</h2>
+        <dl className="card space-y-1 p-5">
+          {criteria.map((c) => {
+            const s = analysis.scores[c.key];
+            return (
+              <div key={c.key} className="flex items-center gap-3 py-1 text-sm">
+                <dt className="flex w-32 shrink-0 items-center gap-2 font-semibold">
+                  <Icon name={CRITERION_ICON[c.key]} size={18} /> {c.label}
+                </dt>
+                <dd className="h-2 flex-1 overflow-hidden rounded-full bg-raised">
+                  {s !== null && <div className={`bar-grow h-full rounded-full ${s <= 4 ? "bg-faint" : "bg-sun"}`} style={{ width: `${s * 10}%` }} />}
+                </dd>
+                <span className="w-9 text-right font-extrabold tabular-nums">{s ?? "–"}</span>
+              </div>
+            );
+          })}
+          <p className="pt-3 text-xs text-muted">
+            Quelle: OpenStreetMap im Umkreis von 500–900 m.
+            {district ? ` Sicherheit und Budget aus unserer Bewertung für ${district.name}.` : " Für Sicherheit haben wir hier noch keine Daten."}
+          </p>
+        </dl>
+      </section>
 
       {city && <ArrivalCard hubs={HUBS[city.slug]} lat={lat} lon={lon} nearestRail={analysis.nearestRail} />}
 
@@ -166,25 +174,30 @@ export default async function CheckErgebnisPage({
       />
 
       <div className="space-y-3">
-        <PlaceSaveButton
-          place={{ name, subtitle: sub, lat, lon, kind, match }}
-          initiallySaved={isSaved}
-          loggedIn={Boolean(user)}
-          returnTo={returnTo}
-        />
-        {district && (
-          <Link href={`/kiez/${district.slug}?stadt=${district.city}${amp}`} className="btn-chunky w-full">
-            <Icon name="hotel" size={22} fill="#ffcfa8" /> Bessere Hotels in {district.name}
-          </Link>
-        )}
-        <Link
-          href={`/duell/hotels?h=${encodeURIComponent([lat.toFixed(6), lon.toFixed(6), kind, name.slice(0, 80)].join("|"))}`}
-          className="btn-chunky btn-chunky-light w-full"
+        <a
+          href={`https://www.booking.com/searchresults.html?ss=${encodeURIComponent(`${name} ${sub.split(",").slice(-2).join(" ")}`.trim().slice(0, 160))}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="press flex w-full items-center justify-center gap-2 rounded-full bg-ink py-4 font-bold text-sand"
         >
-          <Icon name="duel" size={22} /> Mit anderem Hotel vergleichen
-        </Link>
+          <Icon name="external" size={18} /> Bei Booking ansehen
+        </a>
+        <div className="grid grid-cols-2 gap-2.5">
+          <Link
+            href={`/duell/hotels?h=${encodeURIComponent([lat.toFixed(6), lon.toFixed(6), kind, name.slice(0, 80)].join("|"))}`}
+            className="press flex items-center justify-center gap-2 rounded-full bg-tan py-4 font-bold"
+          >
+            <Icon name="duel" size={18} /> Vergleichen
+          </Link>
+          <PlaceSaveButton
+            place={{ name, subtitle: sub, lat, lon, kind, match }}
+            initiallySaved={isSaved}
+            loggedIn={Boolean(user)}
+            returnTo={returnTo}
+          />
+        </div>
         <Link href="/check" className="flex items-center justify-center gap-2 py-2 text-sm font-semibold text-muted">
-          <Icon name="refresh" size={18} /> Anderes Hotel prüfen
+          <Icon name="refresh" size={18} /> Andere Unterkunft prüfen
         </Link>
       </div>
     </div>

@@ -1,9 +1,17 @@
 import Link from "next/link";
-import { getCriteria, getSavedPlaces, resolveWeights, weightsToQuery } from "@/lib/data";
+import { getCities, getCriteria, getLastCity, getSavedPlaces, resolveWeights, weightsToQuery } from "@/lib/data";
 import PlaceSearch from "@/components/PlaceSearch";
 import Icon from "@/components/Icon";
+import type { IconName } from "@/lib/icons";
 
 export const dynamic = "force-dynamic";
+
+const HOW: { icon: IconName; text: string }[] = [
+  { icon: "transit", text: "Wie weit ist die nächste Bahn?" },
+  { icon: "nightlife", text: "Bars, Restaurants und Lärmquellen im Umkreis" },
+  { icon: "nature", text: "Parks und Wasser in Laufweite" },
+  { icon: "safety", text: "Sicherheit aus unseren Viertel-Bewertungen" },
+];
 
 export default async function CheckPage({
   searchParams,
@@ -11,46 +19,43 @@ export default async function CheckPage({
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const params = await searchParams;
-  const criteria = await getCriteria();
+  const [criteria, cities, lastCity] = await Promise.all([getCriteria(), getCities(), getLastCity()]);
   const [{ weights, source }, places] = await Promise.all([resolveWeights(params, criteria), getSavedPlaces()]);
   // Profil-Gewichte nicht in Links schreiben – die App liest sie selbst aus dem Profil
   const query = weights && source === "url" ? weightsToQuery(weights) : "";
+  const city = cities.find((c) => c.slug === lastCity);
 
   return (
-    <div className="pt-2">
-      <span className="inline-flex items-center gap-1.5 rounded-full bg-peach px-3 py-1 text-sm font-semibold text-peach-ink">
-        <Icon name="check" size={16} fill="#fff" /> Lage-Check
-      </span>
-      <h1 className="mt-3 font-display text-[2.3rem] font-extrabold leading-[1.05] tracking-tight">
-        Liegt dein Hotel <span className="text-sun">richtig?</span>
-      </h1>
-      <p className="mt-2 text-muted">
-        Gib dein Hotel, Hostel oder eine Adresse ein. Wir prüfen die Umgebung: Bahn, Bars, Essen, Ruhe und Grün.
+    <div className="fade-up">
+      <p className="text-center text-base font-bold">Lage-Check</p>
+      <h1 className="mega mt-6 text-[2.1rem]">Wie gut liegt deine Unterkunft?</h1>
+      <p className="mt-2 leading-relaxed text-muted">
+        Name, Adresse oder Link von Booking, Hostelworld, Agoda oder Google Maps. Klappt weltweit.
       </p>
 
-      <div className="mt-6">
-        <PlaceSearch weightsQuery={query} />
+      <div className="mt-5">
+        <PlaceSearch weightsQuery={query} near={city ? { lat: city.lat, lon: city.lng } : undefined} autoFocus />
       </div>
 
       {!weights && (
-        <Link
-          href="/quiz"
-          className="mt-5 flex items-center gap-3 rounded-2xl border-2 border-dashed border-line p-4 text-sm"
-        >
-          <Icon name="star" size={28} className="text-sun" />
-          <span>
-            <span className="block font-semibold">Noch persönlicher?</span>
-            <span className="text-muted">Mach zuerst das Quiz, dann bewerten wir die Lage nach deinen Wünschen.</span>
+        <Link href="/reise" className="press mt-6 flex items-center gap-3.5 rounded-[18px] border border-line bg-paper px-3.5 py-3">
+          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-peach text-sun-soft">
+            <Icon name="star" size={22} />
           </span>
+          <span className="min-w-0 flex-1">
+            <span className="block text-[15px] font-bold">Noch persönlicher?</span>
+            <span className="block text-[13px] text-muted">Mach das kurze Quiz, dann bewerten wir nach deinen Wünschen.</span>
+          </span>
+          <Icon name="chevron" size={16} className="text-faint" />
         </Link>
       )}
 
       {places.length > 0 && (
-        <section className="mt-8">
-          <h2 className="font-display text-xl font-bold">Zuletzt gemerkt</h2>
-          <ul className="mt-3 space-y-2">
+        <section className="mt-7">
+          <h2 className="mb-2 font-display text-[19px] font-extrabold">Gemerkt</h2>
+          <ul>
             {places.slice(0, 5).map((p) => (
-              <li key={p.id}>
+              <li key={p.id} className="border-b border-line last:border-0">
                 <Link
                   href={`/check/ergebnis?${new URLSearchParams({
                     lat: String(p.lat),
@@ -59,17 +64,28 @@ export default async function CheckPage({
                     sub: p.subtitle ?? "",
                     kind: p.kind,
                   })}${query ? `&${query}` : ""}`}
-                  className="flex items-center gap-3 rounded-2xl border-2 border-line bg-paper px-4 py-3"
+                  className="flex items-center gap-3.5 py-3"
                 >
-                  <Icon name="hotel" size={24} className="text-sun" />
-                  <span className="min-w-0 flex-1 truncate font-semibold">{p.name}</span>
-                  {p.match !== null && <span className="font-display font-extrabold text-sun">{p.match}%</span>}
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-tan">
+                    <Icon name="hotel" size={20} />
+                  </span>
+                  <span className="min-w-0 flex-1 truncate text-[15px] font-bold">{p.name}</span>
+                  {p.match !== null && <span className="font-display text-[17px] font-extrabold text-sun-soft">{p.match}</span>}
                 </Link>
               </li>
             ))}
           </ul>
         </section>
       )}
+
+      <section className="card mt-7 px-4 py-2">
+        <p className="pt-3 text-xs font-bold uppercase tracking-[0.06em] text-muted">So rechnen wir</p>
+        {HOW.map((h) => (
+          <div key={h.icon} className="flex items-center gap-3.5 border-b border-line py-3 text-sm last:border-0">
+            <Icon name={h.icon} size={20} className="text-muted" /> {h.text}
+          </div>
+        ))}
+      </section>
     </div>
   );
 }

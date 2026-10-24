@@ -35,7 +35,7 @@ export default function KiezMap({
       const m = new maplibregl.Map({
         container: ref.current,
         // Kostenlose Karte ohne API-Schlüssel (OpenFreeMap / OpenStreetMap)
-        style: "https://tiles.openfreemap.org/styles/positron",
+        style: "https://tiles.openfreemap.org/styles/dark",
         center,
         zoom,
         attributionControl: { compact: true },
@@ -54,12 +54,12 @@ export default function KiezMap({
         el.setAttribute("aria-label", `${p.name}, ${p.match}% Match`);
         el.style.cssText = `
           display:flex;align-items:center;justify-content:center;
-          width:${isTop ? 46 : 26 + t * 12}px;height:${isTop ? 46 : 26 + t * 12}px;
-          border-radius:999px;border:3px solid #fffaf1;
-          background:${isTop ? "#f2662f" : `rgba(242,102,47,${0.25 + t * 0.6})`};
-          color:${isTop || t > 0.5 ? "#fff" : "#8a3510"};
-          font:700 ${isTop ? 13 : 10}px system-ui, sans-serif;
-          box-shadow:0 2px 6px rgba(42,26,16,.25);cursor:pointer;`;
+          min-width:${isTop ? 46 : 30 + t * 8}px;height:${isTop ? 30 : 24}px;padding:0 9px;
+          border-radius:999px;border:1px solid ${isTop ? "#f2662f" : "#2a2a2e"};
+          background:${isTop ? "#f2662f" : "#1c1c1f"};
+          color:${isTop ? "#fff" : `rgba(245,245,245,${0.6 + t * 0.4})`};
+          font:800 ${isTop ? 13 : 12}px var(--font-body), system-ui, sans-serif;
+          box-shadow:0 4px 14px rgba(0,0,0,.45);cursor:pointer;`;
         el.textContent = `${p.match}`;
         el.addEventListener("click", () => {
           if (onSelectRef.current) onSelectRef.current(p.slug);
@@ -76,5 +76,5 @@ export default function KiezMap({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [points, highlight]);
 
-  return <div ref={ref} className={`${height} w-full overflow-hidden rounded-3xl border-2 border-line bg-tan`} />;
+  return <div ref={ref} className={`${height} w-full overflow-hidden rounded-3xl bg-paper`} />;
 }

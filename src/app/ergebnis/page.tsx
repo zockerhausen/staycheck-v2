@@ -75,7 +75,7 @@ export default async function ErgebnisPage({
         <div className="mt-4 flex flex-wrap gap-2">
           {reasons.map((k) => (
             <span key={k} className="inline-flex items-center gap-1.5 rounded-full bg-peach px-3 py-1.5 text-sm font-semibold text-peach-ink">
-              <Icon name={CRITERION_ICON[k]} size={18} fill="#fff" /> {labelOf[k]}
+              <Icon name={CRITERION_ICON[k]} size={18} fill="rgba(242,102,47,.22)" /> {labelOf[k]}
             </span>
           ))}
         </div>

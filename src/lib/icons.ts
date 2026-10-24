@@ -95,6 +95,13 @@ export const ICONS = {
     { d: "M5 4h12l-2.6 4.2L17 12.4H5z", f: true, s: true },
     { d: "M5 21V4", s: true },
   ],
+  locate: [
+    { d: "M12 8.5a3.5 3.5 0 1 1 0 7a3.5 3.5 0 1 1 0-7z", f: true, s: true },
+    { d: "M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M12 5.5a6.5 6.5 0 1 1 0 13a6.5 6.5 0 1 1 0-13z", s: true },
+  ],
+  chevron: [{ d: "M9.2 5l7 7-7 7", s: true }],
+  down: [{ d: "M6 9.5l6 6 6-6", s: true }],
+  sliders: [{ d: "M4 7h16M7 12h10M10 17h4", s: true }],
   link: [
     { d: "M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1", s: true },
   ],

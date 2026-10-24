@@ -1,21 +1,23 @@
 import type { Metadata, Viewport } from "next";
-import { Bricolage_Grotesque, DM_Sans } from "next/font/google";
+import { Manrope } from "next/font/google";
 import BottomNav from "@/components/BottomNav";
 import { getUser } from "@/lib/data";
 import "./globals.css";
 
-const head = Bricolage_Grotesque({ subsets: ["latin"], weight: ["600", "700", "800"], variable: "--font-head" });
-const body = DM_Sans({ subsets: ["latin"], variable: "--font-body" });
+// Eine Schrift für alles (ruhig und modern), Überschriften extra fett
+const head = Manrope({ subsets: ["latin"], weight: ["600", "700", "800"], variable: "--font-head" });
+const body = Manrope({ subsets: ["latin"], weight: ["400", "500", "600", "700"], variable: "--font-body" });
 
 export const metadata: Metadata = {
-  title: "StayCheck – Finde deinen Kiez",
+  title: "StayCheck – Schlaf da, wo es passt",
   description: "StayCheck zeigt Backpackern und Reisenden, welcher Bezirk einer Stadt am besten zu ihnen passt.",
 };
 
 export const viewport: Viewport = {
-  themeColor: "#fbf3e4",
+  themeColor: "#0c0c0e",
   width: "device-width",
   initialScale: 1,
+  viewportFit: "cover",
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
@@ -24,7 +26,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="de" className={`${head.variable} ${body.variable}`}>
       <body className="min-h-dvh font-sans antialiased">
-        <main className="mx-auto w-full max-w-md px-4 pb-28 pt-5">{children}</main>
+        <main className="mx-auto w-full max-w-md px-4 pb-28 pt-[max(1.25rem,env(safe-area-inset-top))]">{children}</main>
         <BottomNav loggedIn={Boolean(user)} />
       </body>
     </html>

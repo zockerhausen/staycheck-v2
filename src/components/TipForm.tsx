@@ -71,7 +71,7 @@ export default function TipForm({
               }}
               aria-pressed={category === c.key}
               className={`flex items-center gap-1.5 rounded-full border-2 px-3 py-1.5 text-sm font-bold ${
-                category === c.key ? "border-sun bg-sun text-white" : "border-line bg-white"
+                category === c.key ? "border-sun bg-sun text-white" : "border-line bg-tan"
               }`}
             >
               <Icon name={c.icon} size={16} fill={category === c.key ? "#ffffff55" : undefined} /> {c.label}
@@ -89,7 +89,7 @@ export default function TipForm({
           }}
           rows={3}
           placeholder="z. B. Zimmer zur Straße sind laut, nach hinten raus ist es ruhig."
-          className="mt-1 w-full rounded-xl border-2 border-line bg-white p-3 outline-none focus:border-sun"
+          className="mt-1 w-full rounded-xl border-2 border-line bg-tan p-3 outline-none focus:border-sun"
         />
         <span className="block text-right text-xs text-muted">{body.length}/280</span>
       </label>

@@ -42,8 +42,8 @@ export default function PlaceSaveButton({
         disabled={pending}
         aria-pressed={saved}
         aria-label={saved ? "Nicht mehr merken" : "Merken"}
-        className={`flex h-10 w-10 items-center justify-center rounded-full border-2 transition active:scale-95 ${
-          saved ? "border-sun bg-sun text-white" : "border-line bg-paper text-ink"
+        className={`flex h-10 w-10 items-center justify-center rounded-full transition active:scale-90 ${
+          saved ? "bg-sun text-white" : "bg-raised text-ink"
         }`}
       >
         <Icon name="heart" size={20} fill={saved ? "#ffffff" : undefined} />
@@ -52,9 +52,15 @@ export default function PlaceSaveButton({
   }
 
   return (
-    <button type="button" onClick={click} disabled={pending} className="btn-chunky btn-chunky-light w-full">
-      <Icon name="heart" size={22} fill={saved ? "#f2662f" : undefined} />
-      {saved ? "Gemerkt" : "Ort merken"}
+    <button
+      type="button"
+      onClick={click}
+      disabled={pending}
+      aria-pressed={saved}
+      className={`press flex w-full items-center justify-center gap-2 rounded-full py-4 font-bold ${saved ? "bg-peach text-sun-soft" : "bg-tan"}`}
+    >
+      <Icon name="heart" size={18} fill={saved ? "#f2662f" : undefined} />
+      {saved ? "Gemerkt" : "Merken"}
     </button>
   );
 }

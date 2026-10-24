@@ -43,7 +43,7 @@ export default function TipsSection({
             <li key={t.id} className="rounded-2xl bg-paper p-4">
               <div className="flex items-center gap-2 text-xs font-semibold text-muted">
                 <span className="inline-flex items-center gap-1 rounded-full bg-peach px-2 py-0.5 text-peach-ink">
-                  <Icon name={cat[t.category]?.icon ?? "tip"} size={14} fill="#fff" /> {cat[t.category]?.label ?? "Tipp"}
+                  <Icon name={cat[t.category]?.icon ?? "tip"} size={14} fill="rgba(242,102,47,.22)" /> {cat[t.category]?.label ?? "Tipp"}
                 </span>
                 <span className="truncate">
                   {t.author_name ?? "Reisende:r"} · {timeAgo(t.created_at)}

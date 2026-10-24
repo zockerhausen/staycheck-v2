@@ -17,7 +17,7 @@ export default async function LoginPage({
   return (
     <div className="pt-4">
       <span className="flex h-16 w-16 items-center justify-center rounded-3xl bg-peach text-sun">
-        <Icon name="user" size={40} fill="#ffffff" />
+        <Icon name="user" size={40} fill="rgba(242,102,47,.22)" />
       </span>
       <h1 className="mt-3 font-display text-4xl font-extrabold leading-tight">
         Dein Reise&shy;pass für Kieze

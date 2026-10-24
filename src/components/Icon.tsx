@@ -1,7 +1,7 @@
 import { ICONS, type IconName } from "@/lib/icons";
 
 /**
- * Eigenes StayCheck-Icon. Linienfarbe = currentColor, Akzentfläche = --icon-fill (Standard: Pfirsich #ffcfa8).
+ * Eigenes StayCheck-Icon. Linienfarbe = currentColor, Akzentfläche = --icon-fill (Standard: weiches Orange).
  * Beispiel: <Icon name="hotel" size={28} />
  */
 export default function Icon({
@@ -32,9 +32,9 @@ export default function Icon({
         <path
           key={i}
           d={p.d}
-          fill={"f" in p && p.f ? "var(--icon-fill, #ffcfa8)" : "none"}
+          fill={"f" in p && p.f ? "var(--icon-fill, rgba(242,102,47,.22))" : "none"}
           stroke={"s" in p && p.s ? "currentColor" : "none"}
-          strokeWidth={2.2}
+          strokeWidth={1.9}
           strokeLinecap="round"
           strokeLinejoin="round"
         />

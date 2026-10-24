@@ -20,9 +20,9 @@ export default function ArrivalCard({
   const walk = nearestRail ? luggageWalk(nearestRail.dist) : null;
 
   return (
-    <section className="rounded-3xl border-2 border-b-[5px] border-line bg-paper p-5">
-      <h2 className="flex items-center gap-2 font-display text-xl font-bold">
-        <Icon name="bag" size={24} className="text-sun" /> Ankommen mit Rucksack
+    <section className="card p-5">
+      <h2 className="flex items-center gap-2 font-display text-[19px] font-extrabold">
+        <Icon name="bag" size={22} className="text-sun-soft" /> Ankommen mit Gepäck
       </h2>
 
       {nearestRail ? (
@@ -39,7 +39,7 @@ export default function ArrivalCard({
       <ul className="mt-3 divide-y divide-line">
         {estimates.map((e) => (
           <li key={e.hub.id} className="flex items-center gap-3 py-3">
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-sand text-sun">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-raised text-ink">
               <Icon name={HUB_ICON[e.hub.kind]} size={22} />
             </span>
             <span className="min-w-0 flex-1">
@@ -52,7 +52,7 @@ export default function ArrivalCard({
               href={e.mapsUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex shrink-0 items-center gap-1 rounded-xl bg-ink px-3 py-2 text-xs font-bold text-sand"
+              className="flex shrink-0 items-center gap-1 rounded-full bg-raised px-3 py-2 text-xs font-bold text-ink"
             >
               Route <Icon name="external" size={14} />
             </a>
