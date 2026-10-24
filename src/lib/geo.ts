@@ -336,29 +336,45 @@ export async function autoDistricts(lat: number, lon: number, radius = 6000, max
 
   // 2) Alles Nötige einmal für die ganze Gegend laden (nur Punkte, ohne Details), dann je Viertel selbst zählen.
   //    Trennzeichen („make“) zwischen den Kategorien, damit wir wissen, was was ist.
-  const maxD = Math.max(...picked.map((p) => p.d));
-  const R = Math.min(12_000, Math.round(maxD + 1000));
+  // Rechteck um alle gewählten Viertel (+1 km) – Rechteck-Abfragen sind bei Overpass viel schneller als Kreise
+  const pad = 0.01;
+  const S = Math.min(...picked.map((p) => p.lat)) - pad;
+  const N = Math.max(...picked.map((p) => p.lat)) + pad;
+  const W = Math.min(...picked.map((p) => p.lon)) - pad * 1.5;
+  const E = Math.max(...picked.map((p) => p.lon)) + pad * 1.5;
+  const bb = `${S.toFixed(4)},${W.toFixed(4)},${N.toFixed(4)},${E.toFixed(4)}`;
   const cats = [
-    `nwr(around:${R},${c})[amenity~"^(bar|pub|nightclub|biergarten)$"]`,
-    `nwr(around:${R},${c})[amenity~"^(restaurant|cafe|fast_food|food_court)$"]`,
-    `node(around:${R},${c})[railway~"^(station|halt)$"]`,
-    `node(around:${R},${c})[railway=tram_stop]`,
-    `node(around:${R},${c})[highway=bus_stop]`,
-    `nwr(around:${R},${c})[leisure=park]`,
-    `nwr(around:${R},${c})[tourism~"^(hostel|guest_house)$"]`,
+    `nwr(${bb})[amenity~"^(bar|pub|nightclub|biergarten)$"]`,
+    `nwr(${bb})[amenity~"^(restaurant|cafe|fast_food|food_court)$"]`,
+    `node(${bb})[railway~"^(station|halt)$"]`,
+    `node(${bb})[railway=tram_stop]`,
+    `node(${bb})[highway=bus_stop]`,
+    `way(${bb})[leisure=park]`,
+    `nwr(${bb})[tourism~"^(hostel|guest_house)$"]`,
   ];
-  const body = cats.map((q, i) => `${q};out skel center qt;make sep n="${i}";out;`).join("");
-  const els = await overpass(`[out:json][timeout:60];${body}`);
+  // Zwei Abfragen parallel (Essen ist die größte Gruppe, bekommt eine eigene)
+  const ask = (idx: number[]) =>
+    overpass(`[out:json][timeout:55];${idx.map((i) => `${cats[i]};out skel center qt;make sep n="${i}";out;`).join("")}`);
+  const [part1, part2] = await Promise.all([ask([1]), ask([0, 2, 3, 4, 5, 6])]);
   const groups: { lat: number; lon: number }[][] = cats.map(() => []);
-  let cur = 0;
-  for (const e of els) {
-    if (e.type === "sep") {
-      cur = Number(e.tags?.n ?? cur) + 1;
-      continue;
+  for (const [els, first] of [
+    [part1, 1],
+    [part2, 0],
+  ] as const) {
+    let cur: number = first;
+    const order = first === 1 ? [1] : [0, 2, 3, 4, 5, 6];
+    let pos = 0;
+    cur = order[0];
+    for (const e of els) {
+      if (e.type === "sep") {
+        pos += 1;
+        cur = order[pos] ?? -1;
+        continue;
+      }
+      const la = e.lat ?? e.center?.lat;
+      const lo = e.lon ?? e.center?.lon;
+      if (cur >= 0 && Number.isFinite(la) && Number.isFinite(lo)) groups[cur].push({ lat: la as number, lon: lo as number });
     }
-    const la = e.lat ?? e.center?.lat;
-    const lo = e.lon ?? e.center?.lon;
-    if (cur < groups.length && Number.isFinite(la) && Number.isFinite(lo)) groups[cur].push({ lat: la as number, lon: lo as number });
   }
   const within = (g: number, p: { lat: number; lon: number }, r: number) =>
     groups[g].reduce((n, x) => (Math.abs(x.lat - p.lat) < 0.02 && distance(p.lat, p.lon, x.lat, x.lon) <= r ? n + 1 : n), 0);
@@ -399,6 +415,6 @@ export async function autoDistricts(lat: number, lon: number, radius = 6000, max
 /** Wie autoDistricts, aber das (kleine) Ergebnis wird 7 Tage gespeichert: ab dem zweiten Besuch sofort da. */
 export const autoDistrictsCached = unstable_cache(
   async (lat: number, lon: number) => autoDistricts(lat, lon),
-  ["auto-districts-v2"],
+  ["auto-districts-v3"],
   { revalidate: 7 * 86400 },
 );
