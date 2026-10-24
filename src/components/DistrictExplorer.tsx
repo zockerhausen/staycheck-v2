@@ -69,7 +69,7 @@ export default function DistrictExplorer({
       </div>
 
       {variant === "cards" ? (
-        <div className="-mx-4 mt-3 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-1 [scrollbar-width:none]">
+        <div className="-mx-4 mt-3 flex snap-x snap-mandatory scroll-px-4 gap-3 overflow-x-auto px-4 pb-1 [scrollbar-width:none]">
           {shown.map((d) => (
             <Link
               key={d.slug}
