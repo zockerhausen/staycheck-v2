@@ -87,7 +87,28 @@ type OverpassElement = {
   tags?: Record<string, string>;
 };
 
-async function overpass(query: string): Promise<OverpassElement[]> {
+// Die öffentlichen Overpass-Server erlauben pro Absender nur wenige Anfragen gleichzeitig.
+// Mehr gleichzeitig führt zu Sperren (429) für alle. Deshalb höchstens 2 Abfragen pro Server-Instanz auf einmal,
+// der Rest wartet in einer Schlange.
+const MAX_PARALLEL = 2;
+let running = 0;
+const queue: (() => void)[] = [];
+async function withSlot<T>(fn: () => Promise<T>): Promise<T> {
+  if (running >= MAX_PARALLEL) await new Promise<void>((r) => queue.push(r));
+  running++;
+  try {
+    return await fn();
+  } finally {
+    running--;
+    queue.shift()?.();
+  }
+}
+
+function overpass(query: string): Promise<OverpassElement[]> {
+  return withSlot(() => overpassNow(query));
+}
+
+async function overpassNow(query: string): Promise<OverpassElement[]> {
   // Die öffentlichen Overpass-Server sind oft ausgelastet. Wir fragen zwei gleichzeitig
   // und nehmen die erste gute Antwort; der dritte springt ein, wenn beide scheitern.
   const ask = async (endpoint: string, signal: AbortSignal) => {

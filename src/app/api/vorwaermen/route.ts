@@ -32,20 +32,21 @@ export async function GET(request: Request) {
   const byGeneral = [...districts].sort((a, b) => locationMatch(b.scores, DEFAULT_WEIGHTS) - locationMatch(a.scores, DEFAULT_WEIGHTS));
   const pick = [...new Map([...districts.slice(0, 5), ...byGeneral.slice(0, 5)].map((d) => [d.slug, d])).values()];
 
-  // Gleiche Werte wie auf /ziel/viertel, sonst trifft der Speicher nicht
-  const jobs = pick.map((d) => {
+  // Nacheinander (nicht gleichzeitig), damit die Kartenserver nicht überlastet werden.
+  // Gleiche Werte wie auf /ziel/viertel, sonst trifft der Speicher nicht.
+  const result: Record<string, "ok" | "fehler"> = {};
+  for (const d of pick) {
+    if (Date.now() - started > 80_000) break; // Rest beim nächsten Aufruf
     const name = d.name.replace(/[\u0000-\u001f<>]/g, "").trim().slice(0, 80);
     const center = { lat: Number(d.lat.toFixed(5)), lon: Number(d.lon.toFixed(5)) };
-    return { name, work: hotelsNearCached(center, null, DEFAULT_WEIGHTS, 800, name).then(() => "ok" as const, () => "fehler" as const) };
-  });
-  // Höchstens so lange warten, wie die Funktion laufen darf; der Rest rechnet im Hintergrund weiter
-  const left = Math.max(5_000, 110_000 - (Date.now() - started));
-  const done = await withDeadline(Promise.all(jobs.map((j) => j.work)), left);
-  if (done === "slow") after(() => Promise.all(jobs.map((j) => j.work)));
+    const r = await withDeadline(
+      hotelsNearCached(center, null, DEFAULT_WEIGHTS, 800, name).then(() => "ok" as const, () => "fehler" as const),
+      Math.max(5_000, 110_000 - (Date.now() - started)),
+    );
+    result[name] = r === "slow" ? "fehler" : r;
+    if (r !== "ok") break; // Server ausgelastet: aufhören und später weitermachen
+  }
+  const offen = pick.length - Object.values(result).filter((v) => v === "ok").length;
 
-  return NextResponse.json({
-    stadt: slug,
-    viertel: districts.length,
-    unterkuenfte: done === "slow" ? "läuft" : Object.fromEntries(jobs.map((j, i) => [j.name, done[i]])),
-  });
+  return NextResponse.json({ stadt: slug, viertel: districts.length, unterkuenfte: result, offen });
 }
