@@ -439,3 +439,22 @@ export const autoDistrictsCached = unstable_cache(
   ["auto-districts-v4"],
   { revalidate: 7 * 86400 },
 );
+
+/** Unterkünfte mit Lage-Score, Ergebnis 1 Tag gespeichert (je Ort, Radius und Gewichtung). */
+export const hotelsNearCached = unstable_cache(
+  async (center: { lat: number; lon: number }, district: District | null, weights: Weights, radius: number, areaName: string) =>
+    hotelsNear(center, district, weights, radius, areaName),
+  ["hotels-v1"],
+  { revalidate: 86400 },
+);
+
+/** Wartet höchstens ms Millisekunden. Danach „slow“ – die Arbeit läuft weiter und landet im Zwischenspeicher. */
+export async function withDeadline<T>(work: Promise<T>, ms: number): Promise<T | "slow"> {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const deadline = new Promise<"slow">((r) => (timer = setTimeout(() => r("slow"), ms)));
+  try {
+    return await Promise.race([work, deadline]);
+  } finally {
+    clearTimeout(timer);
+  }
+}

@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getCities, getCriteria, getDistricts, getFavoriteIds, getSavedPlaces, getUser, resolveWeights, weightsToQuery } from "@/lib/data";
-import { DEFAULT_WEIGHTS, hotelsNear, verdict, type HotelResult } from "@/lib/geo";
+import { after } from "next/server";
+import { DEFAULT_WEIGHTS, hotelsNearCached, verdict, withDeadline, type HotelResult } from "@/lib/geo";
+import StillLoading from "@/components/StillLoading";
 import { matchScore, topReasons } from "@/lib/matching";
 import FavoriteButton from "@/components/FavoriteButton";
 import { characterOf, traitsOf } from "@/lib/character";
@@ -14,6 +16,7 @@ import { getTipsForDistrict } from "@/lib/tips";
 
 // Dynamisch durch Cookies/Suchparameter; Kartendaten-Abfragen werden 1 Tag zwischengespeichert.
 export const fetchCache = "default-cache";
+export const maxDuration = 60;
 
 const KIND_LABEL: Record<string, string> = {
   hotel: "Hotel",
@@ -62,11 +65,12 @@ export default async function KiezPage({
 
   let hotels: HotelResult[] = [];
   let failed = false;
-  try {
-    hotels = await hotelsNear({ lat: district.lat, lon: district.lng }, district, weights);
-  } catch {
-    failed = true;
-  }
+  const work = hotelsNearCached({ lat: district.lat, lon: district.lng }, district, weights, 1400, district.name);
+  const raced = await withDeadline(work.catch(() => null), 40_000);
+  const slow = raced === "slow";
+  if (slow) after(() => work.catch(() => undefined));
+  else if (raced === null) failed = true;
+  else hotels = raced;
   const shown = filter === "alle" ? hotels : hotels.filter((h) => h.kind === filter);
   const isSaved = (h: HotelResult) => saved.some((p) => Math.abs(p.lat - h.lat) < 1e-6 && Math.abs(p.lon - h.lon) < 1e-6);
   const checkUrl = (h: HotelResult) =>
@@ -132,7 +136,7 @@ export default async function KiezPage({
       <section>
         <div className="flex items-baseline justify-between">
           <h2 className="font-display text-[19px] font-extrabold">Beste Lage im Viertel</h2>
-          {!failed && <span className="text-sm text-muted">{shown.length} gefunden</span>}
+          {!failed && !slow && <span className="text-sm text-muted">{shown.length} gefunden</span>}
         </div>
 
         <nav className="-mx-4 mt-3 flex gap-2 overflow-x-auto px-4 [scrollbar-width:none]" aria-label="Unterkunftsart">
@@ -150,7 +154,9 @@ export default async function KiezPage({
           ))}
         </nav>
 
-        {failed ? (
+        {slow ? (
+          <StillLoading title="Wir prüfen die Unterkünfte …" text="Für jede Unterkunft schauen wir uns die Umgebung an. Beim ersten Mal dauert das etwas, die Seite lädt von selbst neu." />
+        ) : failed ? (
           <p className="card mt-4 p-4 text-sm text-muted">Die Kartendaten sind gerade überlastet. Lade die Seite in einer Minute neu.</p>
         ) : shown.length === 0 ? (
           <p className="card mt-4 p-4 text-sm text-muted">Hier haben wir keine passenden Unterkünfte gefunden.</p>

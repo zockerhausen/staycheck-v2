@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getCities, getCriteria, getProfile } from "@/lib/data";
-import { autoDistrictsCached, distance, locationMatch, type AutoDistrict } from "@/lib/geo";
+import { after } from "next/server";
+import { autoDistrictsCached, distance, locationMatch, withDeadline, type AutoDistrict } from "@/lib/geo";
+import StillLoading from "@/components/StillLoading";
 import { parseZiel, zielQuery } from "@/lib/ziel";
 import { pageRateLimit } from "@/lib/ratelimit-page";
 import Icon from "@/components/Icon";
@@ -48,10 +50,12 @@ export default async function ZielPage({ searchParams }: { searchParams: Promise
   }
 
   const criteria = await getCriteria();
-  const [{ weights }, districts] = await Promise.all([
-    getProfile(criteria),
-    autoDistrictsCached(ziel.lat, ziel.lon).catch(() => null as AutoDistrict[] | null),
-  ]);
+  const work = autoDistrictsCached(ziel.lat, ziel.lon).catch(() => null as AutoDistrict[] | null);
+  const [{ weights }, raced] = await Promise.all([getProfile(criteria), withDeadline(work, 45_000)]);
+  // Erste Berechnung einer Stadt zu langsam? Im Hintergrund fertig rechnen, Seite lädt von selbst neu.
+  if (raced === "slow") after(() => work);
+  const slow = raced === "slow";
+  const districts = slow ? [] : raced;
   const zq = zielQuery(ziel);
   const viertelHref = (d: AutoDistrict) =>
     `/ziel/viertel?${zq}&${new URLSearchParams({ name: d.name.slice(0, 80), vlat: d.lat.toFixed(5), vlon: d.lon.toFixed(5) })}`;
@@ -65,7 +69,12 @@ export default async function ZielPage({ searchParams }: { searchParams: Promise
       <p className="mt-7 text-xs font-bold uppercase tracking-[0.08em] text-[#ffb08f]">Deine Reise{ziel.land ? ` · ${ziel.land}` : ""}</p>
       <h1 className="mega mt-1 text-[clamp(2.2rem,10vw,2.7rem)] [overflow-wrap:anywhere]">Wo schläfst du in {ziel.ort}?</h1>
 
-      {districts === null ? (
+      {slow ? (
+        <StillLoading
+          title={`Wir erkunden ${ziel.ort} …`}
+          text="Beim ersten Mal zählen wir für jedes Viertel Bahn, Bars, Essen und Parks. Das dauert etwas, die Seite lädt von selbst neu."
+        />
+      ) : districts === null ? (
         <div className="card mt-6 p-5">
           <p className="font-bold">Die Kartendaten sind gerade überlastet.</p>
           <p className="mt-1 text-sm text-muted">Lade die Seite in einer Minute neu. Den Lage-Check für eine Unterkunft kannst du schon nutzen.</p>
