@@ -8,7 +8,8 @@ import { unstable_cache } from "next/cache";
 import { distance, scoreFromData, type Highlight, type Line, type Poi, type ScoreResult } from "./score";
 
 const UA = "StayCheck/0.1 (https://github.com/zockerhausen/staycheck-v2)";
-const OVERPASS = ["https://overpass-api.de/api/interpreter", "https://overpass.private.coffee/api/interpreter"];
+const OVERPASS_FAST = ["https://overpass.kumi.systems/api/interpreter", "https://overpass-api.de/api/interpreter"];
+const OVERPASS_FALLBACK = "https://overpass.private.coffee/api/interpreter";
 
 export type Place = {
   name: string;
@@ -84,21 +85,29 @@ type OverpassElement = {
 };
 
 async function overpass(query: string): Promise<OverpassElement[]> {
-  let lastError: unknown;
-  for (const endpoint of OVERPASS) {
-    try {
-      const res = await fetch(`${endpoint}?data=${encodeURIComponent(query)}`, {
-        headers: { "User-Agent": UA },
-        next: { revalidate: 86400 }, // 1 Tag zwischenspeichern
-      });
-      if (!res.ok) throw new Error(`Overpass ${res.status}`);
-      const json = (await res.json()) as { elements: OverpassElement[] };
-      return json.elements ?? [];
-    } catch (e) {
-      lastError = e;
-    }
+  // Die öffentlichen Overpass-Server sind oft ausgelastet. Wir fragen zwei gleichzeitig
+  // und nehmen die erste gute Antwort; der dritte springt ein, wenn beide scheitern.
+  const ask = async (endpoint: string, signal: AbortSignal) => {
+    const res = await fetch(`${endpoint}?data=${encodeURIComponent(query)}`, {
+      headers: { "User-Agent": UA },
+      signal,
+      next: { revalidate: 86400 }, // 1 Tag zwischenspeichern (wenn die Antwort klein genug ist)
+    });
+    if (!res.ok) throw new Error(`Overpass ${res.status}`);
+    const json = (await res.json()) as { elements?: OverpassElement[]; remark?: string };
+    if (!json.elements || (json.remark && /runtime error|timed out|out of memory/i.test(json.remark))) throw new Error("Overpass unvollständig");
+    return json.elements;
+  };
+  const ctl = new AbortController();
+  const timer = setTimeout(() => ctl.abort(), 50_000);
+  try {
+    return await Promise.any(OVERPASS_FAST.map((e) => ask(e, ctl.signal)));
+  } catch {
+    return await ask(OVERPASS_FALLBACK, AbortSignal.timeout(40_000));
+  } finally {
+    clearTimeout(timer);
+    ctl.abort(); // die langsamere Anfrage abbrechen
   }
-  throw lastError instanceof Error ? lastError : new Error("Overpass nicht erreichbar");
 }
 
 /** Fläche eines Umrisses in m² (Gaußsche Trapezformel, lokal in Metern) */
@@ -214,9 +223,22 @@ export function scoreLocation(lat: number, lon: number, data: { pois: Poi[]; lin
   return { ...r, district };
 }
 
-export async function analyzeLocation(lat: number, lon: number, districts: District[]) {
-  const data = split(await overpass(poiQuery(lat, lon)));
-  return scoreLocation(lat, lon, data, nearestDistrict(lat, lon, districts));
+// Das fertige Ergebnis ist klein und wird 1 Tag gespeichert – die Rohdaten sind oft zu groß für den Zwischenspeicher.
+const scoreCached = unstable_cache(
+  async (lat: number, lon: number, district: { name: string; scores: Record<string, number> } | null) => {
+    const { pois, lines } = split(await overpass(poiQuery(lat, lon)));
+    return scoreFromData(lat, lon, pois, lines, district);
+  },
+  ["score-v1"],
+  { revalidate: 86400 },
+);
+
+export async function analyzeLocation(lat: number, lon: number, districts: District[]): Promise<LocationAnalysis> {
+  const la = Math.round(lat * 1e5) / 1e5;
+  const lo = Math.round(lon * 1e5) / 1e5;
+  const district = nearestDistrict(la, lo, districts);
+  const r = await scoreCached(la, lo, district ? { name: district.name, scores: district.scores } : null);
+  return { ...r, district };
 }
 
 /** Match in Prozent für einen Ort. Kriterien ohne Daten (null) werden ignoriert. */
