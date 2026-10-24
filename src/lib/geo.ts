@@ -329,10 +329,34 @@ const autoStep = (v: number, table: [number, number][], fallback: number) => {
   return fallback;
 };
 
-export async function autoDistricts(lat: number, lon: number, radius = 6000, max = 16): Promise<AutoDistrict[]> {
+export async function autoDistricts(lat: number, lon: number, radius = 4500, max = 16): Promise<AutoDistrict[]> {
   const c = `${lat.toFixed(4)},${lon.toFixed(4)}`;
-  // 1) Stadtteile finden (nur Punkte mit Namen)
-  const places = await overpass(`[out:json][timeout:25];node(around:${radius},${c})[place~"^(suburb|quarter|neighbourhood)$"][name];out;`);
+  // Beide Abfragen laufen gleichzeitig (die öffentlichen Server antworten oft langsam).
+  // 1) Stadtteile (Punkte mit Namen)  2) alles Nötige im Rechteck um das Zentrum, ohne Details
+  const dLat = radius / 110540 + 0.01;
+  const dLon = radius / (111320 * Math.cos((lat * Math.PI) / 180)) + 0.015;
+  const bb = `${(lat - dLat).toFixed(4)},${(lon - dLon).toFixed(4)},${(lat + dLat).toFixed(4)},${(lon + dLon).toFixed(4)}`;
+  const cats: [string, string][] = [
+    [`node(${bb})[amenity~"^(bar|pub|nightclub|biergarten)$"]`, `way(${bb})[amenity~"^(bar|pub|nightclub|biergarten)$"]`],
+    [`node(${bb})[amenity~"^(restaurant|cafe|fast_food|food_court)$"]`, `way(${bb})[amenity~"^(restaurant|cafe|fast_food|food_court)$"]`],
+    [`node(${bb})[railway~"^(station|halt)$"]`, ""],
+    [`node(${bb})[railway=tram_stop]`, ""],
+    [`node(${bb})[highway=bus_stop]`, ""],
+    ["", `way(${bb})[leisure=park]`],
+    [`node(${bb})[tourism~"^(hostel|guest_house)$"]`, `way(${bb})[tourism~"^(hostel|guest_house)$"]`],
+  ];
+  // Punkte nur mit Koordinaten (skel), Flächen nur mit Mittelpunkt (center) – hält die Antwort klein
+  const part = (i: number) => {
+    const [n, w] = cats[i];
+    return `${n ? `${n};out skel qt;` : ""}${w ? `${w};out center qt;` : ""}make sep n="${i}";out;`;
+  };
+  const ask = (idx: number[]) => overpass(`[out:json][timeout:50];${idx.map(part).join("")}`);
+  const [places, foodEls, restEls] = await Promise.all([
+    overpass(`[out:json][timeout:25];node(around:${radius},${c})[place~"^(suburb|quarter|neighbourhood)$"][name];out;`),
+    ask([1]),
+    ask([0, 2, 3, 4, 5, 6]),
+  ]);
+
   const rank: Record<string, number> = { suburb: 0, quarter: 1, neighbourhood: 2 };
   const candidates = places
     .filter((p) => Number.isFinite(p.lat) && Number.isFinite(p.lon) && p.tags?.name)
@@ -356,46 +380,21 @@ export async function autoDistricts(lat: number, lon: number, radius = 6000, max
   }
   if (!picked.length) return [];
 
-  // 2) Alles Nötige einmal für die ganze Gegend laden (nur Punkte, ohne Details), dann je Viertel selbst zählen.
-  //    Trennzeichen („make“) zwischen den Kategorien, damit wir wissen, was was ist.
-  // Rechteck um alle gewählten Viertel (+1 km) – Rechteck-Abfragen sind bei Overpass viel schneller als Kreise
-  const pad = 0.01;
-  const S = Math.min(...picked.map((p) => p.lat)) - pad;
-  const N = Math.max(...picked.map((p) => p.lat)) + pad;
-  const W = Math.min(...picked.map((p) => p.lon)) - pad * 1.5;
-  const E = Math.max(...picked.map((p) => p.lon)) + pad * 1.5;
-  const bb = `${S.toFixed(4)},${W.toFixed(4)},${N.toFixed(4)},${E.toFixed(4)}`;
-  const cats = [
-    `nwr(${bb})[amenity~"^(bar|pub|nightclub|biergarten)$"]`,
-    `nwr(${bb})[amenity~"^(restaurant|cafe|fast_food|food_court)$"]`,
-    `node(${bb})[railway~"^(station|halt)$"]`,
-    `node(${bb})[railway=tram_stop]`,
-    `node(${bb})[highway=bus_stop]`,
-    `way(${bb})[leisure=park]`,
-    `nwr(${bb})[tourism~"^(hostel|guest_house)$"]`,
-  ];
-  // Zwei Abfragen parallel (Essen ist die größte Gruppe, bekommt eine eigene)
-  const ask = (idx: number[]) =>
-    overpass(`[out:json][timeout:55];${idx.map((i) => `${cats[i]};out skel center qt;make sep n="${i}";out;`).join("")}`);
-  const [part1, part2] = await Promise.all([ask([1]), ask([0, 2, 3, 4, 5, 6])]);
   const groups: { lat: number; lon: number }[][] = cats.map(() => []);
-  for (const [els, first] of [
-    [part1, 1],
-    [part2, 0],
+  for (const [els, order] of [
+    [foodEls, [1]],
+    [restEls, [0, 2, 3, 4, 5, 6]],
   ] as const) {
-    let cur: number = first;
-    const order = first === 1 ? [1] : [0, 2, 3, 4, 5, 6];
     let pos = 0;
-    cur = order[0];
     for (const e of els) {
       if (e.type === "sep") {
         pos += 1;
-        cur = order[pos] ?? -1;
         continue;
       }
+      const g = order[pos];
       const la = e.lat ?? e.center?.lat;
       const lo = e.lon ?? e.center?.lon;
-      if (cur >= 0 && Number.isFinite(la) && Number.isFinite(lo)) groups[cur].push({ lat: la as number, lon: lo as number });
+      if (g !== undefined && Number.isFinite(la) && Number.isFinite(lo)) groups[g].push({ lat: la as number, lon: lo as number });
     }
   }
   const within = (g: number, p: { lat: number; lon: number }, r: number) =>
@@ -437,6 +436,6 @@ export async function autoDistricts(lat: number, lon: number, radius = 6000, max
 /** Wie autoDistricts, aber das (kleine) Ergebnis wird 7 Tage gespeichert: ab dem zweiten Besuch sofort da. */
 export const autoDistrictsCached = unstable_cache(
   async (lat: number, lon: number) => autoDistricts(lat, lon),
-  ["auto-districts-v3"],
+  ["auto-districts-v4"],
   { revalidate: 7 * 86400 },
 );
