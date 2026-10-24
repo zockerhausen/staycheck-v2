@@ -278,12 +278,15 @@ export const DEFAULT_WEIGHTS: Weights = { budget: 3, nightlife: 3, quiet: 3, saf
 
 export type HotelResult = Place & { scores: LocationScores; match: number; highlights: Highlight[] };
 
-export async function hotelsNear(
+/**
+ * Alle Unterkünfte im Umkreis mit ihren Lage-Werten. Unabhängig vom Reise-Profil,
+ * damit das (langsame) Ergebnis für alle Nutzer:innen gleich ist und nur einmal berechnet werden muss.
+ */
+async function hotelsScored(
   center: { lat: number; lon: number },
   district: District | null,
-  weights: Weights,
-  radius = 1400,
-  areaName = district?.name ?? "",
+  radius: number,
+  areaName: string,
 ): Promise<HotelResult[]> {
   const c = `${center.lat.toFixed(5)},${center.lon.toFixed(5)}`;
   const hotelsQuery = `[out:json][timeout:25];
@@ -304,12 +307,30 @@ out tags center;`;
         lon: h.lon,
         kind: kindOf(h.tags),
         scores: a.scores,
-        match: locationMatch(a.scores, weights),
+        match: locationMatch(a.scores, DEFAULT_WEIGHTS),
         highlights: a.highlights.slice(0, 2),
       };
     })
     .sort((a, b) => b.match - a.match)
+    .slice(0, 150); // genug Auswahl, damit jedes Profil seine besten findet
+}
+
+/** Nach dem Reise-Profil sortieren (schnell, läuft bei jedem Aufruf). */
+function rankHotels(list: HotelResult[], weights: Weights): HotelResult[] {
+  return list
+    .map((h) => ({ ...h, match: locationMatch(h.scores, weights) }))
+    .sort((a, b) => b.match - a.match)
     .slice(0, 40);
+}
+
+export async function hotelsNear(
+  center: { lat: number; lon: number },
+  district: District | null,
+  weights: Weights,
+  radius = 1400,
+  areaName = district?.name ?? "",
+): Promise<HotelResult[]> {
+  return rankHotels(await hotelsScored(center, district, radius, areaName), weights);
 }
 
 // ---------- Viertel für jede Stadt der Welt (automatisch) ----------
@@ -458,30 +479,31 @@ function once<T>(key: string, fn: () => Promise<T>): Promise<T> {
   return p;
 }
 
-/** Wie autoDistricts, aber das (kleine) Ergebnis wird 7 Tage gespeichert: ab dem zweiten Besuch sofort da. */
+/** Wie autoDistricts, aber das (kleine) Ergebnis wird 30 Tage gespeichert: ab dem zweiten Besuch sofort da. */
 const autoDistrictsStored = unstable_cache(
   async (lat: number, lon: number) => autoDistricts(lat, lon),
   ["auto-districts-v6"],
-  { revalidate: 7 * 86400 },
+  { revalidate: 30 * 86400 }, // Viertel ändern sich selten; danach wird im Hintergrund neu berechnet
 );
 export const autoDistrictsCached = (lat: number, lon: number) => once(`auto:${lat},${lon}`, () => autoDistrictsStored(lat, lon));
 
-/** Unterkünfte mit Lage-Score, Ergebnis 1 Tag gespeichert (je Ort, Radius und Gewichtung). */
-const hotelsNearStored = unstable_cache(
-  async (center: { lat: number; lon: number }, district: District | null, weights: Weights, radius: number, areaName: string) =>
-    hotelsNear(center, district, weights, radius, areaName),
-  ["hotels-v2"],
-  { revalidate: 86400 },
+/** Unterkünfte mit Lage-Score: Rohdaten 14 Tage gespeichert (je Ort und Radius), sortiert wird je Profil. */
+const hotelsScoredStored = unstable_cache(
+  async (center: { lat: number; lon: number }, district: District | null, radius: number, areaName: string) =>
+    hotelsScored(center, district, radius, areaName),
+  ["hotels-v3"],
+  { revalidate: 14 * 86400 },
 );
-export const hotelsNearCached = (
+export const hotelsNearCached = async (
   center: { lat: number; lon: number },
   district: District | null,
   weights: Weights,
   radius: number,
   areaName: string,
 ) =>
-  once(`hotels:${center.lat},${center.lon},${radius},${JSON.stringify(weights)}`, () =>
-    hotelsNearStored(center, district, weights, radius, areaName),
+  rankHotels(
+    await once(`hotels:${center.lat},${center.lon},${radius}`, () => hotelsScoredStored(center, district, radius, areaName)),
+    weights,
   );
 
 /** Wartet höchstens ms Millisekunden. Danach „slow“ – die Arbeit läuft weiter und landet im Zwischenspeicher. */

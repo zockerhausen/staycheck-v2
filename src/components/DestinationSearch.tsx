@@ -4,8 +4,9 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Icon from "@/components/Icon";
 import { rememberCity } from "@/app/actions";
+import { FEATURED, POPULAR } from "@/lib/popular";
 
-type Result = { ort: string; land: string; region: string; lat: number; lon: number; known: string | null };
+type Result = { ort: string; land: string; region: string; lat: number; lon: number; known: string | null; popular?: boolean };
 type Recent = { ort: string; land: string; lat: number; lon: number; known: string | null };
 
 const KEY = "sc_ziele"; // zuletzt gewählte Reiseziele, nur auf diesem Gerät
@@ -113,7 +114,11 @@ export default function DestinationSearch({ verified }: { verified: { slug: stri
                   <span className="block truncate font-bold">{r.ort}</span>
                   <span className="block truncate text-sm text-muted">{[r.region, r.land].filter(Boolean).join(", ")}</span>
                 </span>
-                {r.known && <span className="rounded-full bg-peach px-2 py-1 text-[11px] font-bold text-peach-ink">geprüft</span>}
+                {r.known ? (
+                  <span className="rounded-full bg-peach px-2 py-1 text-[11px] font-bold text-peach-ink">geprüft</span>
+                ) : (
+                  r.popular && <span className="rounded-full bg-raised px-2 py-1 text-[11px] font-bold text-muted">beliebt</span>
+                )}
               </button>
             </li>
           ))}
@@ -134,6 +139,21 @@ export default function DestinationSearch({ verified }: { verified: { slug: stri
               </div>
             </div>
           )}
+          <div>
+            <p className="mb-2 px-1 text-[13px] font-semibold text-muted">Beliebt bei Reisenden</p>
+            <div className="-mx-4 flex gap-2 overflow-x-auto px-4 [scrollbar-width:none]">
+              {FEATURED.map((slug) => POPULAR.find((p) => p.slug === slug)!).map((p) => (
+                <button
+                  key={p.slug}
+                  type="button"
+                  onClick={() => go({ ort: p.ort, land: p.land, lat: p.lat, lon: p.lon, known: null })}
+                  className="press shrink-0 rounded-full bg-tan px-4 py-2.5 text-sm font-semibold"
+                >
+                  {p.ort}
+                </button>
+              ))}
+            </div>
+          </div>
           <div>
             <p className="mb-2 px-1 text-[13px] font-semibold text-muted">Geprüfte Städte, Viertel von uns bewertet</p>
             <div className="flex flex-wrap gap-2">
