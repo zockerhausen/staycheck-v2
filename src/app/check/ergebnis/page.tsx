@@ -20,7 +20,8 @@ import TipsSection from "@/components/TipsSection";
 import { HUBS, cityForPoint } from "@/lib/arrival";
 import { getTipsNear } from "@/lib/tips";
 
-export const dynamic = "force-dynamic";
+// Dynamisch durch Cookies/Suchparameter; Kartendaten-Abfragen werden 1 Tag zwischengespeichert.
+export const fetchCache = "default-cache";
 
 const TONE: Record<string, string> = {
   top: "bg-sun text-white",

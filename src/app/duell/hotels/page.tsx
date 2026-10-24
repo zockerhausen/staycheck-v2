@@ -8,7 +8,8 @@ import Reveal from "@/components/Reveal";
 import HotelDuelForm from "@/components/HotelDuelForm";
 import DuelTabs from "@/components/DuelTabs";
 
-export const dynamic = "force-dynamic";
+// Dynamisch durch Cookies/Suchparameter; Kartendaten-Abfragen werden 1 Tag zwischengespeichert.
+export const fetchCache = "default-cache";
 
 const KINDS = ["hotel", "hostel", "guest_house", "apartment", "address", "other"] as const;
 

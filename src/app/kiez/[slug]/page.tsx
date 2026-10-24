@@ -10,7 +10,8 @@ import PlaceSaveButton from "@/components/PlaceSaveButton";
 import TipsSection from "@/components/TipsSection";
 import { getTipsForDistrict } from "@/lib/tips";
 
-export const dynamic = "force-dynamic";
+// Dynamisch durch Cookies/Suchparameter; Kartendaten-Abfragen werden 1 Tag zwischengespeichert.
+export const fetchCache = "default-cache";
 
 const KIND_LABEL: Record<string, string> = {
   hotel: "Hotel",
