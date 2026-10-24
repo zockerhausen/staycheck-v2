@@ -16,7 +16,7 @@ import { getTipsForDistrict } from "@/lib/tips";
 
 // Dynamisch durch Cookies/Suchparameter; Kartendaten-Abfragen werden 1 Tag zwischengespeichert.
 export const fetchCache = "default-cache";
-export const maxDuration = 60;
+export const maxDuration = 120; // Unterkünfte dürfen im Hintergrund fertig gerechnet werden
 
 const KIND_LABEL: Record<string, string> = {
   hotel: "Hotel",
