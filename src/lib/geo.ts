@@ -240,7 +240,7 @@ export async function analyzeLocation(lat: number, lon: number, districts: Distr
   const la = Math.round(lat * 1e5) / 1e5;
   const lo = Math.round(lon * 1e5) / 1e5;
   const district = nearestDistrict(la, lo, districts);
-  const r = await scoreCached(la, lo, district ? { name: district.name, scores: district.scores } : null);
+  const r = await once(`score:${la},${lo}`, () => scoreCached(la, lo, district ? { name: district.name, scores: district.scores } : null));
   return { ...r, district };
 }
 
@@ -439,20 +439,42 @@ export async function autoDistricts(lat: number, lon: number, radius = 3500, max
     .filter((d) => (d.scores.food ?? 0) >= 3 || (d.scores.transit ?? 0) >= 6); // Viertel ohne alles weglassen
 }
 
+// Läuft dieselbe Berechnung schon (z. B. weil die Seite neu geladen wurde), hängen wir uns dran,
+// statt die Kartenserver ein zweites Mal zu belasten.
+const inflight = new Map<string, Promise<unknown>>();
+function once<T>(key: string, fn: () => Promise<T>): Promise<T> {
+  const running = inflight.get(key) as Promise<T> | undefined;
+  if (running) return running;
+  const p = fn().finally(() => inflight.delete(key));
+  inflight.set(key, p);
+  return p;
+}
+
 /** Wie autoDistricts, aber das (kleine) Ergebnis wird 7 Tage gespeichert: ab dem zweiten Besuch sofort da. */
-export const autoDistrictsCached = unstable_cache(
+const autoDistrictsStored = unstable_cache(
   async (lat: number, lon: number) => autoDistricts(lat, lon),
   ["auto-districts-v6"],
   { revalidate: 7 * 86400 },
 );
+export const autoDistrictsCached = (lat: number, lon: number) => once(`auto:${lat},${lon}`, () => autoDistrictsStored(lat, lon));
 
 /** Unterkünfte mit Lage-Score, Ergebnis 1 Tag gespeichert (je Ort, Radius und Gewichtung). */
-export const hotelsNearCached = unstable_cache(
+const hotelsNearStored = unstable_cache(
   async (center: { lat: number; lon: number }, district: District | null, weights: Weights, radius: number, areaName: string) =>
     hotelsNear(center, district, weights, radius, areaName),
   ["hotels-v1"],
   { revalidate: 86400 },
 );
+export const hotelsNearCached = (
+  center: { lat: number; lon: number },
+  district: District | null,
+  weights: Weights,
+  radius: number,
+  areaName: string,
+) =>
+  once(`hotels:${center.lat},${center.lon},${radius},${JSON.stringify(weights)}`, () =>
+    hotelsNearStored(center, district, weights, radius, areaName),
+  );
 
 /** Wartet höchstens ms Millisekunden. Danach „slow“ – die Arbeit läuft weiter und landet im Zwischenspeicher. */
 export async function withDeadline<T>(work: Promise<T>, ms: number): Promise<T | "slow"> {
