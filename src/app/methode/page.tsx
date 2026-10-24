@@ -10,7 +10,7 @@ const RULES: { icon: IconName; title: string; how: string; scale: string }[] = [
   {
     icon: "transit",
     title: "Anbindung",
-    how: "Fußweg zum nächsten Bahnhof (S-/U-Bahn, Zug, Metro, Skytrain) im Umkreis von 900 m. Straßenbahn und Boote zählen weniger, weil sie seltener und langsamer fahren. Bus nur als Notlösung.",
+    how: "Fußweg zum nächsten Bahnhof (S-/U-Bahn, Zug, Metro, Skytrain) im Umkreis von 900 m. Straßenbahn und Boote zählen weniger, weil sie seltener und langsamer fahren. Bus nur als Notlösung. Stationen im Bau oder außer Betrieb zählen nicht.",
     scale: "Bahn: bis 3 Min. = 10 · bis 5 Min. = 9 · bis 7 Min. = 8 · bis 9 Min. = 7 · bis 12 Min. = 5 · Straßenbahn höchstens 7 · Boot höchstens 6 · nur Bus = 3 · nichts = 1",
   },
   {
@@ -28,7 +28,7 @@ const RULES: { icon: IconName; title: string; how: string; scale: string }[] = [
   {
     icon: "nature",
     title: "Grün & Wasser",
-    how: "Abstand zum Rand des nächsten Parks, Waldes, Sees, Flusses oder Strands (nicht zur Mitte, große Parks zählen also richtig). Mini-Flächen unter 0,5 ha zählen nicht. Volle Punkte gibt es nur für große Parks oder Wasser ab 5 ha.",
+    how: "Abstand zum Rand des nächsten Parks, Waldes, Sees, Flusses oder Strands (nicht zur Mitte, große Parks zählen also richtig). Mini-Flächen unter 0,5 ha zählen nicht. Volle Punkte gibt es nur für große Parks oder Wasser ab etwa 10 ha.",
     scale: "Großer Park: bis 150 m = 10 · bis 300 m = 9 · bis 450 m = 8 · bis 600 m = 7 · bis 800 m = 6 · Kleine Grünfläche höchstens 7 · nichts in 800 m = 2",
   },
   {

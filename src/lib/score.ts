@@ -79,7 +79,19 @@ const step = (value: number, table: [number, number][], fallback: number) => {
 };
 const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
 /** Lesbarer Name: erst Deutsch, dann Englisch, dann Originalschrift (z. B. Thai) */
-const nameOf = (t: Tags) => t["name:de"] ?? t["name:en"] ?? t.name;
+// Namen nur in lateinischer Schrift anzeigen, sonst allgemeine Bezeichnung (z. B. „Park“)
+const latin = (s: string | undefined) => (s && /^[\p{Script=Latin}\p{N}\p{P}\p{Zs}\p{S}]+$/u.test(s) ? s : undefined);
+const nameOf = (t: Tags) => t["name:de"] ?? t["name:en"] ?? latin(t.name);
+
+/** Station oder Anleger, die (noch) nicht in Betrieb sind, zählen nicht. */
+const YEAR = new Date().getFullYear();
+function inService(t: Tags) {
+  if (t.disused === "yes" || t.abandoned === "yes" || t.construction || t.proposed) return false;
+  if (Object.keys(t).some((k) => /^(disused|abandoned|construction|proposed):/.test(k))) return false;
+  if (/not operated|geschlossen|closed|under construction|im bau/i.test(`${t.name ?? ""} ${t["name:en"] ?? ""} ${t.note ?? ""}`)) return false;
+  const opens = Number((t.opening_date ?? t.start_date ?? "").slice(0, 4));
+  return !(opens && opens > YEAR);
+}
 
 /** Fläche des Umriss-Rechtecks in m² (grob, reicht um Mini-Grünflächen auszusortieren) */
 function bboxArea(p: Poi) {
@@ -106,7 +118,7 @@ const isGreen = (t: Tags) =>
   /^(park|garden|nature_reserve)$/.test(t.leisure ?? "") || /^(water|beach|wood)$/.test(t.natural ?? "") || t.landuse === "forest";
 // Mini-Flächen (Verkehrsinsel, Vorgarten, Tiergehege) zählen nicht: mindestens 0,5 ha, Strände immer
 const MIN_GREEN_M2 = 5_000;
-const BIG_GREEN_M2 = 50_000;
+const BIG_GREEN_M2 = 100_000; // 10 ha (das Umriss-Rechteck ist größer als die echte Fläche)
 const isBudgetStay = (t: Tags) => /^(hostel|guest_house)$/.test(t.tourism ?? "");
 const isMainRoad = (t: Tags) => /^(motorway|trunk|primary)$/.test(t.highway ?? "");
 const isSecondaryRoad = (t: Tags) => t.highway === "secondary";
@@ -117,7 +129,7 @@ const isRailLine = (t: Tags) => /^(rail|light_rail|subway|tram)$/.test(t.railway
 export function scoreFromData(lat: number, lon: number, pois: Poi[], lines: Line[], district: ScoreDistrict | null): ScoreResult {
   const near = (r: number, test: (t: Tags) => boolean) =>
     pois
-      .filter((p) => test(p.tags))
+      .filter((p) => test(p.tags) && inService(p.tags))
       .map((p) => ({ p, d: distToPoi(lat, lon, p) }))
       .filter((x) => x.d <= r)
       .sort((a, b) => a.d - b.d);
