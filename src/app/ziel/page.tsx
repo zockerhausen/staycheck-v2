@@ -7,7 +7,6 @@ import StillLoading from "@/components/StillLoading";
 import { parseZiel, zielQuery } from "@/lib/ziel";
 import { pageRateLimit } from "@/lib/ratelimit-page";
 import Icon from "@/components/Icon";
-import PlaceSearch from "@/components/PlaceSearch";
 import DistrictExplorer from "@/components/DistrictExplorer";
 import KiezMap from "@/components/KiezMap";
 
