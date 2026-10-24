@@ -38,7 +38,7 @@ export default async function HotelDuellPage({
       <div className="space-y-6 pt-2">
         <DuelTabs active="hotels" />
         <div>
-          <h1 className="font-display text-4xl font-extrabold leading-tight">Welches Hotel liegt besser?</h1>
+          <h1 className="mega text-[2.1rem]">Welche Unterkunft liegt besser?</h1>
           <p className="mt-2 text-muted">
             Du hast mehrere Unterkünfte im Blick? Füg die Links ein, wir vergleichen die Lage für dich.
           </p>
@@ -82,18 +82,13 @@ export default async function HotelDuellPage({
             match={winner.match ?? 0}
             celebrate
             eyebrow="Beste Lage für dich"
-            caption={
-              sameScore
-                ? "Gleicher Lage-Score – knapp vorne, weil die Bahn näher ist"
-                : source
-                  ? `Lage-Score nach deinem Profil · ${verdict(winner.match ?? 0).label}`
-                  : `Lage-Score · ${verdict(winner.match ?? 0).label}`
-            }
+            caption={source ? "Match für dich" : "Lage-Score"}
+            sub={sameScore ? "Gleicher Score, knapp vorne, weil die Bahn näher ist" : verdict(winner.match ?? 0).label}
           />
         </section>
       ) : (
         <section>
-          <h1 className="font-display text-4xl font-extrabold">Unentschieden!</h1>
+          <h1 className="mega text-[2.4rem]">Unentschieden!</h1>
           <p className="mt-1 text-muted">Beide liegen für dich gleich gut. Dann entscheiden Preis und Bewertungen.</p>
         </section>
       )}
@@ -101,10 +96,10 @@ export default async function HotelDuellPage({
       <section className="card p-4">
         <div className={`grid ${cols} gap-2 text-center`}>
           {results.map((r, i) => (
-            <div key={i} className={`rounded-2xl p-2 ${r === winner && !tie ? "bg-peach" : "bg-sand"}`}>
+            <div key={i} className={`rounded-2xl px-2 py-3 ${r === winner && !tie ? "bg-gradient-to-br from-[#3a1c0e] to-tan outline outline-[1.5px] outline-sun" : "bg-tan"}`}>
               <p className="text-xs font-bold text-muted">#{i + 1}</p>
               <p className="line-clamp-2 text-sm font-bold leading-tight [overflow-wrap:anywhere]">{r.place.name}</p>
-              <p className="mt-1 font-display text-[22px] font-extrabold text-sun">{r.match ?? "–"}%</p>
+              <p className="mt-1 font-display text-[30px] font-extrabold leading-none">{r.match ?? "–"}</p>
             </div>
           ))}
         </div>
@@ -117,20 +112,20 @@ export default async function HotelDuellPage({
               <div key={c.key}>
                 <p className="mb-1 flex items-center justify-center gap-1 text-xs font-semibold text-muted">
                   <Icon name={CRITERION_ICON[c.key]} size={16} /> {c.label}
-                  {source && (weights[c.key] ?? 0) >= 4 && <span className="text-sun">· wichtig für dich</span>}
+                  {source && (weights[c.key] ?? 0) >= 4 && <span className="text-sun-soft">· wichtig für dich</span>}
                 </p>
                 <div className={`grid ${cols} gap-2`}>
                   {values.map((v, i) => (
                     <div key={i} className="flex items-center gap-1.5">
-                      <div className="h-2.5 flex-1 overflow-hidden rounded-full bg-tan">
+                      <div className="h-2 flex-1 overflow-hidden rounded-full bg-raised">
                         {v !== null && (
                           <div
-                            className={`h-full rounded-full ${v === best ? "bg-sun" : "bg-sun/35"}`}
+                            className={`h-full rounded-full ${v === best ? "bg-sun" : "bg-faint"}`}
                             style={{ width: `${v * 10}%` }}
                           />
                         )}
                       </div>
-                      <span className={`w-5 text-right text-xs tabular-nums ${v === best ? "font-extrabold text-sun" : "font-semibold"}`}>
+                      <span className={`w-5 text-right text-xs tabular-nums ${v === best ? "font-extrabold text-sun-soft" : "font-semibold"}`}>
                         {v ?? "–"}
                       </span>
                     </div>
@@ -148,7 +143,7 @@ export default async function HotelDuellPage({
           return (
             <article key={i} className="rounded-3xl bg-paper p-4">
               <div className="flex items-start gap-3">
-                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-ink text-sm font-bold text-sand">
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-raised text-sm font-bold">
                   {i + 1}
                 </span>
                 <h2 className="font-display text-lg font-extrabold leading-tight [overflow-wrap:anywhere]">{r.place.name}</h2>
@@ -157,12 +152,12 @@ export default async function HotelDuellPage({
                 <ul className="mt-3 space-y-1.5">
                   {r.analysis.highlights.slice(0, 3).map((h) => (
                     <li key={h.text} className="flex items-center gap-2 text-sm">
-                      <Icon name={h.icon} size={18} className="text-sun" /> {h.text}
+                      <Icon name={h.icon} size={18} className="text-muted" /> {h.text}
                     </li>
                   ))}
                   {est && (
                     <li className="flex items-center gap-2 text-sm">
-                      <Icon name="plane" size={18} className="text-sun" /> ca. {est.minMinutes}–{est.maxMinutes} Min. vom {airport!.name}
+                      <Icon name="plane" size={18} className="text-muted" /> ca. {est.minMinutes}–{est.maxMinutes} Min. vom {airport!.name}
                     </li>
                   )}
                 </ul>
@@ -171,7 +166,7 @@ export default async function HotelDuellPage({
               )}
               <Link
                 href={`/check/ergebnis?${new URLSearchParams({ lat: String(r.place.lat), lon: String(r.place.lon), name: r.place.name, kind: r.place.kind })}`}
-                className="mt-3 flex items-center gap-1 text-sm font-bold text-sun"
+                className="mt-3 flex items-center gap-1 text-sm font-bold text-sun-soft"
               >
                 <Icon name="check" size={18} /> Alle Details und Tipps
               </Link>

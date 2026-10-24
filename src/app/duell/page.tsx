@@ -41,7 +41,7 @@ export default async function DuellPage({
   return (
     <div className="pt-2">
       <DuelTabs active="kieze" />
-      <h1 className="mt-6 font-display text-4xl font-extrabold">Viertel-Duell</h1>
+      <h1 className="mega mt-6 text-[2.1rem]">Viertel-Duell</h1>
       <p className="mt-1 text-muted">Zwei Viertel, sieben Runden. Wer passt besser?</p>
 
       <div className="mt-4 flex gap-2">
@@ -69,9 +69,7 @@ export default async function DuellPage({
               </option>
             ))}
           </select>
-          <span className="flex h-12 w-12 items-center justify-center rounded-full bg-ink font-display text-lg font-extrabold text-sand">
-            VS
-          </span>
+          <span className="text-sm font-extrabold text-faint">VS</span>
           <select name="b" defaultValue={b.slug} className={selectClass} aria-label="Zweiter Kiez">
             {districts.map((d) => (
               <option key={d.slug} value={d.slug}>
@@ -85,28 +83,32 @@ export default async function DuellPage({
         </button>
       </form>
 
-      <section className="mt-6 card p-5">
-        <div className="pop-in text-center">
-          {winner ? (
-            <>
-              <p className="flex items-center justify-center gap-1.5 text-sm font-semibold text-peach-ink"><Icon name="star" size={18} fill="#f2662f" /> Sieger{weights ? " für dich" : ""}</p>
-              <p className="font-display text-3xl font-extrabold">{winner.name}</p>
-            </>
-          ) : (
-            <p className="font-display text-[22px] font-extrabold">Unentschieden!</p>
-          )}
-          <div className="mt-3 flex items-center justify-center gap-6 font-display text-xl font-extrabold">
-            <span className={winner?.slug === a.slug ? "text-sun" : "text-muted"}>
-              {matchA !== null ? `${matchA}%` : `${winsA} Runden`}
-            </span>
-            <span className="text-sm text-muted">:</span>
-            <span className={winner?.slug === b.slug ? "text-sun" : "text-muted"}>
-              {matchB !== null ? `${matchB}%` : `${winsB} Runden`}
-            </span>
-          </div>
+      <section className="mt-6">
+        <div className="pop-in grid grid-cols-[1fr_auto_1fr] items-center gap-2">
+          {[
+            { d: a, m: matchA, w: winsA },
+            { d: b, m: matchB, w: winsB },
+          ].map(({ d, m, w }, i) => (
+            <div key={d.slug} className={`contents`}>
+              {i === 1 && <span className="text-sm font-extrabold text-faint">VS</span>}
+              <div
+                className={`min-w-0 rounded-3xl px-3 py-4 text-center ${
+                  winner?.slug === d.slug ? "bg-gradient-to-br from-[#3a1c0e] to-paper outline outline-[1.5px] outline-sun" : "bg-paper"
+                }`}
+              >
+                <b className="block font-display text-[40px] font-extrabold leading-none tracking-tight">{m !== null ? m : w}</b>
+                <span className="mt-1 block truncate text-sm font-bold">{d.name.split(" (")[0]}</span>
+              </div>
+            </div>
+          ))}
         </div>
+        <p className="mt-3 text-center text-sm text-muted">
+          {winner ? `${winner.name.split(" (")[0]} gewinnt${weights ? " für dich" : ""}` : "Unentschieden"} · Runden {winsA}:{winsB}
+        </p>
+      </section>
 
-        <div className="mt-5 space-y-3">
+      <section className="card mt-5 p-5">
+        <div className="space-y-3">
           {criteria.map((c) => {
             const sa = a.scores[c.key] ?? 0;
             const sb = b.scores[c.key] ?? 0;
@@ -126,10 +128,10 @@ export default async function DuellPage({
       </section>
 
       <div className="mt-4 grid grid-cols-2 gap-2">
-        <Link href={`/kiez/${a.slug}?stadt=${a.city}${source === "url" && weights ? `&${weightsToQuery(weights)}` : ""}`} className="flex items-center justify-center gap-1.5 rounded-xl bg-tan py-2.5 text-sm font-bold">
+        <Link href={`/kiez/${a.slug}?stadt=${a.city}${source === "url" && weights ? `&${weightsToQuery(weights)}` : ""}`} className="flex items-center justify-center gap-1.5 rounded-full bg-tan py-3 text-sm font-bold">
           <Icon name="hotel" size={18} /> Hotels {a.name}
         </Link>
-        <Link href={`/kiez/${b.slug}?stadt=${b.city}${source === "url" && weights ? `&${weightsToQuery(weights)}` : ""}`} className="flex items-center justify-center gap-1.5 rounded-xl bg-tan py-2.5 text-sm font-bold">
+        <Link href={`/kiez/${b.slug}?stadt=${b.city}${source === "url" && weights ? `&${weightsToQuery(weights)}` : ""}`} className="flex items-center justify-center gap-1.5 rounded-full bg-tan py-3 text-sm font-bold">
           <Icon name="hotel" size={18} /> Hotels {b.name}
         </Link>
       </div>
@@ -146,10 +148,10 @@ export default async function DuellPage({
 function Bar({ value, win, side }: { value: number; win: boolean; side: "left" | "right" }) {
   return (
     <div className={`flex items-center gap-2 ${side === "left" ? "flex-row-reverse" : ""}`}>
-      <div className="flex h-3.5 flex-1 overflow-hidden rounded-full bg-tan" style={{ justifyContent: side === "left" ? "flex-end" : "flex-start" }}>
-        <div className={`h-full rounded-full ${win ? "bg-sun" : "bg-sun/35"}`} style={{ width: `${value * 10}%` }} />
+      <div className="flex h-2 flex-1 overflow-hidden rounded-full bg-raised" style={{ justifyContent: side === "left" ? "flex-end" : "flex-start" }}>
+        <div className={`h-full rounded-full ${win ? "bg-sun" : "bg-faint"}`} style={{ width: `${value * 10}%` }} />
       </div>
-      <span className={`w-5 text-center text-sm tabular-nums ${win ? "font-extrabold text-sun" : "font-semibold"}`}>{value}</span>
+      <span className={`w-5 text-center text-sm tabular-nums ${win ? "font-extrabold text-sun-soft" : "font-semibold"}`}>{value}</span>
     </div>
   );
 }

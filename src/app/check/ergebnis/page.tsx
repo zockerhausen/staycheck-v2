@@ -55,7 +55,7 @@ export default async function CheckErgebnisPage({
     return (
       <div className="pt-10 text-center">
         <Icon name="map" size={56} className="mx-auto text-sun" />
-        <h1 className="mt-4 font-display text-3xl font-extrabold">Kartendaten gerade nicht erreichbar</h1>
+        <h1 className="mega mt-4 text-[2.1rem]">Kartendaten gerade nicht erreichbar</h1>
         <p className="mt-2 text-muted">Der Kartendienst ist überlastet. Versuch es in einer Minute nochmal.</p>
         <Link href="/check" className="btn-chunky mt-6 w-full">
           Zurück zur Suche

@@ -37,7 +37,7 @@ export default async function FavoritenPage() {
 
   return (
     <div className="pt-2">
-      <h1 className="font-display text-4xl font-extrabold">Gemerkt</h1>
+      <h1 className="mega text-[2.1rem]">Gemerkt</h1>
       <p className="mt-1 text-muted">Deine Kieze und Unterkünfte an einem Ort.</p>
 
       {empty && (

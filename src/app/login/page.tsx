@@ -16,13 +16,11 @@ export default async function LoginPage({
 
   return (
     <div className="pt-4">
-      <span className="flex h-16 w-16 items-center justify-center rounded-3xl bg-peach text-sun">
-        <Icon name="user" size={40} fill="rgba(242,102,47,.22)" />
+      <span className="flex h-16 w-16 items-center justify-center rounded-full bg-tan text-ink">
+        <Icon name="user" size={30} />
       </span>
-      <h1 className="mt-3 font-display text-4xl font-extrabold leading-tight">
-        Dein Reise&shy;pass für Kieze
-      </h1>
-      <p className="mt-2 text-muted">Speichere deine Ergebnisse und merk dir die Kieze, die dir gefallen.</p>
+      <h1 className="mega mt-5 text-[2.1rem]">Behalte deine Orte.</h1>
+      <p className="mt-2 text-muted">Reise-Profil, gemerkte Viertel und Unterkünfte auf jedem Gerät.</p>
       {params.fehler === "bestaetigung" && (
         <p className="mt-4 rounded-2xl bg-peach p-3 text-sm font-semibold text-peach-ink">
           Der Bestätigungslink hat nicht funktioniert. Melde dich an oder registriere dich erneut.

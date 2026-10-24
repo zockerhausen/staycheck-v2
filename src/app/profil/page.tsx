@@ -14,7 +14,7 @@ export default async function ProfilPage() {
       <Link href="/reise" className="flex items-center gap-1 text-sm font-semibold text-muted">
         <Icon name="back" size={18} /> Zurück
       </Link>
-      <h1 className="mt-4 font-display text-4xl font-extrabold">Dein Reise-Profil</h1>
+      <h1 className="mega mt-4 text-[2.1rem]">Dein Reise-Profil</h1>
       <p className="mt-2 text-muted">
         So wichtig ist dir das auf Reisen. Danach richten sich alle Kiez-Empfehlungen und Lage-Checks.
         {user ? " Gespeichert in deinem Konto." : " Gespeichert auf diesem Gerät. Mit Konto auch auf allen anderen."}

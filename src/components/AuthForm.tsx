@@ -4,7 +4,7 @@ import { useActionState, useState } from "react";
 import { login, signup } from "@/app/actions";
 
 const inputClass =
-  "mt-1 w-full rounded-2xl bg-paper px-4 py-3.5 text-lg outline-none focus:border-sun";
+  "mt-1.5 w-full rounded-2xl border border-line bg-paper px-4 py-3.5 text-[17px] outline-none focus:border-sun";
 
 export default function AuthForm({ next, defaultMode = "login" }: { next: string; defaultMode?: "login" | "signup" }) {
   const [mode, setMode] = useState<"login" | "signup">(defaultMode);
@@ -17,13 +17,13 @@ export default function AuthForm({ next, defaultMode = "login" }: { next: string
 
   return (
     <div className="mt-8">
-      <div className="mb-6 grid grid-cols-2 rounded-2xl bg-tan p-1.5 font-semibold">
+      <div className="mb-6 grid grid-cols-2 rounded-full bg-paper p-1 font-semibold">
         {(["signup", "login"] as const).map((m) => (
           <button
             key={m}
             type="button"
             onClick={() => setMode(m)}
-            className={`rounded-xl py-2.5 ${mode === m ? "bg-paper text-ink shadow-sm" : "text-muted"}`}
+            className={`rounded-full py-2.5 ${mode === m ? "bg-raised text-ink" : "text-muted"}`}
           >
             {m === "login" ? "Anmelden" : "Registrieren"}
           </button>

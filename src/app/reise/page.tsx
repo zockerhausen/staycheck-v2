@@ -18,8 +18,8 @@ export default async function ReisePage() {
         <span className="inline-flex items-center gap-1.5 rounded-full bg-peach px-3 py-1 text-sm font-semibold text-peach-ink">
           <Icon name="discover" size={16} fill="rgba(242,102,47,.22)" /> Ich suche noch
         </span>
-        <h1 className="mt-3 font-display text-[2.3rem] font-extrabold leading-[1.05] tracking-tight">
-          Wohin geht <span className="text-sun">die Reise?</span>
+        <h1 className="mega mt-3 text-[2.1rem]">
+          Wohin geht die Reise?
         </h1>
         <p className="mt-2 text-muted">
           {weights
