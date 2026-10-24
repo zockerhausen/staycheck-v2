@@ -3,7 +3,6 @@ import { getChosenCity, getCities, getCriteria, getDistricts, getProfile, getUse
 import { rankDistricts } from "@/lib/matching";
 import { getTipsForDistrict, TIP_CATEGORIES } from "@/lib/tips";
 import Icon from "@/components/Icon";
-import PlaceSearch from "@/components/PlaceSearch";
 import RecentChecks from "@/components/RecentChecks";
 import DistrictExplorer from "@/components/DistrictExplorer";
 import DestinationSearch from "@/components/DestinationSearch";
@@ -12,7 +11,7 @@ export const dynamic = "force-dynamic";
 
 /**
  * Start aus Sicht von Reisenden, die einen Trip planen:
- * 1) Wohin geht die Reise?  2) Dort: Viertel finden (Quiz) oder stöbern  3) Schon gebucht? Lage prüfen.
+ * 1) Wohin geht die Reise?  2) Dort: Viertel finden (Quiz) oder stöbern. Lage-Check gebuchter Unterkünfte: eigener Reiter unten.
  */
 export default async function Home({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const params = await searchParams;
@@ -55,12 +54,6 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
         <div className="mt-6">
           <DestinationSearch verified={ready.map((c) => ({ slug: c.slug, name: c.name, country: c.country }))} />
         </div>
-
-        <section className="mt-9">
-          <h2 className="font-display text-[19px] font-extrabold">Schon gebucht?</h2>
-          <p className="mb-3 mt-1 text-[13px] text-muted">Prüf, wie gut deine Unterkunft liegt. Klappt in jeder Stadt der Welt.</p>
-          <PlaceSearch showChips={false} />
-        </section>
 
         <RecentChecks />
       </div>
@@ -118,12 +111,6 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
             match: "match" in d ? (d as { match: number }).match : undefined,
           }))}
         />
-      </section>
-
-      <section className="mt-9">
-        <h2 className="font-display text-[19px] font-extrabold">Schon gebucht?</h2>
-        <p className="mb-3 mt-1 text-[13px] text-muted">Prüf, wie gut deine Unterkunft in {city.name} liegt.</p>
-        <PlaceSearch near={{ lat: city.lat, lon: city.lng }} />
       </section>
 
       <RecentChecks />
