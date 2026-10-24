@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getCriteria, getProfile, getSavedPlaces, getUser } from "@/lib/data";
-import { autoDistricts, DEFAULT_WEIGHTS, distance, hotelsNear, locationMatch, type HotelResult } from "@/lib/geo";
+import { autoDistrictsCached, DEFAULT_WEIGHTS, distance, hotelsNear, locationMatch, type HotelResult } from "@/lib/geo";
 import { parseZiel, zielQuery } from "@/lib/ziel";
 import { characterOf, characterTint, traitsOf } from "@/lib/character";
 import { CRITERION_ICON } from "@/lib/icons";
@@ -44,7 +44,7 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
     getProfile(criteria),
     getUser(),
     getSavedPlaces(),
-    autoDistricts(ziel.lat, ziel.lon).catch(() => []),
+    autoDistrictsCached(ziel.lat, ziel.lon).catch(() => []),
   ]);
   const weights = profile ?? DEFAULT_WEIGHTS;
   const district = districts.find((d) => distance(d.lat, d.lon, vlat, vlon) < 300);

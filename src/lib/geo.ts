@@ -4,6 +4,7 @@
 // Funktioniert weltweit. Sicherheit kommt aus unseren Kiez-Bewertungen (nur dort, wo wir sie haben).
 
 import type { District, Weights } from "./data";
+import { unstable_cache } from "next/cache";
 import { distance, scoreFromData, type Highlight, type Line, type Poi, type ScoreResult } from "./score";
 
 const UA = "StayCheck/0.1 (https://github.com/zockerhausen/staycheck-v2)";
@@ -321,7 +322,8 @@ export async function autoDistricts(lat: number, lon: number, radius = 6000, max
       d: distance(lat, lon, p.lat as number, p.lon as number),
     }))
     .filter((p) => /^[\p{Script=Latin}\p{N}\p{P}\p{Zs}\p{S}]+$/u.test(p.name)) // nur lesbare Namen
-    .sort((a, b) => a.level - b.level || a.d - b.d);
+    // Nähe zum Zentrum zählt am meisten; größere Stadtteile leicht bevorzugt
+    .sort((a, b) => a.d + a.level * 700 - (b.d + b.level * 700));
 
   // Gleichmäßig verteilt: keine zwei Viertel näher als 900 m beieinander
   const picked: typeof candidates = [];
@@ -393,3 +395,10 @@ export async function autoDistricts(lat: number, lon: number, radius = 6000, max
     })
     .filter((d) => (d.scores.food ?? 0) >= 3 || (d.scores.transit ?? 0) >= 6); // Viertel ohne alles weglassen
 }
+
+/** Wie autoDistricts, aber das (kleine) Ergebnis wird 7 Tage gespeichert: ab dem zweiten Besuch sofort da. */
+export const autoDistrictsCached = unstable_cache(
+  async (lat: number, lon: number) => autoDistricts(lat, lon),
+  ["auto-districts-v2"],
+  { revalidate: 7 * 86400 },
+);

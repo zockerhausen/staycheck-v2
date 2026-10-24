@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getCities, getCriteria, getProfile } from "@/lib/data";
-import { autoDistricts, distance, locationMatch, type AutoDistrict } from "@/lib/geo";
+import { autoDistrictsCached, distance, locationMatch, type AutoDistrict } from "@/lib/geo";
 import { parseZiel, zielQuery } from "@/lib/ziel";
 import { pageRateLimit } from "@/lib/ratelimit-page";
 import Icon from "@/components/Icon";
@@ -50,7 +50,7 @@ export default async function ZielPage({ searchParams }: { searchParams: Promise
   const criteria = await getCriteria();
   const [{ weights }, districts] = await Promise.all([
     getProfile(criteria),
-    autoDistricts(ziel.lat, ziel.lon).catch(() => null as AutoDistrict[] | null),
+    autoDistrictsCached(ziel.lat, ziel.lon).catch(() => null as AutoDistrict[] | null),
   ]);
   const zq = zielQuery(ziel);
   const viertelHref = (d: AutoDistrict) =>
