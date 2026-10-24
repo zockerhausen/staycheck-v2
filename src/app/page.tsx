@@ -6,7 +6,7 @@ import Icon from "@/components/Icon";
 import PlaceSearch from "@/components/PlaceSearch";
 import RecentChecks from "@/components/RecentChecks";
 import DistrictExplorer from "@/components/DistrictExplorer";
-import CityButton from "@/components/CityButton";
+import DestinationSearch from "@/components/DestinationSearch";
 
 export const dynamic = "force-dynamic";
 
@@ -50,22 +50,11 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
           <br />
           deine Reise?
         </h1>
-        <p className="mt-3 leading-relaxed text-muted">Wir zeigen dir, welches Viertel zu dir passt und wo du am besten schläfst.</p>
+        <p className="mt-3 leading-relaxed text-muted">Egal welche Stadt: Wir zeigen dir, welches Viertel zu dir passt und wo du am besten schläfst.</p>
 
-        <div className="mt-6 space-y-3">
-          {ready.map((c) => (
-            <CityButton
-              key={c.slug}
-              city={c.slug}
-              href={`/?ziel=${c.slug}`}
-              name={c.name}
-              country={c.country}
-              count={c.districtCount}
-              highlight={c.slug === chosen}
-            />
-          ))}
+        <div className="mt-6">
+          <DestinationSearch verified={ready.map((c) => ({ slug: c.slug, name: c.name, country: c.country }))} />
         </div>
-        <p className="mt-3 px-1 text-[13px] text-muted">Weitere Städte folgen bald.</p>
 
         <section className="mt-9">
           <h2 className="font-display text-[19px] font-extrabold">Schon gebucht?</h2>

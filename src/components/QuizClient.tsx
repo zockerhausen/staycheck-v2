@@ -14,7 +14,7 @@ function buzz() {
 }
 
 /** Das Quiz. Am Ende wird das Reise-Profil gespeichert, damit man es nur einmal machen muss. */
-export default function QuizClient({ city, cityName }: { city: string; cityName: string }) {
+export default function QuizClient({ city, cityName, next: nextUrl }: { city: string; cityName: string; next?: string }) {
   const router = useRouter();
   const [saving, startSaving] = useTransition();
   const [step, setStep] = useState(0);
@@ -37,8 +37,8 @@ export default function QuizClient({ city, cityName }: { city: string; cityName:
         setPicked(null);
       } else {
         startSaving(async () => {
-          await storeProfile(next, city);
-          router.push(`/ergebnis?stadt=${city}&neu=1`);
+          await storeProfile(next, city || undefined);
+          router.push(nextUrl ?? `/ergebnis?stadt=${city}&neu=1`);
         });
       }
     }, 280);
@@ -50,7 +50,7 @@ export default function QuizClient({ city, cityName }: { city: string; cityName:
         <button
           type="button"
           onClick={() => {
-            if (step === 0) return router.push("/reise");
+            if (step === 0) return router.back();
             setStep(step - 1);
             setPicked(null);
           }}
@@ -103,7 +103,7 @@ export default function QuizClient({ city, cityName }: { city: string; cityName:
       <p className="mt-auto pt-8 text-center text-sm text-muted">
         {saving ? "Wir suchen deine Kieze …" : "Du machst das Quiz nur einmal. Später kannst du dein Profil jederzeit anpassen."}
       </p>
-      <Link href="/reise" className="pt-3 text-center text-sm font-semibold text-muted">
+      <Link href="/" className="pt-3 text-center text-sm font-semibold text-muted">
         Abbrechen
       </Link>
     </div>

@@ -25,20 +25,20 @@ const TYPE: Record<TraitKey, string> = {
 };
 
 /** Eigenschaften eines Viertels, stärkste zuerst (höchster Wert über der Schwelle). */
-export function traitsOf(scores: Record<string, number>): Trait[] {
+export function traitsOf(scores: Record<string, number | null>): Trait[] {
   return TRAITS.filter((t) => (scores[t.criterion] ?? 0) >= t.min).sort(
     (a, b) => (scores[b.criterion] ?? 0) - b.min - ((scores[a.criterion] ?? 0) - a.min),
   );
 }
 
 /** Kurzer Typ für die Karte, z. B. „Zum Ausgehen“. */
-export function characterOf(scores: Record<string, number>): string {
+export function characterOf(scores: Record<string, number | null>): string {
   const [first] = traitsOf(scores);
   return first ? TYPE[first.key] : "Allrounder";
 }
 
 /** Dezenter Farbverlauf je Typ (dunkel, damit es ruhig bleibt). */
-export function characterTint(scores: Record<string, number>): string {
+export function characterTint(scores: Record<string, number | null>): string {
   const key = traitsOf(scores)[0]?.key;
   const tints: Record<TraitKey, string> = {
     feiern: "#4a1f10",

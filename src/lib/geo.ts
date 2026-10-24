@@ -246,9 +246,10 @@ export type HotelResult = Place & { scores: LocationScores; match: number; highl
 
 export async function hotelsNear(
   center: { lat: number; lon: number },
-  district: District,
+  district: District | null,
   weights: Weights,
   radius = 1400,
+  areaName = district?.name ?? "",
 ): Promise<HotelResult[]> {
   const c = `${center.lat.toFixed(5)},${center.lon.toFixed(5)}`;
   const hotelsQuery = `[out:json][timeout:25];
@@ -264,7 +265,7 @@ out tags center;`;
       const street = [h.tags["addr:street"], h.tags["addr:housenumber"]].filter(Boolean).join(" ");
       return {
         name: h.tags.name,
-        subtitle: street || district.name,
+        subtitle: street || areaName,
         lat: h.lat,
         lon: h.lon,
         kind: kindOf(h.tags),
@@ -275,4 +276,105 @@ out tags center;`;
     })
     .sort((a, b) => b.match - a.match)
     .slice(0, 40);
+}
+
+// ---------- Viertel für jede Stadt der Welt (automatisch) ----------
+// Für Städte ohne unsere Handbewertung: Stadtteile aus OpenStreetMap, je Stadtteil gezählt,
+// was im Umkreis liegt. Gröber als der Lage-Check einer Adresse – das zeigen wir auch so an.
+
+export type AutoDistrict = {
+  slug: string;
+  name: string;
+  lat: number;
+  lon: number;
+  distKm: number;
+  scores: Record<string, number | null>;
+  reasons: Record<string, string>;
+};
+
+const slugify = (s: string) =>
+  s
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "")
+    .slice(0, 60) || "viertel";
+
+const autoStep = (v: number, table: [number, number][], fallback: number) => {
+  for (const [limit, score] of table) if (v <= limit) return score;
+  return fallback;
+};
+
+export async function autoDistricts(lat: number, lon: number, radius = 7000, max = 18): Promise<AutoDistrict[]> {
+  const c = `${lat.toFixed(4)},${lon.toFixed(4)}`;
+  // 1) Stadtteile finden (nur Punkte mit Namen)
+  const places = await overpass(`[out:json][timeout:25];node(around:${radius},${c})[place~"^(suburb|quarter|neighbourhood)$"][name];out;`);
+  const rank: Record<string, number> = { suburb: 0, quarter: 1, neighbourhood: 2 };
+  const candidates = places
+    .filter((p) => Number.isFinite(p.lat) && Number.isFinite(p.lon) && p.tags?.name)
+    .map((p) => ({
+      name: p.tags!["name:de"] ?? p.tags!["name:en"] ?? p.tags!.name,
+      lat: p.lat as number,
+      lon: p.lon as number,
+      level: rank[p.tags!.place] ?? 3,
+      d: distance(lat, lon, p.lat as number, p.lon as number),
+    }))
+    .filter((p) => /^[\p{Script=Latin}\p{N}\p{P}\p{Zs}\p{S}]+$/u.test(p.name)) // nur lesbare Namen
+    .sort((a, b) => a.level - b.level || a.d - b.d);
+
+  // Gleichmäßig verteilt: keine zwei Viertel näher als 900 m beieinander
+  const picked: typeof candidates = [];
+  for (const p of candidates) {
+    if (picked.length >= max) break;
+    if (picked.some((q) => distance(p.lat, p.lon, q.lat, q.lon) < 900)) continue;
+    picked.push(p);
+  }
+  if (!picked.length) return [];
+
+  // 2) Für jedes Viertel zählen, was im Umkreis liegt (eine Abfrage für alle)
+  const parts = picked.map((p) => {
+    const a = (r: number) => `around:${r},${p.lat.toFixed(5)},${p.lon.toFixed(5)}`;
+    return [
+      `nwr(${a(600)})[amenity~"^(bar|pub|nightclub|biergarten)$"];out count;`,
+      `nwr(${a(500)})[amenity~"^(restaurant|cafe|fast_food|food_court)$"];out count;`,
+      `node(${a(800)})[railway~"^(station|halt)$"];out count;`,
+      `node(${a(400)})[railway=tram_stop];out count;`,
+      `node(${a(400)})[highway=bus_stop];out count;`,
+      `nwr(${a(700)})[leisure=park];out count;`,
+      `nwr(${a(900)})[tourism~"^(hostel|guest_house)$"];out count;`,
+    ].join("");
+  });
+  const counts = (await overpass(`[out:json][timeout:60];${parts.join("")}`)).map((e) => Number(e.tags?.total ?? 0));
+  if (counts.length < picked.length * 7) throw new Error("Unvollständige Antwort");
+
+  return picked
+    .map((p, i) => {
+      const [bars, food, stations, trams, buses, parks, hostels] = counts.slice(i * 7, i * 7 + 7);
+      const transit = stations >= 3 ? 10 : stations === 2 ? 9 : stations === 1 ? 8 : trams > 0 ? 6 : buses >= 3 ? 4 : buses > 0 ? 3 : 1;
+      const scores: Record<string, number | null> = {
+        transit,
+        nightlife: autoStep(bars, [[0, 1], [2, 3], [5, 5], [10, 7], [20, 9]], 10),
+        food: autoStep(food, [[0, 1], [3, 3], [8, 5], [15, 7], [30, 9]], 10),
+        nature: autoStep(parks, [[0, 2], [1, 5], [3, 7]], 8),
+        quiet: Math.min(9, Math.max(2, Math.round(10 - bars * 0.12 - food * 0.03))),
+        budget: autoStep(hostels, [[0, 3], [2, 5], [5, 7], [10, 8]], 9),
+        safety: null,
+      };
+      const reasons: Record<string, string> = {
+        transit: stations
+          ? `${stations} Bahnhof/Bahnhöfe in 800 m`
+          : trams
+            ? `Straßenbahn in 400 m, kein Bahnhof in 800 m`
+            : `${buses} Bushaltestelle(n) in 400 m, keine Bahn`,
+        nightlife: `${bars} Bars und Clubs in 600 m`,
+        food: `${food} Restaurants und Cafés in 500 m`,
+        nature: `${parks} Park(s) in 700 m`,
+        quiet: "Grob geschätzt aus der Zahl der Bars und Restaurants",
+        budget: `${hostels} Hostels und Pensionen in 900 m`,
+        safety: "Für diese Stadt haben wir keine Einschätzung",
+      };
+      return { slug: slugify(p.name), name: p.name, lat: p.lat, lon: p.lon, distKm: Math.round(p.d / 100) / 10, scores, reasons };
+    })
+    .filter((d) => (d.scores.food ?? 0) >= 3 || (d.scores.transit ?? 0) >= 6); // Viertel ohne alles weglassen
 }

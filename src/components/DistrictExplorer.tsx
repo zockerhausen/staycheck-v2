@@ -10,8 +10,9 @@ export type ExplorerDistrict = {
   city: string;
   name: string;
   short: string | null;
-  scores: Record<string, number>;
+  scores: Record<string, number | null>;
   match?: number;
+  href?: string; // eigener Link (z. B. automatische Viertel)
 };
 
 /**
@@ -37,7 +38,7 @@ export default function DistrictExplorer({
           return (b.scores[c] ?? 0) - (a.scores[c] ?? 0);
         })
     : districts;
-  const href = (d: ExplorerDistrict) => `/kiez/${d.slug}?stadt=${d.city}${query ? `&${query}` : ""}`;
+  const href = (d: ExplorerDistrict) => d.href ?? `/kiez/${d.slug}?stadt=${d.city}${query ? `&${query}` : ""}`;
 
   return (
     <div>
