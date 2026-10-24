@@ -329,12 +329,12 @@ const autoStep = (v: number, table: [number, number][], fallback: number) => {
   return fallback;
 };
 
-export async function autoDistricts(lat: number, lon: number, radius = 4500, max = 16): Promise<AutoDistrict[]> {
+export async function autoDistricts(lat: number, lon: number, radius = 3500, max = 14): Promise<AutoDistrict[]> {
   const c = `${lat.toFixed(4)},${lon.toFixed(4)}`;
   // Beide Abfragen laufen gleichzeitig (die öffentlichen Server antworten oft langsam).
   // 1) Stadtteile (Punkte mit Namen)  2) alles Nötige im Rechteck um das Zentrum, ohne Details
-  const dLat = radius / 110540 + 0.01;
-  const dLon = radius / (111320 * Math.cos((lat * Math.PI) / 180)) + 0.015;
+  const dLat = radius / 110540 + 0.006;
+  const dLon = radius / (111320 * Math.cos((lat * Math.PI) / 180)) + 0.009;
   const bb = `${(lat - dLat).toFixed(4)},${(lon - dLon).toFixed(4)},${(lat + dLat).toFixed(4)},${(lon + dLon).toFixed(4)}`;
   const cats: [string, string][] = [
     [`node(${bb})[amenity~"^(bar|pub|nightclub|biergarten)$"]`, `way(${bb})[amenity~"^(bar|pub|nightclub|biergarten)$"]`],
@@ -439,7 +439,7 @@ export async function autoDistricts(lat: number, lon: number, radius = 4500, max
 /** Wie autoDistricts, aber das (kleine) Ergebnis wird 7 Tage gespeichert: ab dem zweiten Besuch sofort da. */
 export const autoDistrictsCached = unstable_cache(
   async (lat: number, lon: number) => autoDistricts(lat, lon),
-  ["auto-districts-v5"],
+  ["auto-districts-v6"],
   { revalidate: 7 * 86400 },
 );
 

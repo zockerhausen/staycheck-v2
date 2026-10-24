@@ -13,7 +13,7 @@ import KiezMap from "@/components/KiezMap";
 import PlaceSaveButton from "@/components/PlaceSaveButton";
 
 export const fetchCache = "default-cache";
-export const maxDuration = 60; // erste Berechnung einer Stadt kann dauern
+export const maxDuration = 120; // erste Berechnung einer Stadt kann dauern (läuft nach der Antwort weiter)
 
 const KIND_LABEL: Record<string, string> = { hotel: "Hotel", hostel: "Hostel", guest_house: "Pension", apartment: "Apartment" };
 const FILTERS = [

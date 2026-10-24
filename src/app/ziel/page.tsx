@@ -13,7 +13,7 @@ import KiezMap from "@/components/KiezMap";
 
 // Kartendaten-Abfragen werden zwischengespeichert (1 Tag), die Seite selbst ist dynamisch.
 export const fetchCache = "default-cache";
-export const maxDuration = 60; // erste Berechnung einer Stadt kann dauern
+export const maxDuration = 120; // erste Berechnung einer Stadt kann dauern (läuft nach der Antwort weiter)
 
 /** Reiseziel ohne unsere Handbewertung: Viertel automatisch aus OpenStreetMap. */
 export default async function ZielPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
