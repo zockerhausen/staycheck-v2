@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import Icon from "@/components/Icon";
 import { deleteTip, reportTip } from "@/app/actions";
 
@@ -15,6 +16,7 @@ export default function TipActions({
   loggedIn: boolean;
   path: string;
 }) {
+  const router = useRouter();
   const [state, setState] = useState<"idle" | "confirm" | "reported">("idle");
   const [pending, startTransition] = useTransition();
 
@@ -23,7 +25,12 @@ export default function TipActions({
       <button
         type="button"
         disabled={pending}
-        onClick={() => startTransition(() => deleteTip(tipId, path))}
+        onClick={() =>
+          startTransition(async () => {
+            await deleteTip(tipId, path);
+            router.refresh();
+          })
+        }
         className="mt-2 text-xs font-semibold text-muted underline underline-offset-2"
       >
         {pending ? "Wird gelöscht …" : "Meinen Tipp löschen"}

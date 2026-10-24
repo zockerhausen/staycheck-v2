@@ -113,11 +113,13 @@ export async function resolveInput(input: string): Promise<ResolveResult> {
   if (!url) return { query: raw, candidates: await searchPlaces(raw) };
 
   url = await expand(url);
-  const host = url.hostname.replace(/^www\./, "");
+  const host = url.hostname.replace(/^www\./, "").toLowerCase();
+  // Anbieter nur am Ende der Adresse erkennen (booking.com.evil.io zählt nicht als Booking)
+  const is = (re: RegExp) => re.test(host);
   const path = url.pathname;
 
   // Google Maps: Koordinaten stehen meist direkt im Link
-  if (/google\.|goo\.gl/.test(host)) {
+  if (is(/(^|\.)google\.[a-z.]{2,6}$|(^|\.)goo\.gl$/)) {
     const name = path.match(/\/place\/([^/@]+)/)?.[1];
     const at = url.href.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/) ?? url.href.match(/!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/);
     const q = url.searchParams.get("q") ?? url.searchParams.get("query") ?? url.searchParams.get("destination");
@@ -126,7 +128,7 @@ export async function resolveInput(input: string): Promise<ResolveResult> {
     if (at) {
       const lat = Number(at[1]);
       const lon = Number(at[2]);
-      const near = label ? await searchPlaces(label, { lat, lon }) : [];
+      const near = label ? await searchPlaces(label, { lat, lon }).catch(() => []) : [];
       const close = near.filter((p) => Math.abs(p.lat - lat) < 0.01 && Math.abs(p.lon - lon) < 0.01);
       return { query: label ?? "Google-Maps-Ort", candidates: [coordsPlace(lat, lon, label), ...close].slice(0, 5) };
     }
@@ -135,7 +137,7 @@ export async function resolveInput(input: string): Promise<ResolveResult> {
   }
 
   // Airbnb verrät die genaue Lage erst nach der Buchung
-  if (/airbnb\./.test(host)) {
+  if (is(/(^|\.)airbnb\.[a-z.]{2,6}$/)) {
     return {
       query: "",
       candidates: [],
@@ -146,14 +148,14 @@ export async function resolveInput(input: string): Promise<ResolveResult> {
   let name: string | undefined;
   let hint: string | undefined;
 
-  if (/booking\.com/.test(host)) {
+  if (is(/(^|\.)booking\.com$/)) {
     // /hotel/de/generator-berlin-mitte.de.html
     const m = path.match(/\/hotel\/([a-z]{2})\/([^/?]+)/i);
     if (m) {
       name = unslug(m[2]);
       hint = COUNTRY[m[1].toLowerCase()];
     }
-  } else if (/hostelworld\./.test(host)) {
+  } else if (is(/(^|\.)hostelworld\.[a-z.]{2,6}$/)) {
     // /pwa/hosteldetails.php/Name/Stadt/12345  oder  /hostels/p/12345/name/
     const a = path.match(/hosteldetails\.php\/([^/]+)\/([^/]+)/i);
     const b = path.match(/\/hostels\/p\/\d+\/([^/?]+)/i);
@@ -161,14 +163,14 @@ export async function resolveInput(input: string): Promise<ResolveResult> {
       name = unslug(a[1]);
       hint = unslug(a[2]);
     } else if (b) name = unslug(b[1]);
-  } else if (/agoda\./.test(host)) {
+  } else if (is(/(^|\.)agoda\.[a-z.]{2,6}$/)) {
     // /de-de/name-of-hotel/hotel/bangkok-th.html
     const m = path.match(/\/([^/]+)\/hotel\/([^/]+)/i);
     if (m) {
       name = unslug(m[1]);
       hint = unslug(m[2]).replace(/\s[a-z]{2}$/i, "");
     }
-  } else if (/hotels\.com|expedia\./.test(host)) {
+  } else if (is(/(^|\.)hotels\.com$|(^|\.)expedia\.[a-z.]{2,6}$/)) {
     const m = path.match(/\/(?:ho\d+|h\d+)\/([^/?]+)/i) ?? path.match(/\/([^/]+)-hotels?-/i);
     if (m) name = unslug(m[1]);
   }

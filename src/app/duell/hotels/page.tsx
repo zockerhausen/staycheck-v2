@@ -10,6 +10,7 @@ import DuelTabs from "@/components/DuelTabs";
 
 // Dynamisch durch Cookies/Suchparameter; Kartendaten-Abfragen werden 1 Tag zwischengespeichert.
 export const fetchCache = "default-cache";
+export const maxDuration = 120;
 
 const KINDS = ["hotel", "hostel", "guest_house", "apartment", "address", "other"] as const;
 

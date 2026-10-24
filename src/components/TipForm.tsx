@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import Icon from "@/components/Icon";
 import { addTip } from "@/app/actions";
 import { TIP_CATEGORIES } from "@/lib/tips-shared";
@@ -18,6 +19,7 @@ export default function TipForm({
   districtId: string | null;
   returnTo: string;
 }) {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [category, setCategory] = useState("");
   const [body, setBody] = useState("");
@@ -54,6 +56,7 @@ export default function TipForm({
           else {
             if ("vibrate" in navigator) navigator.vibrate(15);
             setDone(true);
+            router.refresh(); // neuen Tipp anzeigen
           }
         });
       }}

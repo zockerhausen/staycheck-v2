@@ -9,7 +9,9 @@ import {
   resolveWeights,
   weightsToQuery,
 } from "@/lib/data";
-import { analyzeLocation, DEFAULT_WEIGHTS, locationMatch, verdict } from "@/lib/geo";
+import { after } from "next/server";
+import { analyzeLocation, DEFAULT_WEIGHTS, locationMatch, verdict, withDeadline } from "@/lib/geo";
+import StillLoading from "@/components/StillLoading";
 import { CRITERION_ICON } from "@/lib/icons";
 import Icon from "@/components/Icon";
 import Reveal from "@/components/Reveal";
@@ -24,6 +26,7 @@ import { getTipsNear } from "@/lib/tips";
 
 // Dynamisch durch Cookies/Suchparameter; Kartendaten-Abfragen werden 1 Tag zwischengespeichert.
 export const fetchCache = "default-cache";
+export const maxDuration = 120; // Ergebnis darf im Hintergrund fertig gerechnet werden
 
 export default async function CheckErgebnisPage({
   searchParams,
@@ -34,10 +37,10 @@ export default async function CheckErgebnisPage({
   const get = (k: string) => (typeof params[k] === "string" ? (params[k] as string) : "");
   const lat = Number(get("lat"));
   const lon = Number(get("lon"));
-  if (!Number.isFinite(lat) || !Number.isFinite(lon) || !get("lat")) redirect("/check");
+  if (!Number.isFinite(lat) || !Number.isFinite(lon) || !get("lat") || Math.abs(lat) > 90 || Math.abs(lon) > 180) redirect("/check");
   const name = get("name").slice(0, 120) || "Dein Ort";
   const sub = get("sub").slice(0, 200);
-  const kind = get("kind") || "other";
+  const kind = /^[a-z_]{1,20}$/.test(get("kind")) ? get("kind") : "other";
 
   const [criteria, districts, user, saved, cities, tips] = await Promise.all([
     getCriteria(),
@@ -51,7 +54,24 @@ export default async function CheckErgebnisPage({
   const { weights: resolved, source } = await resolveWeights(params, criteria);
   const weights = resolved ?? DEFAULT_WEIGHTS;
 
-  const analysis = await analyzeLocation(lat, lon, districts).catch(() => null);
+  // Öffentliche Kartenserver sind manchmal langsam: nach 45 s zeigen wir einen Ladehinweis,
+  // rechnen im Hintergrund weiter und laden die Seite automatisch neu (Ergebnis ist dann gespeichert).
+  const work = analyzeLocation(lat, lon, districts).catch(() => null);
+  const raced = await withDeadline(work, 45_000);
+  if (raced === "slow") {
+    after(() => work);
+    return (
+      <div className="pt-6">
+        <h1 className="mega text-[1.9rem] [overflow-wrap:anywhere]">{name}</h1>
+        {sub && <p className="mt-1 text-sm text-muted">{sub}</p>}
+        <StillLoading
+          title="Wir schauen uns die Umgebung an …"
+          text="Die Kartenserver brauchen gerade länger. Die Seite lädt von selbst neu, sobald das Ergebnis da ist."
+        />
+      </div>
+    );
+  }
+  const analysis = raced;
   if (!analysis) {
     return (
       <div className="pt-10 text-center">
