@@ -92,6 +92,17 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
         </span>
         <Icon name="chevron" size={16} className="text-faint" />
       </Link>
+      {top && (
+        <div className="mt-2.5 flex items-center justify-center gap-4 text-[13px] font-semibold text-muted">
+          <Link href="/profil" className="flex items-center gap-1.5">
+            <Icon name="sliders" size={14} /> Reise-Profil ändern
+          </Link>
+          <span className="text-faint">·</span>
+          <Link href={`/quiz?stadt=${city.slug}`} className="flex items-center gap-1.5">
+            <Icon name="refresh" size={14} /> Quiz neu machen
+          </Link>
+        </div>
+      )}
 
       <section className="mt-7">
         <div className="mb-3 flex items-baseline justify-between">

@@ -36,7 +36,7 @@ export default function QuizClient({ city, cityName, next: nextUrl }: { city: st
   const [wer, setWer] = useState<TravelWith | null>(null);
   const [items, setItems] = useState<ExtraKey[]>([]);
   const [must, setMust] = useState<ExtraKey | null>(null);
-  const [picked, setPicked] = useState<number | null>(null);
+  const [picked, setPicked] = useState<number[]>([]);
   const [hint, setHint] = useState("");
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   useEffect(() => () => clearTimeout(timer.current), []);
@@ -49,32 +49,64 @@ export default function QuizClient({ city, cityName, next: nextUrl }: { city: st
   function back() {
     clearTimeout(timer.current);
     setHint("");
-    setPicked(null);
+    setPicked([]);
     if (step === 0) return router.back();
     if (step <= QUIZ.length) setWeights(history[step - 1] ?? BASE_WEIGHTS);
     setHistory((h) => h.slice(0, Math.max(0, step - 1)));
     setStep(Math.min(step - 1, QUIZ.length));
   }
 
+  function advance(ms: number) {
+    clearTimeout(timer.current);
+    timer.current = setTimeout(() => {
+      setPicked([]);
+      setHint("");
+      setStep((s) => s + 1);
+    }, ms);
+  }
+
+  /**
+   * Eine Antwort antippen = übernehmen, nach kurzer Pause geht es weiter.
+   * Wird in dieser Pause eine zweite Antwort angetippt, zählen beide: wir nehmen die Mitte.
+   */
   function choose(index: number | null) {
-    if (picked !== null) return;
-    buzz();
-    setHistory((h) => [...h.slice(0, step), weights]);
     if (index === null) {
+      if (picked.length) return;
+      buzz();
+      setHistory((h) => [...h.slice(0, step), weights]);
       setStep(step + 1); // „Ist mir egal“: Startwert bleibt
       return;
     }
+    if (picked.includes(index) || picked.length >= 2) return;
+    buzz();
     const a = q.answers[index];
-    setPicked(index);
-    setHint(a.hint);
-    setWeights((w) => ({ ...w, ...a.set }));
-    if (a.wer) setWer(a.wer);
+
+    if (picked.length === 0) {
+      setHistory((h) => [...h.slice(0, step), weights]);
+      setPicked([index]);
+      setHint(a.hint);
+      setWeights((w) => ({ ...w, ...a.set }));
+      if (a.wer) setWer(a.wer);
+      if (a.suggest && !items.includes(a.suggest)) setItems((x) => [...x, a.suggest!]);
+      advance(1500); // etwas Zeit für eine zweite Antwort
+      return;
+    }
+
+    // Zweite Antwort: Mittelwert aus beiden (Werte, die nur eine Antwort setzt, mitteln wir mit dem Stand davor)
+    const first = q.answers[picked[0]];
+    const before = history[step] ?? weights;
+    const keys = new Set([...Object.keys(first.set), ...Object.keys(a.set)]);
+    const mixed: Weights = {};
+    for (const k of keys) {
+      const x = first.set[k] ?? before[k] ?? 0;
+      const y = a.set[k] ?? before[k] ?? 0;
+      mixed[k] = Math.round((x + y) / 2);
+    }
+    setPicked([picked[0], index]);
+    setHint("Mal so, mal so. Wir nehmen die Mitte.");
+    setWeights({ ...before, ...mixed });
     if (a.suggest && !items.includes(a.suggest)) setItems((x) => [...x, a.suggest!]);
-    timer.current = setTimeout(() => {
-      setPicked(null);
-      setHint("");
-      setStep((s) => s + 1);
-    }, 1100);
+    advance(1100);
   }
 
   // Extras: antippen = wichtig, nochmal antippen = Muss (nur eins), drittes Mal = weg
@@ -218,7 +250,7 @@ export default function QuizClient({ city, cityName, next: nextUrl }: { city: st
                 type="button"
                 className={`tile pop-in ${q.layout === "grid" ? "flex-col items-start py-4" : "py-3.5"}`}
                 style={{ animationDelay: `${i * 50}ms` }}
-                data-selected={picked === i}
+                data-selected={picked.includes(i)}
                 onClick={() => choose(i)}
               >
                 <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[14px] bg-peach text-sun-soft">
@@ -233,6 +265,7 @@ export default function QuizClient({ city, cityName, next: nextUrl }: { city: st
           </div>
 
           <div className="mt-4 min-h-[52px]">
+            {!hint && step < 2 && <p className="px-1 text-[13px] text-muted">Passt beides? Tippe kurz danach eine zweite Antwort an.</p>}
             {hint && (
               <p className="fade-up flex items-center gap-2 rounded-2xl bg-tan px-3.5 py-3 text-sm" role="status">
                 <Icon name="check" size={16} className="shrink-0 text-[#3ecf8e]" /> {hint}
@@ -240,7 +273,7 @@ export default function QuizClient({ city, cityName, next: nextUrl }: { city: st
             )}
           </div>
 
-          <button type="button" onClick={() => choose(null)} className="mt-auto pt-6 text-center text-sm font-semibold text-muted">
+          <button type="button" onClick={() => choose(null)} disabled={picked.length > 0} className="mt-auto pt-6 text-center text-sm font-semibold text-muted disabled:opacity-40">
             {step === 0 ? "Überspringen" : "Ist mir egal"}
           </button>
         </>
