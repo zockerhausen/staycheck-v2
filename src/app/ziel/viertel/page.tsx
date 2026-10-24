@@ -53,7 +53,7 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
 
   let hotels: HotelResult[] = [];
   let failed = false;
-  const work = hotelsNearCached({ lat: Number(vlat.toFixed(5)), lon: Number(vlon.toFixed(5)) }, null, weights, 1000, name);
+  const work = hotelsNearCached({ lat: Number(vlat.toFixed(5)), lon: Number(vlon.toFixed(5)) }, null, weights, 800, name);
   const raced = await withDeadline(work.catch(() => null), 40_000);
   const slow = raced === "slow";
   if (slow) after(() => work.catch(() => undefined));

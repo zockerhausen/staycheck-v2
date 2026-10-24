@@ -173,6 +173,8 @@ function poiQuery(lat: number, lon: number, extra = 0) {
   const c = `${lat.toFixed(5)},${lon.toFixed(5)}`;
   const a = (r: number) => `around:${r + extra},${c}`;
   // Nebenstraßen nur beim Einzel-Check, sonst wird die Antwort für ein ganzes Viertel zu groß
+  // Geschäfte (nur für die Datenlage) und Nebenstraßen nur beim Einzel-Check, sonst wird die Antwort
+  // für ein ganzes Viertel in dichten Altstädten riesig
   const secondary = extra === 0 ? `way(${a(40)})[highway=secondary];` : "";
   // Beim Einzel-Check echte Park-Umrisse (genaue Größe), fürs ganze Viertel nur Rechtecke (kleinere Antwort)
   const greenOut = extra === 0 ? "out tags geom;" : "out tags bb;";
@@ -188,7 +190,7 @@ function poiQuery(lat: number, lon: number, extra = 0) {
   ${extra === 0 ? "" : relGreen}
   node(${a(600)})[amenity=ferry_terminal];
   nwr(${a(800)})[tourism~"^(hostel|guest_house)$"];
-  nwr(${a(500)})[shop];
+  ${extra === 0 ? `nwr(${a(500)})[shop];` : ""}
 );
 out tags bb;
 (
