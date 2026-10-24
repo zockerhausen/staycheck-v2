@@ -206,15 +206,21 @@ export function scoreFromData(lat: number, lon: number, pois: Poi[], lines: Line
   const green = greens[0];
   {
     const label = (g: { p: Poi }) => nameOf(g.p.tags) ?? (g.p.tags.natural === "water" ? "Gewässer" : "Park");
-    const where = (g: { p: Poi; d: number }) => (g.d < 20 ? `Direkt an ${label(g)}` : `${label(g)}: ca. ${walkMinutes(g.d)} Min. zu Fuß`);
+    // Größe mit angeben, damit man sieht, ob es ein großer Park oder ein kleiner Platz ist
+    const size = (g: { p: Poi }) => {
+      const ha = bboxArea(g.p) / 10_000;
+      return g.p.tags.natural === "beach" ? "" : ` (ca. ${ha >= 10 ? Math.round(ha) : ha.toFixed(1).replace(".", ",")} ha)`;
+    };
+    const where = (g: { p: Poi; d: number }) =>
+      g.d < 20 ? `Direkt an ${label(g)}${size(g)}` : `${label(g)}${size(g)}: ca. ${walkMinutes(g.d)} Min. zu Fuß`;
     if (green) {
       const reasons: string[] = [];
       // Großer Park zählt voll; kleine Grünfläche höchstens 7
       const bigScore = bigGreen ? step(bigGreen.d, [[150, 10], [300, 9], [450, 8], [600, 7]], 6) : 0;
       const smallScore = Math.min(7, step(green.d, [[150, 7], [300, 6], [600, 5]], 4));
       const score = Math.max(bigScore, smallScore);
-      if (bigGreen) reasons.push(`${where(bigGreen)} (großer Park oder Wasser)`);
-      if (!bigGreen || (green !== bigGreen && green.d < bigGreen.d - 100)) reasons.push(`${where(green)} (kleinere Grünfläche)`);
+      if (bigGreen) reasons.push(where(bigGreen));
+      if (!bigGreen || (green !== bigGreen && green.d < bigGreen.d - 100)) reasons.push(`${where(green)}, kleinere Grünfläche`);
       details.nature = { score, source: "messung", reasons };
     } else details.nature = { score: 2, source: "messung", reasons: ["Kein Park und kein Wasser (ab 0,5 ha) in 800 m"] };
   }
