@@ -78,6 +78,7 @@ type OverpassElement = {
   bounds?: { minlat: number; minlon: number; maxlat: number; maxlon: number };
   center?: { lat: number; lon: number };
   geometry?: { lat: number; lon: number }[];
+  members?: { role?: string; geometry?: { lat: number; lon: number }[] }[];
   tags?: Record<string, string>;
 };
 
@@ -129,6 +130,16 @@ function split(elements: OverpassElement[]): { pois: Poi[]; lines: Line[] } {
       const lons = pts.map((p) => p.lon);
       const bbox: [number, number, number, number] = [Math.min(...lats), Math.min(...lons), Math.max(...lats), Math.max(...lons)];
       pois.push({ lat: (bbox[0] + bbox[2]) / 2, lon: (bbox[1] + bbox[3]) / 2, tags, bbox, area: polygonArea(pts) });
+    } else if (e.type === "relation" && e.members?.length && e.bounds) {
+      // Fläche aus mehreren Teilen: nur geschlossene Außenringe zählen wir genau, sonst Schätzung über das Rechteck
+      const outers = e.members.filter((m) => m.role === "outer" && m.geometry && m.geometry.length > 3);
+      const closed = outers.every((m) => {
+        const g = m.geometry!;
+        return Math.abs(g[0].lat - g[g.length - 1].lat) < 1e-7 && Math.abs(g[0].lon - g[g.length - 1].lon) < 1e-7;
+      });
+      const { minlat, minlon, maxlat, maxlon } = e.bounds;
+      const area = outers.length && closed ? outers.reduce((sum, m) => sum + polygonArea(m.geometry!), 0) : undefined;
+      pois.push({ lat: (minlat + maxlat) / 2, lon: (minlon + maxlon) / 2, tags, bbox: [minlat, minlon, maxlat, maxlon], area });
     } else if (Number.isFinite(e.lat) && Number.isFinite(e.lon)) {
       pois.push({ lat: e.lat as number, lon: e.lon as number, tags });
     } else if (e.center && Number.isFinite(e.center.lat)) {
@@ -152,6 +163,7 @@ function poiQuery(lat: number, lon: number, extra = 0) {
   const secondary = extra === 0 ? `way(${a(40)})[highway=secondary];` : "";
   // Beim Einzel-Check echte Park-Umrisse (genaue Größe), fürs ganze Viertel nur Rechtecke (kleinere Antwort)
   const greenOut = extra === 0 ? "out tags geom;" : "out tags bb;";
+  const relGreen = `rel(${a(800)})[leisure~"^(park|garden|nature_reserve)$"];rel(${a(800)})[natural~"^(water|wood)$"];rel(${a(800)})[landuse=forest];`;
   return `[out:json][timeout:25];
 (
   nwr(${a(600)})[amenity~"^(bar|pub|nightclub|biergarten)$"];
@@ -160,9 +172,7 @@ function poiQuery(lat: number, lon: number, extra = 0) {
   node(${a(900)})[public_transport=station];
   node(${a(400)})[highway=bus_stop];
   node(${a(800)})[natural=beach];
-  rel(${a(800)})[leisure~"^(park|garden|nature_reserve)$"];
-  rel(${a(800)})[natural~"^(water|wood)$"];
-  rel(${a(800)})[landuse=forest];
+  ${extra === 0 ? "" : relGreen}
   node(${a(600)})[amenity=ferry_terminal];
   nwr(${a(800)})[tourism~"^(hostel|guest_house)$"];
   nwr(${a(500)})[shop];
@@ -178,6 +188,7 @@ out tags geom;
   way(${a(800)})[leisure~"^(park|garden|nature_reserve)$"];
   way(${a(800)})[natural~"^(water|beach|wood)$"];
   way(${a(800)})[landuse=forest];
+  ${extra === 0 ? relGreen : ""}
 );
 ${greenOut}`;
 }
