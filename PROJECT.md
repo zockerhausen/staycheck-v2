@@ -66,3 +66,9 @@ budget, nightlife, quiet, safety, transit, food, nature – Bewertung je Bezirk 
 - Bewertungen der Berliner Bezirke überprüfen und verfeinern
 - Zweite Stadt
 - Detailseite pro Bezirk (Tipps, Hostels, Anbindung)
+
+## Kartendaten-Server (Overpass)
+Im Moment nutzt StayCheck die freien öffentlichen Overpass-Server (zwei gleichzeitig, der schnellere gewinnt).
+Folge: Der erste Aufruf einer neuen Stadt kann 40–100 Sekunden dauern, danach ist sie 7 Tage gespeichert.
+Später schneller: eigenen Overpass-Server betreiben (ca. 20–50 €/Monat) und in Vercel die Umgebungsvariable
+`OVERPASS_URL` setzen (z. B. `https://overpass.meine-domain.de/api/interpreter`). Kein Code-Umbau nötig.

@@ -8,8 +8,11 @@ import { unstable_cache } from "next/cache";
 import { distance, scoreFromData, type Highlight, type Line, type Poi, type ScoreResult } from "./score";
 
 const UA = "StayCheck/0.1 (https://github.com/zockerhausen/staycheck-v2)";
-const OVERPASS_FAST = ["https://overpass.kumi.systems/api/interpreter", "https://overpass-api.de/api/interpreter"];
-const OVERPASS_FALLBACK = "https://overpass.private.coffee/api/interpreter";
+// Kartendaten-Server. Im Moment die freien öffentlichen Server.
+// Später eigener Server: in Vercel die Umgebungsvariable OVERPASS_URL setzen (nur https), dann wird er zuerst gefragt.
+const OWN_OVERPASS = /^https:\/\/[^\s]+$/.test(process.env.OVERPASS_URL ?? "") ? (process.env.OVERPASS_URL as string) : null;
+const OVERPASS_FAST = OWN_OVERPASS ? [OWN_OVERPASS] : ["https://overpass.kumi.systems/api/interpreter", "https://overpass-api.de/api/interpreter"];
+const OVERPASS_FALLBACK = OWN_OVERPASS ? "https://overpass-api.de/api/interpreter" : "https://overpass.private.coffee/api/interpreter";
 
 export type Place = {
   name: string;
