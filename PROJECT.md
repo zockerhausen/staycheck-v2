@@ -76,3 +76,11 @@ Später schneller: eigenen Overpass-Server betreiben (ca. 20–50 €/Monat) und
 ## Offen vor dem Teilen der App
 
 - **Impressum-Daten ändern** (Wunsch von Pauljonas, unbedingt erinnern): Angaben in `src/lib/legal.ts` sind vorläufig. Hausnummer, PLZ und Ort fehlen noch.
+
+## Beliebte Reiseziele vorab berechnet
+
+- Liste: `src/lib/popular.ts` (Name, Land, Mittelpunkt, andere Namen). Steht in der Suche immer oben.
+- Vorwärmen: `/api/vorwaermen?stadt=<slug>` (nur Städte aus der Liste). Mehrfach aufrufen, bis `unterkuenfte` überall `ok` ist.
+- Gespeichert im Vercel-Zwischenspeicher: Viertel 30 Tage, Unterkünfte 14 Tage; danach wird beim nächsten Besuch im Hintergrund neu gerechnet.
+- Unterkünfte werden unabhängig vom Reise-Profil gespeichert und erst beim Aufruf nach Profil sortiert.
+- Nach Änderungen an `autoDistricts`/`hotelsScored` (neuer Speicher-Schlüssel) die Liste neu vorwärmen.
