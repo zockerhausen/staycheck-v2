@@ -2,16 +2,8 @@ import Link from "next/link";
 import { getCities, getCriteria, getLastCity, getSavedPlaces, resolveWeights, weightsToQuery } from "@/lib/data";
 import PlaceSearch from "@/components/PlaceSearch";
 import Icon from "@/components/Icon";
-import type { IconName } from "@/lib/icons";
 
 export const dynamic = "force-dynamic";
-
-const HOW: { icon: IconName; text: string }[] = [
-  { icon: "transit", text: "Wie weit ist die nächste Bahn?" },
-  { icon: "nightlife", text: "Bars, Restaurants und Lärmquellen im Umkreis" },
-  { icon: "nature", text: "Parks und Wasser in Laufweite" },
-  { icon: "safety", text: "Sicherheit aus unseren Viertel-Bewertungen" },
-];
 
 export default async function CheckPage({
   searchParams,
@@ -30,7 +22,7 @@ export default async function CheckPage({
       <p className="text-center text-base font-bold">Lage-Check</p>
       <h1 className="mega mt-6 text-[2.1rem]">Wie gut liegt deine Unterkunft?</h1>
       <p className="mt-2 leading-relaxed text-muted">
-        Name, Adresse oder Link von Booking, Hostelworld, Agoda oder Google Maps. Klappt weltweit.
+        Name, Adresse oder Buchungslink. Klappt weltweit.
       </p>
 
       <div className="mt-5">
@@ -78,17 +70,9 @@ export default async function CheckPage({
         </section>
       )}
 
-      <section className="card mt-7 px-4 py-2">
-        <p className="pt-3 text-xs font-bold uppercase tracking-[0.06em] text-muted">So rechnen wir</p>
-        {HOW.map((h) => (
-          <div key={h.icon} className="flex items-center gap-3.5 border-b border-line py-3 text-sm">
-            <Icon name={h.icon} size={20} className="text-muted" /> {h.text}
-          </div>
-        ))}
-        <Link href="/methode" className="flex items-center justify-between py-3 text-sm font-semibold text-sun-soft">
-          Alle Regeln ansehen <Icon name="chevron" size={14} />
-        </Link>
-      </section>
+      <Link href="/methode" className="mt-8 flex items-center justify-center gap-1.5 text-sm font-semibold text-muted">
+        <Icon name="check" size={16} /> Wie entsteht der Score?
+      </Link>
     </div>
   );
 }
