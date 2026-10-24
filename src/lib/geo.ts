@@ -406,13 +406,16 @@ export async function autoDistricts(lat: number, lon: number, radius = 4500, max
     .map((p, i) => {
       const [bars, food, stations, trams, buses, parks, hostels] = counts.slice(i * 7, i * 7 + 7);
       const transit = stations >= 3 ? 10 : stations === 2 ? 9 : stations === 1 ? 8 : trams > 0 ? 6 : buses >= 3 ? 4 : buses > 0 ? 3 : 1;
+      // Logarithmische Skala: 10 → 25 → 100 → 200 Lokale machen jeweils einen spürbaren Unterschied,
+      // statt dass alles ab 20 bei 10 von 10 hängen bleibt. Eine Nachkommastelle, damit Viertel vergleichbar bleiben.
+      const log = (n: number, k: number, base = 1) => Math.min(10, Math.max(1, Math.round((base + Math.log2(1 + n) * k) * 10) / 10));
       const scores: Record<string, number | null> = {
         transit,
-        nightlife: autoStep(bars, [[0, 1], [2, 3], [5, 5], [10, 7], [20, 9]], 10),
-        food: autoStep(food, [[0, 1], [3, 3], [8, 5], [15, 7], [30, 9]], 10),
+        nightlife: log(bars, 1.3),
+        food: log(food, 1.15),
         nature: autoStep(parks, [[0, 2], [1, 5], [3, 7]], 8),
-        quiet: Math.min(9, Math.max(2, Math.round(10 - bars * 0.12 - food * 0.03))),
-        budget: autoStep(hostels, [[0, 3], [2, 5], [5, 7], [10, 8]], 9),
+        quiet: Math.min(9, Math.max(1, Math.round((10 - Math.log2(1 + bars + food / 3) * 1.1) * 10) / 10)),
+        budget: log(hostels, 1.2, 3),
         safety: null,
       };
       const reasons: Record<string, string> = {
@@ -424,7 +427,7 @@ export async function autoDistricts(lat: number, lon: number, radius = 4500, max
         nightlife: `${bars} Bars und Clubs in 600 m`,
         food: `${food} Restaurants und Cafés in 500 m`,
         nature: `${parks} Park(s) in 700 m`,
-        quiet: "Grob geschätzt aus der Zahl der Bars und Restaurants",
+        quiet: "Grob geschätzt: je mehr Bars und Restaurants, desto lauter",
         budget: `${hostels} Hostels und Pensionen in 900 m`,
         safety: "Für diese Stadt haben wir keine Einschätzung",
       };
@@ -436,7 +439,7 @@ export async function autoDistricts(lat: number, lon: number, radius = 4500, max
 /** Wie autoDistricts, aber das (kleine) Ergebnis wird 7 Tage gespeichert: ab dem zweiten Besuch sofort da. */
 export const autoDistrictsCached = unstable_cache(
   async (lat: number, lon: number) => autoDistricts(lat, lon),
-  ["auto-districts-v4"],
+  ["auto-districts-v5"],
   { revalidate: 7 * 86400 },
 );
 

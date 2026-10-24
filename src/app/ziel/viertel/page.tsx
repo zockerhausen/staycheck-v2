@@ -112,7 +112,7 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
                       <span className={`bar-grow block h-full rounded-full ${v <= 4 ? "bg-faint" : "bg-sun"}`} style={{ width: `${v * 10}%` }} />
                     )}
                   </span>
-                  <span className="w-7 text-right font-extrabold tabular-nums">{v ?? "–"}</span>
+                  <span className="w-7 text-right font-extrabold tabular-nums">{v === null || v === undefined ? "–" : Math.round(v)}</span>
                 </div>
                 <p className="mt-1 pl-[26px] text-xs text-muted">{district.reasons[c.key]}</p>
               </div>
