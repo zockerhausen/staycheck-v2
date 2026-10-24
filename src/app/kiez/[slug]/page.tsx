@@ -108,6 +108,12 @@ export default async function KiezPage({
 
       <div className="card p-5">
         <ScoreBars criteria={criteria} scores={district.scores} />
+        <p className="mt-3 text-xs leading-relaxed text-muted">
+          Viertel-Werte sind unsere Einschätzung fürs ganze Viertel. Jede Unterkunft unten prüfen wir zusätzlich einzeln mit Kartendaten.{" "}
+          <Link href="/methode" className="font-semibold text-sun-soft underline underline-offset-4">
+            So rechnen wir
+          </Link>
+        </p>
       </div>
 
       <section>

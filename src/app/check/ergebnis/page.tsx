@@ -18,6 +18,7 @@ import PlaceSaveButton from "@/components/PlaceSaveButton";
 import ArrivalCard from "@/components/ArrivalCard";
 import TipsSection from "@/components/TipsSection";
 import { RememberCheck } from "@/components/RecentChecks";
+import ScoreExplain from "@/components/ScoreExplain";
 import { HUBS, cityForPoint } from "@/lib/arrival";
 import { getTipsNear } from "@/lib/tips";
 
@@ -136,29 +137,14 @@ export default async function CheckErgebnisPage({
         </Link>
       )}
 
-      <section>
-        <h2 className="mb-3 font-display text-[19px] font-extrabold">Alle Werte</h2>
-        <dl className="card space-y-1 p-5">
-          {criteria.map((c) => {
-            const s = analysis.scores[c.key];
-            return (
-              <div key={c.key} className="flex items-center gap-3 py-1 text-sm">
-                <dt className="flex w-32 shrink-0 items-center gap-2 font-semibold">
-                  <Icon name={CRITERION_ICON[c.key]} size={18} /> {c.label}
-                </dt>
-                <dd className="h-2 flex-1 overflow-hidden rounded-full bg-raised">
-                  {s !== null && <div className={`bar-grow h-full rounded-full ${s <= 4 ? "bg-faint" : "bg-sun"}`} style={{ width: `${s * 10}%` }} />}
-                </dd>
-                <span className="w-9 text-right font-extrabold tabular-nums">{s ?? "–"}</span>
-              </div>
-            );
-          })}
-          <p className="pt-3 text-xs text-muted">
-            Quelle: OpenStreetMap im Umkreis von 500–900 m.
-            {district ? ` Sicherheit und Budget aus unserer Bewertung für ${district.name}.` : " Für Sicherheit haben wir hier noch keine Daten."}
-          </p>
-        </dl>
-      </section>
+      <ScoreExplain
+        criteria={criteria}
+        details={analysis.details}
+        weights={weights}
+        match={match}
+        coverage={analysis.coverage}
+        personal={Boolean(source)}
+      />
 
       {city && <ArrivalCard hubs={HUBS[city.slug]} lat={lat} lon={lon} nearestRail={analysis.nearestRail} />}
 

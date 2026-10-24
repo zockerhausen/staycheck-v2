@@ -81,10 +81,13 @@ export default async function CheckPage({
       <section className="card mt-7 px-4 py-2">
         <p className="pt-3 text-xs font-bold uppercase tracking-[0.06em] text-muted">So rechnen wir</p>
         {HOW.map((h) => (
-          <div key={h.icon} className="flex items-center gap-3.5 border-b border-line py-3 text-sm last:border-0">
+          <div key={h.icon} className="flex items-center gap-3.5 border-b border-line py-3 text-sm">
             <Icon name={h.icon} size={20} className="text-muted" /> {h.text}
           </div>
         ))}
+        <Link href="/methode" className="flex items-center justify-between py-3 text-sm font-semibold text-sun-soft">
+          Alle Regeln ansehen <Icon name="chevron" size={14} />
+        </Link>
       </section>
     </div>
   );
