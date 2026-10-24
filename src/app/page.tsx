@@ -5,10 +5,11 @@ import { getTipsForDistrict, TIP_CATEGORIES } from "@/lib/tips";
 import Icon from "@/components/Icon";
 import PlaceSearch from "@/components/PlaceSearch";
 import RecentChecks from "@/components/RecentChecks";
+import DistrictExplorer from "@/components/DistrictExplorer";
 
 export const dynamic = "force-dynamic";
 
-/** Start „Suche zuerst“ (Vorbild Google Maps / Airbnb): große Suche oben, darunter eine schlanke Zeile fürs Viertel. */
+/** Start „Suche zuerst“: oben der Lage-Check für gebuchte Unterkünfte, darunter Viertel finden (Quiz) oder selbst stöbern. */
 export default async function Home() {
   const [criteria, cities, lastCity, user] = await Promise.all([getCriteria(), getCities(), getLastCity(), getUser()]);
   const city = cities.find((c) => c.slug === lastCity && c.districtCount > 0) ?? cities.find((c) => c.districtCount > 0) ?? cities[0];
@@ -48,21 +49,49 @@ export default async function Home() {
         <PlaceSearch near={city ? { lat: city.lat, lon: city.lng } : undefined} />
       </div>
 
-      <Link
-        href={top ? `/kiez/${top.slug}` : "/reise"}
-        className="press mt-7 flex items-center gap-3.5 rounded-[18px] border border-line bg-paper px-3.5 py-3"
-      >
-        <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-peach text-sun-soft">
-          <Icon name="discover" size={24} />
-        </span>
-        <span className="min-w-0 flex-1">
-          <span className="block text-[15px] font-bold">{top ? `Dein Viertel: ${top.name.split(" (")[0]}` : "Noch keine Unterkunft?"}</span>
-          <span className="block text-[13px] text-muted">
-            {top ? `${top.match} % Match · Unterkünfte ansehen` : "Finde dein Viertel mit 7 kurzen Fragen"}
-          </span>
-        </span>
-        <Icon name="chevron" size={16} className="text-faint" />
-      </Link>
+      <p className="mt-2.5 px-1 text-[13px] text-muted">Schon gebucht? Prüf hier, wie gut deine Unterkunft liegt.</p>
+
+      {city && districts.length > 0 && (
+        <section className="mt-9">
+          <div className="flex items-baseline justify-between">
+            <h2 className="font-display text-[19px] font-extrabold">Viertel in {city.name}</h2>
+            <Link href={`/ergebnis?stadt=${city.slug}`} className="text-sm font-semibold text-muted">
+              Alle
+            </Link>
+          </div>
+
+          <Link
+            href={top ? `/kiez/${top.slug}?stadt=${city.slug}` : `/quiz?stadt=${city.slug}`}
+            className="press glow-card mt-3 flex items-center gap-3.5 rounded-[18px] px-3.5 py-3.5"
+          >
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-peach text-sun-soft">
+              <Icon name="discover" size={24} />
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block text-[15px] font-bold">
+                {top ? `Dein Viertel: ${top.name.split(" (")[0]} · ${top.match} %` : "Welches Viertel passt zu mir?"}
+              </span>
+              <span className="block text-[13px] text-muted">
+                {top ? "Passt am besten zu deinem Reise-Profil" : "7 kurze Fragen, dann zeigen wir dir dein Viertel"}
+              </span>
+            </span>
+            <Icon name="chevron" size={16} className="text-faint" />
+          </Link>
+
+          <p className="mb-3 mt-6 text-[13px] font-semibold text-muted">{top ? "Alle Viertel, sortiert nach deinem Profil" : "Oder selbst stöbern:"}</p>
+          <DistrictExplorer
+            variant="cards"
+            districts={(top ? rankDistricts(districts, weights!) : districts).map((d) => ({
+              slug: d.slug,
+              city: d.city,
+              name: d.name,
+              short: d.short_description,
+              scores: d.scores,
+              match: "match" in d ? (d as { match: number }).match : undefined,
+            }))}
+          />
+        </section>
+      )}
 
       <RecentChecks />
 

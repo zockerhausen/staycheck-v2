@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import "maplibre-gl/dist/maplibre-gl.css";
 
-export type MapPoint = { slug: string; name: string; lat: number; lng: number; match: number };
+export type MapPoint = { slug: string; name: string; lat: number; lng: number; match: number; label?: string };
 
 /** Karte mit Match-Punkten: je höher der Match, desto größer und kräftiger der Punkt. */
 export default function KiezMap({
@@ -51,7 +51,7 @@ export default function KiezMap({
         const isTop = p.slug === highlight;
         const el = document.createElement("button");
         el.type = "button";
-        el.setAttribute("aria-label", `${p.name}, ${p.match}% Match`);
+        el.setAttribute("aria-label", p.label ? p.name : `${p.name}, ${p.match}% Match`);
         el.style.cssText = `
           display:flex;align-items:center;justify-content:center;
           min-width:${isTop ? 46 : 30 + t * 8}px;height:${isTop ? 30 : 24}px;padding:0 9px;
@@ -60,7 +60,7 @@ export default function KiezMap({
           color:${isTop ? "#fff" : `rgba(245,245,245,${0.6 + t * 0.4})`};
           font:800 ${isTop ? 13 : 12}px var(--font-body), system-ui, sans-serif;
           box-shadow:0 4px 14px rgba(0,0,0,.45);cursor:pointer;`;
-        el.textContent = `${p.match}`;
+        el.textContent = p.label ?? `${p.match}`;
         el.addEventListener("click", () => {
           if (onSelectRef.current) onSelectRef.current(p.slug);
           else document.getElementById(`kiez-${p.slug}`)?.scrollIntoView({ behavior: "smooth", inline: "start", block: "nearest" });

@@ -4,6 +4,7 @@ import { getCities, getCriteria, getDistricts, getFavoriteIds, getSavedPlaces, g
 import { DEFAULT_WEIGHTS, hotelsNear, verdict, type HotelResult } from "@/lib/geo";
 import { matchScore, topReasons } from "@/lib/matching";
 import FavoriteButton from "@/components/FavoriteButton";
+import { characterOf, traitsOf } from "@/lib/character";
 import Icon from "@/components/Icon";
 import KiezMap from "@/components/KiezMap";
 import ScoreBars from "@/components/ScoreBars";
@@ -89,10 +90,22 @@ export default async function KiezPage({
           {user && <FavoriteButton districtId={district.id} isFavorite={favorites.has(district.id)} />}
         </div>
         <p className="mt-16 text-xs font-bold uppercase tracking-[0.08em] text-[#ffb08f]">
-          {cityName} · {match} % Match
+          {cityName} · {resolved ? `${match} % Match` : characterOf(district.scores)}
         </p>
         <h1 className="mega mt-1 text-[clamp(2.4rem,12vw,3.3rem)] [overflow-wrap:anywhere]">{district.name.split(" (")[0]}</h1>
         <p className="mt-2 text-[15px] leading-relaxed text-[#c9c0bb]">{district.short_description}</p>
+        <div className="mt-4 flex flex-wrap gap-2">
+          {traitsOf(district.scores).map((t) => (
+            <span key={t.key} className="flex items-center gap-1.5 rounded-full bg-black/30 px-3 py-1.5 text-[13px] font-semibold">
+              <Icon name={t.icon} size={14} /> {t.label}
+            </span>
+          ))}
+        </div>
+        {!resolved && (
+          <Link href={`/quiz?stadt=${district.city}`} className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-sun-soft">
+            Passt das zu mir? Reise-Profil in 30 Sek. <Icon name="chevron" size={14} />
+          </Link>
+        )}
       </section>
 
       <div className="grid grid-cols-4 gap-2">

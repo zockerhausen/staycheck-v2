@@ -17,6 +17,7 @@ import Reveal from "@/components/Reveal";
 import KiezMap from "@/components/KiezMap";
 import ShareButton from "@/components/ShareButton";
 import SaveButton from "@/components/SaveButton";
+import DistrictExplorer from "@/components/DistrictExplorer";
 
 export const dynamic = "force-dynamic";
 
@@ -37,7 +38,44 @@ export default async function ErgebnisPage({
   ]);
 
   const { weights, source } = await resolveWeights(params, criteria);
-  if (!weights) redirect(`/quiz?stadt=${city.slug}`);
+  const explorer = (list: typeof districts, withMatch?: Record<string, number>) =>
+    list.map((d) => ({ slug: d.slug, city: d.city, name: d.name, short: d.short_description, scores: d.scores, match: withMatch?.[d.slug] }));
+
+  // Ohne Reise-Profil: Viertel frei entdecken (nach Eigenschaften), Quiz als Angebot
+  if (!weights) {
+    const pts = districts
+      .filter((d) => d.lat !== null && d.lng !== null)
+      .map((d) => ({ slug: d.slug, name: d.name, lat: d.lat as number, lng: d.lng as number, match: 0, label: d.name.split(" (")[0].split(" /")[0] }));
+    return (
+      <div className="fade-up space-y-6">
+        <div className="flex items-center justify-between">
+          <Link href="/" aria-label="Start" className="press flex h-11 w-11 items-center justify-center rounded-full bg-tan">
+            <Icon name="back" size={18} />
+          </Link>
+          <Link href="/reise" className="press flex items-center gap-1.5 rounded-full bg-tan px-4 py-2.5 text-sm font-semibold">
+            {city.name} <Icon name="down" size={14} />
+          </Link>
+          <span className="h-11 w-11" />
+        </div>
+        <div>
+          <h1 className="mega text-[2.1rem]">Viertel in {city.name}</h1>
+          <p className="mt-2 text-muted">Jedes Viertel hat seinen eigenen Charakter. Filter nach dem, was dir wichtig ist.</p>
+        </div>
+        <Link href={`/quiz?stadt=${city.slug}`} className="press glow-card flex items-center gap-3.5 rounded-[18px] px-3.5 py-3.5">
+          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-peach text-sun-soft">
+            <Icon name="discover" size={24} />
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="block text-[15px] font-bold">Welches passt zu mir?</span>
+            <span className="block text-[13px] text-muted">7 kurze Fragen, dann zeigen wir dir dein Viertel</span>
+          </span>
+          <Icon name="chevron" size={16} className="text-faint" />
+        </Link>
+        <KiezMap points={pts} center={[city.lng, city.lat]} zoom={city.zoom} height="h-64" />
+        <DistrictExplorer variant="list" districts={explorer(districts)} />
+      </div>
+    );
+  }
 
   const ranked = rankDistricts(districts, weights);
   const [top, ...rest] = ranked;
@@ -109,20 +147,9 @@ export default async function ErgebnisPage({
       <section>
         <h2 className="mb-3 font-display text-[19px] font-extrabold">Alle Viertel in {city.name}</h2>
         <KiezMap points={points} highlight={top.slug} center={[city.lng, city.lat]} zoom={city.zoom} height="h-72" />
-        <ol className="mt-2">
-          {ranked.map((d, i) => (
-            <li key={d.id} id={`kiez-${d.slug}`} className="flex items-center gap-3 border-b border-line py-3 last:border-0">
-              <span className="w-5 shrink-0 font-bold text-faint">{i + 1}</span>
-              <Link href={`/kiez/${d.slug}${q("?")}`} className="min-w-0 flex-1">
-                <span className="block truncate text-[15px] font-bold">{d.name}</span>
-                <span className="block truncate text-[13px] text-muted">
-                  {topReasons(d, weights, 2).map((k) => labelOf[k]).join(" · ")}
-                </span>
-              </Link>
-              <span className="w-12 text-right font-display text-[17px] font-extrabold tabular-nums text-sun-soft">{d.match}%</span>
-            </li>
-          ))}
-        </ol>
+        <div className="mt-4">
+          <DistrictExplorer variant="list" districts={explorer(ranked, Object.fromEntries(ranked.map((d) => [d.slug, d.match])))} query={query} />
+        </div>
       </section>
     </div>
   );
