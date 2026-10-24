@@ -306,7 +306,7 @@ const autoStep = (v: number, table: [number, number][], fallback: number) => {
   return fallback;
 };
 
-export async function autoDistricts(lat: number, lon: number, radius = 7000, max = 18): Promise<AutoDistrict[]> {
+export async function autoDistricts(lat: number, lon: number, radius = 6000, max = 16): Promise<AutoDistrict[]> {
   const c = `${lat.toFixed(4)},${lon.toFixed(4)}`;
   // 1) Stadtteile finden (nur Punkte mit Namen)
   const places = await overpass(`[out:json][timeout:25];node(around:${radius},${c})[place~"^(suburb|quarter|neighbourhood)$"][name];out;`);
@@ -332,21 +332,36 @@ export async function autoDistricts(lat: number, lon: number, radius = 7000, max
   }
   if (!picked.length) return [];
 
-  // 2) Für jedes Viertel zählen, was im Umkreis liegt (eine Abfrage für alle)
-  const parts = picked.map((p) => {
-    const a = (r: number) => `around:${r},${p.lat.toFixed(5)},${p.lon.toFixed(5)}`;
-    return [
-      `nwr(${a(600)})[amenity~"^(bar|pub|nightclub|biergarten)$"];out count;`,
-      `nwr(${a(500)})[amenity~"^(restaurant|cafe|fast_food|food_court)$"];out count;`,
-      `node(${a(800)})[railway~"^(station|halt)$"];out count;`,
-      `node(${a(400)})[railway=tram_stop];out count;`,
-      `node(${a(400)})[highway=bus_stop];out count;`,
-      `nwr(${a(700)})[leisure=park];out count;`,
-      `nwr(${a(900)})[tourism~"^(hostel|guest_house)$"];out count;`,
-    ].join("");
-  });
-  const counts = (await overpass(`[out:json][timeout:60];${parts.join("")}`)).map((e) => Number(e.tags?.total ?? 0));
-  if (counts.length < picked.length * 7) throw new Error("Unvollständige Antwort");
+  // 2) Alles Nötige einmal für die ganze Gegend laden (nur Punkte, ohne Details), dann je Viertel selbst zählen.
+  //    Trennzeichen („make“) zwischen den Kategorien, damit wir wissen, was was ist.
+  const maxD = Math.max(...picked.map((p) => p.d));
+  const R = Math.min(12_000, Math.round(maxD + 1000));
+  const cats = [
+    `nwr(around:${R},${c})[amenity~"^(bar|pub|nightclub|biergarten)$"]`,
+    `nwr(around:${R},${c})[amenity~"^(restaurant|cafe|fast_food|food_court)$"]`,
+    `node(around:${R},${c})[railway~"^(station|halt)$"]`,
+    `node(around:${R},${c})[railway=tram_stop]`,
+    `node(around:${R},${c})[highway=bus_stop]`,
+    `nwr(around:${R},${c})[leisure=park]`,
+    `nwr(around:${R},${c})[tourism~"^(hostel|guest_house)$"]`,
+  ];
+  const body = cats.map((q, i) => `${q};out skel center qt;make sep n="${i}";out;`).join("");
+  const els = await overpass(`[out:json][timeout:60];${body}`);
+  const groups: { lat: number; lon: number }[][] = cats.map(() => []);
+  let cur = 0;
+  for (const e of els) {
+    if (e.type === "sep") {
+      cur = Number(e.tags?.n ?? cur) + 1;
+      continue;
+    }
+    const la = e.lat ?? e.center?.lat;
+    const lo = e.lon ?? e.center?.lon;
+    if (cur < groups.length && Number.isFinite(la) && Number.isFinite(lo)) groups[cur].push({ lat: la as number, lon: lo as number });
+  }
+  const within = (g: number, p: { lat: number; lon: number }, r: number) =>
+    groups[g].reduce((n, x) => (Math.abs(x.lat - p.lat) < 0.02 && distance(p.lat, p.lon, x.lat, x.lon) <= r ? n + 1 : n), 0);
+  const RADII = [600, 500, 800, 400, 400, 700, 900];
+  const counts = picked.flatMap((p) => RADII.map((r, g) => within(g, p, r)));
 
   return picked
     .map((p, i) => {
