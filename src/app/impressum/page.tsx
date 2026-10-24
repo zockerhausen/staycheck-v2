@@ -12,7 +12,7 @@ export default function ImpressumPage() {
         <p>
           <Field value={o.name} label="Name" />
           <br />
-          <Field value={o.street} label="Straße und Hausnummer" />
+          {o.street}{!/\d/.test(o.street) && <> <Field value="" label="Hausnummer" /></>}
           <br />
           <Field value={o.city} label="PLZ und Ort" />
           <br />
@@ -29,6 +29,15 @@ export default function ImpressumPage() {
             </a>
           ) : (
             <Field value="" label="E-Mail" />
+          )}
+          {o.email2 && (
+            <>
+              <br />
+              Weitere E-Mail:{" "}
+              <a className="text-sun-soft underline" href={`mailto:${o.email2}`}>
+                {o.email2}
+              </a>
+            </>
           )}
           {o.phone && (
             <>

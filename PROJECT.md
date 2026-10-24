@@ -72,3 +72,7 @@ Im Moment nutzt StayCheck die freien öffentlichen Overpass-Server (zwei gleichz
 Folge: Der erste Aufruf einer neuen Stadt kann 40–100 Sekunden dauern, danach ist sie 7 Tage gespeichert.
 Später schneller: eigenen Overpass-Server betreiben (ca. 20–50 €/Monat) und in Vercel die Umgebungsvariable
 `OVERPASS_URL` setzen (z. B. `https://overpass.meine-domain.de/api/interpreter`). Kein Code-Umbau nötig.
+
+## Offen vor dem Teilen der App
+
+- **Impressum-Daten ändern** (Wunsch von Pauljonas, unbedingt erinnern): Angaben in `src/lib/legal.ts` sind vorläufig. Hausnummer, PLZ und Ort fehlen noch.
