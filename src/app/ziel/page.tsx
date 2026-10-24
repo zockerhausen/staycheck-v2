@@ -137,12 +137,6 @@ export default async function ZielPage({ searchParams }: { searchParams: Promise
           </section>
         </>
       )}
-
-      <section className="mt-9">
-        <h2 className="font-display text-[19px] font-extrabold">Schon gebucht?</h2>
-        <p className="mb-3 mt-1 text-[13px] text-muted">Prüf, wie gut deine Unterkunft in {ziel.ort} liegt.</p>
-        <PlaceSearch near={{ lat: ziel.lat, lon: ziel.lon }} />
-      </section>
     </div>
   );
 }
