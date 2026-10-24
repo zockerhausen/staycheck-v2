@@ -1,7 +1,9 @@
 import { ImageResponse } from "next/og";
+import { rateLimit, tooMany } from "@/lib/ratelimit";
 
 // Erzeugt das Teilen-Bild (1080 × 1920, Story-Format)
 export async function GET(request: Request) {
+  if (!rateLimit(request, "teilen", 20)) return tooMany();
   const { searchParams } = new URL(request.url);
   const kiez = (searchParams.get("kiez") ?? "Berlin").slice(0, 40);
   const match = Math.min(100, Math.max(0, Number(searchParams.get("match")) || 0));

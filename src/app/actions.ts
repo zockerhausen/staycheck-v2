@@ -8,7 +8,7 @@ import { CITY_COOKIE, PROFILE_COOKIE, encodeProfile } from "@/lib/data";
 
 function safeNext(v: FormDataEntryValue | null) {
   const n = String(v || "/");
-  return n.startsWith("/") && !n.startsWith("//") ? n : "/";
+  return /^\/(?![\/\\])[^\s\\]*$/.test(n) ? n : "/";
 }
 
 export type FormState = { error?: string; message?: string } | undefined;
@@ -21,8 +21,7 @@ export async function login(_prev: FormState, formData: FormData): Promise<FormS
   });
   if (error) return { error: "E-Mail oder Passwort ist falsch." };
   await syncProfileFromCookie();
-  const next = String(formData.get("next") || "/");
-  redirect(next.startsWith("/") && !next.startsWith("//") ? next : "/");
+  redirect(safeNext(formData.get("next")));
 }
 
 export async function signup(_prev: FormState, formData: FormData): Promise<FormState> {
@@ -36,9 +35,12 @@ export async function signup(_prev: FormState, formData: FormData): Promise<Form
     password,
     options: { emailRedirectTo: `${origin}/auth/callback?next=${encodeURIComponent(safeNext(formData.get("next")))}` },
   });
-  if (error) return { error: error.message };
+  if (error) {
+    if (/password/i.test(error.message)) return { error: "Das Passwort ist zu schwach. Nimm mindestens 8 Zeichen mit Zahlen oder Sonderzeichen." };
+    return { error: "Registrierung hat nicht geklappt. Prüf deine E-Mail-Adresse oder versuch es später nochmal." };
+  }
   if (data.session) redirect(safeNext(formData.get("next")));
-  return { message: "Fast geschafft! Bestätige deine E-Mail über den Link, den wir dir geschickt haben." };
+  return { message: "Fast geschafft! Falls die Adresse neu ist, haben wir dir einen Bestätigungslink geschickt." };
 }
 
 export async function signout() {
@@ -72,8 +74,8 @@ export async function storeProfile(weights: Record<string, number>, city?: strin
       .map(([k, v]) => [k, Math.min(5, Math.max(0, Math.round(Number(v) || 0)))]),
   );
   const jar = await cookies();
-  jar.set(PROFILE_COOKIE, encodeProfile(clean), { maxAge: YEAR, path: "/", sameSite: "lax" });
-  if (city && /^[a-z-]{2,40}$/.test(city)) jar.set(CITY_COOKIE, city, { maxAge: YEAR, path: "/", sameSite: "lax" });
+  jar.set(PROFILE_COOKIE, encodeProfile(clean), { maxAge: YEAR, path: "/", sameSite: "lax", secure: true, httpOnly: true });
+  if (city && /^[a-z-]{2,40}$/.test(city)) jar.set(CITY_COOKIE, city, { maxAge: YEAR, path: "/", sameSite: "lax", secure: true, httpOnly: true });
   await savePreferences(clean);
   revalidatePath("/", "layout");
 }
@@ -104,7 +106,7 @@ export async function syncProfileFromCookie() {
 
 export async function rememberCity(city: string) {
   if (!/^[a-z-]{2,40}$/.test(city)) return;
-  (await cookies()).set(CITY_COOKIE, city, { maxAge: YEAR, path: "/", sameSite: "lax" });
+  (await cookies()).set(CITY_COOKIE, city, { maxAge: YEAR, path: "/", sameSite: "lax", secure: true, httpOnly: true });
 }
 
 /** Speichert Präferenzen und merkt sich den Top-Kiez. */

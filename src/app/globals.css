@@ -23,6 +23,11 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
+/* Schieberegler in Sonnen-Orange */
+input[type="range"] {
+  accent-color: var(--color-sun);
+}
+
 /* Dicke Knöpfe, die sich beim Tippen „eindrücken“ (wie bei Duolingo) */
 .btn-chunky {
   display: flex;

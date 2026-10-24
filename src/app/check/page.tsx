@@ -12,8 +12,9 @@ export default async function CheckPage({
 }) {
   const params = await searchParams;
   const criteria = await getCriteria();
-  const [{ weights }, places] = await Promise.all([resolveWeights(params, criteria), getSavedPlaces()]);
-  const query = weights ? weightsToQuery(weights) : "";
+  const [{ weights, source }, places] = await Promise.all([resolveWeights(params, criteria), getSavedPlaces()]);
+  // Profil-Gewichte nicht in Links schreiben – die App liest sie selbst aus dem Profil
+  const query = weights && source === "url" ? weightsToQuery(weights) : "";
 
   return (
     <div className="pt-2">

@@ -11,7 +11,7 @@ export default async function LoginPage({
   searchParams: Promise<Record<string, string | undefined>>;
 }) {
   const params = await searchParams;
-  const next = params.next && params.next.startsWith("/") && !params.next.startsWith("//") ? params.next : "/";
+  const next = params.next && /^\/(?![\/\\])[^\s\\]*$/.test(params.next) ? params.next : "/";
   if (await getUser()) redirect(next);
 
   return (

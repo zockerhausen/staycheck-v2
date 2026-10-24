@@ -51,17 +51,21 @@ export default async function HotelDuellPage({
   const { weights: resolved, source } = await resolveWeights(params, criteria);
   const weights = resolved ?? DEFAULT_WEIGHTS;
 
-  // Nacheinander abfragen, um den kostenlosen Kartendienst zu schonen
+  // Parallel abfragen (max. 3), damit niemand lange warten muss
   type Result = { place: Place; analysis: Awaited<ReturnType<typeof analyzeLocation>> | null; match: number | null };
-  const results: Result[] = [];
-  for (const p of places) {
-    const analysis = await analyzeLocation(p.lat, p.lon, districts).catch(() => null);
-    results.push({ place: p, analysis, match: analysis ? locationMatch(analysis.scores, weights) : null });
-  }
+  const results: Result[] = await Promise.all(
+    places.map(async (p) => {
+      const analysis = await analyzeLocation(p.lat, p.lon, districts).catch(() => null);
+      return { place: p, analysis, match: analysis ? locationMatch(analysis.scores, weights) : null };
+    }),
+  );
   const valid = results.filter((r) => r.analysis && r.match !== null);
-  const sorted = [...valid].sort((a, b) => (b.match ?? 0) - (a.match ?? 0));
+  // Bei Gleichstand entscheidet der kürzere Weg zur nächsten Bahn
+  const railDist = (r: Result) => r.analysis?.nearestRail?.dist ?? 99_999;
+  const sorted = [...valid].sort((a, b) => (b.match ?? 0) - (a.match ?? 0) || railDist(a) - railDist(b));
   const winner = sorted[0];
-  const tie = sorted.length > 1 && sorted[0].match === sorted[1].match;
+  const sameScore = sorted.length > 1 && sorted[0].match === sorted[1].match;
+  const tie = sameScore && railDist(sorted[0]) === railDist(sorted[1]);
   const city = cityForPoint(places[0].lat, places[0].lon, cities);
   const airport = city ? HUBS[city.slug].find((h) => h.kind === "airport") : undefined;
   const cols = results.length === 3 ? "grid-cols-3" : "grid-cols-2";
@@ -77,11 +81,20 @@ export default async function HotelDuellPage({
             match={winner.match ?? 0}
             celebrate
             eyebrow="Beste Lage für dich"
-            caption={source ? `Lage-Score nach deinem Profil · ${verdict(winner.match ?? 0).label}` : "Lage-Score"}
+            caption={
+              sameScore
+                ? "Gleicher Lage-Score – knapp vorne, weil die Bahn näher ist"
+                : source
+                  ? `Lage-Score nach deinem Profil · ${verdict(winner.match ?? 0).label}`
+                  : `Lage-Score · ${verdict(winner.match ?? 0).label}`
+            }
           />
         </section>
       ) : (
-        <h1 className="font-display text-4xl font-extrabold">Unentschieden!</h1>
+        <section>
+          <h1 className="font-display text-4xl font-extrabold">Unentschieden!</h1>
+          <p className="mt-1 text-muted">Beide liegen für dich gleich gut. Dann entscheiden Preis und Bewertungen.</p>
+        </section>
       )}
 
       <section className="rounded-3xl border-2 border-b-[5px] border-line bg-paper p-4">
@@ -103,7 +116,7 @@ export default async function HotelDuellPage({
               <div key={c.key}>
                 <p className="mb-1 flex items-center justify-center gap-1 text-xs font-semibold text-muted">
                   <Icon name={CRITERION_ICON[c.key]} size={16} /> {c.label}
-                  {(weights[c.key] ?? 0) >= 4 && <span className="text-sun">· wichtig für dich</span>}
+                  {source && (weights[c.key] ?? 0) >= 4 && <span className="text-sun">· wichtig für dich</span>}
                 </p>
                 <div className={`grid ${cols} gap-2`}>
                   {values.map((v, i) => (

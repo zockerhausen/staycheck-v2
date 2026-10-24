@@ -3,6 +3,45 @@ import { searchPlaces, type Place } from "./geo";
 
 const UA = "Mozilla/5.0 (compatible; StayCheck/0.1; +https://github.com/zockerhausen/staycheck-v2)";
 
+// Sicherheit: Der Server ruft nur Seiten dieser Anbieter ab (kein Abruf beliebiger Adressen → kein SSRF).
+const FETCH_ALLOWED = [
+  "booking.com",
+  "hostelworld.com",
+  "agoda.com",
+  "hotels.com",
+  "expedia.com",
+  "expedia.de",
+  "google.com",
+  "maps.app.goo.gl",
+  "goo.gl",
+];
+
+export function isFetchAllowed(url: URL) {
+  if (url.protocol !== "https:" || url.port || url.username || url.password) return false;
+  const host = url.hostname.toLowerCase();
+  return FETCH_ALLOWED.some((d) => host === d || host.endsWith(`.${d}`));
+}
+
+/** Folgt Weiterleitungen Schritt für Schritt und prüft jedes Ziel. */
+async function safeFetch(url: URL, maxHops = 4): Promise<Response | null> {
+  let current = url;
+  for (let i = 0; i <= maxHops; i++) {
+    if (!isFetchAllowed(current)) return null;
+    const res = await fetch(current, {
+      redirect: "manual",
+      headers: { "User-Agent": UA, "Accept-Language": "de,en" },
+      signal: AbortSignal.timeout(5000),
+    });
+    const loc = res.headers.get("location");
+    if (res.status >= 300 && res.status < 400 && loc) {
+      current = new URL(loc, current);
+      continue;
+    }
+    return res;
+  }
+  return null;
+}
+
 export type ResolveResult = { query: string; candidates: Place[]; error?: string };
 
 const COUNTRY: Record<string, string> = {
@@ -24,20 +63,28 @@ function coordsPlace(lat: number, lon: number, name?: string): Place {
 
 /** Folgt Kurzlinks (maps.app.goo.gl, bit.ly …) bis zur Ziel-URL. */
 async function expand(url: URL): Promise<URL> {
-  if (!/(goo\.gl|maps\.app|bit\.ly|tinyurl|t\.co|booking\.com\/Share)/i.test(url.href)) return url;
+  if (!/(goo\.gl|maps\.app|booking\.com\/Share)/i.test(url.href) || !isFetchAllowed(url)) return url;
+  let current = url;
   try {
-    const res = await fetch(url, { redirect: "follow", headers: { "User-Agent": UA }, signal: AbortSignal.timeout(5000) });
-    return new URL(res.url);
+    for (let i = 0; i < 4; i++) {
+      const res = await fetch(current, { redirect: "manual", headers: { "User-Agent": UA }, signal: AbortSignal.timeout(5000) });
+      const loc = res.headers.get("location");
+      if (!(res.status >= 300 && res.status < 400 && loc)) break;
+      const next = new URL(loc, current);
+      if (!isFetchAllowed(next)) break;
+      current = next;
+    }
   } catch {
-    return url;
+    // ignorieren, wir arbeiten mit dem, was wir haben
   }
+  return current;
 }
 
 /** Liest Titel/Koordinaten aus der Seite selbst (klappt nicht bei jeder Seite). */
 async function sniffPage(url: URL): Promise<{ title?: string; lat?: number; lon?: number }> {
   try {
-    const res = await fetch(url, { headers: { "User-Agent": UA, "Accept-Language": "de,en" }, signal: AbortSignal.timeout(5000) });
-    if (!res.ok) return {};
+    const res = await safeFetch(url);
+    if (!res || !res.ok) return {};
     const html = (await res.text()).slice(0, 400_000);
     const meta = (prop: string) =>
       html.match(new RegExp(`<meta[^>]+(?:property|name)=["']${prop}["'][^>]+content=["']([^"']+)["']`, "i"))?.[1];
@@ -126,8 +173,8 @@ export async function resolveInput(input: string): Promise<ResolveResult> {
     if (m) name = unslug(m[1]);
   }
 
-  // Zur Sicherheit auch die Seite selbst lesen (Titel, manchmal Koordinaten)
-  const page = await sniffPage(url);
+  // Bei bekannten Anbietern zusätzlich die Seite lesen (Titel, manchmal Koordinaten). Andere Seiten rufen wir nie ab.
+  const page = isFetchAllowed(url) ? await sniffPage(url) : {};
   if (page.lat !== undefined && page.lon !== undefined) {
     const label = page.title ?? name;
     return { query: label ?? host, candidates: [coordsPlace(page.lat, page.lon, label)] };
