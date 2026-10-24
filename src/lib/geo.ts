@@ -99,6 +99,21 @@ async function overpass(query: string): Promise<OverpassElement[]> {
   throw lastError instanceof Error ? lastError : new Error("Overpass nicht erreichbar");
 }
 
+/** Fläche eines Umrisses in m² (Gaußsche Trapezformel, lokal in Metern) */
+function polygonArea(pts: { lat: number; lon: number }[]) {
+  if (pts.length < 3) return 0;
+  const lat0 = pts[0].lat;
+  const kx = 111320 * Math.cos((lat0 * Math.PI) / 180);
+  const ky = 110540;
+  let sum = 0;
+  for (let i = 0; i < pts.length; i++) {
+    const a = pts[i];
+    const b = pts[(i + 1) % pts.length];
+    sum += (a.lon * kx) * (b.lat * ky) - (b.lon * kx) * (a.lat * ky);
+  }
+  return Math.abs(sum) / 2;
+}
+
 /** Overpass-Antwort → Punkte (mit Umriss bei Flächen) und Linien (Straßen, Gleise) */
 function split(elements: OverpassElement[]): { pois: Poi[]; lines: Line[] } {
   const pois: Poi[] = [];
@@ -107,6 +122,13 @@ function split(elements: OverpassElement[]): { pois: Poi[]; lines: Line[] } {
     const tags = e.tags ?? {};
     if (e.geometry && e.geometry.length > 1 && (tags.highway || tags.railway)) {
       lines.push({ tags, points: e.geometry.filter((p) => Number.isFinite(p.lat) && Number.isFinite(p.lon)) });
+    } else if (e.geometry && e.geometry.length > 2) {
+      // Fläche mit echtem Umriss (Park, See …): echte Größe statt Rechteck
+      const pts = e.geometry.filter((p) => Number.isFinite(p.lat) && Number.isFinite(p.lon));
+      const lats = pts.map((p) => p.lat);
+      const lons = pts.map((p) => p.lon);
+      const bbox: [number, number, number, number] = [Math.min(...lats), Math.min(...lons), Math.max(...lats), Math.max(...lons)];
+      pois.push({ lat: (bbox[0] + bbox[2]) / 2, lon: (bbox[1] + bbox[3]) / 2, tags, bbox, area: polygonArea(pts) });
     } else if (Number.isFinite(e.lat) && Number.isFinite(e.lon)) {
       pois.push({ lat: e.lat as number, lon: e.lon as number, tags });
     } else if (e.center && Number.isFinite(e.center.lat)) {
@@ -128,6 +150,8 @@ function poiQuery(lat: number, lon: number, extra = 0) {
   const a = (r: number) => `around:${r + extra},${c}`;
   // Nebenstraßen nur beim Einzel-Check, sonst wird die Antwort für ein ganzes Viertel zu groß
   const secondary = extra === 0 ? `way(${a(40)})[highway=secondary];` : "";
+  // Beim Einzel-Check echte Park-Umrisse (genaue Größe), fürs ganze Viertel nur Rechtecke (kleinere Antwort)
+  const greenOut = extra === 0 ? "out tags geom;" : "out tags bb;";
   return `[out:json][timeout:25];
 (
   nwr(${a(600)})[amenity~"^(bar|pub|nightclub|biergarten)$"];
@@ -135,9 +159,10 @@ function poiQuery(lat: number, lon: number, extra = 0) {
   node(${a(900)})[railway~"^(station|halt|tram_stop)$"];
   node(${a(900)})[public_transport=station];
   node(${a(400)})[highway=bus_stop];
-  nwr(${a(800)})[leisure~"^(park|garden|nature_reserve)$"];
-  nwr(${a(800)})[natural~"^(water|beach|wood)$"];
-  nwr(${a(800)})[landuse=forest];
+  node(${a(800)})[natural=beach];
+  rel(${a(800)})[leisure~"^(park|garden|nature_reserve)$"];
+  rel(${a(800)})[natural~"^(water|wood)$"];
+  rel(${a(800)})[landuse=forest];
   node(${a(600)})[amenity=ferry_terminal];
   nwr(${a(800)})[tourism~"^(hostel|guest_house)$"];
   nwr(${a(500)})[shop];
@@ -148,7 +173,13 @@ out tags bb;
   ${secondary}
   way(${a(160)})[railway~"^(rail|light_rail|subway|tram)$"]["tunnel"!="yes"];
 );
-out tags geom;`;
+out tags geom;
+(
+  way(${a(800)})[leisure~"^(park|garden|nature_reserve)$"];
+  way(${a(800)})[natural~"^(water|beach|wood)$"];
+  way(${a(800)})[landuse=forest];
+);
+${greenOut}`;
 }
 
 /** Nächstgelegener Kiez (nur wenn wir für die Stadt Kiez-Daten haben und er nah genug ist). */

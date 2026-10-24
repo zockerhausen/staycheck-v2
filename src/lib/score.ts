@@ -4,7 +4,7 @@
 
 export type Tags = Record<string, string>;
 /** Punkt aus OpenStreetMap. Bei Flächen (Parks …) zusätzlich der Umriss als Rechteck (bbox). */
-export type Poi = { lat: number; lon: number; tags: Tags; bbox?: [number, number, number, number] };
+export type Poi = { lat: number; lon: number; tags: Tags; bbox?: [number, number, number, number]; area?: number };
 /** Linie aus OpenStreetMap (Straße, Gleis) mit Verlauf. */
 export type Line = { tags: Tags; points: { lat: number; lon: number }[] };
 
@@ -95,11 +95,13 @@ function inService(t: Tags) {
 
 /** Fläche des Umriss-Rechtecks in m² (grob, reicht um Mini-Grünflächen auszusortieren) */
 function bboxArea(p: Poi) {
+  if (p.area !== undefined) return p.area; // echter Umriss bekannt
   if (!p.bbox) return 0;
   const [minLat, minLon, maxLat, maxLon] = p.bbox;
   const h = (maxLat - minLat) * 110540;
   const w = (maxLon - minLon) * 111320 * Math.cos((((minLat + maxLat) / 2) * Math.PI) / 180);
-  return Math.max(0, h * w);
+  // Bei Relationen kennen wir nur das Rechteck: die echte Fläche ist meist deutlich kleiner
+  return Math.max(0, h * w) * 0.5;
 }
 
 // ---------- Kategorien ----------
@@ -118,7 +120,7 @@ const isGreen = (t: Tags) =>
   /^(park|garden|nature_reserve)$/.test(t.leisure ?? "") || /^(water|beach|wood)$/.test(t.natural ?? "") || t.landuse === "forest";
 // Mini-Flächen (Verkehrsinsel, Vorgarten, Tiergehege) zählen nicht: mindestens 0,5 ha, Strände immer
 const MIN_GREEN_M2 = 5_000;
-const BIG_GREEN_M2 = 100_000; // 10 ha (das Umriss-Rechteck ist größer als die echte Fläche)
+const BIG_GREEN_M2 = 50_000; // 5 ha echte Fläche
 const isBudgetStay = (t: Tags) => /^(hostel|guest_house)$/.test(t.tourism ?? "");
 const isMainRoad = (t: Tags) => /^(motorway|trunk|primary)$/.test(t.highway ?? "");
 const isSecondaryRoad = (t: Tags) => t.highway === "secondary";
