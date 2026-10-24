@@ -207,3 +207,9 @@ export async function resolveWeights(
 export async function getLastCity(): Promise<string> {
   return (await cookies()).get(CITY_COOKIE)?.value ?? "berlin";
 }
+
+/** Reiseziel, das die Person selbst gewählt hat (ohne Standard-Stadt). */
+export async function getChosenCity(): Promise<string | null> {
+  const v = (await cookies()).get(CITY_COOKIE)?.value;
+  return v && /^[a-z-]{2,40}$/.test(v) ? v : null;
+}
