@@ -5,6 +5,7 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const kiez = (searchParams.get("kiez") ?? "Berlin").slice(0, 40);
   const match = Math.min(100, Math.max(0, Number(searchParams.get("match")) || 0));
+  const stadt = (searchParams.get("stadt") ?? "Berlin").slice(0, 30);
   const tags = (searchParams.get("tags") ?? "")
     .split(",")
     .filter(Boolean)
@@ -26,7 +27,7 @@ export async function GET(request: Request) {
         }}
       >
         <div style={{ display: "flex", fontSize: 56, fontWeight: 800, color: "#f2662f" }}>StayCheck</div>
-        <div style={{ display: "flex", marginTop: 260, fontSize: 52, color: "#8a3510" }}>Mein Kiez in Berlin</div>
+        <div style={{ display: "flex", marginTop: 260, fontSize: 52, color: "#8a3510" }}>Mein Kiez in {stadt}</div>
         <div style={{ display: "flex", fontSize: 150, fontWeight: 800, lineHeight: 1, marginTop: 20 }}>{kiez}</div>
         <div style={{ display: "flex", alignItems: "flex-end", marginTop: 40, color: "#f2662f", fontWeight: 800 }}>
           <span style={{ fontSize: 300, lineHeight: 1 }}>{match}</span>

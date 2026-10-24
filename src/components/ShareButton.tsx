@@ -9,21 +9,23 @@ export default function ShareButton({
   match,
   tags,
   light = false,
+  city = "Berlin",
 }: {
   name: string;
   match: number;
   tags: string[];
   light?: boolean;
+  city?: string;
 }) {
   const [busy, setBusy] = useState(false);
 
   async function share() {
     setBusy(true);
     try {
-      const url = `/api/teilen?${new URLSearchParams({ kiez: name, match: String(match), tags: tags.join(",") })}`;
+      const url = `/api/teilen?${new URLSearchParams({ kiez: name, match: String(match), tags: tags.join(","), stadt: city })}`;
       const blob = await (await fetch(url)).blob();
       const file = new File([blob], `staycheck-${name}.png`, { type: "image/png" });
-      const text = `Mein Kiez in Berlin: ${name} (${match}% Match). Finde deinen auf StayCheck!`;
+      const text = `Mein Kiez in ${city}: ${name} (${match}% Match). Finde deinen auf StayCheck!`;
 
       if (navigator.canShare?.({ files: [file] })) {
         await navigator.share({ files: [file], text, url: window.location.origin });

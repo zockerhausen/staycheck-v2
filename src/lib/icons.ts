@@ -76,6 +76,28 @@ export const ICONS = {
     { d: "M9 4.5l6 2.2 5-2v13l-5 2-6-2.2-5 2v-13z", f: true, s: true },
     { d: "M9 4.5v13M15 6.7v13", s: true },
   ],
+  plane: [
+    { d: "M10.6 3.6c.6-1.1 2.2-1.1 2.8 0l.6 5.6 7 4.1v2.1l-7-1.9-.5 4.1 2.4 2v1.6L12 19.9l-3.9 1.2v-1.6l2.4-2-.5-4.1-7 1.9v-2.1l7-4.1z", f: true, s: true },
+  ],
+  bag: [
+    { d: "M6.5 9a5.5 5.5 0 0 1 11 0v9a3 3 0 0 1-3 3h-5a3 3 0 0 1-3-3z", f: true, s: true },
+    { d: "M9.5 6.6V5.5a2.5 2.5 0 0 1 5 0v1.1M9.5 13.5h5", s: true },
+  ],
+  bus: [
+    { d: "M5.5 3.5h13a1.5 1.5 0 0 1 1.5 1.5v11a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 16V5a1.5 1.5 0 0 1 1.5-1.5z", f: true, s: true },
+    { d: "M4 10.5h16M7.5 17v3M16.5 17v3M8 13.8h.01M16 13.8h.01", s: true },
+  ],
+  tip: [
+    { d: "M5 4h14a2 2 0 0 1 2 2v8.5a2 2 0 0 1-2 2h-7l-4.5 3.8v-3.8H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z", f: true, s: true },
+    { d: "M7.5 9h9M7.5 12h5.5", s: true },
+  ],
+  flag: [
+    { d: "M5 4h12l-2.6 4.2L17 12.4H5z", f: true, s: true },
+    { d: "M5 21V4", s: true },
+  ],
+  link: [
+    { d: "M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1", s: true },
+  ],
 } satisfies Record<string, IconPart[]>;
 
 export type IconName = keyof typeof ICONS;

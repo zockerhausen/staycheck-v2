@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { getCriteria, getDistricts, getSavedWeights, weightsFromParams, weightsToQuery } from "@/lib/data";
+import { getCities, getCriteria, getDistricts, getLastCity, resolveWeights, weightsToQuery } from "@/lib/data";
+import DuelTabs from "@/components/DuelTabs";
 import { matchScore } from "@/lib/matching";
 import { CRITERION_ICON } from "@/lib/icons";
 import Icon from "@/components/Icon";
@@ -15,16 +16,16 @@ export default async function DuellPage({
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const params = await searchParams;
-  const [criteria, districts, saved] = await Promise.all([getCriteria(), getDistricts(), getSavedWeights()]);
+  const cities = (await getCities()).filter((c) => c.districtCount > 0);
+  const wanted = typeof params.stadt === "string" ? params.stadt : await getLastCity();
+  const city = cities.find((c) => c.slug === wanted) ?? cities[0];
+  const [criteria, districts] = await Promise.all([getCriteria(), getDistricts(city?.slug)]);
 
-  const fromUrl = weightsFromParams(params, criteria);
-  const weights = Object.keys(fromUrl).length > 0 ? fromUrl : saved;
+  const { weights, source } = await resolveWeights(params, criteria);
+  const fromUrl: Record<string, number> = source === "url" && weights ? weights : {};
 
-  const a = districts.find((d) => d.slug === params.a) ?? districts.find((d) => d.slug === "kreuzberg") ?? districts[0];
-  const b =
-    districts.find((d) => d.slug === params.b && d.slug !== a?.slug) ??
-    districts.find((d) => d.slug !== a?.slug && d.slug === "prenzlauer-berg") ??
-    districts.find((d) => d.slug !== a?.slug);
+  const a = districts.find((d) => d.slug === params.a) ?? districts[0];
+  const b = districts.find((d) => d.slug === params.b && d.slug !== a?.slug) ?? districts.find((d) => d.slug !== a?.slug);
 
   if (!a || !b) return <p>Keine Kieze gefunden.</p>;
 
@@ -39,10 +40,24 @@ export default async function DuellPage({
 
   return (
     <div className="pt-2">
-      <h1 className="font-display text-4xl font-extrabold">Kiez-Duell</h1>
-      <p className="mt-1 text-muted">Zwei Kieze, sieben Runden. Wer passt besser?</p>
+      <DuelTabs active="kieze" />
+      <h1 className="mt-6 font-display text-4xl font-extrabold">Viertel-Duell</h1>
+      <p className="mt-1 text-muted">Zwei Viertel, sieben Runden. Wer passt besser?</p>
 
-      <form className="mt-6">
+      <div className="mt-4 flex gap-2">
+        {cities.map((c) => (
+          <Link
+            key={c.slug}
+            href={`/duell?stadt=${c.slug}`}
+            className={`rounded-full border-2 px-4 py-1.5 text-sm font-bold ${c.slug === city?.slug ? "border-sun bg-sun text-white" : "border-line bg-paper"}`}
+          >
+            {c.name}
+          </Link>
+        ))}
+      </div>
+
+      <form className="mt-4">
+        <input type="hidden" name="stadt" value={city?.slug ?? ""} />
         {Object.entries(fromUrl).map(([k, v]) => (
           <input key={k} type="hidden" name={k} value={v} />
         ))}
@@ -111,10 +126,10 @@ export default async function DuellPage({
       </section>
 
       <div className="mt-4 grid grid-cols-2 gap-2">
-        <Link href={`/kiez/${a.slug}${weights ? `?${weightsToQuery(weights)}` : ""}`} className="flex items-center justify-center gap-1.5 rounded-xl bg-tan py-2.5 text-sm font-bold">
+        <Link href={`/kiez/${a.slug}?stadt=${a.city}${source === "url" && weights ? `&${weightsToQuery(weights)}` : ""}`} className="flex items-center justify-center gap-1.5 rounded-xl bg-tan py-2.5 text-sm font-bold">
           <Icon name="hotel" size={18} /> Hotels {a.name}
         </Link>
-        <Link href={`/kiez/${b.slug}${weights ? `?${weightsToQuery(weights)}` : ""}`} className="flex items-center justify-center gap-1.5 rounded-xl bg-tan py-2.5 text-sm font-bold">
+        <Link href={`/kiez/${b.slug}?stadt=${b.city}${source === "url" && weights ? `&${weightsToQuery(weights)}` : ""}`} className="flex items-center justify-center gap-1.5 rounded-xl bg-tan py-2.5 text-sm font-bold">
           <Icon name="hotel" size={18} /> Hotels {b.name}
         </Link>
       </div>

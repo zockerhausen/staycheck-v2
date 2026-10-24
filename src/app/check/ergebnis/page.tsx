@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import {
+  getCities,
   getCriteria,
   getDistricts,
   getSavedPlaces,
@@ -14,6 +15,10 @@ import Icon from "@/components/Icon";
 import Reveal from "@/components/Reveal";
 import KiezMap from "@/components/KiezMap";
 import PlaceSaveButton from "@/components/PlaceSaveButton";
+import ArrivalCard from "@/components/ArrivalCard";
+import TipsSection from "@/components/TipsSection";
+import { HUBS, cityForPoint } from "@/lib/arrival";
+import { getTipsNear } from "@/lib/tips";
 
 export const dynamic = "force-dynamic";
 
@@ -38,7 +43,15 @@ export default async function CheckErgebnisPage({
   const sub = get("sub").slice(0, 200);
   const kind = get("kind") || "other";
 
-  const [criteria, districts, user, saved] = await Promise.all([getCriteria(), getDistricts(), getUser(), getSavedPlaces()]);
+  const [criteria, districts, user, saved, cities, tips] = await Promise.all([
+    getCriteria(),
+    getDistricts(),
+    getUser(),
+    getSavedPlaces(),
+    getCities(),
+    getTipsNear(lat, lon),
+  ]);
+  const city = cityForPoint(lat, lon, cities);
   const { weights: resolved, source } = await resolveWeights(params, criteria);
   const weights = resolved ?? DEFAULT_WEIGHTS;
 
@@ -58,10 +71,11 @@ export default async function CheckErgebnisPage({
 
   const match = locationMatch(analysis.scores, weights);
   const v = verdict(match);
-  const query = weightsToQuery(weights);
+  const query = source === "url" ? weightsToQuery(weights) : "";
+  const amp = query ? `&${query}` : "";
   const district = analysis.district;
   const isSaved = saved.some((p) => Math.abs(p.lat - lat) < 1e-6 && Math.abs(p.lon - lon) < 1e-6);
-  const returnTo = `/check/ergebnis?${new URLSearchParams({ lat: String(lat), lon: String(lon), name, sub, kind })}&${query}`;
+  const returnTo = `/check/ergebnis?${new URLSearchParams({ lat: String(lat), lon: String(lon), name, sub, kind })}${amp}`;
 
   // Stärken und Schwächen für diesen Nutzer
   const weighted = criteria
@@ -137,6 +151,19 @@ export default async function CheckErgebnisPage({
         height="h-56"
       />
 
+      {city && <ArrivalCard hubs={HUBS[city.slug]} lat={lat} lon={lon} nearestRail={analysis.nearestRail} />}
+
+      <TipsSection
+        tips={tips}
+        userId={user?.id ?? null}
+        lat={lat}
+        lon={lon}
+        placeName={name}
+        districtId={district?.id ?? null}
+        returnTo={returnTo}
+        title="Tipps zu dieser Lage"
+      />
+
       <div className="space-y-3">
         <PlaceSaveButton
           place={{ name, subtitle: sub, lat, lon, kind, match }}
@@ -145,11 +172,17 @@ export default async function CheckErgebnisPage({
           returnTo={returnTo}
         />
         {district && (
-          <Link href={`/kiez/${district.slug}?${query}`} className="btn-chunky w-full">
+          <Link href={`/kiez/${district.slug}?stadt=${district.city}${amp}`} className="btn-chunky w-full">
             <Icon name="hotel" size={22} fill="#ffcfa8" /> Bessere Hotels in {district.name}
           </Link>
         )}
-        <Link href={`/check?${query}`} className="flex items-center justify-center gap-2 py-2 text-sm font-semibold text-muted">
+        <Link
+          href={`/duell/hotels?h=${encodeURIComponent([lat.toFixed(6), lon.toFixed(6), kind, name.slice(0, 80)].join("|"))}`}
+          className="btn-chunky btn-chunky-light w-full"
+        >
+          <Icon name="duel" size={22} /> Mit anderem Hotel vergleichen
+        </Link>
+        <Link href="/check" className="flex items-center justify-center gap-2 py-2 text-sm font-semibold text-muted">
           <Icon name="refresh" size={18} /> Anderes Hotel prüfen
         </Link>
       </div>

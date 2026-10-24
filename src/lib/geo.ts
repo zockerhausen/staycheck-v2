@@ -27,6 +27,7 @@ export type LocationAnalysis = {
   highlights: Highlight[];
   district: District | null;
   counts: { bars: number; food: number; hostels: number };
+  nearestRail: { name: string; dist: number } | null;
 };
 
 // ---------- Hilfsfunktionen ----------
@@ -209,6 +210,7 @@ export function scoreLocation(lat: number, lon: number, pois: Poi[], district: D
     highlights,
     district,
     counts: { bars, food, hostels },
+    nearestRail: rail ? { name: rail.poi.tags.name ?? "Bahnhof", dist: Math.round(rail.dist) } : null,
   };
 }
 

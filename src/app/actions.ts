@@ -1,9 +1,10 @@
 "use server";
 
-import { headers } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { CITY_COOKIE, PROFILE_COOKIE, encodeProfile } from "@/lib/data";
 
 function safeNext(v: FormDataEntryValue | null) {
   const n = String(v || "/");
@@ -19,6 +20,7 @@ export async function login(_prev: FormState, formData: FormData): Promise<FormS
     password: String(formData.get("password") ?? ""),
   });
   if (error) return { error: "E-Mail oder Passwort ist falsch." };
+  await syncProfileFromCookie();
   const next = String(formData.get("next") || "/");
   redirect(next.startsWith("/") && !next.startsWith("//") ? next : "/");
 }
@@ -58,6 +60,51 @@ export async function savePreferences(weights: Record<string, number>) {
     updated_at: new Date().toISOString(),
   }));
   await supabase.from("user_preferences").upsert(rows);
+}
+
+const YEAR = 60 * 60 * 24 * 365;
+
+/** Reise-Profil dauerhaft speichern: im Browser (Cookie) und – falls eingeloggt – im Konto. */
+export async function storeProfile(weights: Record<string, number>, city?: string) {
+  const clean = Object.fromEntries(
+    Object.entries(weights)
+      .filter(([k]) => /^[a-z_]{2,20}$/.test(k))
+      .map(([k, v]) => [k, Math.min(5, Math.max(0, Math.round(Number(v) || 0)))]),
+  );
+  const jar = await cookies();
+  jar.set(PROFILE_COOKIE, encodeProfile(clean), { maxAge: YEAR, path: "/", sameSite: "lax" });
+  if (city && /^[a-z-]{2,40}$/.test(city)) jar.set(CITY_COOKIE, city, { maxAge: YEAR, path: "/", sameSite: "lax" });
+  await savePreferences(clean);
+  revalidatePath("/", "layout");
+}
+
+/** Wer das Quiz ohne Konto gemacht hat, bekommt sein Profil beim Anmelden ins Konto übernommen. */
+export async function syncProfileFromCookie() {
+  const raw = (await cookies()).get(PROFILE_COOKIE)?.value;
+  if (!raw) return;
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return;
+  const { count } = await supabase
+    .from("user_preferences")
+    .select("criterion_key", { count: "exact", head: true })
+    .eq("user_id", user.id);
+  if (count) return;
+  const weights = Object.fromEntries(
+    raw
+      .split(",")
+      .map((p) => p.split(":"))
+      .filter(([k, v]) => /^[a-z_]{2,20}$/.test(k) && Number.isFinite(Number(v)))
+      .map(([k, v]) => [k, Math.min(5, Math.max(0, Math.round(Number(v))))]),
+  );
+  if (Object.keys(weights).length) await savePreferences(weights);
+}
+
+export async function rememberCity(city: string) {
+  if (!/^[a-z-]{2,40}$/.test(city)) return;
+  (await cookies()).set(CITY_COOKIE, city, { maxAge: YEAR, path: "/", sameSite: "lax" });
 }
 
 /** Speichert Präferenzen und merkt sich den Top-Kiez. */
@@ -124,4 +171,72 @@ export async function togglePlace(place: PlaceInput, isSaved: boolean): Promise<
   }
   revalidatePath("/favoriten");
   return !isSaved;
+}
+
+export type TipInput = {
+  lat: number;
+  lon: number;
+  placeName?: string;
+  districtId?: string | null;
+  category: string;
+  body: string;
+};
+
+const TIP_CATEGORY_KEYS = ["laerm", "sicherheit", "anbindung", "essen", "unterkunft", "sonstiges"];
+
+/** Tipp von Reisenden speichern. Gibt eine Fehlermeldung zurück oder null. */
+export async function addTip(input: TipInput, returnTo: string): Promise<string | null> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect(`/login?next=${encodeURIComponent(returnTo)}`);
+
+  const body = input.body.trim().replace(/\s+/g, " ");
+  if (body.length < 10) return "Schreib bitte mindestens 10 Zeichen.";
+  if (body.length > 280) return "Maximal 280 Zeichen.";
+  if (/https?:\/\/|www\./i.test(body)) return "Bitte keine Links in Tipps.";
+  if (!TIP_CATEGORY_KEYS.includes(input.category)) return "Wähl eine Kategorie.";
+  if (!Number.isFinite(input.lat) || !Number.isFinite(input.lon)) return "Ort fehlt.";
+
+  // Schutz vor Spam: max. 5 Tipps pro Stunde
+  const since = new Date(Date.now() - 3_600_000).toISOString();
+  const { count } = await supabase
+    .from("place_tips")
+    .select("id", { count: "exact", head: true })
+    .eq("user_id", user.id)
+    .gte("created_at", since);
+  if ((count ?? 0) >= 5) return "Du hast gerade viele Tipps geschrieben. Versuch es später nochmal.";
+
+  const { error } = await supabase.from("place_tips").insert({
+    user_id: user.id,
+    lat: input.lat,
+    lon: input.lon,
+    place_name: input.placeName?.slice(0, 120) ?? null,
+    district_id: input.districtId ?? null,
+    category: input.category,
+    body,
+  });
+  if (error) return "Speichern hat nicht geklappt. Versuch es nochmal.";
+  revalidatePath(returnTo.split("?")[0]);
+  return null;
+}
+
+export async function reportTip(tipId: string) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+  await supabase.from("tip_reports").upsert({ tip_id: tipId, user_id: user.id }, { onConflict: "tip_id,user_id", ignoreDuplicates: true });
+}
+
+export async function deleteTip(tipId: string, path: string) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return;
+  await supabase.from("place_tips").delete().eq("id", tipId).eq("user_id", user.id);
+  revalidatePath(path);
 }

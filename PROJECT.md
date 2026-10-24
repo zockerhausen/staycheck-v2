@@ -4,7 +4,7 @@
 StayCheck hilft Backpackern und Reisenden, **dort zu schlafen, wo es passt**. Zwei Wege:
 - **Ich hab schon ein Hotel** → Lage-Check: Adresse/Hotel eingeben, die Umgebung wird bewertet (funktioniert weltweit).
 - **Ich suche noch** → Quiz → passender Kiez → Unterkünfte im Kiez, sortiert nach Lage-Score.
-Start: **Berlin** (Kiez-Bewertungen). Lage-Check nutzt OpenStreetMap und geht in jeder Stadt.
+Städte mit Viertel-Bewertungen: **Berlin**, **Bangkok** (Bangkok-Werte sind Startwerte, bitte prüfen). Lage-Check nutzt OpenStreetMap und geht in jeder Stadt.
 
 ## Kernfunktionen (Mobile first)
 1. **Quiz** (`/quiz`): 7 Fragen, eine pro Bildschirm, große Antwort-Kacheln, Fortschrittsbalken (Duolingo-Prinzip).
@@ -16,6 +16,14 @@ Start: **Berlin** (Kiez-Bewertungen). Lage-Check nutzt OpenStreetMap und geht in
    Bahn-Entfernung, Bars, Restaurants, Parks, Hauptstraßen, Hostels. Ergebnis: Lage-Score, Urteil (Top-Lage … Eher abseits), Highlights.
 5. **Kiez-Seite mit Unterkünften** (`/kiez/[slug]`): Hotels/Hostels/Pensionen aus OpenStreetMap, jede mit Lage-Score, Link zu Booking.com.
 6. **Konto** (`/login`, `/konto`, `/favoriten`): E-Mail + Passwort. Gespeichert werden Präferenzen, gemerkte Kieze und Unterkünfte (`saved_places`).
+
+7. **Reise-Profil** (`/reise`, `/profil`): Stadt wählen → Quiz nur beim ersten Mal. Profil wird im Cookie `sc_profil`
+   und (mit Konto) in `user_preferences` gespeichert; beim Login wird ein Geräte-Profil ins Konto übernommen. Anpassbar per Schieberegler.
+8. **Hotel-Duell per Link** (`/duell/hotels`): Links von Booking, Hostelworld, Agoda, Google Maps oder Namen → `src/lib/links.ts`
+   erkennt die Unterkunft, 2–3 Unterkünfte werden verglichen. Airbnb geht nicht (Lage erst nach Buchung).
+9. **Ankunfts-Check** (`src/lib/arrival.ts`): Flughafen/Bahnhof → Unterkunft. V1 = Schätzung + Google-Maps-Route.
+   Für echte Verbindungen später eine ÖPNV-API mit Schlüssel (z. B. Google Routes, HERE). Transitous ist nur für nicht-kommerzielle Projekte.
+10. **Tipps von Reisenden** (`place_tips`, `tip_reports`): max. 280 Zeichen, keine Links, max. 5 pro Stunde, ab 3 Meldungen ausgeblendet.
 
 ## Produkt-Prinzipien
 - Erst den Erfolgsmoment liefern, dann um etwas bitten (Konto, später App-Bewertung). Inspiriert von @ayoships.

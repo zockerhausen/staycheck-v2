@@ -8,7 +8,7 @@ export default function Home() {
 
       <section className="mt-8">
         <span className="inline-flex items-center gap-1.5 rounded-full bg-peach px-3 py-1 text-sm font-semibold text-peach-ink">
-          <Icon name="check" size={16} fill="#fff" /> Jetzt für Berlin
+          <Icon name="check" size={16} fill="#fff" /> Berlin · Bangkok · Lage-Check weltweit
         </span>
         <h1 className="mt-4 font-display text-[2.6rem] font-extrabold leading-[1.02] tracking-tight">
           Schlaf da, wo
@@ -32,7 +32,7 @@ export default function Home() {
           <Icon name="forward" size={24} />
         </Link>
 
-        <Link href="/quiz" className="flex items-center gap-4 rounded-3xl border-2 border-b-[6px] border-line bg-paper p-5 transition active:translate-y-[3px] active:border-b-2">
+        <Link href="/reise" className="flex items-center gap-4 rounded-3xl border-2 border-b-[6px] border-line bg-paper p-5 transition active:translate-y-[3px] active:border-b-2">
           <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-peach text-sun">
             <Icon name="discover" size={34} fill="#ffffff" />
           </span>
@@ -45,8 +45,8 @@ export default function Home() {
       </div>
 
       <div className="mt-auto pt-8">
-        <Link href="/duell" className="flex items-center justify-center gap-2 text-sm font-bold text-muted">
-          <Icon name="duel" size={20} /> Zwei Kieze im Duell vergleichen
+        <Link href="/duell/hotels" className="flex items-center justify-center gap-2 text-sm font-bold text-muted">
+          <Icon name="duel" size={20} /> Mehrere Hotels im Blick? Lage-Duell starten
         </Link>
       </div>
     </div>

@@ -1,0 +1,6 @@
+-- Bereits im Supabase-Projekt ausgeführt (zur Dokumentation).
+-- 1) cities: lat, lng, zoom, sort_order; Bangkok mit 10 Vierteln und Startbewertungen (bitte prüfen!)
+-- 2) place_tips: Tipps von Reisenden (RLS: sichtbare Tipps öffentlich, eigene anlegen/löschen)
+-- 3) tip_reports: Meldungen; Trigger blendet Tipps ab 3 Meldungen aus
+-- Trigger prepare_tip setzt author_name aus profiles und erzwingt report_count = 0, hidden = false.
+-- Vollständiges SQL: siehe Supabase → Database → Migrations (cities_bangkok_tips).

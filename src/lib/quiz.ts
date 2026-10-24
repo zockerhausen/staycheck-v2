@@ -7,7 +7,7 @@ export const QUIZ: QuizQuestion[] = [
     key: "budget",
     question: "Wie sieht dein Reisebudget aus?",
     answers: [
-      { text: "Jeder Euro zählt", weight: 5 },
+      { text: "Jeder Cent zählt", weight: 5 },
       { text: "Backpacker-Budget, aber ok", weight: 3 },
       { text: "Geld ist nicht das Thema", weight: 0 },
     ],
@@ -43,7 +43,7 @@ export const QUIZ: QuizQuestion[] = [
     key: "transit",
     question: "Wie bewegst du dich durch die Stadt?",
     answers: [
-      { text: "Nur mit U- und S-Bahn", weight: 5 },
+      { text: "Nur mit Bahn und Metro", weight: 5 },
       { text: "Mal Bahn, mal Fahrrad", weight: 3 },
       { text: "Ich laufe alles zu Fuß", weight: 1 },
     ],
@@ -53,7 +53,7 @@ export const QUIZ: QuizQuestion[] = [
     question: "Wie wichtig ist dir gutes Essen?",
     answers: [
       { text: "Ich reise für das Essen", weight: 5 },
-      { text: "Ein guter Döner reicht", weight: 3 },
+      { text: "Gutes Streetfood reicht mir", weight: 3 },
       { text: "Hauptsache satt", weight: 0 },
     ],
   },
@@ -61,7 +61,7 @@ export const QUIZ: QuizQuestion[] = [
     key: "nature",
     question: "Brauchst du Grün und Wasser in der Nähe?",
     answers: [
-      { text: "Ja, Parks und Spree sind Pflicht", weight: 5 },
+      { text: "Ja, Parks und Wasser sind Pflicht", weight: 5 },
       { text: "Wäre schön", weight: 3 },
       { text: "Ich bin Stadtkind", weight: 0 },
     ],

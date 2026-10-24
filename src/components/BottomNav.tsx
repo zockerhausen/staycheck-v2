@@ -12,9 +12,9 @@ export default function BottomNav({ loggedIn }: { loggedIn: boolean }) {
   if (pathname.startsWith("/quiz")) return null; // Im Quiz volle Konzentration
 
   const items: Item[] = [
-    { href: "/", label: "Entdecken", icon: "discover", match: (p) => p === "/" || p.startsWith("/ergebnis") || p.startsWith("/kiez") },
+    { href: "/", label: "Entdecken", icon: "discover", match: (p) => p === "/" || ["/ergebnis", "/kiez", "/reise", "/profil"].some((x) => p.startsWith(x)) },
     { href: "/check", label: "Lage-Check", icon: "check", match: (p) => p.startsWith("/check") },
-    { href: "/duell", label: "Duell", icon: "duel", match: (p) => p.startsWith("/duell") },
+    { href: "/duell/hotels", label: "Duell", icon: "duel", match: (p) => p.startsWith("/duell") },
     { href: "/favoriten", label: "Gemerkt", icon: "heart", match: (p) => p.startsWith("/favoriten") },
     {
       href: loggedIn ? "/konto" : "/login",

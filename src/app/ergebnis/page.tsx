@@ -1,11 +1,13 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import {
+  getCity,
   getCriteria,
   getDistricts,
   getFavoriteIds,
+  getLastCity,
   getUser,
-  weightsFromParams,
+  resolveWeights,
   weightsToQuery,
 } from "@/lib/data";
 import { rankDistricts, topReasons } from "@/lib/matching";
@@ -26,22 +28,27 @@ export default async function ErgebnisPage({
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const params = await searchParams;
+  const wanted = typeof params.stadt === "string" ? params.stadt : await getLastCity();
+  const city = (await getCity(wanted)) ?? (await getCity("berlin"));
+  if (!city) redirect("/reise");
   const [criteria, districts, favorites, user] = await Promise.all([
     getCriteria(),
-    getDistricts(),
+    getDistricts(city.slug),
     getFavoriteIds(),
     getUser(),
   ]);
 
-  const weights = weightsFromParams(params, criteria);
-  if (Object.keys(weights).length === 0) redirect("/quiz");
+  const { weights, source } = await resolveWeights(params, criteria);
+  if (!weights) redirect(`/quiz?stadt=${city.slug}`);
 
   const ranked = rankDistricts(districts, weights);
   const [top, ...rest] = ranked;
   if (!top) redirect("/");
 
   const labelOf = Object.fromEntries(criteria.map((c) => [c.key, c.label]));
-  const query = weightsToQuery(weights);
+  // Gewichte nur in Links mitgeben, wenn sie aus der URL kamen – sonst gilt immer das aktuelle Profil
+  const query = source === "url" ? weightsToQuery(weights) : "";
+  const q = (sep: "?" | "&") => (query ? `${sep}${query}` : "");
   const reasons = topReasons(top, weights, 3);
   const points = ranked
     .filter((d) => d.lat !== null && d.lng !== null)
@@ -53,13 +60,18 @@ export default async function ErgebnisPage({
         <Link href="/" className="font-display text-xl font-extrabold text-sun">
           StayCheck
         </Link>
-        <Link href="/quiz" className="flex items-center gap-1 text-sm font-semibold text-muted">
-          <Icon name="refresh" size={18} /> Quiz neu
-        </Link>
+        <div className="flex items-center gap-4">
+          <Link href="/reise" className="flex items-center gap-1 text-sm font-semibold text-muted">
+            <Icon name="map" size={18} /> Stadt
+          </Link>
+          <Link href="/profil" className="flex items-center gap-1 text-sm font-semibold text-muted">
+            <Icon name="user" size={18} /> Profil
+          </Link>
+        </div>
       </div>
 
       <section>
-        <Reveal name={top.name} match={top.match} celebrate={params.neu === "1"} />
+        <Reveal name={top.name} match={top.match} celebrate={params.neu === "1"} eyebrow={`Dein Kiez in ${city.name}`} />
         <div className="mt-4 flex flex-wrap gap-2">
           {reasons.map((k) => (
             <span key={k} className="inline-flex items-center gap-1.5 rounded-full bg-peach px-3 py-1.5 text-sm font-semibold text-peach-ink">
@@ -71,28 +83,28 @@ export default async function ErgebnisPage({
       </section>
 
       <div className="space-y-3">
-        <Link href={`/kiez/${top.slug}?${query}`} className="btn-chunky w-full">
+        <Link href={`/kiez/${top.slug}${q("?")}`} className="btn-chunky w-full">
           <Icon name="hotel" size={22} fill="#ffffff55" /> Hotels in {top.name} finden
         </Link>
-        <ShareButton name={top.name} match={top.match} tags={reasons.map((k) => labelOf[k])} light />
+        <ShareButton name={top.name} match={top.match} tags={reasons.map((k) => labelOf[k])} city={city.name} light />
         <SaveButton
           loggedIn={Boolean(user)}
           weights={weights}
           districtId={top.id}
           alreadySaved={favorites.has(top.id)}
-          returnTo={`/ergebnis?${query}`}
+          returnTo={`/ergebnis?stadt=${city.slug}${q("&")}`}
         />
       </div>
 
       <section>
         <h2 className="font-display text-xl font-bold">Alle Kieze auf der Karte</h2>
         <p className="mb-3 text-sm text-muted">Die Zahl ist dein Match. Tipp auf einen Punkt.</p>
-        <KiezMap points={points} highlight={top.slug} />
+        <KiezMap points={points} highlight={top.slug} center={[city.lng, city.lat]} zoom={city.zoom} />
       </section>
 
       <section>
         <h2 className="font-display text-xl font-bold">Weitere Kieze für dich</h2>
-        <p className="mb-3 text-sm text-muted">Wisch zur Seite →</p>
+        <p className="mb-3 text-sm text-muted">Wisch zur Seite</p>
         <div className="snap-row -mx-4 px-4">
           {[top, ...rest].map((d, i) => (
             <article
@@ -113,11 +125,11 @@ export default async function ErgebnisPage({
               <ScoreBars criteria={criteria} scores={d.scores} />
               <div className="mt-auto flex items-center justify-between gap-2 pt-4">
                 <div className="flex items-center gap-4">
-                  <Link href={`/kiez/${d.slug}?${query}`} className="flex items-center gap-1 text-sm font-bold text-sun">
+                  <Link href={`/kiez/${d.slug}${q("?")}`} className="flex items-center gap-1 text-sm font-bold text-sun">
                     <Icon name="hotel" size={18} /> Hotels
                   </Link>
                   <Link
-                    href={`/duell?a=${top.slug === d.slug ? d.slug : top.slug}&b=${top.slug === d.slug ? rest[0]?.slug ?? d.slug : d.slug}&${query}`}
+                    href={`/duell?stadt=${city.slug}&a=${top.slug === d.slug ? d.slug : top.slug}&b=${top.slug === d.slug ? rest[0]?.slug ?? d.slug : d.slug}${q("&")}`}
                     className="flex items-center gap-1 text-sm font-bold text-muted"
                   >
                     <Icon name="duel" size={18} /> Duell

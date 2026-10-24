@@ -22,8 +22,8 @@ export default async function KontoPage() {
         <Link href="/favoriten" className="btn-chunky btn-chunky-light w-full">
           <Icon name="heart" size={22} /> Gemerkt
         </Link>
-        <Link href="/quiz" className="btn-chunky btn-chunky-light w-full">
-          <Icon name="refresh" size={22} /> Quiz neu machen
+        <Link href="/profil" className="btn-chunky btn-chunky-light w-full">
+          <Icon name="star" size={22} /> Mein Reise-Profil
         </Link>
         <form action={signout}>
           <button className="w-full py-3 text-sm font-semibold text-muted">Abmelden</button>
