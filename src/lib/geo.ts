@@ -361,7 +361,8 @@ export async function hotelsNear(
 // was im Umkreis liegt. Gröber als der Lage-Check einer Adresse – das zeigen wir auch so an.
 
 export type Zone = { lat: number; lon: number; s: number[] }; // s: Werte in der Reihenfolge ZONE_KEYS
-export type AutoCity = { districts: AutoDistrict[]; zones: Zone[]; step: number };
+export type NamedPlace = { n: string; lat: number; lon: number; l: number }; // l: 0 Stadtteil, 1 Quartier, 2 Kiez
+export type AutoCity = { districts: AutoDistrict[]; zones: Zone[]; step: number; places?: NamedPlace[] };
 
 export type AutoDistrict = {
   slug: string;
@@ -533,7 +534,12 @@ export async function autoCity(lat: number, lon: number, radius = 3500, max = 14
       });
     }
   }
-  return { districts, zones, step: STEP };
+  // Namen von Stadtteilen und Kiezen, um kleine Ecken zu benennen (die nächsten 250)
+  const named: NamedPlace[] = [...candidates]
+    .sort((a, b) => a.d - b.d)
+    .slice(0, 250)
+    .map((p) => ({ n: p.name.slice(0, 60), lat: Math.round(p.lat * 1e5) / 1e5, lon: Math.round(p.lon * 1e5) / 1e5, l: p.level }));
+  return { districts, zones, step: STEP, places: named };
 }
 
 /** Werte aus den gezählten Dingen (Reihenfolge wie RADII). Gleiche Formeln für Viertel und Raster. */
@@ -571,7 +577,7 @@ function once<T>(key: string, fn: () => Promise<T>): Promise<T> {
 /** Viertel + Raster einer Stadt, 30 Tage gespeichert: ab dem zweiten Besuch sofort da. */
 const autoCityStored = unstable_cache(
   async (lat: number, lon: number, radius: number) => autoCity(lat, lon, radius),
-  ["auto-city-v1"],
+  ["auto-city-v2"],
   { revalidate: 30 * 86400 }, // Viertel ändern sich selten; danach wird im Hintergrund neu berechnet
 );
 export const autoCityCached = (lat: number, lon: number, radius = 3500) =>
@@ -583,13 +589,19 @@ export const autoDistrictsCached = (lat: number, lon: number) => autoCityCached(
  * rechnet sie im Hintergrund weiter und die Karte zeigt beim nächsten Besuch die Zonen.
  */
 export async function cityZones(lat: number, lon: number, radius: number, weights: Weights, waitMs = 1200): Promise<ZonePoint[]> {
+  const r = await cityDataQuick(lat, lon, radius, waitMs);
+  return r ? pickZones(r.zones, weights) : [];
+}
+
+/** Raster, Viertel und Namen einer Stadt – nur kurz warten, sonst im Hintergrund weiterrechnen (null). */
+export async function cityDataQuick(lat: number, lon: number, radius: number, waitMs = 1200): Promise<AutoCity | null> {
   const work = autoCityCached(Number(lat.toFixed(4)), Number(lon.toFixed(4)), radius).catch(() => null);
   const r = await withDeadline(work, waitMs);
   if (r === "slow") {
     after(() => work);
-    return [];
+    return null;
   }
-  return r ? pickZones(r.zones, weights) : [];
+  return r;
 }
 
 /** Unterkünfte mit Lage-Score: Rohdaten 14 Tage gespeichert (je Ort und Radius), sortiert wird je Profil. */

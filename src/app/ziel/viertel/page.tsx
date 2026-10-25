@@ -4,7 +4,7 @@ import { getCriteria, getExtras, getProfile, getSavedPlaces, getUser } from "@/l
 import { after } from "next/server";
 import { autoCityCached, DEFAULT_WEIGHTS, distance, hotelsNearCached, locationMatch, withDeadline, type HotelResult } from "@/lib/geo";
 import StillLoading from "@/components/StillLoading";
-import { pickZones } from "@/lib/zones";
+import { pickZones, ZONE_KEYS } from "@/lib/zones";
 import ZoneLegend from "@/components/ZoneLegend";
 import AskDistrict from "@/components/AskDistrict";
 import { assistantEnabled } from "@/lib/assistant";
@@ -38,16 +38,18 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
   const name = typeof params.name === "string" ? params.name.replace(/[\u0000-\u001f<>]/g, "").trim().slice(0, 80) : "";
   if (!ziel || !name || !Number.isFinite(vlat) || !Number.isFinite(vlon) || Math.abs(vlat) > 85 || Math.abs(vlon) > 180) redirect("/?ziel=neu");
   const zq = zielQuery(ziel);
+  // Größeres Raster für geprüfte Großstädte (Berlin, Bangkok), sonst Standard
+  const rad = params.rad === "6000" ? 6000 : 3500;
   const back = `/ziel?${zq}`;
   const filter = typeof params.typ === "string" && FILTERS.some((f) => f.key === params.typ) ? params.typ : "alle";
-  const self = `/ziel/viertel?${zq}&${new URLSearchParams({ name, vlat: vlat.toFixed(5), vlon: vlon.toFixed(5) })}`;
+  const self = `/ziel/viertel?${zq}&${new URLSearchParams({ name, vlat: vlat.toFixed(5), vlon: vlon.toFixed(5), ...(rad === 6000 ? { rad: "6000" } : {}) })}`;
 
   if (!(await pageRateLimit("ziel-viertel", 15))) {
     return <p className="card mt-8 p-5 text-sm text-muted">Zu viele Anfragen in kurzer Zeit. Warte eine Minute und lade die Seite neu.</p>;
   }
 
   const criteria = await getCriteria();
-  const cityWork = autoCityCached(ziel.lat, ziel.lon).catch(() => null);
+  const cityWork = autoCityCached(ziel.lat, ziel.lon, rad).catch(() => null);
   const [{ weights: profile }, user, saved, cityRaw] = await Promise.all([
     getProfile(criteria),
     getUser(),
@@ -59,7 +61,25 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
   const weights = profile ?? DEFAULT_WEIGHTS;
   const districts = cityData?.districts ?? [];
   const zones = cityData ? pickZones(cityData.zones, weights) : [];
-  const district = districts.find((d) => distance(d.lat, d.lon, vlat, vlon) < 300);
+  // Ein bekanntes Viertel an dieser Stelle – sonst eine „Ecke“: Werte aus dem Raster rundherum (450 m)
+  const near = (cityData?.zones ?? []).filter((z) => distance(z.lat, z.lon, vlat, vlon) <= 450);
+  const district =
+    districts.find((d) => distance(d.lat, d.lon, vlat, vlon) < 300) ??
+    (near.length
+      ? {
+          slug: "ecke",
+          name,
+          lat: vlat,
+          lon: vlon,
+          distKm: Math.round(distance(ziel.lat, ziel.lon, vlat, vlon) / 100) / 10,
+          scores: Object.fromEntries(
+            ZONE_KEYS.map((k, i) => [k, Math.round((near.reduce((s, z) => s + z.s[i], 0) / near.length) * 10) / 10]),
+          ) as Record<string, number | null>,
+          reasons: Object.fromEntries(
+            ZONE_KEYS.map((k) => [k, `Durchschnitt von ${near.length} Messpunkten in dieser Ecke (Umkreis 450 m)`]),
+          ) as Record<string, string>,
+        }
+      : undefined);
 
   let hotels: HotelResult[] = [];
   let failed = false;

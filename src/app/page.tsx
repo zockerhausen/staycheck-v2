@@ -10,7 +10,8 @@ import LegalLinks from "@/components/LegalLinks";
 import CitySwitcher from "@/components/CitySwitcher";
 import KiezMap from "@/components/KiezMap";
 import ZoneLegend from "@/components/ZoneLegend";
-import { cityZones, DEFAULT_WEIGHTS } from "@/lib/geo";
+import { cityDataQuick, DEFAULT_WEIGHTS } from "@/lib/geo";
+import { findSpots, pickZones } from "@/lib/zones";
 import { redirect } from "next/navigation";
 import { zielQuery } from "@/lib/ziel";
 
@@ -82,7 +83,14 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
 
   // Schritt 2: Reiseziel gewählt
   const { weights } = await getProfile(criteria);
-  const [districts, zones] = await Promise.all([getDistricts(city.slug), cityZones(city.lat, city.lng, 6000, weights ?? DEFAULT_WEIGHTS)]);
+  const [districts, cd] = await Promise.all([getDistricts(city.slug), cityDataQuick(city.lat, city.lng, 6000)]);
+  const w = weights ?? DEFAULT_WEIGHTS;
+  const zones = cd ? pickZones(cd.zones, w) : [];
+  // Kleine Ecken statt ganzer Bezirke (sobald das Raster der Stadt berechnet ist)
+  const spots = cd ? findSpots(cd.zones, w, cd.places, cd.step) : [];
+  const spotHref = (sp: (typeof spots)[number]) =>
+    `/ziel/viertel?${zielQuery({ ort: city.name, land: city.country, lat: Number(city.lat.toFixed(4)), lon: Number(city.lng.toFixed(4)) })}&${new URLSearchParams({ name: sp.name, vlat: sp.lat.toFixed(5), vlon: sp.lon.toFixed(5), rad: "6000" })}`;
+  const topSpot = weights && spots[0] ? spots[0] : null;
   const ranked = weights ? rankDistricts(districts, weights) : null;
   const top = ranked?.[0] ?? null;
   const tipDistrict = top ?? districts[0];
@@ -97,7 +105,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
       <h1 className="mega mt-1 text-[clamp(2.2rem,10vw,2.7rem)]">Wo schläfst du in {city.name}?</h1>
 
       <Link
-        href={top ? `/kiez/${top.slug}?stadt=${city.slug}` : `/quiz?stadt=${city.slug}`}
+        href={topSpot ? spotHref(topSpot) : top ? `/kiez/${top.slug}?stadt=${city.slug}` : `/quiz?stadt=${city.slug}`}
         className="press glow-card mt-6 flex items-center gap-3.5 rounded-[18px] px-3.5 py-3.5"
       >
         <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-peach text-sun-soft">
@@ -105,10 +113,18 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
         </span>
         <span className="min-w-0 flex-1">
           <span className="block text-[15px] font-bold">
-            {top ? `Dein Viertel: ${top.name.split(" (")[0]} · ${top.match} %` : "Welches Viertel passt zu mir?"}
+            {topSpot
+              ? `Deine Ecke: ${topSpot.name} · ${topSpot.match} %`
+              : top
+                ? `Dein Viertel: ${top.name.split(" (")[0]} · ${top.match} %`
+                : "Welches Viertel passt zu mir?"}
           </span>
           <span className="block text-[13px] text-muted">
-            {top ? "Passt am besten zu deinem Reise-Profil" : "7 kurze Fragen, dann zeigen wir dir dein Viertel"}
+            {topSpot
+              ? `${topSpot.area ? `In ${topSpot.area} · ` : ""}passt am besten zu deinem Reise-Profil`
+              : top
+                ? "Passt am besten zu deinem Reise-Profil"
+                : "7 kurze Fragen, dann zeigen wir dir dein Viertel"}
           </span>
         </span>
         <Icon name="chevron" size={16} className="text-faint" />
@@ -125,7 +141,54 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
         </div>
       )}
 
-      <section className="mt-7">
+      {spots.length > 0 ? (
+        <>
+          <section className="mt-7">
+            <h2 className="font-display text-[19px] font-extrabold">{weights ? "Deine besten Ecken" : `Die besten Ecken in ${city.name}`}</h2>
+            <p className="mb-3 mt-1 text-[13px] text-muted">Kleine Gegenden statt ganzer Bezirke, genau dort, wo es passt.</p>
+            <div className="mb-4">
+              <KiezMap
+                points={spots.map((sp) => ({ slug: sp.slug, name: sp.name, lat: sp.lat, lng: sp.lon, match: sp.match, label: sp.name }))}
+                highlight={topSpot?.slug}
+                center={[city.lng, city.lat]}
+                zoom={city.zoom}
+                height="h-60"
+                zones={zones}
+                fit
+              />
+              <ZoneLegend personal={Boolean(weights)} shown={zones.length > 0} />
+            </div>
+            <DistrictExplorer
+              variant="cards"
+              districts={spots.map((sp) => ({
+                slug: sp.slug,
+                city: city.slug,
+                name: sp.name,
+                short: sp.area ? `In ${sp.area}` : "",
+                scores: sp.scores,
+                match: weights ? sp.match : undefined,
+                href: spotHref(sp),
+              }))}
+            />
+          </section>
+          <section className="mt-8">
+            <h2 className="mb-1 font-display text-[17px] font-extrabold">Bezirke im Überblick</h2>
+            <p className="mb-2 text-[13px] text-muted">Von uns bewertet, mit Sicherheit und Tipps von Reisenden.</p>
+            <DistrictExplorer
+              variant="list"
+              districts={(ranked ?? districts).map((d) => ({
+                slug: d.slug,
+                city: d.city,
+                name: d.name,
+                short: d.short_description,
+                scores: d.scores,
+                match: "match" in d ? (d as { match: number }).match : undefined,
+              }))}
+            />
+          </section>
+        </>
+      ) : (
+        <section className="mt-7">
         <h2 className="mb-3 font-display text-[19px] font-extrabold">{top ? "Alle Viertel für dich" : "Oder selbst stöbern"}</h2>
         <div className="mb-4">
           <KiezMap
@@ -160,6 +223,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
           }))}
         />
       </section>
+      )}
 
       <RecentChecks />
 

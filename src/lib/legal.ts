@@ -3,12 +3,12 @@
 // Solange etwas fehlt (leere Zeichenkette), zeigen die Seiten einen deutlichen Hinweis statt erfundener Angaben.
 export const OPERATOR = {
   name: "Pauljonas Beth", // Vor- und Nachname (bei Firma: Firmenname + Rechtsform + vertretungsberechtigte Person)
-  street: "Anna-Mackenroth-Weg", // Hausnummer fehlt noch // Straße und Hausnummer (kein Postfach)
-  city: "", // PLZ und Ort
+  street: "Anna-Mackenroth-Weg 17", // Straße und Hausnummer (kein Postfach)
+  city: "", // PLZ und Ort – fehlt noch (Nutzer gefragt)
   country: "Deutschland",
   email: "pauljonas.beth@me.com",
   email2: "zockerhausen.77@web.de", // zweite Kontaktmöglichkeit
-  phone: "", // optional, aber eine zweite schnelle Kontaktmöglichkeit ist Pflicht (E-Mail + Telefon oder Kontaktformular)
+  phone: "0160 99745799", // optional, aber eine zweite schnelle Kontaktmöglichkeit ist Pflicht (E-Mail + Telefon oder Kontaktformular)
   vatId: "", // nur falls vorhanden (USt-IdNr.)
   commercial: false, // true, sobald die App Geld verdient (Werbung, Affiliate-Links, Abo)
 };

@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { getCities, getCriteria, getProfile, getUser } from "@/lib/data";
 import { after } from "next/server";
 import { autoCityCached, DEFAULT_WEIGHTS, distance, locationMatch, withDeadline, type AutoCity } from "@/lib/geo";
-import { pickZones } from "@/lib/zones";
+import { findSpots, pickZones } from "@/lib/zones";
 import ZoneLegend from "@/components/ZoneLegend";
 import StillLoading from "@/components/StillLoading";
 import { parseZiel, zielQuery } from "@/lib/ziel";
@@ -60,12 +60,17 @@ export default async function ZielPage({ searchParams }: { searchParams: Promise
   const slow = raced === "slow";
   const districts = slow ? [] : (raced?.districts ?? null);
   const zones = slow || !raced ? [] : pickZones(raced.zones, weights ?? DEFAULT_WEIGHTS);
+  // Kleine Ecken statt ganzer Stadtteile
+  const spots = slow || !raced ? [] : findSpots(raced.zones, weights ?? DEFAULT_WEIGHTS, raced.places, raced.step);
   const zq = zielQuery(ziel);
   const viertelHref = (d: AutoCity["districts"][number]) =>
     `/ziel/viertel?${zq}&${new URLSearchParams({ name: d.name.slice(0, 80), vlat: d.lat.toFixed(5), vlon: d.lon.toFixed(5) })}`;
   const list = (districts ?? []).map((d) => ({ ...d, match: weights ? locationMatch(d.scores, weights) : undefined }));
   const sorted = weights ? [...list].sort((a, b) => (b.match ?? 0) - (a.match ?? 0)) : list;
   const top = weights ? sorted[0] : undefined;
+  const spotHref = (sp: (typeof spots)[number]) =>
+    `/ziel/viertel?${zq}&${new URLSearchParams({ name: sp.name, vlat: sp.lat.toFixed(5), vlon: sp.lon.toFixed(5) })}`;
+  const topSpot = weights && spots[0] ? spots[0] : null;
 
   return (
     <div className="fade-up">
@@ -91,14 +96,16 @@ export default async function ZielPage({ searchParams }: { searchParams: Promise
       ) : (
         <>
           <Link
-            href={top ? viertelHref(top) : `/quiz?${zq}`}
+            href={topSpot ? spotHref(topSpot) : top ? viertelHref(top) : `/quiz?${zq}`}
             className="press glow-card mt-6 flex items-center gap-3.5 rounded-[18px] px-3.5 py-3.5"
           >
             <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-peach text-sun-soft">
               <Icon name="discover" size={24} />
             </span>
             <span className="min-w-0 flex-1">
-              <span className="block text-[15px] font-bold">{top ? `Dein Viertel: ${top.name} · ${top.match} %` : "Welches Viertel passt zu mir?"}</span>
+              <span className="block text-[15px] font-bold">
+                {topSpot ? `Deine Ecke: ${topSpot.name} · ${topSpot.match} %` : top ? `Dein Viertel: ${top.name} · ${top.match} %` : "Welches Viertel passt zu mir?"}
+              </span>
               <span className="block text-[13px] text-muted">
                 {top ? "Passt am besten zu deinem Reise-Profil" : "7 kurze Fragen, dann zeigen wir dir dein Viertel"}
               </span>
@@ -117,10 +124,43 @@ export default async function ZielPage({ searchParams }: { searchParams: Promise
             </div>
           )}
 
-          <section className="mt-7">
-            <h2 className="mb-3 font-display text-[19px] font-extrabold">{top ? "Alle Viertel für dich" : "Oder selbst stöbern"}</h2>
+          {spots.length > 0 && (
+            <section className="mt-7">
+              <h2 className="font-display text-[19px] font-extrabold">{weights ? "Deine besten Ecken" : `Die besten Ecken in ${ziel.ort}`}</h2>
+              <p className="mb-3 mt-1 text-[13px] text-muted">Kleine Gegenden statt ganzer Stadtteile, genau dort, wo es passt.</p>
+              <div className="mb-4">
+                <KiezMap
+                  points={spots.map((sp) => ({ slug: sp.slug, name: sp.name, lat: sp.lat, lng: sp.lon, match: sp.match, label: sp.name }))}
+                  highlight={topSpot?.slug}
+                  center={[ziel.lon, ziel.lat]}
+                  zoom={11.5}
+                  height="h-60"
+                  zones={zones}
+                  fit
+                />
+                <ZoneLegend personal={Boolean(weights)} shown={zones.length > 0} />
+              </div>
+              <DistrictExplorer
+                variant="cards"
+                districts={spots.map((sp) => ({
+                  slug: sp.slug,
+                  city: "",
+                  name: sp.name,
+                  short: sp.area ? `In ${sp.area}` : "",
+                  scores: sp.scores,
+                  match: weights ? sp.match : undefined,
+                  href: spotHref(sp),
+                }))}
+              />
+            </section>
+          )}
+
+          <section className={spots.length ? "mt-8" : "mt-7"}>
+            <h2 className={spots.length ? "mb-1 font-display text-[17px] font-extrabold" : "mb-3 font-display text-[19px] font-extrabold"}>
+              {spots.length ? "Stadtteile im Überblick" : top ? "Alle Viertel für dich" : "Oder selbst stöbern"}
+            </h2>
             <DistrictExplorer
-              variant="cards"
+              variant={spots.length ? "list" : "cards"}
               districts={sorted.map((d) => ({
                 slug: d.slug,
                 city: "",
@@ -142,16 +182,19 @@ export default async function ZielPage({ searchParams }: { searchParams: Promise
             </p>
           </section>
 
-          <section className="mt-7">
-            <KiezMap
-              points={sorted.map((d) => ({ slug: d.slug, name: d.name, lat: d.lat, lng: d.lon, match: d.match ?? 0, label: d.name }))}
-              center={[ziel.lon, ziel.lat]}
-              zoom={11.5}
-              height="h-64"
-              zones={zones}
-            />
-            <ZoneLegend personal={Boolean(weights)} shown={zones.length > 0} />
-          </section>
+          {spots.length === 0 && (
+            <section className="mt-7">
+              <KiezMap
+                points={sorted.map((d) => ({ slug: d.slug, name: d.name, lat: d.lat, lng: d.lon, match: d.match ?? 0, label: d.name }))}
+                center={[ziel.lon, ziel.lat]}
+                zoom={11.5}
+                height="h-64"
+                zones={zones}
+                fit
+              />
+              <ZoneLegend personal={Boolean(weights)} shown={zones.length > 0} />
+            </section>
+          )}
         </>
       )}
     </div>
