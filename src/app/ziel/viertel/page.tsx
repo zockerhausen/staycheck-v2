@@ -236,7 +236,7 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
             );
           })}
           <p className="py-3 text-xs leading-relaxed text-muted">
-            Automatisch aus OpenStreetMap, gezählt rund um die Mitte des Viertels. Jede Unterkunft unten prüfen wir einzeln genauer.
+            Automatisch aus OpenStreetMap, gezählt rund um die Mitte des Viertels. Jede Unterkunft prüfen wir einzeln genauer.
           </p>
         </section>
       )}
