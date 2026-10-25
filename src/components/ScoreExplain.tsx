@@ -44,9 +44,14 @@ export default function ScoreExplain({
   capped?: number | null; // ungedeckelter Wert, wenn das Muss fehlt
 }) {
   const scores = Object.fromEntries(Object.entries(details).map(([k, d]) => [k, d.score]));
-  const { rows, ignored } = matchBreakdown(scores, weights);
+  const { rows } = matchBreakdown(scores, weights);
   const label = (k: string) => criteria.find((c) => c.key === k)?.label ?? EXTRA_LABEL[k] ?? k;
-  const order = rows.map((r) => r.key).filter((k) => details[k]);
+  const shareOf = Object.fromEntries(rows.map((r) => [r.key, r.share]));
+  // Was am meisten zählt zuerst, Werte ohne Daten ans Ende
+  const order = [...rows]
+    .sort((a, b) => Number(a.score === null) - Number(b.score === null) || b.share - a.share)
+    .map((r) => r.key)
+    .filter((k) => details[k]);
 
   return (
     <section className="space-y-3">
@@ -59,47 +64,32 @@ export default function ScoreExplain({
         </span>
       </div>
 
-      <div className="card p-5">
-        <p className="text-sm leading-relaxed text-muted">
+      <div className="card px-5 py-2">
+        <p className="pb-1 pt-3 text-sm leading-relaxed text-muted">
           {personal
             ? "Der Score ist der Durchschnitt aller Werte, gewichtet nach deinem Reise-Profil. Was dir wichtig ist, zählt mehr."
             : "Der Score ist der Durchschnitt aller Werte mit einer Standard-Gewichtung. Mit dem Quiz rechnen wir nach deinen Wünschen."}
         </p>
-        <ul className="mt-4 space-y-2.5">
-          {rows
-            .filter((r) => r.share > 0)
-            .map((r) => (
-              <li key={r.key} className="flex items-center gap-3 text-sm">
-                <span className="flex w-32 shrink-0 items-center gap-2 font-semibold">
-                  <Icon name={CRITERION_ICON[r.key]} size={18} /> {label(r.key)}
-                </span>
-                <span className="h-2 flex-1 overflow-hidden rounded-full bg-raised" aria-hidden>
-                  <span className="bar-grow block h-full rounded-full bg-sun-soft/70" style={{ width: `${r.share}%` }} />
-                </span>
-                <span className="w-24 text-right text-xs text-muted">
-                  {r.key === must ? "Muss · " : ""}zählt {r.share} % · <b className="text-ink">{r.score}</b>/10
-                </span>
-              </li>
-            ))}
-        </ul>
         {capped !== null && (
-          <p className="mt-3 text-xs font-semibold text-[#ffb547]">
+          <p className="pt-2 text-xs font-semibold text-[#ffb547]">
             Gerechnet wären es {capped}. Weil dein Muss fehlt, zählen höchstens {MUST_CAP}.
           </p>
         )}
-        {ignored.length > 0 && (
-          <p className="mt-3 text-xs text-muted">Nicht eingerechnet, weil uns Daten fehlen: {ignored.map(label).join(", ")}.</p>
-        )}
-      </div>
-
-      <div className="card px-5 py-2">
         {order.map((k) => {
           const d = details[k];
+          const share = shareOf[k] ?? 0;
           return (
             <details key={k} className="group border-b border-line py-1 last:border-0">
               <summary className="flex cursor-pointer list-none items-center gap-3 py-2.5 text-sm [&::-webkit-details-marker]:hidden">
-                <span className="flex w-32 shrink-0 items-center gap-2 font-semibold">
-                  <Icon name={CRITERION_ICON[k]} size={18} /> {label(k)}
+                <span className="flex w-32 shrink-0 items-center gap-2">
+                  <Icon name={CRITERION_ICON[k]} size={18} className="shrink-0" />
+                  <span className="min-w-0">
+                    <span className="block truncate font-semibold">{label(k)}</span>
+                    <span className="block text-[11px] text-muted">
+                      {k === must ? <b className="text-sun-soft">Muss · </b> : null}
+                      {d.score === null ? "nicht eingerechnet" : share > 0 ? `zählt ${share} %` : "zählt nicht"}
+                    </span>
+                  </span>
                 </span>
                 <span className="h-2 flex-1 overflow-hidden rounded-full bg-raised">
                   {d.score !== null && (
