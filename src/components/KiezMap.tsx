@@ -110,17 +110,17 @@ function addZones(m: import("maplibre-gl").Map, zones: ZonePoint[], step: number
         paint: {
           "heatmap-weight": ["get", "w"],
           "heatmap-radius": ["interpolate", ["exponential", 2], ["zoom"], 8, px(8), 18, px(18)],
-          "heatmap-intensity": 0.45,
+          "heatmap-intensity": ["interpolate", ["linear"], ["zoom"], 10, 1.4, 15, 1],
           // Nur Orange, von durchsichtig bis kräftig – darunter bleibt die Karte lesbar
           "heatmap-color": [
             "interpolate",
             ["linear"],
             ["heatmap-density"],
             0, "rgba(242,102,47,0)",
-            0.12, "rgba(242,102,47,0.08)",
-            0.35, "rgba(242,102,47,0.26)",
-            0.7, "rgba(255,122,69,0.42)",
-            1, "rgba(255,138,92,0.55)",
+            0.06, "rgba(242,102,47,0.12)",
+            0.25, "rgba(242,102,47,0.32)",
+            0.55, "rgba(255,122,69,0.48)",
+            1, "rgba(255,138,92,0.62)",
           ],
           "heatmap-opacity": 1,
         },
