@@ -122,7 +122,7 @@ export type Turn = { role: "user" | "assistant"; content: string };
 export async function callClaude(system: string, messages: Turn[], withSearch = true): Promise<Response> {
   const body: Record<string, unknown> = {
     model: ASSISTANT_MODEL,
-    max_tokens: 700,
+    max_tokens: 4000, // inkl. Nachdenken und Websuche; die Antwort selbst bleibt kurz (siehe Prompt)
     stream: true,
     system,
     messages,
