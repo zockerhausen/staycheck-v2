@@ -79,7 +79,12 @@ export async function POST(request: Request) {
             buf = buf.slice(i + 2);
             const line = chunk.split("\n").find((l) => l.startsWith("data:"));
             if (!line) continue;
-            let ev: { type?: string; delta?: { type?: string; text?: string; citation?: { url?: string; title?: string } }; content_block?: { type?: string } };
+            let ev: {
+              type?: string;
+              delta?: { type?: string; text?: string; stop_reason?: string; citation?: { url?: string; title?: string } };
+              content_block?: { type?: string };
+              error?: { type?: string };
+            };
             try {
               ev = JSON.parse(line.slice(5));
             } catch {
@@ -93,7 +98,8 @@ export async function POST(request: Request) {
                 send({ t: "src", url: c.url, title: (c.title ?? c.url).slice(0, 120) });
               }
             } else if (ev.type === "content_block_start" && ev.content_block?.type === "server_tool_use") send({ t: "search" });
-            else if (ev.type === "error") send({ t: "error", v: "Die Antwort wurde unterbrochen." });
+            else if (ev.type === "message_delta" && ev.delta?.stop_reason) send({ t: "stop", v: ev.delta.stop_reason });
+            else if (ev.type === "error") send({ t: "error", v: "Die Antwort wurde unterbrochen.", code: ev.error?.type });
           }
         }
         send({ t: "end" });
