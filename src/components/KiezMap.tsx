@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { applyStayCheckTheme } from "@/lib/mapTheme";
 import type { ZonePoint } from "@/lib/zones";
@@ -8,7 +9,7 @@ import type { ZonePoint } from "@/lib/zones";
 export type MapPoint = { slug: string; name: string; lat: number; lng: number; match: number; label?: string };
 
 /** Karte mit Match-Punkten: je höher der Match, desto größer und kräftiger der Punkt. */
-export default function KiezMap({
+function MapCanvas({
   points,
   highlight,
   onSelect,
@@ -17,6 +18,7 @@ export default function KiezMap({
   height = "h-64",
   zones,
   zoneStep = 350,
+  full = false,
 }: {
   points: MapPoint[];
   highlight?: string;
@@ -27,6 +29,7 @@ export default function KiezMap({
   /** Passende Stellen (Raster), werden als weiche orange Flächen gezeichnet */
   zones?: ZonePoint[];
   zoneStep?: number;
+  full?: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const onSelectRef = useRef(onSelect);
@@ -52,6 +55,7 @@ export default function KiezMap({
         maxPitch: 60,
       });
       map = m;
+      if (full) m.addControl(new maplibregl.NavigationControl({ showCompass: false }), "bottom-right");
       m.on("style.load", () => {
         applyStayCheckTheme(m);
         if (zones?.length) addZones(m, zones, zoneStep, center[1]);
@@ -89,9 +93,70 @@ export default function KiezMap({
       map?.remove();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [points, highlight, zones]);
+  }, [points, highlight, zones, full]);
 
-  return <div ref={ref} className={`${height} w-full overflow-hidden rounded-3xl bg-paper`} />;
+  return <div ref={ref} className={`${height} w-full overflow-hidden bg-paper ${full ? "" : "rounded-3xl"}`} />;
+}
+
+type KiezMapProps = Parameters<typeof MapCanvas>[0];
+
+/** Karte mit Knopf zum Vergrößern: öffnet dieselbe Karte bildschirmfüllend. */
+export default function KiezMap(props: KiezMapProps) {
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    if (!open) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = prev;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
+  // Antippen eines Punkts in der Vollansicht: erst schließen, dann wie gewohnt reagieren
+  const selectFromFull = (slug: string) => {
+    setOpen(false);
+    setTimeout(() => {
+      if (props.onSelect) props.onSelect(slug);
+      else document.getElementById(`kiez-${slug}`)?.scrollIntoView({ behavior: "smooth", inline: "start", block: "center" });
+    }, 50);
+  };
+
+  return (
+    <div className="relative">
+      <MapCanvas {...props} />
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        aria-label="Karte vergrößern"
+        className="press absolute right-3 top-3 z-10 flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-black/55 text-ink backdrop-blur"
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+          <path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7" />
+        </svg>
+      </button>
+      {open &&
+        createPortal(
+          <div className="fixed inset-0 z-[100] bg-sand" role="dialog" aria-modal="true" aria-label="Karte">
+            <MapCanvas {...props} height="h-full" zoom={(props.zoom ?? 10.3) + 0.4} onSelect={selectFromFull} full />
+            <button
+              type="button"
+              onClick={() => setOpen(false)}
+              aria-label="Karte schließen"
+              className="press absolute right-4 top-[max(1rem,env(safe-area-inset-top))] z-10 flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-black/60 text-ink backdrop-blur"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden>
+                <path d="M6 6l12 12M18 6L6 18" />
+              </svg>
+            </button>
+          </div>,
+          document.body,
+        )}
+    </div>
+  );
 }
 
 /**

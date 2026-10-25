@@ -224,3 +224,22 @@ input[type="range"] {
 .maplibregl-ctrl-attrib a {
   color: #8d8d94 !important;
 }
+
+/* Zoom-Knöpfe der Vollbild-Karte im dunklen Look */
+.maplibregl-ctrl-group {
+  background: rgba(12, 12, 14, 0.75) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 14px !important;
+  backdrop-filter: blur(8px);
+  margin-bottom: max(1.25rem, env(safe-area-inset-bottom)) !important;
+}
+.maplibregl-ctrl-group button {
+  width: 40px !important;
+  height: 40px !important;
+}
+.maplibregl-ctrl-group button + button {
+  border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+.maplibregl-ctrl-group .maplibregl-ctrl-icon {
+  filter: invert(1);
+}
