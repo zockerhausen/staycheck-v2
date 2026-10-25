@@ -394,8 +394,16 @@ export async function autoCity(lat: number, lon: number, radius = 3500, max = 14
   // 1) Stadtteile (Punkte mit Namen)  2) alles Nötige im Rechteck um das Zentrum, ohne Details
   const dLat = radius / 110540 + 0.006;
   const dLon = radius / (111320 * Math.cos((lat * Math.PI) / 180)) + 0.009;
-  const bb = `${(lat - dLat).toFixed(4)},${(lon - dLon).toFixed(4)},${(lat + dLat).toFixed(4)},${(lon + dLon).toFixed(4)}`;
-  const cats: [string, string][] = [
+  // Große Gebiete (z. B. Berlin mit 6 km) in 2×2 Stücke teilen: eine Riesen-Abfrage brechen die Server sonst ab
+  const n = radius > 4000 ? 2 : 1;
+  const tiles: string[] = [];
+  for (let i = 0; i < n; i++)
+    for (let j = 0; j < n; j++) {
+      const s0 = lat - dLat + (2 * dLat * i) / n;
+      const w0 = lon - dLon + (2 * dLon * j) / n;
+      tiles.push(`${s0.toFixed(4)},${w0.toFixed(4)},${(s0 + (2 * dLat) / n).toFixed(4)},${(w0 + (2 * dLon) / n).toFixed(4)}`);
+    }
+  const catsFor = (bb: string): [string, string][] => [
     [`node(${bb})[amenity~"^(bar|pub|nightclub|biergarten)$"]`, `way(${bb})[amenity~"^(bar|pub|nightclub|biergarten)$"]`],
     [`node(${bb})[amenity~"^(restaurant|cafe|fast_food|food_court)$"]`, `way(${bb})[amenity~"^(restaurant|cafe|fast_food|food_court)$"]`],
     [`node(${bb})[railway~"^(station|halt)$"]`, ""],
@@ -404,16 +412,18 @@ export async function autoCity(lat: number, lon: number, radius = 3500, max = 14
     ["", `way(${bb})[leisure=park]`],
     [`node(${bb})[tourism~"^(hostel|guest_house)$"]`, `way(${bb})[tourism~"^(hostel|guest_house)$"]`],
   ];
+  const CATS = 7;
   // Punkte nur mit Koordinaten (skel), Flächen nur mit Mittelpunkt (center) – hält die Antwort klein
-  const part = (i: number) => {
-    const [n, w] = cats[i];
-    return `${n ? `${n};out skel qt;` : ""}${w ? `${w};out center qt;` : ""}make sep n="${i}";out;`;
+  const part = (bb: string, i: number) => {
+    const [nq, w] = catsFor(bb)[i];
+    return `${nq ? `${nq};out skel qt;` : ""}${w ? `${w};out center qt;` : ""}make sep n="${i}";out;`;
   };
-  const ask = (idx: number[]) => overpass(`[out:json][timeout:50];${idx.map(part).join("")}`);
-  const [places, foodEls, restEls] = await Promise.all([
+  const ask = (bb: string, idx: number[]) => overpass(`[out:json][timeout:50];${idx.map((i) => part(bb, i)).join("")}`);
+  const FOOD = [1];
+  const REST = [0, 2, 3, 4, 5, 6];
+  const [places, ...tileEls] = await Promise.all([
     overpass(`[out:json][timeout:25];node(around:${radius},${c})[place~"^(suburb|quarter|neighbourhood)$"][name];out;`),
-    ask([1]),
-    ask([0, 2, 3, 4, 5, 6]),
+    ...tiles.flatMap((bb) => [ask(bb, FOOD), ask(bb, REST)]),
   ]);
 
   const rank: Record<string, number> = { suburb: 0, quarter: 1, neighbourhood: 2 };
@@ -438,11 +448,10 @@ export async function autoCity(lat: number, lon: number, radius = 3500, max = 14
     picked.push(p);
   }
 
-  const groups: { lat: number; lon: number }[][] = cats.map(() => []);
-  for (const [els, order] of [
-    [foodEls, [1]],
-    [restEls, [0, 2, 3, 4, 5, 6]],
-  ] as const) {
+  const groups: { lat: number; lon: number }[][] = Array.from({ length: CATS }, () => []);
+  const seen = Array.from({ length: CATS }, () => new Set<string>()); // Flächen an Stück-Grenzen nicht doppelt zählen
+  for (const [k, els] of tileEls.entries()) {
+    const order = k % 2 === 0 ? FOOD : REST;
     let pos = 0;
     for (const e of els) {
       if (e.type === "sep") {
@@ -452,7 +461,11 @@ export async function autoCity(lat: number, lon: number, radius = 3500, max = 14
       const g = order[pos];
       const la = e.lat ?? e.center?.lat;
       const lo = e.lon ?? e.center?.lon;
-      if (g !== undefined && Number.isFinite(la) && Number.isFinite(lo)) groups[g].push({ lat: la as number, lon: lo as number });
+      if (g === undefined || !Number.isFinite(la) || !Number.isFinite(lo)) continue;
+      const id = `${e.type}:${la},${lo}`;
+      if (seen[g].has(id)) continue;
+      seen[g].add(id);
+      groups[g].push({ lat: la as number, lon: lo as number });
     }
   }
   // Punkte in Kacheln (ca. 1 km) einsortieren, damit das Zählen auch für hunderte Rasterpunkte schnell bleibt
@@ -569,7 +582,7 @@ export const autoDistrictsCached = (lat: number, lon: number) => autoCityCached(
  * Passende Zonen für die Karte. Wartet nur kurz: ist die Stadt noch nicht berechnet,
  * rechnet sie im Hintergrund weiter und die Karte zeigt beim nächsten Besuch die Zonen.
  */
-export async function cityZones(lat: number, lon: number, radius: number, weights: Weights, waitMs = 2500): Promise<ZonePoint[]> {
+export async function cityZones(lat: number, lon: number, radius: number, weights: Weights, waitMs = 1200): Promise<ZonePoint[]> {
   const work = autoCityCached(Number(lat.toFixed(4)), Number(lon.toFixed(4)), radius).catch(() => null);
   const r = await withDeadline(work, waitMs);
   if (r === "slow") {
