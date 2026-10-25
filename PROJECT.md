@@ -77,7 +77,6 @@ Später schneller: eigenen Overpass-Server betreiben (ca. 20–50 €/Monat) und
 
 - **Vorab-Berechnung neu starten** (Wunsch von Pauljonas: erinnern, er gibt das Startsignal): Seit den Zonen (Speicher-Schlüssel `auto-city-v1`) sind die beliebten Städte wieder kalt. Nur Lissabon ist fertig. Danach auch `/ergebnis?stadt=berlin` und `bangkok` einmal aufrufen.
 
-- **Impressum-Daten ändern** (Wunsch von Pauljonas, unbedingt erinnern): Angaben in `src/lib/legal.ts` sind vorläufig. Hausnummer, PLZ und Ort fehlen noch.
 
 ## Beliebte Reiseziele vorab berechnet
 

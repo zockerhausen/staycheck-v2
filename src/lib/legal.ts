@@ -1,10 +1,9 @@
-// TODO (Nutzer-Wunsch): Diese Angaben sind vorläufig. Pauljonas will sie vor dem Teilen der App noch ändern – daran erinnern!
 // Angaben für Impressum und Datenschutz. NUR hier eintragen, die Seiten lesen alles von hier.
 // Solange etwas fehlt (leere Zeichenkette), zeigen die Seiten einen deutlichen Hinweis statt erfundener Angaben.
 export const OPERATOR = {
   name: "Pauljonas Beth", // Vor- und Nachname (bei Firma: Firmenname + Rechtsform + vertretungsberechtigte Person)
   street: "Anna-Mackenroth-Weg 17", // Straße und Hausnummer (kein Postfach)
-  city: "", // PLZ und Ort – fehlt noch (Nutzer gefragt)
+  city: "12205 Berlin", // PLZ und Ort
   country: "Deutschland",
   email: "pauljonas.beth@me.com",
   email2: "zockerhausen.77@web.de", // zweite Kontaktmöglichkeit
