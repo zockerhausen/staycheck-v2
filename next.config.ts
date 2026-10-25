@@ -29,7 +29,12 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   // Schon besuchte Seiten 30 Sek. im Browser behalten: Zurück und Vor gehen sofort
   // (Änderungen über Server-Aktionen, z. B. Quiz, leeren diesen Speicher automatisch)
-  experimental: { staleTimes: { dynamic: 30, static: 180 } },
+  experimental: {
+    staleTimes: { dynamic: 30, static: 180 },
+    // Nicht verkleinern: der Zwischenspeicher (unstable_cache) nutzt den Funktionstext als Schlüssel.
+    // Verkleinert ändert er sich bei jedem Update, und alle vorberechneten Städte wären wieder leer.
+    serverMinification: false,
+  },
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },

@@ -54,7 +54,7 @@ export default async function ZielPage({ searchParams }: { searchParams: Promise
 
   const criteria = await getCriteria();
   const work = autoCityCached(ziel.lat, ziel.lon).catch(() => null as AutoCity | null);
-  const [{ weights }, raced] = await Promise.all([getProfile(criteria), withDeadline(work, 45_000)]);
+  const [{ weights }, raced] = await Promise.all([getProfile(criteria), withDeadline(work, 9_000)]);
   // Erste Berechnung einer Stadt zu langsam? Im Hintergrund fertig rechnen, Seite lädt von selbst neu.
   if (raced === "slow") after(() => work);
   const slow = raced === "slow";

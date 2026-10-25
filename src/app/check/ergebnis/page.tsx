@@ -59,7 +59,7 @@ export default async function CheckErgebnisPage({
   // Öffentliche Kartenserver sind manchmal langsam: nach 45 s zeigen wir einen Ladehinweis,
   // rechnen im Hintergrund weiter und laden die Seite automatisch neu (Ergebnis ist dann gespeichert).
   const work = analyzeLocation(lat, lon, districts).catch(() => null);
-  const raced = await withDeadline(work, 45_000);
+  const raced = await withDeadline(work, 9_000);
   if (raced === "slow") {
     after(() => work);
     return (

@@ -47,12 +47,15 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
   }
 
   const criteria = await getCriteria();
-  const [{ weights: profile }, user, saved, cityData] = await Promise.all([
+  const cityWork = autoCityCached(ziel.lat, ziel.lon).catch(() => null);
+  const [{ weights: profile }, user, saved, cityRaw] = await Promise.all([
     getProfile(criteria),
     getUser(),
     getSavedPlaces(),
-    autoCityCached(ziel.lat, ziel.lon).catch(() => null),
+    withDeadline(cityWork, 6_000),
   ]);
+  if (cityRaw === "slow") after(() => cityWork);
+  const cityData = cityRaw === "slow" ? null : cityRaw;
   const weights = profile ?? DEFAULT_WEIGHTS;
   const districts = cityData?.districts ?? [];
   const zones = cityData ? pickZones(cityData.zones, weights) : [];
@@ -61,7 +64,7 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
   let hotels: HotelResult[] = [];
   let failed = false;
   const work = hotelsNearCached({ lat: Number(vlat.toFixed(5)), lon: Number(vlon.toFixed(5)) }, null, weights, 800, name);
-  const raced = await withDeadline(work.catch(() => null), 40_000);
+  const raced = await withDeadline(work.catch(() => null), 9_000);
   const slow = raced === "slow";
   if (slow) after(() => work.catch(() => undefined));
   else if (raced === null) failed = true;

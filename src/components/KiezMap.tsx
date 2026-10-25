@@ -60,7 +60,17 @@ export default function KiezMap({
       const max = Math.max(...points.map((p) => p.match), 1);
       const min = Math.min(...points.map((p) => p.match), max);
 
+      const select = (slug: string) => {
+        if (onSelectRef.current) onSelectRef.current(slug);
+        else document.getElementById(`kiez-${slug}`)?.scrollIntoView({ behavior: "smooth", inline: "start", block: "nearest" });
+      };
+      // Namen (Viertel-Übersicht) als Kartenbeschriftung: überlappende Namen blendet die Karte selbst aus,
+      // statt dass sich Kästchen stapeln. Zahlen (Match) bleiben Knöpfe.
+      const labeled = points.filter((p) => p.label && p.slug !== highlight);
+      m.on("style.load", () => addLabels(m, labeled, select));
+
       for (const p of points) {
+        if (p.label && p.slug !== highlight) continue;
         const t = max === min ? 1 : (p.match - min) / (max - min);
         const isTop = p.slug === highlight;
         const el = document.createElement("button");
@@ -69,10 +79,7 @@ export default function KiezMap({
         el.className = isTop ? "sc-pin sc-pin-top" : "sc-pin";
         el.style.setProperty("--t", String(0.55 + t * 0.45));
         el.textContent = p.label ?? `${p.match}`;
-        el.addEventListener("click", () => {
-          if (onSelectRef.current) onSelectRef.current(p.slug);
-          else document.getElementById(`kiez-${p.slug}`)?.scrollIntoView({ behavior: "smooth", inline: "start", block: "nearest" });
-        });
+        el.addEventListener("click", () => select(p.slug));
         new maplibregl.Marker({ element: el }).setLngLat([p.lng, p.lat]).addTo(m);
       }
     });
@@ -129,5 +136,53 @@ function addZones(m: import("maplibre-gl").Map, zones: ZonePoint[], step: number
     );
   } catch {
     // ohne Zonen weiter
+  }
+}
+
+function addLabels(m: import("maplibre-gl").Map, points: MapPoint[], select: (slug: string) => void) {
+  if (!points.length) return;
+  try {
+    m.addSource("sc-labels", {
+      type: "geojson",
+      data: {
+        type: "FeatureCollection",
+        features: points.map((p) => ({
+          type: "Feature",
+          properties: { slug: p.slug, label: p.label ?? p.name },
+          geometry: { type: "Point", coordinates: [p.lng, p.lat] },
+        })),
+      },
+    });
+    m.addLayer({
+      id: "sc-label-dots",
+      type: "circle",
+      source: "sc-labels",
+      paint: { "circle-radius": 4, "circle-color": "#ff8a5c", "circle-stroke-color": "#0c0c0e", "circle-stroke-width": 2 },
+    });
+    m.addLayer({
+      id: "sc-label-text",
+      type: "symbol",
+      source: "sc-labels",
+      layout: {
+        "text-field": ["get", "label"],
+        "text-font": ["Noto Sans Regular"],
+        "text-size": 13,
+        "text-offset": [0, 1.1],
+        "text-anchor": "top",
+        "text-max-width": 8,
+        "text-padding": 4,
+      },
+      paint: { "text-color": "#f5f5f5", "text-halo-color": "#0c0c0e", "text-halo-width": 2 },
+    });
+    for (const id of ["sc-label-dots", "sc-label-text"]) {
+      m.on("click", id, (e) => {
+        const slug = e.features?.[0]?.properties?.slug;
+        if (typeof slug === "string") select(slug);
+      });
+      m.on("mouseenter", id, () => (m.getCanvas().style.cursor = "pointer"));
+      m.on("mouseleave", id, () => (m.getCanvas().style.cursor = ""));
+    }
+  } catch {
+    // ohne Beschriftung weiter
   }
 }

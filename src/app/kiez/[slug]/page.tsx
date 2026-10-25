@@ -75,7 +75,7 @@ export default async function KiezPage({
   let hotels: HotelResult[] = [];
   let failed = false;
   const work = hotelsNearCached({ lat: district.lat, lon: district.lng }, district, weights, 1000, district.name);
-  const raced = await withDeadline(work.catch(() => null), 40_000);
+  const raced = await withDeadline(work.catch(() => null), 9_000);
   const slow = raced === "slow";
   if (slow) after(() => work.catch(() => undefined));
   else if (raced === null) failed = true;
