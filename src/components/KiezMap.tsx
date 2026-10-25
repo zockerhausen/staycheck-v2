@@ -88,12 +88,11 @@ export default function KiezMap({
 }
 
 /**
- * Weiche Flächen: jeder Rasterpunkt ein unscharfer Kreis (etwas größer als der Rasterabstand),
- * Nachbarn verschmelzen so zu Zonen. Radius in Metern, auf jeder Zoomstufe gleich groß.
+ * Weiche Leuchtflächen (Heatmap): Nachbarpunkte verschmelzen zu Zonen. Radius in Metern, auf jeder Zoomstufe gleich groß.
  */
 function addZones(m: import("maplibre-gl").Map, zones: ZonePoint[], step: number, lat: number) {
   const metersPerPx0 = 156543.03 * Math.cos((lat * Math.PI) / 180); // bei Zoom 0
-  const px = (zoom: number) => (step * 0.95) / (metersPerPx0 / 2 ** zoom);
+  const px = (zoom: number) => (step * 2.2) / (metersPerPx0 / 2 ** zoom); // Radius > Rasterabstand: Nachbarn verschmelzen
   const before = m.getStyle().layers?.find((l) => l.type === "symbol")?.id;
   try {
     m.addSource("sc-zones", {
@@ -106,13 +105,24 @@ function addZones(m: import("maplibre-gl").Map, zones: ZonePoint[], step: number
     m.addLayer(
       {
         id: "sc-zones",
-        type: "circle",
+        type: "heatmap",
         source: "sc-zones",
         paint: {
-          "circle-color": "#f2662f",
-          "circle-radius": ["interpolate", ["exponential", 2], ["zoom"], 8, px(8), 18, px(18)],
-          "circle-blur": 0.9,
-          "circle-opacity": ["*", 0.32, ["get", "w"]],
+          "heatmap-weight": ["get", "w"],
+          "heatmap-radius": ["interpolate", ["exponential", 2], ["zoom"], 8, px(8), 18, px(18)],
+          "heatmap-intensity": 0.45,
+          // Nur Orange, von durchsichtig bis kräftig – darunter bleibt die Karte lesbar
+          "heatmap-color": [
+            "interpolate",
+            ["linear"],
+            ["heatmap-density"],
+            0, "rgba(242,102,47,0)",
+            0.12, "rgba(242,102,47,0.08)",
+            0.35, "rgba(242,102,47,0.26)",
+            0.7, "rgba(255,122,69,0.42)",
+            1, "rgba(255,138,92,0.55)",
+          ],
+          "heatmap-opacity": 1,
         },
       },
       before,
