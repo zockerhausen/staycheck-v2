@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import Icon from "@/components/Icon";
 import DestinationSearch from "@/components/DestinationSearch";
@@ -47,8 +48,9 @@ export default function CitySwitcher({ current, verified }: { current: string; v
         <Icon name="down" size={14} className="shrink-0" />
       </button>
 
-      {open && (
-        <div className="fixed inset-0 z-[60]" role="dialog" aria-modal="true" aria-label="Reiseziel wechseln">
+      {open &&
+        createPortal(
+        <div className="fixed inset-0 z-[100]" role="dialog" aria-modal="true" aria-label="Reiseziel wechseln">
           <button
             type="button"
             aria-label="Schließen"
@@ -85,8 +87,9 @@ export default function CitySwitcher({ current, verified }: { current: string; v
               Reiseziel entfernen
             </button>
           </div>
-        </div>
-      )}
+        </div>,
+          document.body, // außerhalb des Seitenrahmens, damit es wirklich von unten über allem liegt
+        )}
     </>
   );
 }
