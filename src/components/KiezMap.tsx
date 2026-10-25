@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import "maplibre-gl/dist/maplibre-gl.css";
+import { applyStayCheckTheme } from "@/lib/mapTheme";
 
 export type MapPoint = { slug: string; name: string; lat: number; lng: number; match: number; label?: string };
 
@@ -40,8 +41,12 @@ export default function KiezMap({
         zoom,
         attributionControl: { compact: true },
         dragRotate: false,
+        // Nah dran leicht geneigt, damit die 3D-Gebäude wirken
+        pitch: zoom >= 14 ? 35 : 0,
+        maxPitch: 60,
       });
       map = m;
+      m.on("style.load", () => applyStayCheckTheme(m));
 
       const max = Math.max(...points.map((p) => p.match), 1);
       const min = Math.min(...points.map((p) => p.match), max);
@@ -52,14 +57,8 @@ export default function KiezMap({
         const el = document.createElement("button");
         el.type = "button";
         el.setAttribute("aria-label", p.label ? p.name : `${p.name}, ${p.match}% Match`);
-        el.style.cssText = `
-          display:flex;align-items:center;justify-content:center;
-          min-width:${isTop ? 46 : 30 + t * 8}px;height:${isTop ? 30 : 24}px;padding:0 9px;
-          border-radius:999px;border:1px solid ${isTop ? "#f2662f" : "#2a2a2e"};
-          background:${isTop ? "#f2662f" : "#1c1c1f"};
-          color:${isTop ? "#fff" : `rgba(245,245,245,${0.6 + t * 0.4})`};
-          font:800 ${isTop ? 13 : 12}px var(--font-body), system-ui, sans-serif;
-          box-shadow:0 4px 14px rgba(0,0,0,.45);cursor:pointer;`;
+        el.className = isTop ? "sc-pin sc-pin-top" : "sc-pin";
+        el.style.setProperty("--t", String(0.55 + t * 0.45));
         el.textContent = p.label ?? `${p.match}`;
         el.addEventListener("click", () => {
           if (onSelectRef.current) onSelectRef.current(p.slug);

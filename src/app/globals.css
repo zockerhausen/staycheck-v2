@@ -171,3 +171,56 @@ input[type="range"] {
 @media (prefers-reduced-motion: reduce) {
   .pop-in { animation: none; }
 }
+
+/* Kartenmarkierungen (KiezMap) */
+.sc-pin {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 26px;
+  padding: 0 9px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(28, 28, 31, 0.92);
+  backdrop-filter: blur(6px);
+  color: rgba(245, 245, 245, var(--t, 1));
+  font: 800 12px var(--font-body), system-ui, sans-serif;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+.sc-pin:active {
+  transform: scale(0.94);
+}
+.sc-pin-top {
+  height: 32px;
+  min-width: 48px;
+  padding: 0 12px;
+  border: 0;
+  background: linear-gradient(180deg, #ff7a45, #f2662f);
+  color: #fff;
+  font-size: 14px;
+  box-shadow: 0 0 0 6px rgba(242, 102, 47, 0.22), 0 8px 22px rgba(242, 102, 47, 0.45);
+  z-index: 2;
+}
+.sc-pin-top::after {
+  content: "";
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  margin-left: -5px;
+  background: #f2662f;
+  transform: rotate(45deg);
+  border-radius: 2px;
+  z-index: -1;
+}
+.maplibregl-ctrl-attrib {
+  background: rgba(12, 12, 14, 0.7) !important;
+  color: #8d8d94 !important;
+}
+.maplibregl-ctrl-attrib a {
+  color: #8d8d94 !important;
+}
