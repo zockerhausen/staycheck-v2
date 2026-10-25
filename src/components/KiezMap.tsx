@@ -53,6 +53,13 @@ function MapCanvas({
         zoom,
         attributionControl: { compact: true },
         dragRotate: false,
+        // In der Seite: mit zwei Fingern bewegen, damit Scrollen die Karte nicht verschiebt. Im Vollbild normal.
+        cooperativeGestures: !full,
+        locale: {
+          "CooperativeGesturesHandler.WindowsHelpText": "Strg + Scrollen zum Zoomen",
+          "CooperativeGesturesHandler.MacHelpText": "⌘ + Scrollen zum Zoomen",
+          "CooperativeGesturesHandler.MobileHelpText": "Mit zwei Fingern bewegen, oder oben rechts vergrößern",
+        },
         // Nah dran leicht geneigt, damit die 3D-Gebäude wirken
         pitch: zoom >= 14 ? 35 : 0,
         maxPitch: 60,
