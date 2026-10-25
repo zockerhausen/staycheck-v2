@@ -92,7 +92,7 @@ export default function KiezMap({
  */
 function addZones(m: import("maplibre-gl").Map, zones: ZonePoint[], step: number, lat: number) {
   const metersPerPx0 = 156543.03 * Math.cos((lat * Math.PI) / 180); // bei Zoom 0
-  const px = (zoom: number) => (step * 2.2) / (metersPerPx0 / 2 ** zoom); // Radius > Rasterabstand: Nachbarn verschmelzen
+  const px = (zoom: number) => (step * 2.8) / (metersPerPx0 / 2 ** zoom); // Radius > Rasterabstand: Nachbarn verschmelzen
   const before = m.getStyle().layers?.find((l) => l.type === "symbol")?.id;
   try {
     m.addSource("sc-zones", {
