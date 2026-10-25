@@ -5,6 +5,8 @@
 
 import type { District, Weights } from "./data";
 import { unstable_cache } from "next/cache";
+import { after } from "next/server";
+import { pickZones, ZONE_KEYS, type ZonePoint } from "./zones";
 import { distance, scoreFromData, type Highlight, type Line, type Poi, type ScoreResult } from "./score";
 
 const UA = "StayCheck/0.1 (https://github.com/zockerhausen/staycheck-v2)";
@@ -358,6 +360,9 @@ export async function hotelsNear(
 // Für Städte ohne unsere Handbewertung: Stadtteile aus OpenStreetMap, je Stadtteil gezählt,
 // was im Umkreis liegt. Gröber als der Lage-Check einer Adresse – das zeigen wir auch so an.
 
+export type Zone = { lat: number; lon: number; s: number[] }; // s: Werte in der Reihenfolge ZONE_KEYS
+export type AutoCity = { districts: AutoDistrict[]; zones: Zone[]; step: number };
+
 export type AutoDistrict = {
   slug: string;
   name: string;
@@ -382,7 +387,8 @@ const autoStep = (v: number, table: [number, number][], fallback: number) => {
   return fallback;
 };
 
-export async function autoDistricts(lat: number, lon: number, radius = 3500, max = 14): Promise<AutoDistrict[]> {
+/** Viertel einer Stadt plus ein feines Raster („Zonen“) für die Karte, aus denselben Kartendaten. */
+export async function autoCity(lat: number, lon: number, radius = 3500, max = 14): Promise<AutoCity> {
   const c = `${lat.toFixed(4)},${lon.toFixed(4)}`;
   // Beide Abfragen laufen gleichzeitig (die öffentlichen Server antworten oft langsam).
   // 1) Stadtteile (Punkte mit Namen)  2) alles Nötige im Rechteck um das Zentrum, ohne Details
@@ -431,7 +437,6 @@ export async function autoDistricts(lat: number, lon: number, radius = 3500, max
     if (picked.some((q) => distance(p.lat, p.lon, q.lat, q.lon) < 900)) continue;
     picked.push(p);
   }
-  if (!picked.length) return [];
 
   const groups: { lat: number; lon: number }[][] = cats.map(() => []);
   for (const [els, order] of [
@@ -450,27 +455,35 @@ export async function autoDistricts(lat: number, lon: number, radius = 3500, max
       if (g !== undefined && Number.isFinite(la) && Number.isFinite(lo)) groups[g].push({ lat: la as number, lon: lo as number });
     }
   }
-  const within = (g: number, p: { lat: number; lon: number }, r: number) =>
-    groups[g].reduce((n, x) => (Math.abs(x.lat - p.lat) < 0.02 && distance(p.lat, p.lon, x.lat, x.lon) <= r ? n + 1 : n), 0);
+  // Punkte in Kacheln (ca. 1 km) einsortieren, damit das Zählen auch für hunderte Rasterpunkte schnell bleibt
+  const CELL = 0.01;
+  const buckets = groups.map((g) => {
+    const m = new Map<string, { lat: number; lon: number }[]>();
+    for (const x of g) {
+      const k = `${Math.floor(x.lat / CELL)}:${Math.floor(x.lon / CELL)}`;
+      const list = m.get(k);
+      if (list) list.push(x);
+      else m.set(k, [x]);
+    }
+    return m;
+  });
+  const within = (g: number, p: { lat: number; lon: number }, r: number) => {
+    let n = 0;
+    const bi = Math.floor(p.lat / CELL);
+    const bj = Math.floor(p.lon / CELL);
+    for (let i = bi - 1; i <= bi + 1; i++)
+      for (let j = bj - 1; j <= bj + 1; j++)
+        for (const x of buckets[g].get(`${i}:${j}`) ?? []) if (distance(p.lat, p.lon, x.lat, x.lon) <= r) n++;
+    return n;
+  };
   const RADII = [600, 500, 800, 400, 400, 700, 900];
-  const counts = picked.flatMap((p) => RADII.map((r, g) => within(g, p, r)));
+  const countsAt = (p: { lat: number; lon: number }) => RADII.map((r, g) => within(g, p, r));
 
-  return picked
-    .map((p, i) => {
-      const [bars, food, stations, trams, buses, parks, hostels] = counts.slice(i * 7, i * 7 + 7);
-      const transit = stations >= 3 ? 10 : stations === 2 ? 9 : stations === 1 ? 8 : trams > 0 ? 6 : buses >= 3 ? 4 : buses > 0 ? 3 : 1;
-      // Logarithmische Skala: 10 → 25 → 100 → 200 Lokale machen jeweils einen spürbaren Unterschied,
-      // statt dass alles ab 20 bei 10 von 10 hängen bleibt. Eine Nachkommastelle, damit Viertel vergleichbar bleiben.
-      const log = (n: number, k: number, base = 1) => Math.min(10, Math.max(1, Math.round((base + Math.log2(1 + n) * k) * 10) / 10));
-      const scores: Record<string, number | null> = {
-        transit,
-        nightlife: log(bars, 1.3),
-        food: log(food, 1.15),
-        nature: autoStep(parks, [[0, 2], [1, 5], [3, 7]], 8),
-        quiet: Math.min(9, Math.max(1, Math.round((10 - Math.log2(1 + bars + food / 3) * 1.1) * 10) / 10)),
-        budget: log(hostels, 1.2, 3),
-        safety: null,
-      };
+  const districts = picked
+    .map((p) => {
+      const c7 = countsAt(p);
+      const [bars, food, stations, trams, buses, parks, hostels] = c7;
+      const scores = autoScores(c7);
       const reasons: Record<string, string> = {
         transit: stations
           ? `${stations} Bahnhof/Bahnhöfe in 800 m`
@@ -487,6 +500,48 @@ export async function autoDistricts(lat: number, lon: number, radius = 3500, max
       return { slug: slugify(p.name), name: p.name, lat: p.lat, lon: p.lon, distKm: Math.round(p.d / 100) / 10, scores, reasons };
     })
     .filter((d) => (d.scores.food ?? 0) >= 3 || (d.scores.transit ?? 0) >= 6); // Viertel ohne alles weglassen
+
+  // Raster: alle ~350 m ein Punkt im Kreis um das Zentrum. Punkte ohne alles (Wasser, Felder) fallen weg.
+  const STEP = 350;
+  const zones: Zone[] = [];
+  const nLat = Math.ceil(radius / STEP);
+  const mLat = STEP / 110540;
+  const mLon = STEP / (111320 * Math.cos((lat * Math.PI) / 180));
+  for (let i = -nLat; i <= nLat; i++) {
+    for (let j = -nLat; j <= nLat; j++) {
+      const p = { lat: lat + i * mLat, lon: lon + j * mLon };
+      if (distance(lat, lon, p.lat, p.lon) > radius) continue;
+      const sc = autoScores(countsAt(p));
+      if ((sc.food ?? 0) < 3 && (sc.transit ?? 0) < 6) continue;
+      zones.push({
+        lat: Math.round(p.lat * 1e5) / 1e5,
+        lon: Math.round(p.lon * 1e5) / 1e5,
+        s: ZONE_KEYS.map((k) => Math.round((sc[k] ?? 0) * 10) / 10),
+      });
+    }
+  }
+  return { districts, zones, step: STEP };
+}
+
+/** Werte aus den gezählten Dingen (Reihenfolge wie RADII). Gleiche Formeln für Viertel und Raster. */
+function autoScores([bars, food, stations, trams, buses, parks, hostels]: number[]): Record<string, number | null> {
+  const transit = stations >= 3 ? 10 : stations === 2 ? 9 : stations === 1 ? 8 : trams > 0 ? 6 : buses >= 3 ? 4 : buses > 0 ? 3 : 1;
+  // Logarithmische Skala: 10 → 25 → 100 → 200 Lokale machen jeweils einen spürbaren Unterschied,
+  // statt dass alles ab 20 bei 10 von 10 hängen bleibt. Eine Nachkommastelle, damit Viertel vergleichbar bleiben.
+  const log = (n: number, k: number, base = 1) => Math.min(10, Math.max(1, Math.round((base + Math.log2(1 + n) * k) * 10) / 10));
+  return {
+    transit,
+    nightlife: log(bars, 1.3),
+    food: log(food, 1.15),
+    nature: autoStep(parks, [[0, 2], [1, 5], [3, 7]], 8),
+    quiet: Math.min(9, Math.max(1, Math.round((10 - Math.log2(1 + bars + food / 3) * 1.1) * 10) / 10)),
+    budget: log(hostels, 1.2, 3),
+    safety: null,
+  };
+}
+
+export async function autoDistricts(lat: number, lon: number, radius = 3500, max = 14): Promise<AutoDistrict[]> {
+  return (await autoCity(lat, lon, radius, max)).districts;
 }
 
 // Läuft dieselbe Berechnung schon (z. B. weil die Seite neu geladen wurde), hängen wir uns dran,
@@ -500,13 +555,29 @@ function once<T>(key: string, fn: () => Promise<T>): Promise<T> {
   return p;
 }
 
-/** Wie autoDistricts, aber das (kleine) Ergebnis wird 30 Tage gespeichert: ab dem zweiten Besuch sofort da. */
-const autoDistrictsStored = unstable_cache(
-  async (lat: number, lon: number) => autoDistricts(lat, lon),
-  ["auto-districts-v6"],
+/** Viertel + Raster einer Stadt, 30 Tage gespeichert: ab dem zweiten Besuch sofort da. */
+const autoCityStored = unstable_cache(
+  async (lat: number, lon: number, radius: number) => autoCity(lat, lon, radius),
+  ["auto-city-v1"],
   { revalidate: 30 * 86400 }, // Viertel ändern sich selten; danach wird im Hintergrund neu berechnet
 );
-export const autoDistrictsCached = (lat: number, lon: number) => once(`auto:${lat},${lon}`, () => autoDistrictsStored(lat, lon));
+export const autoCityCached = (lat: number, lon: number, radius = 3500) =>
+  once(`city:${lat},${lon},${radius}`, () => autoCityStored(lat, lon, radius));
+export const autoDistrictsCached = (lat: number, lon: number) => autoCityCached(lat, lon).then((c) => c.districts);
+
+/**
+ * Passende Zonen für die Karte. Wartet nur kurz: ist die Stadt noch nicht berechnet,
+ * rechnet sie im Hintergrund weiter und die Karte zeigt beim nächsten Besuch die Zonen.
+ */
+export async function cityZones(lat: number, lon: number, radius: number, weights: Weights, waitMs = 2500): Promise<ZonePoint[]> {
+  const work = autoCityCached(Number(lat.toFixed(4)), Number(lon.toFixed(4)), radius).catch(() => null);
+  const r = await withDeadline(work, waitMs);
+  if (r === "slow") {
+    after(() => work);
+    return [];
+  }
+  return r ? pickZones(r.zones, weights) : [];
+}
 
 /** Unterkünfte mit Lage-Score: Rohdaten 14 Tage gespeichert (je Ort und Radius), sortiert wird je Profil. */
 const hotelsScoredStored = unstable_cache(

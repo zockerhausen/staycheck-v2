@@ -2,8 +2,10 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getCriteria, getExtras, getProfile, getSavedPlaces, getUser } from "@/lib/data";
 import { after } from "next/server";
-import { autoDistrictsCached, DEFAULT_WEIGHTS, distance, hotelsNearCached, locationMatch, withDeadline, type HotelResult } from "@/lib/geo";
+import { autoCityCached, DEFAULT_WEIGHTS, distance, hotelsNearCached, locationMatch, withDeadline, type HotelResult } from "@/lib/geo";
 import StillLoading from "@/components/StillLoading";
+import { pickZones } from "@/lib/zones";
+import ZoneLegend from "@/components/ZoneLegend";
 import { personalMatch } from "@/lib/profile";
 import { parseZiel, zielQuery } from "@/lib/ziel";
 import { characterOf, characterTint, traitsOf } from "@/lib/character";
@@ -43,13 +45,15 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
   }
 
   const criteria = await getCriteria();
-  const [{ weights: profile }, user, saved, districts] = await Promise.all([
+  const [{ weights: profile }, user, saved, cityData] = await Promise.all([
     getProfile(criteria),
     getUser(),
     getSavedPlaces(),
-    autoDistrictsCached(ziel.lat, ziel.lon).catch(() => []),
+    autoCityCached(ziel.lat, ziel.lon).catch(() => null),
   ]);
   const weights = profile ?? DEFAULT_WEIGHTS;
+  const districts = cityData?.districts ?? [];
+  const zones = cityData ? pickZones(cityData.zones, weights) : [];
   const district = districts.find((d) => distance(d.lat, d.lon, vlat, vlon) < 300);
 
   let hotels: HotelResult[] = [];
@@ -167,7 +171,9 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
                 center={[vlon, vlat]}
                 zoom={14}
                 height="h-60"
+                zones={zones}
               />
+              <ZoneLegend personal={Boolean(profile)} shown={zones.length > 0} />
             </div>
             <ol className="mt-2">
               {shown.slice(0, 25).map((h, i) => (

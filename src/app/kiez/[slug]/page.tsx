@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getCities, getCriteria, getDistricts, getExtras, getFavoriteIds, getSavedPlaces, getUser, resolveWeights, weightsToQuery } from "@/lib/data";
 import { after } from "next/server";
-import { DEFAULT_WEIGHTS, hotelsNearCached, verdict, withDeadline, type HotelResult } from "@/lib/geo";
+import { cityZones, DEFAULT_WEIGHTS, hotelsNearCached, verdict, withDeadline, type HotelResult } from "@/lib/geo";
 import StillLoading from "@/components/StillLoading";
 import { matchScore, topReasons } from "@/lib/matching";
 import FavoriteButton from "@/components/FavoriteButton";
@@ -10,6 +10,7 @@ import { personalMatch } from "@/lib/profile";
 import { characterOf, traitsOf } from "@/lib/character";
 import Icon from "@/components/Icon";
 import KiezMap from "@/components/KiezMap";
+import ZoneLegend from "@/components/ZoneLegend";
 import ScoreBars from "@/components/ScoreBars";
 import PlaceSaveButton from "@/components/PlaceSaveButton";
 import TipsSection from "@/components/TipsSection";
@@ -63,7 +64,11 @@ export default async function KiezPage({
   const amp = query ? `&${query}` : "";
   const filter = typeof sp.typ === "string" ? sp.typ : "alle";
 
-  const tips = await getTipsForDistrict(district.id);
+  const cityRow = cities.find((c) => c.slug === district.city);
+  const [tips, zones] = await Promise.all([
+    getTipsForDistrict(district.id),
+    cityRow ? cityZones(cityRow.lat, cityRow.lng, 6000, weights) : Promise.resolve([]),
+  ]);
 
   let hotels: HotelResult[] = [];
   let failed = false;
@@ -180,7 +185,9 @@ export default async function KiezPage({
                 center={[district.lng, district.lat]}
                 zoom={13.6}
                 height="h-60"
+                zones={zones}
               />
+              <ZoneLegend personal={Boolean(resolved)} shown={zones.length > 0} />
             </div>
             <ol className="mt-2">
               {shown.slice(0, 25).map((h, i) => (

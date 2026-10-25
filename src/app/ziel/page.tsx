@@ -2,7 +2,9 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getCities, getCriteria, getProfile } from "@/lib/data";
 import { after } from "next/server";
-import { autoDistrictsCached, distance, locationMatch, withDeadline, type AutoDistrict } from "@/lib/geo";
+import { autoCityCached, DEFAULT_WEIGHTS, distance, locationMatch, withDeadline, type AutoCity } from "@/lib/geo";
+import { pickZones } from "@/lib/zones";
+import ZoneLegend from "@/components/ZoneLegend";
 import StillLoading from "@/components/StillLoading";
 import { parseZiel, zielQuery } from "@/lib/ziel";
 import { pageRateLimit } from "@/lib/ratelimit-page";
@@ -49,14 +51,15 @@ export default async function ZielPage({ searchParams }: { searchParams: Promise
   }
 
   const criteria = await getCriteria();
-  const work = autoDistrictsCached(ziel.lat, ziel.lon).catch(() => null as AutoDistrict[] | null);
+  const work = autoCityCached(ziel.lat, ziel.lon).catch(() => null as AutoCity | null);
   const [{ weights }, raced] = await Promise.all([getProfile(criteria), withDeadline(work, 45_000)]);
   // Erste Berechnung einer Stadt zu langsam? Im Hintergrund fertig rechnen, Seite lädt von selbst neu.
   if (raced === "slow") after(() => work);
   const slow = raced === "slow";
-  const districts = slow ? [] : raced;
+  const districts = slow ? [] : (raced?.districts ?? null);
+  const zones = slow || !raced ? [] : pickZones(raced.zones, weights ?? DEFAULT_WEIGHTS);
   const zq = zielQuery(ziel);
-  const viertelHref = (d: AutoDistrict) =>
+  const viertelHref = (d: AutoCity["districts"][number]) =>
     `/ziel/viertel?${zq}&${new URLSearchParams({ name: d.name.slice(0, 80), vlat: d.lat.toFixed(5), vlon: d.lon.toFixed(5) })}`;
   const list = (districts ?? []).map((d) => ({ ...d, match: weights ? locationMatch(d.scores, weights) : undefined }));
   const sorted = weights ? [...list].sort((a, b) => (b.match ?? 0) - (a.match ?? 0)) : list;
@@ -143,7 +146,9 @@ export default async function ZielPage({ searchParams }: { searchParams: Promise
               center={[ziel.lon, ziel.lat]}
               zoom={11.5}
               height="h-64"
+              zones={zones}
             />
+            <ZoneLegend personal={Boolean(weights)} shown={zones.length > 0} />
           </section>
         </>
       )}

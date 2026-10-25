@@ -18,8 +18,11 @@ import KiezMap from "@/components/KiezMap";
 import ShareButton from "@/components/ShareButton";
 import SaveButton from "@/components/SaveButton";
 import DistrictExplorer from "@/components/DistrictExplorer";
+import ZoneLegend from "@/components/ZoneLegend";
+import { cityZones, DEFAULT_WEIGHTS } from "@/lib/geo";
 
 export const dynamic = "force-dynamic";
+export const maxDuration = 120; // Zonen einer Stadt dürfen beim ersten Mal im Hintergrund fertig rechnen
 
 export default async function ErgebnisPage({
   searchParams,
@@ -38,6 +41,7 @@ export default async function ErgebnisPage({
   ]);
 
   const { weights, source } = await resolveWeights(params, criteria);
+  const zones = await cityZones(city.lat, city.lng, 6000, weights ?? DEFAULT_WEIGHTS);
   const explorer = (list: typeof districts, withMatch?: Record<string, number>) =>
     list.map((d) => ({ slug: d.slug, city: d.city, name: d.name, short: d.short_description, scores: d.scores, match: withMatch?.[d.slug] }));
 
@@ -71,7 +75,10 @@ export default async function ErgebnisPage({
           </span>
           <Icon name="chevron" size={16} className="text-faint" />
         </Link>
-        <KiezMap points={pts} center={[city.lng, city.lat]} zoom={city.zoom} height="h-64" />
+        <div>
+          <KiezMap points={pts} center={[city.lng, city.lat]} zoom={city.zoom} height="h-64" zones={zones} />
+          <ZoneLegend personal={false} shown={zones.length > 0} />
+        </div>
         <DistrictExplorer variant="list" districts={explorer(districts)} />
       </div>
     );
@@ -146,7 +153,8 @@ export default async function ErgebnisPage({
 
       <section>
         <h2 className="mb-3 font-display text-[19px] font-extrabold">Alle Viertel in {city.name}</h2>
-        <KiezMap points={points} highlight={top.slug} center={[city.lng, city.lat]} zoom={city.zoom} height="h-72" />
+        <KiezMap points={points} highlight={top.slug} center={[city.lng, city.lat]} zoom={city.zoom} height="h-72" zones={zones} />
+        <ZoneLegend personal shown={zones.length > 0} />
         <div className="mt-4">
           <DistrictExplorer variant="list" districts={explorer(ranked, Object.fromEntries(ranked.map((d) => [d.slug, d.match])))} query={query} />
         </div>

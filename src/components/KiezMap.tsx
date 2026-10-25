@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { applyStayCheckTheme } from "@/lib/mapTheme";
+import type { ZonePoint } from "@/lib/zones";
 
 export type MapPoint = { slug: string; name: string; lat: number; lng: number; match: number; label?: string };
 
@@ -14,6 +15,8 @@ export default function KiezMap({
   center = [13.405, 52.51],
   zoom = 10.3,
   height = "h-64",
+  zones,
+  zoneStep = 350,
 }: {
   points: MapPoint[];
   highlight?: string;
@@ -21,6 +24,9 @@ export default function KiezMap({
   center?: [number, number];
   zoom?: number;
   height?: string;
+  /** Passende Stellen (Raster), werden als weiche orange Flächen gezeichnet */
+  zones?: ZonePoint[];
+  zoneStep?: number;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const onSelectRef = useRef(onSelect);
@@ -46,7 +52,10 @@ export default function KiezMap({
         maxPitch: 60,
       });
       map = m;
-      m.on("style.load", () => applyStayCheckTheme(m));
+      m.on("style.load", () => {
+        applyStayCheckTheme(m);
+        if (zones?.length) addZones(m, zones, zoneStep, center[1]);
+      });
 
       const max = Math.max(...points.map((p) => p.match), 1);
       const min = Math.min(...points.map((p) => p.match), max);
@@ -73,7 +82,42 @@ export default function KiezMap({
       map?.remove();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [points, highlight]);
+  }, [points, highlight, zones]);
 
   return <div ref={ref} className={`${height} w-full overflow-hidden rounded-3xl bg-paper`} />;
+}
+
+/**
+ * Weiche Flächen: jeder Rasterpunkt ein unscharfer Kreis (etwas größer als der Rasterabstand),
+ * Nachbarn verschmelzen so zu Zonen. Radius in Metern, auf jeder Zoomstufe gleich groß.
+ */
+function addZones(m: import("maplibre-gl").Map, zones: ZonePoint[], step: number, lat: number) {
+  const metersPerPx0 = 156543.03 * Math.cos((lat * Math.PI) / 180); // bei Zoom 0
+  const px = (zoom: number) => (step * 0.95) / (metersPerPx0 / 2 ** zoom);
+  const before = m.getStyle().layers?.find((l) => l.type === "symbol")?.id;
+  try {
+    m.addSource("sc-zones", {
+      type: "geojson",
+      data: {
+        type: "FeatureCollection",
+        features: zones.map((z) => ({ type: "Feature", properties: { w: z.w }, geometry: { type: "Point", coordinates: [z.lon, z.lat] } })),
+      },
+    });
+    m.addLayer(
+      {
+        id: "sc-zones",
+        type: "circle",
+        source: "sc-zones",
+        paint: {
+          "circle-color": "#f2662f",
+          "circle-radius": ["interpolate", ["exponential", 2], ["zoom"], 8, px(8), 18, px(18)],
+          "circle-blur": 0.9,
+          "circle-opacity": ["*", 0.32, ["get", "w"]],
+        },
+      },
+      before,
+    );
+  } catch {
+    // ohne Zonen weiter
+  }
 }
