@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { after } from "next/server";
-import { autoCityCached, autoDistrictsCached, DEFAULT_WEIGHTS, hotelsNearCached, locationMatch, withDeadline, type AutoDistrict } from "@/lib/geo";
+import { autoCityCached, autoDistrictsCached, overpassPing, DEFAULT_WEIGHTS, hotelsNearCached, locationMatch, withDeadline, type AutoDistrict } from "@/lib/geo";
 import { POPULAR } from "@/lib/popular";
 import { getCities } from "@/lib/data";
 import { rateLimit, tooMany } from "@/lib/ratelimit";
@@ -16,6 +16,7 @@ export const maxDuration = 120;
  */
 export async function GET(request: Request) {
   if (!rateLimit(request, "vorwaermen", 30)) return tooMany();
+  if (new URL(request.url).searchParams.has("ping")) return NextResponse.json(await overpassPing());
   const slug = new URL(request.url).searchParams.get("stadt") ?? "";
   const city = POPULAR.find((p) => p.slug === slug);
   if (!city) {
