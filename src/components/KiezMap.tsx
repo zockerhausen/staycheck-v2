@@ -141,7 +141,7 @@ export default function KiezMap(props: KiezMapProps) {
       {open &&
         createPortal(
           <div className="fixed inset-0 z-[100] bg-sand" role="dialog" aria-modal="true" aria-label="Karte">
-            <MapCanvas {...props} height="h-full" zoom={(props.zoom ?? 10.3) + 0.4} onSelect={selectFromFull} full />
+            <MapCanvas {...props} height="h-full" onSelect={selectFromFull} full />
             <button
               type="button"
               onClick={() => setOpen(false)}
