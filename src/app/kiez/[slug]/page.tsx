@@ -11,6 +11,8 @@ import { characterOf, traitsOf } from "@/lib/character";
 import Icon from "@/components/Icon";
 import KiezMap from "@/components/KiezMap";
 import ZoneLegend from "@/components/ZoneLegend";
+import AskDistrict from "@/components/AskDistrict";
+import { assistantEnabled } from "@/lib/assistant";
 import ScoreBars from "@/components/ScoreBars";
 import PlaceSaveButton from "@/components/PlaceSaveButton";
 import TipsSection from "@/components/TipsSection";
@@ -148,6 +150,12 @@ export default async function KiezPage({
           </Link>
         </p>
       </div>
+
+      <AskDistrict
+        target={{ art: "kiez", slug: district.slug, stadt: district.city }}
+        place={district.name.split(" (")[0]}
+        enabled={assistantEnabled()}
+      />
 
       <section>
         <div className="flex items-baseline justify-between">

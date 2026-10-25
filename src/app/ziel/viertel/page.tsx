@@ -6,6 +6,8 @@ import { autoCityCached, DEFAULT_WEIGHTS, distance, hotelsNearCached, locationMa
 import StillLoading from "@/components/StillLoading";
 import { pickZones } from "@/lib/zones";
 import ZoneLegend from "@/components/ZoneLegend";
+import AskDistrict from "@/components/AskDistrict";
+import { assistantEnabled } from "@/lib/assistant";
 import { personalMatch } from "@/lib/profile";
 import { parseZiel, zielQuery } from "@/lib/ziel";
 import { characterOf, characterTint, traitsOf } from "@/lib/character";
@@ -137,6 +139,12 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
           </p>
         </section>
       )}
+
+      <AskDistrict
+        target={{ art: "auto", ort: ziel.ort, land: ziel.land, lat: ziel.lat, lon: ziel.lon, name, vlat, vlon }}
+        place={name}
+        enabled={assistantEnabled()}
+      />
 
       <section>
         <div className="flex items-baseline justify-between">

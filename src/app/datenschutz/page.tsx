@@ -83,14 +83,24 @@ export default function DatenschutzPage() {
         </p>
       </Section>
 
-      <Section title="6. Externe Links">
+      <Section title="6. „Frag das Viertel“ (KI-Assistent)">
+        <p>
+          Wenn du dort eine Frage stellst, schickt unser Server deine Frage, deine vorherigen Fragen in diesem Gespräch und unsere Daten zum Viertel an
+          Anthropic PBC (USA), die das KI-Modell Claude betreiben. Für Aktuelles kann Claude dabei im Internet suchen. Wir senden weder deinen Namen noch
+          deine E-Mail-Adresse oder dein Konto mit; schreib bitte auch selbst nichts Persönliches in die Frage. Wir speichern die Gespräche nicht.
+          Anthropic verwendet Anfragen über die API laut eigenen Angaben standardmäßig nicht zum Training. Für die Übermittlung gelten die
+          EU-Standardvertragsklauseln. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (du nutzt die Funktion aktiv).
+        </p>
+      </Section>
+
+      <Section title="7. Externe Links">
         <p>
           Links zu Buchungsportalen oder Google Maps öffnen die Seiten dieser Anbieter. Erst dann gelten deren Datenschutzregeln. Wir bekommen dafür kein Geld
           und geben keine Daten an sie weiter.
         </p>
       </Section>
 
-      <Section title="7. Deine Rechte">
+      <Section title="8. Deine Rechte">
         <p>
           Du hast das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit und Widerspruch (Art. 15 bis 21 DSGVO).
           Schreib uns dafür einfach an <Field value={o.email} label="E-Mail" />. Außerdem kannst du dich bei einer Datenschutz-Aufsichtsbehörde beschweren,
@@ -98,7 +108,7 @@ export default function DatenschutzPage() {
         </p>
       </Section>
 
-      <Section title="8. Keine Pflicht">
+      <Section title="9. Keine Pflicht">
         <p>Du musst uns keine Daten geben. Ohne Konto funktionieren Suche, Quiz und Lage-Check trotzdem, nur Merken auf mehreren Geräten geht dann nicht.</p>
       </Section>
     </LegalPage>
