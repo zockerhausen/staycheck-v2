@@ -94,14 +94,14 @@ export default function AskDistrict({ target, place, enabled }: { target: Target
   }
 
   return (
-    <section className="card overflow-hidden p-4">
+    <section className="glow-card overflow-hidden rounded-[22px] p-4">
       <div className="flex items-center gap-3">
         <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[14px] bg-peach text-sun-soft">
           <Icon name="discover" size={22} />
         </span>
         <div className="min-w-0">
           <h2 className="font-display text-[18px] font-extrabold leading-tight">Frag das Viertel</h2>
-          <p className="truncate text-[13px] text-muted">Alles zu {place}, mit unseren Daten und Websuche</p>
+          <p className="truncate text-[13px] text-muted">Dein Reise-Assistent für {place}</p>
         </div>
       </div>
 

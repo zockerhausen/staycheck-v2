@@ -153,29 +153,17 @@ export default function DestinationSearch({
           <div>
             <p className="mb-2 px-1 text-[13px] font-semibold text-muted">Beliebt bei Reisenden</p>
             <div className="-mx-4 flex gap-2 overflow-x-auto px-4 [scrollbar-width:none]">
-              {FEATURED.map((slug) => POPULAR.find((p) => p.slug === slug)!).map((p) => (
+              {[
+                ...verified.map((c) => ({ slug: c.slug, ort: c.name, land: c.country, lat: 0, lon: 0, known: c.slug as string | null })),
+                ...FEATURED.map((slug) => POPULAR.find((p) => p.slug === slug)!).map((p) => ({ ...p, known: null })),
+              ].map((p) => (
                 <button
                   key={p.slug}
                   type="button"
-                  onClick={() => go({ ort: p.ort, land: p.land, lat: p.lat, lon: p.lon, known: null })}
+                  onClick={() => go({ ort: p.ort, land: p.land, lat: p.lat, lon: p.lon, known: p.known })}
                   className="press shrink-0 rounded-full bg-tan px-4 py-2.5 text-sm font-semibold"
                 >
                   {p.ort}
-                </button>
-              ))}
-            </div>
-          </div>
-          <div>
-            <p className="mb-2 px-1 text-[13px] font-semibold text-muted">Geprüfte Städte, Viertel von uns bewertet</p>
-            <div className="flex flex-wrap gap-2">
-              {verified.map((c) => (
-                <button
-                  key={c.slug}
-                  type="button"
-                  onClick={() => go({ ort: c.name, land: c.country, lat: 0, lon: 0, known: c.slug })}
-                  className="press flex items-center gap-1.5 rounded-full bg-tan px-4 py-2.5 text-sm font-semibold"
-                >
-                  <Icon name="check" size={15} /> {c.name}
                 </button>
               ))}
             </div>

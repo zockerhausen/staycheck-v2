@@ -116,6 +116,12 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
         )}
       </section>
 
+      <AskDistrict
+        target={{ art: "auto", ort: ziel.ort, land: ziel.land, lat: ziel.lat, lon: ziel.lon, name, vlat, vlon }}
+        place={name}
+        enabled={assistantEnabled()}
+      />
+
       {district && (
         <section className="card px-5 py-2">
           {criteria.map((c) => {
@@ -142,12 +148,6 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
           </p>
         </section>
       )}
-
-      <AskDistrict
-        target={{ art: "auto", ort: ziel.ort, land: ziel.land, lat: ziel.lat, lon: ziel.lon, name, vlat, vlon }}
-        place={name}
-        enabled={assistantEnabled()}
-      />
 
       <section>
         <div className="flex items-baseline justify-between">

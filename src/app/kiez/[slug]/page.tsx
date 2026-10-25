@@ -130,6 +130,12 @@ export default async function KiezPage({
         )}
       </section>
 
+      <AskDistrict
+        target={{ art: "kiez", slug: district.slug, stadt: district.city }}
+        place={district.name.split(" (")[0]}
+        enabled={assistantEnabled()}
+      />
+
       <div className="grid grid-cols-4 gap-2">
         {tileKeys.map((k) => (
           <div key={k} className="rounded-[18px] bg-paper px-1 py-3 text-center">
@@ -150,12 +156,6 @@ export default async function KiezPage({
           </Link>
         </p>
       </div>
-
-      <AskDistrict
-        target={{ art: "kiez", slug: district.slug, stadt: district.city }}
-        place={district.name.split(" (")[0]}
-        enabled={assistantEnabled()}
-      />
 
       <section>
         <div className="flex items-baseline justify-between">
