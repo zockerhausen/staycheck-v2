@@ -76,6 +76,7 @@ export default function DistrictExplorer({
           {shown.map((d) => (
             <Link
               key={d.slug}
+              id={`kiez-${d.slug}`}
               href={href(d)}
               className="press flex h-[200px] w-[72%] max-w-[260px] shrink-0 snap-start flex-col justify-end rounded-[22px] p-4"
               style={{ background: `linear-gradient(160deg, ${characterTint(d.scores, pool)} 0%, #161618 85%)` }}

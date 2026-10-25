@@ -8,10 +8,14 @@ import DistrictExplorer from "@/components/DistrictExplorer";
 import DestinationSearch from "@/components/DestinationSearch";
 import LegalLinks from "@/components/LegalLinks";
 import CitySwitcher from "@/components/CitySwitcher";
+import KiezMap from "@/components/KiezMap";
+import ZoneLegend from "@/components/ZoneLegend";
+import { cityZones, DEFAULT_WEIGHTS } from "@/lib/geo";
 import { redirect } from "next/navigation";
 import { zielQuery } from "@/lib/ziel";
 
 export const dynamic = "force-dynamic";
+export const maxDuration = 120; // Zonen dürfen beim ersten Mal im Hintergrund fertig rechnen
 
 /**
  * Start aus Sicht von Reisenden, die einen Trip planen:
@@ -77,7 +81,8 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
   }
 
   // Schritt 2: Reiseziel gewählt
-  const [{ weights }, districts] = await Promise.all([getProfile(criteria), getDistricts(city.slug)]);
+  const { weights } = await getProfile(criteria);
+  const [districts, zones] = await Promise.all([getDistricts(city.slug), cityZones(city.lat, city.lng, 6000, weights ?? DEFAULT_WEIGHTS)]);
   const ranked = weights ? rankDistricts(districts, weights) : null;
   const top = ranked?.[0] ?? null;
   const tipDistrict = top ?? districts[0];
@@ -121,11 +126,26 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
       )}
 
       <section className="mt-7">
-        <div className="mb-3 flex items-baseline justify-between">
-          <h2 className="font-display text-[19px] font-extrabold">{top ? "Alle Viertel für dich" : "Oder selbst stöbern"}</h2>
-          <Link href={`/ergebnis?stadt=${city.slug}`} className="text-sm font-semibold text-muted">
-            Karte
-          </Link>
+        <h2 className="mb-3 font-display text-[19px] font-extrabold">{top ? "Alle Viertel für dich" : "Oder selbst stöbern"}</h2>
+        <div className="mb-4">
+          <KiezMap
+            points={(ranked ?? districts)
+              .filter((d) => d.lat !== null && d.lng !== null)
+              .map((d) => ({
+                slug: d.slug,
+                name: d.name,
+                lat: d.lat as number,
+                lng: d.lng as number,
+                match: "match" in d ? (d as { match: number }).match : 0,
+                label: d.name.split(" (")[0].split(" /")[0],
+              }))}
+            highlight={top?.slug}
+            center={[city.lng, city.lat]}
+            zoom={city.zoom}
+            height="h-60"
+            zones={zones}
+          />
+          <ZoneLegend personal={Boolean(weights)} shown={zones.length > 0} />
         </div>
         <DistrictExplorer
           variant="cards"
