@@ -1,3 +1,4 @@
+import { parseZiel, type Ziel } from "@/lib/ziel";
 import { cookies } from "next/headers";
 import { cleanExtras, decodeExtras, type Extras } from "@/lib/profile";
 import { createClient } from "@/lib/supabase/server";
@@ -36,6 +37,7 @@ export type Weights = Record<string, number>;
 export const PROFILE_COOKIE = "sc_profil";
 export const CITY_COOKIE = "sc_stadt";
 export const EXTRAS_COOKIE = "sc_extra";
+export const ZIEL_COOKIE = "sc_ziel"; // gewähltes Reiseziel ohne eigene Bewertung (Ort, Land, Koordinaten)
 
 export async function getCriteria(): Promise<Criterion[]> {
   const supabase = await createClient();
@@ -211,6 +213,13 @@ export async function getLastCity(): Promise<string> {
 }
 
 /** Reiseziel, das die Person selbst gewählt hat (ohne Standard-Stadt). */
+/** Gewähltes Reiseziel einer Stadt ohne Handbewertung (z. B. Lissabon), streng geprüft. */
+export async function getChosenZiel(): Promise<Ziel | null> {
+  const v = (await cookies()).get(ZIEL_COOKIE)?.value;
+  if (!v || v.length > 300) return null;
+  return parseZiel(Object.fromEntries(new URLSearchParams(v)));
+}
+
 export async function getChosenCity(): Promise<string | null> {
   const v = (await cookies()).get(CITY_COOKIE)?.value;
   return v && /^[a-z-]{2,40}$/.test(v) ? v : null;

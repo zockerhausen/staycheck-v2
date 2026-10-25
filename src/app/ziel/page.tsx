@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { getCities, getCriteria, getProfile } from "@/lib/data";
+import { getCities, getCriteria, getProfile, getUser } from "@/lib/data";
 import { after } from "next/server";
 import { autoCityCached, DEFAULT_WEIGHTS, distance, locationMatch, withDeadline, type AutoCity } from "@/lib/geo";
 import { pickZones } from "@/lib/zones";
@@ -11,6 +11,7 @@ import { pageRateLimit } from "@/lib/ratelimit-page";
 import Icon from "@/components/Icon";
 import DistrictExplorer from "@/components/DistrictExplorer";
 import KiezMap from "@/components/KiezMap";
+import CitySwitcher from "@/components/CitySwitcher";
 
 // Kartendaten-Abfragen werden zwischengespeichert (1 Tag), die Seite selbst ist dynamisch.
 export const fetchCache = "default-cache";
@@ -23,18 +24,19 @@ export default async function ZielPage({ searchParams }: { searchParams: Promise
   if (!ziel) redirect("/?ziel=neu");
 
   // Geprüfte Stadt in der Nähe? Dann lieber unsere handbewerteten Viertel.
-  const cities = await getCities();
+  const [cities, user] = await Promise.all([getCities(), getUser()]);
   const known = cities.find((c) => c.districtCount > 0 && distance(ziel.lat, ziel.lon, c.lat, c.lng) < 30_000);
   if (known) redirect(`/?ziel=${known.slug}`);
 
   const header = (
     <div className="flex items-center justify-between">
-      <Link href="/?ziel=neu" aria-label="Anderes Reiseziel" className="press flex h-11 w-11 items-center justify-center rounded-full bg-tan">
-        <Icon name="back" size={18} />
+      <Link href={user ? "/konto" : "/login"} aria-label="Konto" className="press flex h-11 w-11 items-center justify-center rounded-full bg-tan">
+        <Icon name="user" size={20} />
       </Link>
-      <Link href="/?ziel=neu" className="press flex items-center gap-1.5 rounded-full bg-tan px-4 py-2.5 text-sm font-semibold">
-        <Icon name="plane" size={15} /> {ziel.ort} <Icon name="down" size={14} />
-      </Link>
+      <CitySwitcher
+        current={ziel.ort}
+        verified={cities.filter((c) => c.districtCount > 0).map((c) => ({ slug: c.slug, name: c.name, country: c.country }))}
+      />
       <Link href="/check" aria-label="Lage-Check" className="press flex h-11 w-11 items-center justify-center rounded-full bg-tan">
         <Icon name="search" size={20} />
       </Link>

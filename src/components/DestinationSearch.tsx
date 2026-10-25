@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Icon from "@/components/Icon";
-import { rememberCity } from "@/app/actions";
+import { rememberCity, rememberZiel } from "@/app/actions";
 import { FEATURED, POPULAR } from "@/lib/popular";
 
 type Result = { ort: string; land: string; region: string; lat: number; lon: number; known: string | null; popular?: boolean };
@@ -21,7 +21,15 @@ function readRecent(): Recent[] {
 }
 
 /** „Wohin geht deine Reise?“ – jede Stadt der Welt. Geprüfte Städte (Berlin, Bangkok) zuerst. */
-export default function DestinationSearch({ verified }: { verified: { slug: string; name: string; country: string }[] }) {
+export default function DestinationSearch({
+  verified,
+  autoFocus = false,
+  onPick,
+}: {
+  verified: { slug: string; name: string; country: string }[];
+  autoFocus?: boolean;
+  onPick?: () => void;
+}) {
   const router = useRouter();
   const [q, setQ] = useState("");
   const [results, setResults] = useState<Result[]>([]);
@@ -63,6 +71,7 @@ export default function DestinationSearch({ verified }: { verified: { slug: stri
 
   function go(r: Recent) {
     if ("vibrate" in navigator) navigator.vibrate(10);
+    onPick?.();
     try {
       const list = [r, ...readRecent().filter((x) => !(x.ort === r.ort && x.land === r.land))].slice(0, 5);
       localStorage.setItem(KEY, JSON.stringify(list));
@@ -73,6 +82,7 @@ export default function DestinationSearch({ verified }: { verified: { slug: stri
       void rememberCity(r.known);
       router.push(`/?ziel=${r.known}`);
     } else {
+      void rememberZiel({ ort: r.ort, land: r.land, lat: r.lat, lon: r.lon });
       const p = new URLSearchParams({ ort: r.ort.slice(0, 80), land: r.land.slice(0, 60), lat: r.lat.toFixed(4), lon: r.lon.toFixed(4) });
       router.push(`/ziel?${p}`);
     }
@@ -94,6 +104,7 @@ export default function DestinationSearch({ verified }: { verified: { slug: stri
           onChange={(e) => setQ(e.target.value)}
           placeholder="Stadt, z. B. Lissabon oder Hanoi"
           autoComplete="off"
+          autoFocus={autoFocus}
           maxLength={80}
           className="min-w-0 flex-1 bg-transparent py-3 text-[17px] outline-none placeholder:text-muted"
         />

@@ -3,7 +3,8 @@
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { CITY_COOKIE, EXTRAS_COOKIE, PROFILE_COOKIE, encodeProfile } from "@/lib/data";
+import { CITY_COOKIE, EXTRAS_COOKIE, PROFILE_COOKIE, ZIEL_COOKIE, encodeProfile } from "@/lib/data";
+import { parseZiel, zielQuery } from "@/lib/ziel";
 import { cleanExtras, decodeExtras, encodeExtras, type Extras } from "@/lib/profile";
 
 function safeNext(v: FormDataEntryValue | null) {
@@ -66,7 +67,7 @@ export async function deleteAccount(_prev: FormState, formData: FormData): Promi
   if (error) return { error: "Das hat nicht geklappt. Versuche es später noch einmal." };
   await supabase.auth.signOut().catch(() => undefined);
   const jar = await cookies();
-  for (const c of [PROFILE_COOKIE, EXTRAS_COOKIE, CITY_COOKIE]) jar.delete(c);
+  for (const c of [PROFILE_COOKIE, EXTRAS_COOKIE, CITY_COOKIE, ZIEL_COOKIE]) jar.delete(c);
   redirect("/?geloescht=1");
 }
 
@@ -156,8 +157,32 @@ export async function syncProfileFromCookie() {
 }
 
 export async function rememberCity(city: string) {
-  if (!/^[a-z-]{2,40}$/.test(city)) return;
-  (await cookies()).set(CITY_COOKIE, city, { maxAge: YEAR, path: "/", sameSite: "lax", secure: true, httpOnly: true });
+  if (typeof city !== "string" || !/^[a-z-]{2,40}$/.test(city)) return;
+  const jar = await cookies();
+  jar.set(CITY_COOKIE, city, { maxAge: YEAR, path: "/", sameSite: "lax", secure: true, httpOnly: true });
+  jar.delete(ZIEL_COOKIE); // es gibt immer nur ein aktuelles Reiseziel
+}
+
+/** Kein Reiseziel mehr: Startseite fragt wieder „Wohin geht deine Reise?“ */
+export async function clearTrip() {
+  const jar = await cookies();
+  jar.delete(CITY_COOKIE);
+  jar.delete(ZIEL_COOKIE);
+}
+
+/** Reiseziel ohne Handbewertung merken (z. B. Lissabon), damit die Startseite dorthin führt. */
+export async function rememberZiel(input: { ort?: unknown; land?: unknown; lat?: unknown; lon?: unknown }) {
+  if (!input || typeof input !== "object") return;
+  const z = parseZiel({
+    ort: typeof input.ort === "string" ? input.ort : undefined,
+    land: typeof input.land === "string" ? input.land : undefined,
+    lat: typeof input.lat === "number" ? String(input.lat) : undefined,
+    lon: typeof input.lon === "number" ? String(input.lon) : undefined,
+  });
+  if (!z) return;
+  const jar = await cookies();
+  jar.set(ZIEL_COOKIE, zielQuery(z), { maxAge: YEAR, path: "/", sameSite: "lax", secure: true, httpOnly: true });
+  jar.delete(CITY_COOKIE);
 }
 
 /** Speichert Präferenzen und merkt sich den Top-Kiez. */

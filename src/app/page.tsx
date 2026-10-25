@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getChosenCity, getCities, getCriteria, getDistricts, getProfile, getUser } from "@/lib/data";
+import { getChosenCity, getChosenZiel, getCities, getCriteria, getDistricts, getProfile, getUser } from "@/lib/data";
 import { rankDistricts } from "@/lib/matching";
 import { getTipsForDistrict, TIP_CATEGORIES } from "@/lib/tips";
 import Icon from "@/components/Icon";
@@ -7,6 +7,9 @@ import RecentChecks from "@/components/RecentChecks";
 import DistrictExplorer from "@/components/DistrictExplorer";
 import DestinationSearch from "@/components/DestinationSearch";
 import LegalLinks from "@/components/LegalLinks";
+import CitySwitcher from "@/components/CitySwitcher";
+import { redirect } from "next/navigation";
+import { zielQuery } from "@/lib/ziel";
 
 export const dynamic = "force-dynamic";
 
@@ -21,6 +24,13 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
   const fromUrl = typeof params.ziel === "string" ? params.ziel : null;
   const wantsPicker = fromUrl === "neu";
   const city = wantsPicker ? undefined : ready.find((c) => c.slug === (fromUrl ?? chosen));
+  const verified = ready.map((c) => ({ slug: c.slug, name: c.name, country: c.country }));
+
+  // Zuletzt gewähltes Reiseziel ohne Handbewertung (z. B. Lissabon)? Dann direkt dorthin.
+  if (!city && !wantsPicker && !fromUrl) {
+    const ziel = await getChosenZiel();
+    if (ziel) redirect(`/ziel?${zielQuery(ziel)}`);
+  }
 
   const header = (
     <div className="flex items-center justify-between">
@@ -28,9 +38,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
         <Icon name="user" size={20} />
       </Link>
       {city ? (
-        <Link href="/?ziel=neu" className="press flex items-center gap-1.5 rounded-full bg-tan px-4 py-2.5 text-sm font-semibold">
-          <Icon name="plane" size={15} /> {city.name} <Icon name="down" size={14} />
-        </Link>
+        <CitySwitcher current={city.name} verified={verified} />
       ) : (
         <span className="text-base font-bold">StayCheck</span>
       )}
@@ -53,7 +61,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
         <p className="mt-3 leading-relaxed text-muted">Egal welche Stadt: Wir zeigen dir, welches Viertel zu dir passt und wo du am besten schläfst.</p>
 
         <div className="mt-6">
-          <DestinationSearch verified={ready.map((c) => ({ slug: c.slug, name: c.name, country: c.country }))} />
+          <DestinationSearch verified={verified} />
         </div>
 
         {params.geloescht === "1" && (
