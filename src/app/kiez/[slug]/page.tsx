@@ -12,6 +12,7 @@ import Icon from "@/components/Icon";
 import KiezMap from "@/components/KiezMap";
 import ZoneLegend from "@/components/ZoneLegend";
 import AskDistrict from "@/components/AskDistrict";
+import StayButton from "@/components/StayButton";
 import { assistantEnabled } from "@/lib/assistant";
 import ScoreBars from "@/components/ScoreBars";
 import PlaceSaveButton from "@/components/PlaceSaveButton";
@@ -123,6 +124,9 @@ export default async function KiezPage({
             </span>
           ))}
         </div>
+        <a href="#unterkuenfte" className="btn-chunky mt-5 w-full">
+          <Icon name="hotel" size={20} /> Unterkünfte in {district.name.split(" (")[0]}
+        </a>
         {!resolved && (
           <Link href={`/quiz?stadt=${district.city}`} className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-sun-soft">
             Passt das zu mir? Reise-Profil in 30 Sek. <Icon name="chevron" size={14} />
@@ -136,28 +140,7 @@ export default async function KiezPage({
         enabled={assistantEnabled()}
       />
 
-      <div className="grid grid-cols-4 gap-2">
-        {tileKeys.map((k) => (
-          <div key={k} className="rounded-[18px] bg-paper px-1 py-3 text-center">
-            <b className={`block font-display text-[22px] font-extrabold ${(district.scores[k] ?? 0) <= 4 ? "text-sun-soft" : ""}`}>
-              {district.scores[k]}
-            </b>
-            <span className="block truncate text-[11px] font-semibold text-muted">{label(k)}</span>
-          </div>
-        ))}
-      </div>
-
-      <div className="card p-5">
-        <ScoreBars criteria={criteria} scores={district.scores} />
-        <p className="mt-3 text-xs leading-relaxed text-muted">
-          Viertel-Werte sind unsere Einschätzung fürs ganze Viertel. Jede Unterkunft unten prüfen wir zusätzlich einzeln mit Kartendaten.{" "}
-          <Link href="/methode" className="font-semibold text-sun-soft underline underline-offset-4">
-            So rechnen wir
-          </Link>
-        </p>
-      </div>
-
-      <section>
+      <section id="unterkuenfte" className="scroll-mt-4">
         <div className="flex items-baseline justify-between">
           <h2 className="font-display text-[19px] font-extrabold">Beste Lage im Viertel</h2>
           {!failed && !slow && <span className="text-sm text-muted">{shown.length} gefunden</span>}
@@ -229,6 +212,28 @@ export default async function KiezPage({
           </>
         )}
       </section>
+
+      <div className="grid grid-cols-4 gap-2">
+        {tileKeys.map((k) => (
+          <div key={k} className="rounded-[18px] bg-paper px-1 py-3 text-center">
+            <b className={`block font-display text-[22px] font-extrabold ${(district.scores[k] ?? 0) <= 4 ? "text-sun-soft" : ""}`}>
+              {district.scores[k]}
+            </b>
+            <span className="block truncate text-[11px] font-semibold text-muted">{label(k)}</span>
+          </div>
+        ))}
+      </div>
+
+      <div className="card p-5">
+        <ScoreBars criteria={criteria} scores={district.scores} />
+        <p className="mt-3 text-xs leading-relaxed text-muted">
+          Viertel-Werte sind unsere Einschätzung fürs ganze Viertel. Jede Unterkunft unten prüfen wir zusätzlich einzeln mit Kartendaten.{" "}
+          <Link href="/methode" className="font-semibold text-sun-soft underline underline-offset-4">
+            So rechnen wir
+          </Link>
+        </p>
+      </div>
+
       <TipsSection
         tips={tips}
         userId={user?.id ?? null}
@@ -239,6 +244,7 @@ export default async function KiezPage({
         returnTo={`/kiez/${slug}?stadt=${district.city}`}
         title={`Tipps zu ${district.name.split(" (")[0]}`}
       />
+      <StayButton targetId="unterkuenfte" label="Unterkünfte hier" />
     </div>
   );
 }

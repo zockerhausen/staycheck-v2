@@ -7,6 +7,7 @@ import StillLoading from "@/components/StillLoading";
 import { pickZones, ZONE_KEYS } from "@/lib/zones";
 import ZoneLegend from "@/components/ZoneLegend";
 import AskDistrict from "@/components/AskDistrict";
+import StayButton from "@/components/StayButton";
 import { assistantEnabled } from "@/lib/assistant";
 import { personalMatch } from "@/lib/profile";
 import { parseZiel, zielQuery } from "@/lib/ziel";
@@ -129,6 +130,9 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
             </span>
           ))}
         </div>
+        <a href="#unterkuenfte" className="btn-chunky mt-5 w-full">
+          <Icon name="hotel" size={20} /> Unterkünfte in {name}
+        </a>
         {!profile && (
           <Link href={`/quiz?${zq}`} className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-sun-soft">
             Passt das zu mir? Reise-Profil in 30 Sek. <Icon name="chevron" size={14} />
@@ -142,34 +146,7 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
         enabled={assistantEnabled()}
       />
 
-      {district && (
-        <section className="card px-5 py-2">
-          {criteria.map((c) => {
-            const v = district.scores[c.key];
-            return (
-              <div key={c.key} className="border-b border-line py-3 last:border-0">
-                <div className="flex items-center gap-3 text-sm">
-                  <span className="flex w-32 shrink-0 items-center gap-2 font-semibold">
-                    <Icon name={CRITERION_ICON[c.key]} size={18} /> {c.label}
-                  </span>
-                  <span className="h-2 flex-1 overflow-hidden rounded-full bg-raised">
-                    {v !== null && v !== undefined && (
-                      <span className={`bar-grow block h-full rounded-full ${v <= 4 ? "bg-faint" : "bg-sun"}`} style={{ width: `${v * 10}%` }} />
-                    )}
-                  </span>
-                  <span className="w-7 text-right font-extrabold tabular-nums">{v === null || v === undefined ? "–" : Math.round(v)}</span>
-                </div>
-                <p className="mt-1 pl-[26px] text-xs text-muted">{district.reasons[c.key]}</p>
-              </div>
-            );
-          })}
-          <p className="py-3 text-xs leading-relaxed text-muted">
-            Automatisch aus OpenStreetMap, gezählt rund um die Mitte des Viertels. Jede Unterkunft unten prüfen wir einzeln genauer.
-          </p>
-        </section>
-      )}
-
-      <section>
+      <section id="unterkuenfte" className="scroll-mt-4">
         <div className="flex items-baseline justify-between">
           <h2 className="font-display text-[19px] font-extrabold">Beste Lage im Viertel</h2>
           {!failed && !slow && <span className="text-sm text-muted">{shown.length} gefunden</span>}
@@ -236,6 +213,35 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
           </>
         )}
       </section>
+
+      {district && (
+        <section className="card px-5 py-2">
+          {criteria.map((c) => {
+            const v = district.scores[c.key];
+            return (
+              <div key={c.key} className="border-b border-line py-3 last:border-0">
+                <div className="flex items-center gap-3 text-sm">
+                  <span className="flex w-32 shrink-0 items-center gap-2 font-semibold">
+                    <Icon name={CRITERION_ICON[c.key]} size={18} /> {c.label}
+                  </span>
+                  <span className="h-2 flex-1 overflow-hidden rounded-full bg-raised">
+                    {v !== null && v !== undefined && (
+                      <span className={`bar-grow block h-full rounded-full ${v <= 4 ? "bg-faint" : "bg-sun"}`} style={{ width: `${v * 10}%` }} />
+                    )}
+                  </span>
+                  <span className="w-7 text-right font-extrabold tabular-nums">{v === null || v === undefined ? "–" : Math.round(v)}</span>
+                </div>
+                <p className="mt-1 pl-[26px] text-xs text-muted">{district.reasons[c.key]}</p>
+              </div>
+            );
+          })}
+          <p className="py-3 text-xs leading-relaxed text-muted">
+            Automatisch aus OpenStreetMap, gezählt rund um die Mitte des Viertels. Jede Unterkunft unten prüfen wir einzeln genauer.
+          </p>
+        </section>
+      )}
+
+      <StayButton targetId="unterkuenfte" label="Unterkünfte hier" />
     </div>
   );
 }
