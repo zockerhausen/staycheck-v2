@@ -14,20 +14,21 @@ export default function StayButton({ targetId, label }: { targetId: string; labe
   useEffect(() => setMounted(true), []);
 
   useEffect(() => {
-    const target = document.getElementById(targetId);
-    if (!target) return;
-    let inView = false;
-    const io = new IntersectionObserver(([e]) => {
-      inView = e.isIntersecting;
-      update();
-    });
-    io.observe(target);
-    const update = () => setShow(!inView && window.scrollY > 260);
+    // Sichtbar, wenn die Unterkünfte gerade nicht deutlich im Bild sind (nur ein Rand zählt nicht)
+    const update = () => {
+      const t = document.getElementById(targetId);
+      if (!t) return setShow(false);
+      const r = t.getBoundingClientRect();
+      const vh = window.innerHeight;
+      const visible = r.top < vh * 0.65 && r.bottom > vh * 0.35;
+      setShow(!visible && window.scrollY > 260);
+    };
     window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
     update();
     return () => {
-      io.disconnect();
       window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
     };
   }, [targetId]);
 
@@ -43,7 +44,7 @@ export default function StayButton({ targetId, label }: { targetId: string; labe
         type="button"
         tabIndex={show ? 0 : -1}
         onClick={() => document.getElementById(targetId)?.scrollIntoView({ behavior: "smooth", block: "start" })}
-        className="press pointer-events-auto flex items-center gap-2 rounded-full bg-sun px-5 py-3 text-[15px] font-bold text-white shadow-[0_10px_30px_rgba(242,102,47,.45)]"
+        className={`press flex ${show ? "pointer-events-auto" : "pointer-events-none"} items-center gap-2 rounded-full bg-sun px-5 py-3 text-[15px] font-bold text-white shadow-[0_10px_30px_rgba(242,102,47,.45)]`}
       >
         <Icon name="hotel" size={18} /> {label}
       </button>
