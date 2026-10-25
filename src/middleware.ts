@@ -5,6 +5,8 @@ import { SUPABASE_PUBLISHABLE_KEY, SUPABASE_URL } from "@/lib/supabase/config";
 // Hält die Login-Session frisch, bei jedem Seitenaufruf.
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({ request });
+  // Ohne Login-Cookie gibt es nichts aufzufrischen: keine Anfrage an Supabase (macht jede Seite schneller)
+  if (!request.cookies.getAll().some((c) => c.name.startsWith("sb-"))) return response;
 
   const supabase = createServerClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
     cookies: {

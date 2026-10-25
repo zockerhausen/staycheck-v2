@@ -1,5 +1,6 @@
 import { parseZiel, type Ziel } from "@/lib/ziel";
 import { cookies } from "next/headers";
+import { cache } from "react";
 import { cleanExtras, decodeExtras, type Extras } from "@/lib/profile";
 import { createClient } from "@/lib/supabase/server";
 
@@ -39,7 +40,7 @@ export const CITY_COOKIE = "sc_stadt";
 export const EXTRAS_COOKIE = "sc_extra";
 export const ZIEL_COOKIE = "sc_ziel"; // gewähltes Reiseziel ohne eigene Bewertung (Ort, Land, Koordinaten)
 
-export async function getCriteria(): Promise<Criterion[]> {
+export const getCriteria = cache(async (): Promise<Criterion[]> => {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("criteria")
@@ -47,9 +48,9 @@ export async function getCriteria(): Promise<Criterion[]> {
     .order("sort_order");
   if (error) throw new Error(error.message);
   return (data ?? []) as Criterion[];
-}
+});
 
-export async function getCities(): Promise<City[]> {
+export const getCities = cache(async (): Promise<City[]> => {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("cities")
@@ -65,7 +66,7 @@ export async function getCities(): Promise<City[]> {
     zoom: c.zoom,
     districtCount: c.districts?.[0]?.count ?? 0,
   }));
-}
+});
 
 export async function getCity(slug: string): Promise<City | null> {
   const cities = await getCities();
@@ -143,13 +144,17 @@ export function decodeProfile(raw: string | undefined, criteria: Criterion[]): W
   return Object.keys(weights).length === criteria.length ? weights : null;
 }
 
-export async function getUser() {
+/** Angemeldet? Ohne Login-Cookie gar nicht erst beim Server nachfragen (spart eine Weltreise pro Seite).
+ *  Mit Cookie prüft Supabase die Sitzung echt. Pro Seitenaufruf nur einmal (cache). */
+export const getUser = cache(async () => {
+  const hasSession = (await cookies()).getAll().some((c) => c.name.startsWith("sb-"));
+  if (!hasSession) return null;
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
   return user;
-}
+});
 
 export async function getSavedWeights(): Promise<Weights | null> {
   const supabase = await createClient();

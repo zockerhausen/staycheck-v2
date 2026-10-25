@@ -27,6 +27,9 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   eslint: { ignoreDuringBuilds: true },
   poweredByHeader: false,
+  // Schon besuchte Seiten 30 Sek. im Browser behalten: Zurück und Vor gehen sofort
+  // (Änderungen über Server-Aktionen, z. B. Quiz, leeren diesen Speicher automatisch)
+  experimental: { staleTimes: { dynamic: 30, static: 180 } },
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },

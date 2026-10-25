@@ -23,7 +23,7 @@ export default function DatenschutzPage() {
 
       <Section title="2. Beim Aufrufen der App">
         <p>
-          Die App läuft bei Vercel Inc. (USA). Bei jedem Aufruf verarbeitet Vercel technisch nötige Daten wie IP-Adresse, Zeitpunkt, aufgerufene Seite und
+          Die App läuft bei Vercel Inc. (USA) auf Servern in Singapur, nahe an unserer Datenbank. Bei jedem Aufruf verarbeitet Vercel technisch nötige Daten wie IP-Adresse, Zeitpunkt, aufgerufene Seite und
           Browsertyp, um die Seite auszuliefern und vor Missbrauch zu schützen. Rechtsgrundlage ist unser berechtigtes Interesse an einem sicheren Betrieb (Art.
           6 Abs. 1 lit. f DSGVO). Vercel ist nach dem EU-US Data Privacy Framework zertifiziert; zusätzlich gelten die EU-Standardvertragsklauseln.
         </p>
