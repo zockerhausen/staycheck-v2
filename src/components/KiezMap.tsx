@@ -19,6 +19,7 @@ function MapCanvas({
   zones,
   zoneStep = 350,
   full = false,
+  fit = false,
 }: {
   points: MapPoint[];
   highlight?: string;
@@ -30,6 +31,8 @@ function MapCanvas({
   zones?: ZonePoint[];
   zoneStep?: number;
   full?: boolean;
+  /** Ausschnitt so wählen, dass alle Punkte sichtbar sind */
+  fit?: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const onSelectRef = useRef(onSelect);
@@ -55,6 +58,17 @@ function MapCanvas({
         maxPitch: 60,
       });
       map = m;
+      if (fit && points.length > 1) {
+        const lons = points.map((p) => p.lng);
+        const lats = points.map((p) => p.lat);
+        m.fitBounds(
+          [
+            [Math.min(...lons), Math.min(...lats)],
+            [Math.max(...lons), Math.max(...lats)],
+          ],
+          { padding: { top: 40, bottom: 40, left: 50, right: 50 }, duration: 0, maxZoom: 14 },
+        );
+      }
       if (full) m.addControl(new maplibregl.NavigationControl({ showCompass: false }), "bottom-right");
       m.on("style.load", () => {
         applyStayCheckTheme(m);
@@ -93,7 +107,7 @@ function MapCanvas({
       map?.remove();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [points, highlight, zones, full]);
+  }, [points, highlight, zones, full, fit]);
 
   return <div ref={ref} className={`${height} w-full overflow-hidden bg-paper ${full ? "" : "rounded-3xl"}`} />;
 }

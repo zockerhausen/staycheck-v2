@@ -144,6 +144,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
             zoom={city.zoom}
             height="h-60"
             zones={zones}
+            fit
           />
           <ZoneLegend personal={Boolean(weights)} shown={zones.length > 0} />
         </div>
