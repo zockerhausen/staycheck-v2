@@ -1,0 +1,18 @@
+[
+ {
+  "slug": "berlin",
+  "lat": 52.51,
+  "lon": 13.405,
+  "radius": 6000,
+  "generated": "2026-10-26",
+  "hotels": 740
+ },
+ {
+  "slug": "lissabon",
+  "lat": 38.7078,
+  "lon": -9.1366,
+  "radius": 3500,
+  "generated": "2026-10-26",
+  "hotels": 709
+ }
+]
