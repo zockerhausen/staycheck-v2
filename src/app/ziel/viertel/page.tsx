@@ -10,6 +10,8 @@ import { pickZones, ZONE_KEYS } from "@/lib/zones";
 import ZoneLegend from "@/components/ZoneLegend";
 import AskDistrict from "@/components/AskDistrict";
 import StayButton from "@/components/StayButton";
+import { fmtScore, reviewsForMany, stayKey, TOP_FAIR } from "@/lib/reviews";
+import StayTip from "@/components/StayTip";
 import { inBudget, PRICE_LABEL, priceClass } from "@/lib/price";
 import DistrictVibe from "@/components/DistrictVibe";
 import NearbyFacts from "@/components/NearbyFacts";
@@ -29,6 +31,7 @@ export const maxDuration = 120; // erste Berechnung einer Stadt kann dauern (lä
 const KIND_LABEL: Record<string, string> = { hotel: "Hotel", hostel: "Hostel", guest_house: "Pension", apartment: "Apartment" };
 const FILTERS = [
   { key: "alle", label: "Alle" },
+  { key: "top", label: "Top bewertet" },
   { key: "hostel", label: "Hostels" },
   { key: "hotel", label: "Hotels" },
   { key: "guest_house", label: "Pensionen" },
@@ -107,13 +110,26 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
   // Budget aus dem Reise-Profil: eigener Filter, Preisklasse an jeder Unterkunft (geschätzt)
   const band = (await getExtras()).preis ?? null;
   const clsOf = (h: HotelResult) => priceClass(h.kind, h.stars ?? 0);
+  // Bewertungen aller Plattformen (zusammengerechnet) für die besten Unterkünfte
+  const rev = await reviewsForMany(hotels.slice(0, 80).map((h) => ({ name: h.name, lat: h.lat, lon: h.lon, kind: h.kind })));
+  const revOf = (h: HotelResult) => rev.get(stayKey(h));
   const shown =
     filter === "alle"
       ? hotels
       : filter === "budget"
         ? hotels.filter((h) => inBudget(band, clsOf(h)) !== false)
-        : hotels.filter((h) => h.kind === filter);
-  const filters = [...(band ? [{ key: "budget", label: `Mein Budget ${PRICE_LABEL[band]}` }] : []), ...FILTERS];
+        : filter === "top"
+          ? hotels.filter((h) => (revOf(h)?.fair ?? 0) >= TOP_FAIR)
+          : hotels.filter((h) => h.kind === filter);
+  const filters = [
+    ...(band ? [{ key: "budget", label: `Mein Budget ${PRICE_LABEL[band]}` }] : []),
+    ...FILTERS.filter((f) => f.key !== "top" || rev.size > 0),
+  ];
+  // Unser Tipp: gute Lage + top bewertet + im Budget
+  const tipStay = hotels
+    .filter((h) => (revOf(h)?.fair ?? 0) >= TOP_FAIR && (revOf(h)?.total ?? 0) >= 100 && inBudget(band, clsOf(h)) !== false)
+    .map((h) => ({ h, value: h.match * 0.6 + (revOf(h)!.fair * 10) * 0.4 }))
+    .sort((a, b) => b.value - a.value)[0]?.h;
   const isSaved = (h: HotelResult) => saved.some((p) => Math.abs(p.lat - h.lat) < 1e-6 && Math.abs(p.lon - h.lon) < 1e-6);
   const checkUrl = (h: HotelResult) =>
     `/check/ergebnis?${new URLSearchParams({ lat: h.lat.toFixed(6), lon: h.lon.toFixed(6), name: h.name, sub: `${h.subtitle}, ${ziel.ort}`, kind: h.kind })}`;
@@ -186,6 +202,17 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
           <p className="card mt-4 p-4 text-sm text-muted">Hier haben wir in OpenStreetMap keine passenden Unterkünfte gefunden.</p>
         ) : (
           <>
+            {tipStay && filter !== "top" && (
+              <StayTip
+                href={checkUrl(tipStay)}
+                name={tipStay.name}
+                kind={KIND_LABEL[tipStay.kind] ?? "Unterkunft"}
+                price={clsOf(tipStay) ? PRICE_LABEL[clsOf(tipStay)!] : null}
+                match={tipStay.match}
+                reviews={revOf(tipStay)!}
+                budget={Boolean(band)}
+              />
+            )}
             <div className="mt-4">
               <KiezMap
                 points={shown.slice(0, 25).map((h, i) => ({ slug: `h${i}`, name: h.name, lat: h.lat, lng: h.lon, match: h.match }))}
@@ -210,6 +237,12 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
                       <span className="block truncate text-[13px] text-muted">
                         {KIND_LABEL[h.kind] ?? "Unterkunft"}{clsOf(h) ? ` · ${PRICE_LABEL[clsOf(h)!]}` : ""}{inBudget(band, clsOf(h)) === false ? " · über Budget" : ""} · {h.highlights[0]?.text ?? ""}
                       </span>
+                      {revOf(h) && (
+                        <span className="mt-0.5 block truncate text-[12px] text-muted">
+                          <b className="text-ink">{fmtScore(revOf(h)!.fair)}</b> Gäste · {revOf(h)!.total.toLocaleString("de-DE")} Bewertungen
+                          {revOf(h)!.demo ? " · Beispiel" : ""}
+                        </span>
+                      )}
                     </span>
                     <span className="font-display text-[17px] font-extrabold tabular-nums text-sun-soft">{h.match}</span>
                   </Link>

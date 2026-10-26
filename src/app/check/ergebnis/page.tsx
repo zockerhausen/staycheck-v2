@@ -24,6 +24,8 @@ import ArrivalCard from "@/components/ArrivalCard";
 import TipsSection from "@/components/TipsSection";
 import { RememberCheck } from "@/components/RecentChecks";
 import ScoreExplain from "@/components/ScoreExplain";
+import ReviewSummary from "@/components/ReviewSummary";
+import { reviewsFor } from "@/lib/reviews";
 import { HUBS, cityForPoint } from "@/lib/arrival";
 import { getTipsNear } from "@/lib/tips";
 import { EXTRA_LABEL, MUST_CAP, NO_EXTRAS, fullWeights, personalMatch } from "@/lib/profile";
@@ -114,6 +116,8 @@ export default async function CheckErgebnisPage({
   const query = source === "url" ? weightsToQuery(weights) : "";
   const amp = query ? `&${query}` : "";
   const district = analysis.district;
+  const isStay = ["hotel", "hostel", "guest_house", "apartment", "motel"].includes(kind);
+  const reviews = isStay ? await reviewsFor({ name, lat, lon, kind }) : null;
   const isSaved = saved.some((p) => Math.abs(p.lat - lat) < 1e-6 && Math.abs(p.lon - lon) < 1e-6);
   const returnTo = `/check/ergebnis?${new URLSearchParams({ lat: String(lat), lon: String(lon), name, sub, kind })}${amp}`;
 
@@ -199,6 +203,8 @@ export default async function CheckErgebnisPage({
           />
         </div>
       </div>
+
+      {reviews && <ReviewSummary reviews={reviews} />}
 
       <KiezMap
         points={[{ slug: "ort", name, lat, lng: lon, match }]}
