@@ -22,29 +22,27 @@ export default function StayTip({
 }) {
   return (
     <Link href={href} className="press glow-card mt-4 block rounded-[22px] p-4">
-      <span className="flex items-center gap-1.5 text-[13px] font-extrabold text-sun-soft">
+      <span className="inline-flex items-center gap-1.5 rounded-full bg-peach px-3 py-1.5 text-[13px] font-extrabold text-sun-soft">
         <Icon name="discover" size={14} /> Unser Tipp{budget ? " in deinem Budget" : ""}
       </span>
-      <b className="mt-1.5 block truncate font-display text-[21px] font-extrabold leading-tight">{name}</b>
-      <span className="mt-0.5 block text-[13px] text-muted">
+      <b className="mt-2.5 block truncate text-[21px] font-black leading-tight tracking-tight">{name}</b>
+      <span className="mt-0.5 block text-[15px] font-semibold text-muted">
         {kind}
         {price ? ` · ${price}` : ""}
       </span>
       <span className="mt-3 grid grid-cols-2 gap-2">
         <span className="rounded-[14px] bg-tan px-3 py-2">
-          <b className="block font-display text-[20px] font-extrabold leading-none text-sun-soft">{match}</b>
-          <span className="mt-1 block text-[11px] text-muted">Lage für dich</span>
+          <b className="block text-[22px] font-black leading-none text-sun">{match}</b>
+          <span className="mt-1 block text-[12px] font-bold text-muted">Lage für dich</span>
         </span>
         <span className="rounded-[14px] bg-tan px-3 py-2">
-          <b className="block font-display text-[20px] font-extrabold leading-none">{fmtScore(reviews.fair)}</b>
-          <span className="mt-1 block truncate text-[11px] text-muted">
-            {fairLabel(reviews.fair)} · {reviews.platforms.length} Plattformen{reviews.demo ? " · Beispiel" : ""}
+          <b className="block text-[22px] font-black leading-none">{fmtScore(reviews.fair)}</b>
+          <span className="mt-1 block truncate text-[12px] font-bold text-muted">
+            {fairLabel(reviews.fair)}, {reviews.platforms.length} Seiten{reviews.demo ? " (Beispiel)" : ""}
           </span>
         </span>
       </span>
-      <span className="mt-3 flex items-center justify-center gap-1.5 text-sm font-bold text-sun-soft">
-        Ansehen und Preise vergleichen <Icon name="chevron" size={14} />
-      </span>
+      <span className="btn-chunky mt-4 w-full">Ansehen und Preise vergleichen</span>
     </Link>
   );
 }

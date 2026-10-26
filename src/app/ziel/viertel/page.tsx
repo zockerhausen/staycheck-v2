@@ -9,7 +9,6 @@ import StillLoading from "@/components/StillLoading";
 import { pickZones, ZONE_KEYS } from "@/lib/zones";
 import ZoneLegend from "@/components/ZoneLegend";
 import AskDistrict from "@/components/AskDistrict";
-import StayButton from "@/components/StayButton";
 import { dedupeStays } from "@/lib/geo";
 import { fmtScore, reviewsForMany, stayKey, TOP_FAIR } from "@/lib/reviews";
 import StayTip from "@/components/StayTip";
@@ -19,12 +18,15 @@ import NearbyFacts from "@/components/NearbyFacts";
 import { assistantEnabled } from "@/lib/assistant";
 import { personalMatch } from "@/lib/profile";
 import { parseZiel, zielQuery } from "@/lib/ziel";
-import { characterOf, characterTint, traitsOf } from "@/lib/character";
+import { characterTint, traitsOf } from "@/lib/character";
 import { CRITERION_ICON } from "@/lib/icons";
 import { pageRateLimit } from "@/lib/ratelimit-page";
 import Icon from "@/components/Icon";
 import KiezMap from "@/components/KiezMap";
-import PlaceSaveButton from "@/components/PlaceSaveButton";
+import AreaHero from "@/components/AreaHero";
+import StayRow from "@/components/StayRow";
+import ViewTabs from "@/components/ViewTabs";
+import { areaPhoto } from "@/lib/photos";
 
 export const fetchCache = "default-cache";
 export const maxDuration = 120; // erste Berechnung einer Stadt kann dauern (läuft nach der Antwort weiter)
@@ -137,163 +139,180 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
     `/check/ergebnis?${new URLSearchParams({ lat: h.lat.toFixed(6), lon: h.lon.toFixed(6), name: h.name, sub: `${h.subtitle}, ${ziel.ort}`, kind: h.kind })}`;
   const scores = district?.scores ?? {};
   const pool = districts.map((d) => d.scores);
-  const match = district && profile ? locationMatch(district.scores, profile) : null;
+
+  // Kopf: Foto, drei Zahlen (Lage, Gäste, Preis)
+  const photoWork = areaPhoto(name, ziel.ort, vlat, vlon);
+  const photoRaced = await withDeadline(photoWork, 2500);
+  if (photoRaced === "slow") after(() => photoWork);
+  const photo = photoRaced === "slow" ? null : photoRaced;
+  const lageValue = district ? (profile ? locationMatch(district.scores, profile) : locationMatch(district.scores, DEFAULT_WEIGHTS)) : null;
+  const revList = [...rev.values()];
+  const guestAvg = revList.length ? revList.reduce((s, r) => s + r.fair, 0) / revList.length : null;
+  const classes = hotels.map(clsOf).filter((c): c is NonNullable<ReturnType<typeof clsOf>> => c !== null).sort();
+  const typicalPrice = classes.length ? PRICE_LABEL[classes[Math.floor(classes.length / 2)]] : null;
+  const demo = revList.some((r) => r.demo);
+
+  const staysTab = (
+    <section id="unterkuenfte" className="scroll-mt-20">
+      <nav className="-mx-4 flex gap-2 overflow-x-auto px-4 [scrollbar-width:none]" aria-label="Unterkunftsart">
+        {filters.map((f) => (
+          <Link
+            key={f.key}
+            href={`${self}&typ=${f.key}`}
+            scroll={false}
+            className={`press shrink-0 rounded-full border px-4 py-2.5 text-[14px] font-extrabold ${
+              filter === f.key ? "border-ink bg-ink text-sand" : "border-line bg-sand"
+            }`}
+          >
+            {f.label}
+          </Link>
+        ))}
+      </nav>
+
+      {slow ? (
+        <StillLoading title="Wir prüfen die Unterkünfte …" text="Für jede Unterkunft schauen wir uns die Umgebung an. Beim ersten Mal dauert das etwas, die Seite lädt von selbst neu." />
+      ) : failed ? (
+        <p className="card mt-4 p-4 text-[15px] text-muted">Die Kartendaten sind gerade überlastet. Lade die Seite in einer Minute neu.</p>
+      ) : shown.length === 0 ? (
+        <p className="card mt-4 p-4 text-[15px] text-muted">Hier haben wir keine passenden Unterkünfte gefunden.</p>
+      ) : (
+        <>
+          {tipStay && filter !== "top" && (
+            <StayTip
+              href={checkUrl(tipStay)}
+              name={tipStay.name}
+              kind={KIND_LABEL[tipStay.kind] ?? "Unterkunft"}
+              price={clsOf(tipStay) ? PRICE_LABEL[clsOf(tipStay)!] : null}
+              match={tipStay.match}
+              reviews={revOf(tipStay)!}
+              budget={Boolean(band)}
+            />
+          )}
+          <div className="mt-5 flex items-baseline justify-between">
+            <h2 className="text-[20px] font-black tracking-tight">Beste Lage im Viertel</h2>
+            <span className="text-[14px] font-bold text-muted">{shown.length} gefunden</span>
+          </div>
+          <ol className="mt-1">
+            {shown.slice(0, 25).map((h, i) => (
+              <StayRow
+                key={`${h.lat}-${h.lon}`}
+                id={`kiez-h${i}`}
+                href={checkUrl(h)}
+                name={h.name}
+                kind={KIND_LABEL[h.kind] ?? "Unterkunft"}
+                price={clsOf(h) ? PRICE_LABEL[clsOf(h)!] : null}
+                overBudget={inBudget(band, clsOf(h)) === false}
+                note={h.highlights[0]?.text ?? ""}
+                match={h.match}
+                reviews={revOf(h)}
+                save={{
+                  place: { name: h.name, subtitle: h.subtitle, lat: h.lat, lon: h.lon, kind: h.kind, match: h.match },
+                  initiallySaved: isSaved(h),
+                  loggedIn: Boolean(user),
+                  returnTo: self,
+                }}
+              />
+            ))}
+          </ol>
+          <div className="mt-5">
+            <KiezMap
+              points={shown.slice(0, 25).map((h, i) => ({ slug: `h${i}`, name: h.name, lat: h.lat, lng: h.lon, match: h.match }))}
+              highlight="h0"
+              center={[vlon, vlat]}
+              zoom={14}
+              height="h-64"
+              zones={zones}
+            />
+            <ZoneLegend personal={Boolean(profile)} shown={zones.length > 0} />
+          </div>
+          <p className="mt-3 text-[13px] font-semibold text-muted">
+            Tippe auf eine Unterkunft für Details, Begründung und Preise.{demo ? " Gäste-Werte sind vorerst Beispieldaten." : ""}
+          </p>
+        </>
+      )}
+    </section>
+  );
+
+  const valuesCard = district && (
+    <section className="card mt-5 px-5 py-2">
+      {criteria.map((c) => {
+        const v = district.scores[c.key];
+        return (
+          <div key={c.key} className="border-b border-line py-3 last:border-0">
+            <div className="flex items-center gap-3 text-[15px]">
+              <span className="flex w-32 shrink-0 items-center gap-2 font-extrabold">
+                <Icon name={CRITERION_ICON[c.key]} size={19} /> {c.label}
+              </span>
+              <span className="h-2.5 flex-1 overflow-hidden rounded-full bg-raised">
+                {v !== null && v !== undefined && (
+                  <span className={`bar-grow block h-full rounded-full ${v <= 4 ? "bg-bad" : "bg-ink"}`} style={{ width: `${v * 10}%` }} />
+                )}
+              </span>
+              <span className="w-7 text-right font-black tabular-nums">{v === null || v === undefined ? "–" : Math.round(v)}</span>
+            </div>
+            <p className="mt-1 pl-[27px] text-[13px] font-semibold text-muted">{district.reasons[c.key]}</p>
+          </div>
+        );
+      })}
+      <p className="py-3 text-[13px] font-semibold leading-relaxed text-muted">
+        Automatisch aus OpenStreetMap, gezählt rund um die Mitte des Viertels. Jede Unterkunft prüfen wir einzeln genauer.
+      </p>
+    </section>
+  );
 
   return (
-    <div className="fade-up space-y-7">
-      <section
-        className="-mx-4 -mt-[max(1.25rem,env(safe-area-inset-top))] px-4 pb-2 pt-[max(1.25rem,env(safe-area-inset-top))]"
-        style={{ background: `linear-gradient(180deg, ${characterTint(scores, pool)} 0%, #1a120e 55%, #0c0c0e 100%)` }}
-      >
-        <BackButton fallback={back} className="press flex h-11 w-11 items-center justify-center rounded-full bg-sand/85 shadow-soft backdrop-blur">
-          <Icon name="back" size={18} />
-        </BackButton>
-        <p className="mt-16 text-[13px] font-extrabold text-sun-soft">
-          {ziel.ort} · {match !== null ? `${match} % Match` : district ? characterOf(scores, pool) : "Viertel"}
-        </p>
-        <h1 className="mega mt-1 text-[clamp(2.2rem,11vw,3.1rem)] [overflow-wrap:anywhere]">{name}</h1>
-        {district && (
-          <p className="mt-2 text-[15px] text-muted">{district.distKm < 1.5 ? "Im Zentrum" : `${String(district.distKm).replace(".", ",")} km vom Zentrum`}</p>
-        )}
-        <div className="mt-4 flex flex-wrap gap-2">
-          {traitsOf(scores, pool).map((t) => (
-            <span key={t.key} className="flex items-center gap-1.5 rounded-full bg-sand/70 px-3 py-1.5 text-[13px] font-bold">
-              <Icon name={t.icon} size={14} /> {t.label}
-            </span>
-          ))}
-        </div>
-        <a href="#unterkuenfte" className="btn-chunky mt-5 w-full">
-          <Icon name="hotel" size={20} /> Unterkünfte in {name}
-        </a>
-        {!profile && (
-          <Link href={`/quiz?${zq}`} className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-sun-soft">
-            Passt das zu mir? Reise-Profil in 30 Sek. <Icon name="chevron" size={14} />
-          </Link>
-        )}
-      </section>
-
-      <AskDistrict
-        target={{ art: "auto", ort: ziel.ort, land: ziel.land, lat: ziel.lat, lon: ziel.lon, name, vlat, vlon }}
-        place={name}
-        enabled={assistantEnabled()}
+    <div className="fade-up space-y-6">
+      <AreaHero
+        name={name}
+        where={`${ziel.ort}${district ? `, ${district.distKm < 1.5 ? "im Zentrum" : `${String(district.distKm).replace(".", ",")} km vom Zentrum`}` : ""}`}
+        photo={photo}
+        tint={characterTint(scores, pool)}
+        backHref={back}
+        traits={traitsOf(scores, pool).slice(0, 3)}
+        tiles={[
+          { value: lageValue !== null ? String(lageValue) : "–", label: profile ? "Lage für dich" : "Lage allgemein", accent: true },
+          { value: guestAvg !== null ? fmtScore(guestAvg) : "–", label: demo ? "Gäste (Beispiel)" : "Gäste im Schnitt" },
+          { value: typicalPrice ?? "–", label: "Meiste Unterkünfte" },
+        ]}
       />
 
-      <section id="unterkuenfte" className="scroll-mt-4">
-        <div className="flex items-baseline justify-between">
-          <h2 className="font-display text-[19px] font-extrabold">Beste Lage im Viertel</h2>
-          {!failed && !slow && <span className="text-sm text-muted">{shown.length} gefunden</span>}
-        </div>
-        <nav className="-mx-4 mt-3 flex gap-2 overflow-x-auto px-4 [scrollbar-width:none]" aria-label="Unterkunftsart">
-          {filters.map((f) => (
-            <Link
-              key={f.key}
-              href={`${self}&typ=${f.key}`}
-              scroll={false}
-              className={`press shrink-0 rounded-full px-4 py-2.5 text-sm font-semibold ${filter === f.key ? "bg-ink text-sand" : "bg-tan"}`}
-            >
-              {f.label}
-            </Link>
-          ))}
-        </nav>
-
-        {slow ? (
-          <StillLoading title="Wir prüfen die Unterkünfte …" text="Für jede Unterkunft schauen wir uns die Umgebung an. Beim ersten Mal dauert das etwas, die Seite lädt von selbst neu." />
-        ) : failed ? (
-          <p className="card mt-4 p-4 text-sm text-muted">Die Kartendaten sind gerade überlastet. Lade die Seite in einer Minute neu.</p>
-        ) : shown.length === 0 ? (
-          <p className="card mt-4 p-4 text-sm text-muted">Hier haben wir in OpenStreetMap keine passenden Unterkünfte gefunden.</p>
-        ) : (
-          <>
-            {tipStay && filter !== "top" && (
-              <StayTip
-                href={checkUrl(tipStay)}
-                name={tipStay.name}
-                kind={KIND_LABEL[tipStay.kind] ?? "Unterkunft"}
-                price={clsOf(tipStay) ? PRICE_LABEL[clsOf(tipStay)!] : null}
-                match={tipStay.match}
-                reviews={revOf(tipStay)!}
-                budget={Boolean(band)}
-              />
-            )}
-            <div className="mt-4">
-              <KiezMap
-                points={shown.slice(0, 25).map((h, i) => ({ slug: `h${i}`, name: h.name, lat: h.lat, lng: h.lon, match: h.match }))}
-                highlight="h0"
-                center={[vlon, vlat]}
-                zoom={14}
-                height="h-60"
-                zones={zones}
-              />
-              <ZoneLegend personal={Boolean(profile)} shown={zones.length > 0} />
-            </div>
-            <ol className="mt-2">
-              {shown.slice(0, 25).map((h, i) => (
-                <li key={`${h.lat}-${h.lon}`} id={`kiez-h${i}`} className="flex items-center gap-3 border-b border-line py-3 last:border-0">
-                  <span className="w-5 shrink-0 font-bold text-faint">{i + 1}</span>
-                  <Link href={checkUrl(h)} className="flex min-w-0 flex-1 items-center gap-3">
-                    <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-raised">
-                      <Icon name="hotel" size={22} />
-                    </span>
-                    <span className="min-w-0 flex-1">
-                      <span className="block truncate text-[15px] font-bold">{h.name}</span>
-                      <span className="block truncate text-[13px] text-muted">
-                        {KIND_LABEL[h.kind] ?? "Unterkunft"}{clsOf(h) ? ` · ${PRICE_LABEL[clsOf(h)!]}` : ""}{inBudget(band, clsOf(h)) === false ? " · über Budget" : ""} · {h.highlights[0]?.text ?? ""}
-                      </span>
-                      {revOf(h) && (
-                        <span className="mt-0.5 block truncate text-[12px] text-muted">
-                          <b className="text-ink">{fmtScore(revOf(h)!.fair)}</b> Gäste · {revOf(h)!.total.toLocaleString("de-DE")} Bewertungen
-                          {revOf(h)!.demo ? " · Beispiel" : ""}
-                        </span>
-                      )}
-                    </span>
-                    <span className="font-display text-[17px] font-extrabold tabular-nums text-sun-soft">{h.match}</span>
-                  </Link>
-                  <PlaceSaveButton
-                    compact
-                    place={{ name: h.name, subtitle: h.subtitle, lat: h.lat, lon: h.lon, kind: h.kind, match: h.match }}
-                    initiallySaved={isSaved(h)}
-                    loggedIn={Boolean(user)}
-                    returnTo={self}
-                  />
-                </li>
-              ))}
-            </ol>
-            <p className="mt-3 text-xs text-muted">Tippe auf eine Unterkunft für Details, Begründung und Preise.{[...rev.values()].some((r) => r.demo) ? " Gäste-Werte sind vorerst Beispieldaten." : ""}</p>
-          </>
-        )}
-      </section>
-
-      {district && <DistrictVibe name={name} scores={scores} />}
-      <NearbyFacts lat={vlat} lon={vlon} name={name} />
-
-      {district && (
-        <section className="card px-5 py-2">
-          {criteria.map((c) => {
-            const v = district.scores[c.key];
-            return (
-              <div key={c.key} className="border-b border-line py-3 last:border-0">
-                <div className="flex items-center gap-3 text-sm">
-                  <span className="flex w-32 shrink-0 items-center gap-2 font-semibold">
-                    <Icon name={CRITERION_ICON[c.key]} size={18} /> {c.label}
-                  </span>
-                  <span className="h-2 flex-1 overflow-hidden rounded-full bg-raised">
-                    {v !== null && v !== undefined && (
-                      <span className={`bar-grow block h-full rounded-full ${v <= 4 ? "bg-faint" : "bg-sun"}`} style={{ width: `${v * 10}%` }} />
-                    )}
-                  </span>
-                  <span className="w-7 text-right font-extrabold tabular-nums">{v === null || v === undefined ? "–" : Math.round(v)}</span>
-                </div>
-                <p className="mt-1 pl-[26px] text-xs text-muted">{district.reasons[c.key]}</p>
-              </div>
-            );
-          })}
-          <p className="py-3 text-xs leading-relaxed text-muted">
-            Automatisch aus OpenStreetMap, gezählt rund um die Mitte des Viertels. Jede Unterkunft prüfen wir einzeln genauer.
-          </p>
-        </section>
+      {!profile && (
+        <Link href={`/quiz?${zq}`} className="press flex items-center gap-3 rounded-[20px] bg-peach px-4 py-3.5">
+          <Icon name="discover" size={22} className="text-sun-soft" />
+          <span className="min-w-0 flex-1 text-[15px] font-extrabold">Passt das zu mir? Reise-Profil in 30 Sekunden</span>
+          <Icon name="chevron" size={16} className="text-muted" />
+        </Link>
       )}
 
-      <StayButton targetId="unterkuenfte" label="Unterkünfte hier" />
+      <ViewTabs
+        tabs={[
+          { key: "stay", label: "Unterkünfte", content: staysTab },
+          {
+            key: "vibe",
+            label: "Tag und Nacht",
+            content: (
+              <div className="space-y-5">
+                {district ? <DistrictVibe name={name} scores={scores} /> : <p className="card p-4 text-[15px] text-muted">Für diese Ecke haben wir zu wenig Daten.</p>}
+                <AskDistrict
+                  target={{ art: "auto", ort: ziel.ort, land: ziel.land, lat: ziel.lat, lon: ziel.lon, name, vlat, vlon }}
+                  place={name}
+                  enabled={assistantEnabled()}
+                />
+              </div>
+            ),
+          },
+          {
+            key: "near",
+            label: "Umgebung",
+            content: (
+              <div>
+                <NearbyFacts lat={vlat} lon={vlon} name={name} />
+                {valuesCard}
+              </div>
+            ),
+          },
+        ]}
+      />
     </div>
   );
 }
