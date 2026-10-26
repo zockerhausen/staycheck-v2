@@ -26,9 +26,12 @@ export default async function NearbyFacts({ lat, lon, name }: { lat: number; lon
     .filter((s) => walk(s.d) <= 15)
     .sort((a, b) => b.w - a.w || a.d - b.d)
     .slice(0, 6);
-  const airport = pre.airports[0];
-  const airportKm = airport ? Math.round(distance(lat, lon, airport.lat, airport.lon) / 100) / 10 : null;
-  if (!sights.length && !airport) return null;
+  // Die zwei nächsten Flughäfen (oft gibt es einen großen und einen kleineren in Stadtnähe)
+  const airports = pre.airports
+    .map((a) => ({ ...a, km: Math.round(distance(lat, lon, a.lat, a.lon) / 100) / 10 }))
+    .sort((a, b) => a.km - b.km)
+    .slice(0, 2);
+  if (!sights.length && !airports.length) return null;
 
   return (
     <section className="card p-5">
@@ -52,12 +55,16 @@ export default async function NearbyFacts({ lat, lon, name }: { lat: number; lon
           </ul>
         </>
       )}
-      {airport && airportKm !== null && (
+      {airports.length > 0 && (
         <div className="mt-4 flex items-start gap-3 rounded-2xl bg-tan px-3.5 py-3">
           <Icon name="plane" size={18} className="mt-0.5 shrink-0 text-sun-soft" />
           <span className="text-sm leading-relaxed">
-            <b>Vom Flughafen {airport.iata}</b> ({airport.n}): {String(airportKm).replace(".", ",")} km Luftlinie. Den besten Weg kennt „Frag das
-            Viertel“ oben.
+            {airports.map((a, i) => (
+              <span key={a.iata} className="block">
+                <b>{a.iata}</b> {a.n}: {String(a.km).replace(".", ",")} km Luftlinie{i === airports.length - 1 ? "." : ""}
+              </span>
+            ))}
+            <span className="mt-1 block text-muted">Den besten Weg von dort kennt „Frag das Viertel“ oben.</span>
           </span>
         </div>
       )}
