@@ -11,6 +11,7 @@ export type QuizAnswer = {
   hint: string;
   wer?: TravelWith;
   suggest?: "cafe"; // Extra, das wir für die letzte Frage schon vormerken
+  preis?: 1 | 2 | 3; // Budget pro Nacht (für den Budget-Filter bei Unterkünften)
 };
 export type QuizQuestion = { key: string; question: string; layout: "grid" | "list"; answers: QuizAnswer[] };
 
@@ -72,9 +73,9 @@ export const QUIZ: QuizQuestion[] = [
     question: "Was darf eine Nacht kosten?",
     layout: "list",
     answers: [
-      { text: "Bis 30 €", sub: "Hostel, Schlafsaal, Pension", icon: "budget", set: { budget: 5 }, hint: "Viertel mit vielen Hostels zählen mehr." },
-      { text: "30 bis 80 €", sub: "Einfaches Zimmer", icon: "hotel", set: { budget: 3 }, hint: "Preis zählt, aber nicht um jeden Preis." },
-      { text: "Mehr ist okay", sub: "Lage geht vor", icon: "star", set: { budget: 1 }, hint: "Teurere Viertel sind für dich kein Problem." },
+      { text: "Bis 30 €", sub: "Hostel, Schlafsaal, Pension", icon: "budget", preis: 1, set: { budget: 5 }, hint: "Viertel mit vielen Hostels zählen mehr." },
+      { text: "30 bis 80 €", sub: "Einfaches Zimmer", icon: "hotel", preis: 2, set: { budget: 3 }, hint: "Preis zählt, aber nicht um jeden Preis." },
+      { text: "Mehr ist okay", sub: "Lage geht vor", icon: "star", preis: 3, set: { budget: 1 }, hint: "Teurere Viertel sind für dich kein Problem." },
     ],
   },
   {

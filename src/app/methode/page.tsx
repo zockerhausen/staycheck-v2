@@ -154,7 +154,7 @@ export default function MethodePage() {
       </section>
 
       <p className="mt-6 text-xs leading-relaxed text-muted">
-        Kartendaten © OpenStreetMap-Mitwirkende (ODbL). Suche über Photon (Komoot), Umgebung über die Overpass API.
+        Kartendaten © OpenStreetMap-Mitwirkende (ODbL), vorberechnet aus Geofabrik-Auszügen. Flughäfen: OurAirports (gemeinfrei). Suche über Photon (Komoot), sonst Umgebung über die Overpass API.
       </p>
       <LegalLinks className="mt-10" />
     </div>

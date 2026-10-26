@@ -237,7 +237,9 @@ export async function getExtras(): Promise<Extras> {
     const supabase = await createClient();
     const { data } = await supabase.from("profiles").select("travel_with, extras, must_have").eq("id", user.id).maybeSingle();
     if (data && (data.travel_with || (data.extras as string[] | null)?.length || data.must_have)) {
-      return cleanExtras({ wer: data.travel_with, items: data.extras, must: data.must_have });
+      // Budget liegt (noch) nur im Cookie, nicht im Konto
+      const cookiePreis = decodeExtras((await cookies()).get(EXTRAS_COOKIE)?.value).preis;
+      return cleanExtras({ wer: data.travel_with, items: data.extras, must: data.must_have, preis: cookiePreis });
     }
   }
   return decodeExtras((await cookies()).get(EXTRAS_COOKIE)?.value);

@@ -8,7 +8,9 @@ import { pickZones, ZONE_KEYS } from "@/lib/zones";
 import ZoneLegend from "@/components/ZoneLegend";
 import AskDistrict from "@/components/AskDistrict";
 import StayButton from "@/components/StayButton";
+import { inBudget, PRICE_LABEL, priceClass } from "@/lib/price";
 import DistrictVibe from "@/components/DistrictVibe";
+import NearbyFacts from "@/components/NearbyFacts";
 import { assistantEnabled } from "@/lib/assistant";
 import { personalMatch } from "@/lib/profile";
 import { parseZiel, zielQuery } from "@/lib/ziel";
@@ -43,7 +45,7 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
   // Größeres Raster für geprüfte Großstädte (Berlin, Bangkok), sonst Standard
   const rad = params.rad === "6000" ? 6000 : 3500;
   const back = `/ziel?${zq}`;
-  const filter = typeof params.typ === "string" && FILTERS.some((f) => f.key === params.typ) ? params.typ : "alle";
+  const filter = typeof params.typ === "string" && (params.typ === "budget" || FILTERS.some((f) => f.key === params.typ)) ? params.typ : "alle";
   const self = `/ziel/viertel?${zq}&${new URLSearchParams({ name, vlat: vlat.toFixed(5), vlon: vlon.toFixed(5), ...(rad === 6000 ? { rad: "6000" } : {}) })}`;
 
   if (!(await pageRateLimit("ziel-viertel", 15))) {
@@ -100,7 +102,16 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
         .sort((a, b) => b.match - a.match);
     }
   }
-  const shown = filter === "alle" ? hotels : hotels.filter((h) => h.kind === filter);
+  // Budget aus dem Reise-Profil: eigener Filter, Preisklasse an jeder Unterkunft (geschätzt)
+  const band = (await getExtras()).preis ?? null;
+  const clsOf = (h: HotelResult) => priceClass(h.kind, h.stars ?? 0);
+  const shown =
+    filter === "alle"
+      ? hotels
+      : filter === "budget"
+        ? hotels.filter((h) => inBudget(band, clsOf(h)) !== false)
+        : hotels.filter((h) => h.kind === filter);
+  const filters = [...(band ? [{ key: "budget", label: `Mein Budget ${PRICE_LABEL[band]}` }] : []), ...FILTERS];
   const isSaved = (h: HotelResult) => saved.some((p) => Math.abs(p.lat - h.lat) < 1e-6 && Math.abs(p.lon - h.lon) < 1e-6);
   const checkUrl = (h: HotelResult) =>
     `/check/ergebnis?${new URLSearchParams({ lat: h.lat.toFixed(6), lon: h.lon.toFixed(6), name: h.name, sub: `${h.subtitle}, ${ziel.ort}`, kind: h.kind })}`;
@@ -153,7 +164,7 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
           {!failed && !slow && <span className="text-sm text-muted">{shown.length} gefunden</span>}
         </div>
         <nav className="-mx-4 mt-3 flex gap-2 overflow-x-auto px-4 [scrollbar-width:none]" aria-label="Unterkunftsart">
-          {FILTERS.map((f) => (
+          {filters.map((f) => (
             <Link
               key={f.key}
               href={`${self}&typ=${f.key}`}
@@ -195,7 +206,7 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
                     <span className="min-w-0 flex-1">
                       <span className="block truncate text-[15px] font-bold">{h.name}</span>
                       <span className="block truncate text-[13px] text-muted">
-                        {KIND_LABEL[h.kind] ?? "Unterkunft"} · {h.highlights[0]?.text ?? ""}
+                        {KIND_LABEL[h.kind] ?? "Unterkunft"}{clsOf(h) ? ` · ${PRICE_LABEL[clsOf(h)!]}` : ""}{inBudget(band, clsOf(h)) === false ? " · über Budget" : ""} · {h.highlights[0]?.text ?? ""}
                       </span>
                     </span>
                     <span className="font-display text-[17px] font-extrabold tabular-nums text-sun-soft">{h.match}</span>
@@ -216,6 +227,7 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
       </section>
 
       {district && <DistrictVibe name={name} scores={scores} />}
+      <NearbyFacts lat={vlat} lon={vlon} name={name} />
 
       {district && (
         <section className="card px-5 py-2">

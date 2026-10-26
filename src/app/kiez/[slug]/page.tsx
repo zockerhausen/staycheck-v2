@@ -13,7 +13,9 @@ import KiezMap from "@/components/KiezMap";
 import ZoneLegend from "@/components/ZoneLegend";
 import AskDistrict from "@/components/AskDistrict";
 import StayButton from "@/components/StayButton";
+import { inBudget, PRICE_LABEL, priceClass } from "@/lib/price";
 import DistrictVibe from "@/components/DistrictVibe";
+import NearbyFacts from "@/components/NearbyFacts";
 import { assistantEnabled } from "@/lib/assistant";
 import ScoreBars from "@/components/ScoreBars";
 import PlaceSaveButton from "@/components/PlaceSaveButton";
@@ -66,7 +68,7 @@ export default async function KiezPage({
   const weights = resolved ?? DEFAULT_WEIGHTS;
   const query = source === "url" ? weightsToQuery(weights) : "";
   const amp = query ? `&${query}` : "";
-  const filter = typeof sp.typ === "string" ? sp.typ : "alle";
+  const filter = typeof sp.typ === "string" && (sp.typ === "budget" || FILTERS.some((f) => f.key === sp.typ)) ? sp.typ : "alle";
 
   const cityRow = cities.find((c) => c.slug === district.city);
   const [tips, zones] = await Promise.all([
@@ -91,7 +93,16 @@ export default async function KiezPage({
         .sort((a, b) => b.match - a.match);
     }
   }
-  const shown = filter === "alle" ? hotels : hotels.filter((h) => h.kind === filter);
+  // Budget aus dem Reise-Profil: eigener Filter, Preisklasse an jeder Unterkunft (geschätzt)
+  const band = (await getExtras()).preis ?? null;
+  const clsOf = (h: HotelResult) => priceClass(h.kind, h.stars ?? 0);
+  const shown =
+    filter === "alle"
+      ? hotels
+      : filter === "budget"
+        ? hotels.filter((h) => inBudget(band, clsOf(h)) !== false)
+        : hotels.filter((h) => h.kind === filter);
+  const filters = [...(band ? [{ key: "budget", label: `Mein Budget ${PRICE_LABEL[band]}` }] : []), ...FILTERS];
   const isSaved = (h: HotelResult) => saved.some((p) => Math.abs(p.lat - h.lat) < 1e-6 && Math.abs(p.lon - h.lon) < 1e-6);
   const checkUrl = (h: HotelResult) =>
     `/check/ergebnis?${new URLSearchParams({ lat: h.lat.toFixed(6), lon: h.lon.toFixed(6), name: h.name, sub: h.subtitle, kind: h.kind })}${amp}`;
@@ -148,7 +159,7 @@ export default async function KiezPage({
         </div>
 
         <nav className="-mx-4 mt-3 flex gap-2 overflow-x-auto px-4 [scrollbar-width:none]" aria-label="Unterkunftsart">
-          {FILTERS.map((f) => (
+          {filters.map((f) => (
             <Link
               key={f.key}
               href={`/kiez/${slug}?stadt=${district.city}&typ=${f.key}${amp}`}
@@ -192,7 +203,7 @@ export default async function KiezPage({
                     <span className="min-w-0 flex-1">
                       <span className="block truncate text-[15px] font-bold">{h.name}</span>
                       <span className="block truncate text-[13px] text-muted">
-                        {KIND_LABEL[h.kind] ?? "Unterkunft"} · {h.highlights[0]?.text ?? verdict(h.match).label}
+                        {KIND_LABEL[h.kind] ?? "Unterkunft"}{clsOf(h) ? ` · ${PRICE_LABEL[clsOf(h)!]}` : ""}{inBudget(band, clsOf(h)) === false ? " · über Budget" : ""} · {h.highlights[0]?.text ?? verdict(h.match).label}
                       </span>
                     </span>
                     <span className="font-display text-[17px] font-extrabold tabular-nums text-sun-soft">{h.match}</span>
@@ -215,6 +226,7 @@ export default async function KiezPage({
       </section>
 
       <DistrictVibe name={district.name.split(" (")[0]} scores={district.scores} />
+      <NearbyFacts lat={district.lat} lon={district.lng} name={district.name.split(" (")[0]} />
 
       <div className="grid grid-cols-4 gap-2">
         {tileKeys.map((k) => (

@@ -36,6 +36,7 @@ export default function QuizClient({ city, cityName, next: nextUrl }: { city: st
   const [wer, setWer] = useState<TravelWith | null>(null);
   const [items, setItems] = useState<ExtraKey[]>([]);
   const [must, setMust] = useState<ExtraKey | null>(null);
+  const [preis, setPreis] = useState<1 | 2 | 3 | null>(null);
   const [picked, setPicked] = useState<number[]>([]);
   const [hint, setHint] = useState("");
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
@@ -87,6 +88,7 @@ export default function QuizClient({ city, cityName, next: nextUrl }: { city: st
       setHint(a.hint);
       setWeights((w) => ({ ...w, ...a.set }));
       if (a.wer) setWer(a.wer);
+      if (a.preis) setPreis(a.preis);
       if (a.suggest && !items.includes(a.suggest)) setItems((x) => [...x, a.suggest!]);
       advance(1500); // etwas Zeit für eine zweite Antwort
       return;
@@ -102,6 +104,8 @@ export default function QuizClient({ city, cityName, next: nextUrl }: { city: st
       const y = a.set[k] ?? before[k] ?? 0;
       mixed[k] = Math.round((x + y) / 2);
     }
+    // Zwei Budget-Antworten: die großzügigere zählt (sonst fallen passende Unterkünfte raus)
+    if (a.preis && first.preis) setPreis(Math.max(a.preis, first.preis) as 1 | 2 | 3);
     setPicked([picked[0], index]);
     setHint("Mal so, mal so. Wir nehmen die Mitte.");
     setWeights({ ...before, ...mixed });
@@ -126,7 +130,7 @@ export default function QuizClient({ city, cityName, next: nextUrl }: { city: st
     buzz([12, 40, 18]);
     setStep(QUIZ.length + 1);
     startSaving(async () => {
-      await storeProfile(weights, city || undefined, { wer, items, must });
+      await storeProfile(weights, city || undefined, { wer, items, must, preis });
     });
   }
 

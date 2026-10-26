@@ -5,9 +5,10 @@ import type { IconName } from "@/lib/icons";
 export type Weights = Record<string, number>;
 export type TravelWith = "allein" | "paar" | "freunde" | "business";
 export type ExtraKey = "supermarkt" | "waschsalon" | "cafe" | "strand" | "fitness" | "sehenswert";
-export type Extras = { wer: TravelWith | null; items: ExtraKey[]; must: ExtraKey | null };
+export type PriceBand = 1 | 2 | 3; // 1 = bis ca. 30 €, 2 = 30–80 €, 3 = mehr ist okay
+export type Extras = { wer: TravelWith | null; items: ExtraKey[]; must: ExtraKey | null; preis?: PriceBand | null };
 
-export const NO_EXTRAS: Extras = { wer: null, items: [], must: null };
+export const NO_EXTRAS: Extras = { wer: null, items: [], must: null, preis: null };
 
 export const EXTRAS: { key: ExtraKey; label: string; icon: IconName }[] = [
   { key: "supermarkt", label: "Supermarkt", icon: "cart" },
@@ -29,17 +30,19 @@ export const MUST_CAP = 60;
 
 /** Cookie-Format: "w=allein;x=cafe.supermarkt;m=cafe" – alles wird beim Lesen streng geprüft. */
 export function encodeExtras(e: Extras) {
-  return [`w=${e.wer ?? ""}`, `x=${e.items.join(".")}`, `m=${e.must ?? ""}`].join(";");
+  return [`w=${e.wer ?? ""}`, `x=${e.items.join(".")}`, `m=${e.must ?? ""}`, `p=${e.preis ?? ""}`].join(";");
 }
 
-export function cleanExtras(input: { wer?: unknown; items?: unknown; must?: unknown } | null | undefined): Extras {
+export function cleanExtras(input: { wer?: unknown; items?: unknown; must?: unknown; preis?: unknown } | null | undefined): Extras {
   const wer = typeof input?.wer === "string" && WER.has(input.wer) ? (input.wer as TravelWith) : null;
   const items = Array.isArray(input?.items)
     ? ([...new Set(input.items.filter((x): x is string => typeof x === "string" && EXTRA_KEYS.has(x)))] as ExtraKey[])
     : [];
   const must = typeof input?.must === "string" && EXTRA_KEYS.has(input.must) ? (input.must as ExtraKey) : null;
   if (must && !items.includes(must)) items.push(must);
-  return { wer, items: items.slice(0, 6), must };
+  const p = Number(input?.preis);
+  const preis = p === 1 || p === 2 || p === 3 ? (p as PriceBand) : null;
+  return { wer, items: items.slice(0, 6), must, preis };
 }
 
 export function decodeExtras(raw: string | undefined): Extras {
@@ -50,7 +53,7 @@ export function decodeExtras(raw: string | undefined): Extras {
       .split(";")
       .map((p) => p.split("=") as [string, string]),
   );
-  return cleanExtras({ wer: parts.w, items: (parts.x ?? "").split(".").filter(Boolean), must: parts.m });
+  return cleanExtras({ wer: parts.w, items: (parts.x ?? "").split(".").filter(Boolean), must: parts.m, preis: parts.p });
 }
 
 /** Gewichte inklusive Extras (für den persönlichen Match). */

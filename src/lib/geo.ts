@@ -300,7 +300,7 @@ export const DEFAULT_WEIGHTS: Weights = { budget: 3, nightlife: 3, quiet: 3, saf
 
 // ---------- Hotels in einem Kiez ----------
 
-export type HotelResult = Place & { scores: LocationScores; match: number; highlights: Highlight[] };
+export type HotelResult = Place & { scores: LocationScores; match: number; highlights: Highlight[]; stars?: number };
 
 /**
  * Alle Unterkünfte im Umkreis mit ihren Lage-Werten. Unabhängig vom Reise-Profil,
