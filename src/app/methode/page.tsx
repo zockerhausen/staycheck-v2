@@ -1,4 +1,4 @@
-import Link from "next/link";
+import BackButton from "@/components/BackButton";
 import type { Metadata } from "next";
 import Icon from "@/components/Icon";
 import LegalLinks from "@/components/LegalLinks";
@@ -62,9 +62,9 @@ export default function MethodePage() {
   return (
     <div className="fade-up">
       <div className="flex items-center justify-between">
-        <Link href="/check" aria-label="Zurück" className="press flex h-11 w-11 items-center justify-center rounded-full bg-tan">
+        <BackButton fallback="/check" className="press flex h-11 w-11 items-center justify-center rounded-full bg-tan">
           <Icon name="back" size={18} />
-        </Link>
+        </BackButton>
         <span className="text-base font-bold">So rechnen wir</span>
         <span className="h-11 w-11" />
       </div>

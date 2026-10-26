@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Manrope } from "next/font/google";
 import BottomNav from "@/components/BottomNav";
+import { NavTracker } from "@/components/BackButton";
 import { getUser } from "@/lib/data";
 import "./globals.css";
 
@@ -27,6 +28,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html lang="de" className={`${head.variable} ${body.variable}`}>
       <body className="min-h-dvh font-sans antialiased">
         <main className="mx-auto w-full max-w-md px-4 pb-28 pt-[max(1.25rem,env(safe-area-inset-top))]">{children}</main>
+        <NavTracker />
         <BottomNav loggedIn={Boolean(user)} />
       </body>
     </html>

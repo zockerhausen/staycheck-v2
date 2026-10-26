@@ -1,3 +1,4 @@
+import BackButton from "@/components/BackButton";
 import { VERIFIED_RADIUS } from "@/lib/popular";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -116,13 +117,12 @@ export default async function KiezPage({
     <div className="fade-up space-y-7">
       <section className="hero-glow -mx-4 -mt-[max(1.25rem,env(safe-area-inset-top))] px-4 pb-2 pt-[max(1.25rem,env(safe-area-inset-top))]">
         <div className="flex items-center justify-between">
-          <Link
-            href={`/ergebnis?stadt=${district.city}${amp}`}
-            aria-label="Zurück"
+          <BackButton
+            fallback={`/ergebnis?stadt=${district.city}${amp}`}
             className="press flex h-11 w-11 items-center justify-center rounded-full bg-black/35 backdrop-blur"
           >
             <Icon name="back" size={18} />
-          </Link>
+          </BackButton>
           {user && <FavoriteButton districtId={district.id} isFavorite={favorites.has(district.id)} />}
         </div>
         <p className="mt-16 text-xs font-bold uppercase tracking-[0.08em] text-[#ffb08f]">

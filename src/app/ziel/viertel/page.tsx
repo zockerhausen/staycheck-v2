@@ -1,3 +1,4 @@
+import BackButton from "@/components/BackButton";
 import { CITY_RADIUS, VERIFIED_RADIUS } from "@/lib/popular";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -126,9 +127,9 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
         className="-mx-4 -mt-[max(1.25rem,env(safe-area-inset-top))] px-4 pb-2 pt-[max(1.25rem,env(safe-area-inset-top))]"
         style={{ background: `linear-gradient(180deg, ${characterTint(scores, pool)} 0%, #1a120e 55%, #0c0c0e 100%)` }}
       >
-        <Link href={back} aria-label="Zurück" className="press flex h-11 w-11 items-center justify-center rounded-full bg-black/35 backdrop-blur">
+        <BackButton fallback={back} className="press flex h-11 w-11 items-center justify-center rounded-full bg-black/35 backdrop-blur">
           <Icon name="back" size={18} />
-        </Link>
+        </BackButton>
         <p className="mt-16 text-xs font-bold uppercase tracking-[0.08em] text-[#ffb08f]">
           {ziel.ort} · {match !== null ? `${match} % Match` : district ? characterOf(scores, pool) : "Viertel"}
         </p>

@@ -1,3 +1,4 @@
+import BackButton from "@/components/BackButton";
 import { VERIFIED_RADIUS } from "@/lib/popular";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -54,9 +55,9 @@ export default async function ErgebnisPage({
     return (
       <div className="fade-up space-y-6">
         <div className="flex items-center justify-between">
-          <Link href="/" aria-label="Start" className="press flex h-11 w-11 items-center justify-center rounded-full bg-tan">
+          <BackButton fallback="/" className="press flex h-11 w-11 items-center justify-center rounded-full bg-tan">
             <Icon name="back" size={18} />
-          </Link>
+          </BackButton>
           <Link href="/reise" className="press flex items-center gap-1.5 rounded-full bg-tan px-4 py-2.5 text-sm font-semibold">
             {city.name} <Icon name="down" size={14} />
           </Link>
@@ -101,9 +102,9 @@ export default async function ErgebnisPage({
   return (
     <div className="fade-up space-y-7">
       <div className="flex items-center justify-between">
-        <Link href="/" aria-label="Start" className="press flex h-11 w-11 items-center justify-center rounded-full bg-tan">
+        <BackButton fallback="/" className="press flex h-11 w-11 items-center justify-center rounded-full bg-tan">
           <Icon name="back" size={18} />
-        </Link>
+        </BackButton>
         <Link href="/reise" className="press flex items-center gap-1.5 rounded-full bg-tan px-4 py-2.5 text-sm font-semibold">
           {city.name} <Icon name="down" size={14} />
         </Link>

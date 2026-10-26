@@ -1,3 +1,4 @@
+import BackButton from "@/components/BackButton";
 import Link from "next/link";
 import { getCriteria, getExtras, getProfile, getUser } from "@/lib/data";
 import ProfileEditor from "@/components/ProfileEditor";
@@ -11,9 +12,9 @@ export default async function ProfilPage() {
 
   return (
     <div className="pt-2">
-      <Link href="/reise" className="flex items-center gap-1 text-sm font-semibold text-muted">
+      <BackButton fallback="/reise" className="flex items-center gap-1 text-sm font-semibold text-muted">
         <Icon name="back" size={18} /> Zurück
-      </Link>
+      </BackButton>
       <h1 className="mega mt-4 text-[2.1rem]">Dein Reise-Profil</h1>
       <p className="mt-2 text-muted">
         So wichtig ist dir das auf Reisen. Danach richten sich alle Kiez-Empfehlungen und Lage-Checks.

@@ -1,3 +1,4 @@
+import BackButton from "@/components/BackButton";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import {
@@ -127,9 +128,9 @@ export default async function CheckErgebnisPage({
     <div className="fade-up space-y-7">
       <RememberCheck name={name} sub={sub} lat={lat} lon={lon} kind={kind} match={match} label={v.label} />
       <div className="flex items-center justify-between">
-        <Link href="/check" aria-label="Neue Suche" className="press flex h-11 w-11 items-center justify-center rounded-full bg-tan">
+        <BackButton fallback="/check" className="press flex h-11 w-11 items-center justify-center rounded-full bg-tan">
           <Icon name="back" size={18} />
-        </Link>
+        </BackButton>
         <span className="text-base font-bold">Lage-Check</span>
         <span className="h-11 w-11" />
       </div>

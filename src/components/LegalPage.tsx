@@ -1,3 +1,4 @@
+import BackButton from "@/components/BackButton";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import Icon from "@/components/Icon";
@@ -7,9 +8,9 @@ import { legalComplete } from "@/lib/legal";
 export default function LegalPage({ title, updated, children }: { title: string; updated?: string; children: ReactNode }) {
   return (
     <div className="fade-up pb-10">
-      <Link href="/" aria-label="Zurück" className="press flex h-11 w-11 items-center justify-center rounded-full bg-tan">
+      <BackButton fallback="/" className="press flex h-11 w-11 items-center justify-center rounded-full bg-tan">
         <Icon name="back" size={18} />
-      </Link>
+      </BackButton>
       <h1 className="mega mt-6 text-[2.1rem]">{title}</h1>
       {updated && <p className="mt-1 text-sm text-muted">Stand: {updated}</p>}
       {!legalComplete() && (
