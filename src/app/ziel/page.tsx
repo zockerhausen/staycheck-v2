@@ -71,6 +71,32 @@ export default async function ZielPage({ searchParams }: { searchParams: Promise
   const spotHref = (sp: (typeof spots)[number]) =>
     `/ziel/viertel?${zq}&${new URLSearchParams({ name: sp.name, vlat: sp.lat.toFixed(5), vlon: sp.lon.toFixed(5) })}`;
   const topSpot = weights && spots[0] ? spots[0] : null;
+  const districtList = (
+    <>
+      <DistrictExplorer
+        variant={spots.length ? "list" : "cards"}
+        filters={!spots.length}
+        districts={sorted.map((d) => ({
+          slug: d.slug,
+          city: "",
+          name: d.name,
+          short: d.distKm < 1.5 ? "Im Zentrum" : `${String(d.distKm).replace(".", ",")} km vom Zentrum`,
+          scores: d.scores,
+          match: d.match,
+          href: viertelHref(d),
+        }))}
+      />
+      <p className="mt-3 flex items-start gap-2 px-1 text-xs leading-relaxed text-muted">
+        <Icon name="flag" size={14} className="mt-0.5 shrink-0" />
+        <span>
+          Automatisch aus OpenStreetMap berechnet, gröber als bei geprüften Städten. Sicherheit kennen wir hier noch nicht.{" "}
+          <Link href="/methode" className="font-semibold text-sun-soft underline underline-offset-4">
+            So rechnen wir
+          </Link>
+        </span>
+      </p>
+    </>
+  );
 
   return (
     <div className="fade-up">
@@ -155,32 +181,24 @@ export default async function ZielPage({ searchParams }: { searchParams: Promise
             </section>
           )}
 
-          <section className={spots.length ? "mt-8" : "mt-7"}>
-            <h2 className={spots.length ? "mb-1 font-display text-[17px] font-extrabold" : "mb-3 font-display text-[19px] font-extrabold"}>
-              {spots.length ? "Stadtteile im Überblick" : top ? "Alle Viertel für dich" : "Oder selbst stöbern"}
-            </h2>
-            <DistrictExplorer
-              variant={spots.length ? "list" : "cards"}
-              districts={sorted.map((d) => ({
-                slug: d.slug,
-                city: "",
-                name: d.name,
-                short: d.distKm < 1.5 ? "Im Zentrum" : `${String(d.distKm).replace(".", ",")} km vom Zentrum`,
-                scores: d.scores,
-                match: d.match,
-                href: viertelHref(d),
-              }))}
-            />
-            <p className="mt-3 flex items-start gap-2 px-1 text-xs leading-relaxed text-muted">
-              <Icon name="flag" size={14} className="mt-0.5 shrink-0" />
-              <span>
-                Automatisch aus OpenStreetMap berechnet, gröber als bei geprüften Städten. Sicherheit kennen wir hier noch nicht.{" "}
-                <Link href="/methode" className="font-semibold text-sun-soft underline underline-offset-4">
-                  So rechnen wir
-                </Link>
+          {spots.length > 0 ? (
+            <details className="group mt-7">
+            <summary className="press flex cursor-pointer list-none items-center gap-3 rounded-[18px] bg-paper px-4 py-3.5 [&::-webkit-details-marker]:hidden">
+              <Icon name="map" size={20} className="text-muted" />
+              <span className="min-w-0 flex-1">
+                <span className="block text-[15px] font-bold">{`Alle ${sorted.length} Stadtteile ansehen`}</span>
+                <span className="block text-[13px] text-muted">Die ganze Stadt in größeren Stücken</span>
               </span>
-            </p>
-          </section>
+              <Icon name="chevron" size={16} className="text-faint transition-transform group-open:rotate-90" />
+            </summary>
+              <div className="mt-2">{districtList}</div>
+            </details>
+          ) : (
+            <section className="mt-7">
+              <h2 className="mb-3 font-display text-[19px] font-extrabold">{top ? "Alle Viertel für dich" : "Oder selbst stöbern"}</h2>
+              {districtList}
+            </section>
+          )}
 
           {spots.length === 0 && (
             <section className="mt-7">

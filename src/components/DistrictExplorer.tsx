@@ -23,10 +23,12 @@ export default function DistrictExplorer({
   districts,
   variant = "cards",
   query = "",
+  filters = true,
 }: {
   districts: ExplorerDistrict[];
   variant?: "cards" | "list";
   query?: string;
+  filters?: boolean;
 }) {
   const [filter, setFilter] = useState<TraitKey | null>(null);
   const pool = districts.map((d) => d.scores); // Eigenschaften im Vergleich zur ganzen Stadt
@@ -44,6 +46,7 @@ export default function DistrictExplorer({
 
   return (
     <div>
+      {filters && (
       <div className="-mx-4 flex gap-2 overflow-x-auto px-4 [scrollbar-width:none]" role="group" aria-label="Nach Eigenschaft filtern">
         <button
           type="button"
@@ -70,6 +73,7 @@ export default function DistrictExplorer({
           </button>
         ))}
       </div>
+      )}
 
       {variant === "cards" ? (
         <div className="-mx-4 mt-3 flex snap-x snap-mandatory scroll-px-4 gap-3 overflow-x-auto px-4 pb-1 [scrollbar-width:none]">

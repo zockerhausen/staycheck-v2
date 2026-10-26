@@ -172,11 +172,19 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
               }))}
             />
           </section>
-          <section className="mt-8">
-            <h2 className="mb-1 font-display text-[17px] font-extrabold">Bezirke im Überblick</h2>
-            <p className="mb-2 text-[13px] text-muted">Von uns bewertet, mit Sicherheit und Tipps von Reisenden.</p>
+          <details className="group mt-7">
+            <summary className="press flex cursor-pointer list-none items-center gap-3 rounded-[18px] bg-paper px-4 py-3.5 [&::-webkit-details-marker]:hidden">
+              <Icon name="map" size={20} className="text-muted" />
+              <span className="min-w-0 flex-1">
+                <span className="block text-[15px] font-bold">{`Alle ${(ranked ?? districts).length} Bezirke ansehen`}</span>
+                <span className="block text-[13px] text-muted">Die ganze Stadt in größeren Stücken</span>
+              </span>
+              <Icon name="chevron" size={16} className="text-faint transition-transform group-open:rotate-90" />
+            </summary>
+            <p className="mb-1 mt-3 px-1 text-[13px] text-muted">Von uns bewertet, mit Sicherheit und Tipps von Reisenden.</p>
             <DistrictExplorer
               variant="list"
+              filters={false}
               districts={(ranked ?? districts).map((d) => ({
                 slug: d.slug,
                 city: d.city,
@@ -186,7 +194,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
                 match: "match" in d ? (d as { match: number }).match : undefined,
               }))}
             />
-          </section>
+          </details>
         </>
       ) : (
         <section className="mt-7">
