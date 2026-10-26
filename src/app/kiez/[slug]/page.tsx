@@ -13,6 +13,7 @@ import KiezMap from "@/components/KiezMap";
 import ZoneLegend from "@/components/ZoneLegend";
 import AskDistrict from "@/components/AskDistrict";
 import StayButton from "@/components/StayButton";
+import DistrictVibe from "@/components/DistrictVibe";
 import { assistantEnabled } from "@/lib/assistant";
 import ScoreBars from "@/components/ScoreBars";
 import PlaceSaveButton from "@/components/PlaceSaveButton";
@@ -212,6 +213,8 @@ export default async function KiezPage({
           </>
         )}
       </section>
+
+      <DistrictVibe name={district.name.split(" (")[0]} scores={district.scores} />
 
       <div className="grid grid-cols-4 gap-2">
         {tileKeys.map((k) => (

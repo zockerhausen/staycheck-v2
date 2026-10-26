@@ -8,6 +8,7 @@ import { pickZones, ZONE_KEYS } from "@/lib/zones";
 import ZoneLegend from "@/components/ZoneLegend";
 import AskDistrict from "@/components/AskDistrict";
 import StayButton from "@/components/StayButton";
+import DistrictVibe from "@/components/DistrictVibe";
 import { assistantEnabled } from "@/lib/assistant";
 import { personalMatch } from "@/lib/profile";
 import { parseZiel, zielQuery } from "@/lib/ziel";
@@ -213,6 +214,8 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
           </>
         )}
       </section>
+
+      {district && <DistrictVibe name={name} scores={scores} />}
 
       {district && (
         <section className="card px-5 py-2">

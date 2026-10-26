@@ -41,7 +41,7 @@ export default function AskDistrict({ target, place, enabled }: { target: Target
   const [searching, setSearching] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
 
-  const suggestions = ["Ist es hier nachts laut?", "Wie komme ich vom Flughafen hierher?", "Was sollte ich hier unbedingt essen?", "Ist die Gegend abends sicher?"];
+  const suggestions = ["Wie sieht ein perfekter Tag hier aus?", "Ist es hier nachts laut?", "Wie komme ich vom Flughafen hierher?", "Was sollte ich hier unbedingt essen?", "Ist die Gegend abends sicher?"];
 
   async function ask(frage: string) {
     const text = frage.trim().slice(0, 300);

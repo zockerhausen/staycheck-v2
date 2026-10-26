@@ -125,6 +125,23 @@ export default function MethodePage() {
       </section>
 
       <section className="card mt-7 p-5">
+        <h2 className="font-display text-[19px] font-extrabold">Ecken statt Bezirke</h2>
+        <p className="mt-2 text-sm leading-relaxed">
+          Über jede Stadt legen wir ein Raster mit Punkten alle 350 m und messen an jedem Punkt dieselben Werte. Die besten Punkte für dein Profil
+          (etwa die besten 15 %, mindestens 58 % Match) verbinden wir zu Ecken von höchstens rund einem Kilometer und benennen sie nach dem
+          nächsten Kiez in OpenStreetMap.
+        </p>
+      </section>
+
+      <section className="card mt-7 p-5">
+        <h2 className="font-display text-[19px] font-extrabold">„So fühlt es sich an“</h2>
+        <p className="mt-2 text-sm leading-relaxed">
+          Der Tagesablauf folgt fest aus den Werten, zum Beispiel: Essen ab 8 = „viele Cafés in Laufweite“, Ruhe bis 3 oder Nachtleben ab 9 =
+          „bis spät belebt“, Bahn ab 8 = „Bahn in wenigen Minuten“. „Passt gut zu“ und „Eher nicht für“ nutzen dieselben Schwellen.
+        </p>
+      </section>
+
+      <section className="card mt-7 p-5">
         <h2 className="font-display text-[19px] font-extrabold">Was wir nicht wissen</h2>
         <ul className="mt-3 space-y-2 text-sm leading-relaxed">
           <li>• Lärm im Gebäude: dünne Fenster, Zimmer zur Straße oder zum Hof.</li>
