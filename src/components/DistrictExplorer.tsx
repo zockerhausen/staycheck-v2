@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Icon from "@/components/Icon";
 import { TRAITS, characterOf, characterTint, traitsOf, type TraitKey } from "@/lib/character";
+import type { AreaPhoto } from "@/lib/photos";
 
 export type ExplorerDistrict = {
   slug: string;
@@ -13,6 +14,7 @@ export type ExplorerDistrict = {
   scores: Record<string, number | null>;
   match?: number;
   href?: string; // eigener Link (z. B. automatische Viertel)
+  photo?: AreaPhoto;
 };
 
 /**
@@ -94,11 +96,22 @@ export default function DistrictExplorer({
                   className="relative flex aspect-[16/10] items-end overflow-hidden rounded-[22px] p-4"
                   style={{ background: `linear-gradient(150deg, ${characterTint(d.scores, pool)} 0%, var(--color-tan) 100%)` }}
                 >
-                  <Icon name={main?.icon ?? "discover"} size={120} className="absolute -right-3 -top-2 text-ink/10" fill="transparent" />
-                  {i === 0 && !filter && topLabel && (
-                    <span className="absolute left-3 top-3 rounded-full bg-sand px-3 py-1.5 text-[13px] font-extrabold shadow-soft">{topLabel}</span>
+                  {d.photo ? (
+                    <>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={d.photo.url} alt="" loading={i < 2 ? "eager" : "lazy"} className="absolute inset-0 h-full w-full object-cover" />
+                      <span className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-black/0" />
+                      <span className="absolute bottom-2 right-3 max-w-[60%] truncate text-[10px] font-semibold text-white/80">
+                        Foto: {d.photo.credit}, {d.photo.license}
+                      </span>
+                    </>
+                  ) : (
+                    <Icon name={main?.icon ?? "discover"} size={120} className="absolute -right-3 -top-2 text-ink/10" fill="transparent" />
                   )}
-                  <span className="relative text-[15px] font-extrabold text-ink/80">{characterOf(d.scores, pool)}</span>
+                  {i === 0 && !filter && topLabel && (
+                    <span className="absolute left-3 top-3 rounded-full bg-white px-3 py-1.5 text-[13px] font-extrabold text-[#17171b] shadow-soft">{topLabel}</span>
+                  )}
+                  <span className={`relative text-[15px] font-extrabold ${d.photo ? "text-white" : "text-ink/80"}`}>{characterOf(d.scores, pool)}</span>
                 </span>
                 <span className="mt-3 flex items-start justify-between gap-3">
                   <span className="min-w-0">

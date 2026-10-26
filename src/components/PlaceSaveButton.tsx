@@ -42,11 +42,11 @@ export default function PlaceSaveButton({
         disabled={pending}
         aria-pressed={saved}
         aria-label={saved ? "Nicht mehr merken" : "Merken"}
-        className={`flex h-10 w-10 items-center justify-center rounded-full transition active:scale-90 ${
-          saved ? "bg-sun text-white" : "bg-raised text-ink"
+        className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full transition active:scale-90 ${
+          saved ? "bg-sun text-white" : "bg-tan text-ink"
         }`}
       >
-        <Icon name="heart" size={20} fill={saved ? "#ffffff" : undefined} />
+        <Icon name="heart" size={21} fill={saved ? "#ffffff" : "transparent"} className={saved ? "heart-pop" : ""} />
       </button>
     );
   }
@@ -57,9 +57,9 @@ export default function PlaceSaveButton({
       onClick={click}
       disabled={pending}
       aria-pressed={saved}
-      className={`press flex w-full items-center justify-center gap-2 rounded-full py-4 font-bold ${saved ? "bg-peach text-sun-soft" : "bg-tan"}`}
+      className={`press flex w-full items-center justify-center gap-2 rounded-2xl py-4 font-extrabold ${saved ? "bg-peach text-sun-soft" : "bg-tan"}`}
     >
-      <Icon name="heart" size={18} fill={saved ? "#f2662f" : undefined} />
+      <Icon name="heart" size={18} fill={saved ? "var(--color-sun)" : undefined} className={saved ? "heart-pop" : ""} />
       {saved ? "Gemerkt" : "Merken"}
     </button>
   );

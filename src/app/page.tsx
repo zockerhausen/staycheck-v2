@@ -16,6 +16,8 @@ import { cityDataQuick, DEFAULT_WEIGHTS } from "@/lib/geo";
 import { findSpots, pickZones } from "@/lib/zones";
 import { redirect } from "next/navigation";
 import { zielQuery } from "@/lib/ziel";
+import { areaPhotos } from "@/lib/photos";
+import { after } from "next/server";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 120; // Zonen dürfen beim ersten Mal im Hintergrund fertig rechnen
@@ -93,6 +95,12 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
   const spotHref = (sp: (typeof spots)[number]) =>
     `/ziel/viertel?${zielQuery({ ort: city.name, land: city.country, lat: Number(city.lat.toFixed(4)), lon: Number(city.lng.toFixed(4)) })}&${new URLSearchParams({ name: sp.name, vlat: sp.lat.toFixed(5), vlon: sp.lon.toFixed(5), rad: String(VERIFIED_RADIUS) })}`;
   const topSpot = weights && spots[0] ? spots[0] : null;
+  // Fotos der Ecken (Wikipedia/Wikimedia), höchstens kurz warten, Rest lädt im Hintergrund
+  const { photos, rest: photosRest } = await areaPhotos(
+    spots.slice(0, 12).map((sp) => ({ key: sp.slug, name: sp.name, lat: sp.lat, lon: sp.lon })),
+    city.name,
+  );
+  after(() => photosRest);
   const ranked = weights ? rankDistricts(districts, weights) : null;
   const top = ranked?.[0] ?? null;
   const tipDistrict = top ?? districts[0];
@@ -166,6 +174,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
                   scores: sp.scores,
                   match: sp.match,
                   href: spotHref(sp),
+                  photo: photos[sp.slug],
                 }))
               : allDistricts
           }

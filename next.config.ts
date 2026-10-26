@@ -13,7 +13,7 @@ const securityHeaders = [
       "default-src 'self'",
       "script-src 'self' 'unsafe-inline'",
       "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' data: blob: https://tiles.openfreemap.org",
+      "img-src 'self' data: blob: https://tiles.openfreemap.org https://upload.wikimedia.org",
       "font-src 'self' data:",
       "connect-src 'self' https://yxwnkvvhwlnsvnjdxdle.supabase.co https://tiles.openfreemap.org",
       "worker-src 'self' blob:",

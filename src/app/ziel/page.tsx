@@ -7,6 +7,7 @@ import { findSpots, pickZones } from "@/lib/zones";
 import ZoneLegend from "@/components/ZoneLegend";
 import StillLoading from "@/components/StillLoading";
 import { parseZiel, zielQuery } from "@/lib/ziel";
+import { areaPhotos } from "@/lib/photos";
 import { pageRateLimit } from "@/lib/ratelimit-page";
 import Icon from "@/components/Icon";
 import DistrictExplorer from "@/components/DistrictExplorer";
@@ -75,6 +76,12 @@ export default async function ZielPage({ searchParams }: { searchParams: Promise
   const spotHref = (sp: (typeof spots)[number]) =>
     `/ziel/viertel?${zq}&${new URLSearchParams({ name: sp.name, vlat: sp.lat.toFixed(5), vlon: sp.lon.toFixed(5) })}`;
   const topSpot = weights && spots[0] ? spots[0] : null;
+  // Fotos der Ecken (Wikipedia/Wikimedia), höchstens kurz warten, Rest lädt im Hintergrund
+  const { photos, rest: photosRest } = await areaPhotos(
+    spots.slice(0, 12).map((sp) => ({ key: sp.slug, name: sp.name, lat: sp.lat, lon: sp.lon })),
+    ziel.ort,
+  );
+  after(() => photosRest);
   const districtList = (
     <>
       <DistrictExplorer
@@ -154,6 +161,7 @@ export default async function ZielPage({ searchParams }: { searchParams: Promise
                   scores: sp.scores,
                   match: sp.match,
                   href: spotHref(sp),
+                  photo: photos[sp.slug],
                 }))}
               />
             ) : (

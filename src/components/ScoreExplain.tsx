@@ -55,17 +55,17 @@ export default function ScoreExplain({
 
   return (
     <section className="space-y-3">
-      <h2 className="font-display text-[19px] font-extrabold">Warum {match}?</h2>
+      <h2 className="text-[20px] font-black tracking-tight">Warum {match}?</h2>
 
-      <div className={`flex items-start gap-2.5 rounded-[18px] px-4 py-3 text-sm ${COVERAGE_STYLE[coverage.level]}`}>
+      <div className={`flex items-start gap-2.5 rounded-[18px] px-4 py-3 text-[14px] font-semibold ${COVERAGE_STYLE[coverage.level]}`}>
         <Icon name={coverage.level === "duenn" ? "flag" : "check"} size={18} className="mt-0.5 shrink-0" />
         <span>
-          <b className="font-bold">{COVERAGE_LABEL[coverage.level]}.</b> <span className="text-ink/80">{coverage.text}</span>
+          <b className="font-extrabold">{COVERAGE_LABEL[coverage.level]}.</b> <span className="text-ink/80">{coverage.text}</span>
         </span>
       </div>
 
       <div className="card px-5 py-2">
-        <p className="pb-1 pt-3 text-sm leading-relaxed text-muted">
+        <p className="pb-1 pt-3 text-[14px] font-semibold leading-relaxed text-muted">
           {personal
             ? "Der Score ist der Durchschnitt aller Werte, gewichtet nach deinem Reise-Profil. Was dir wichtig ist, zählt mehr."
             : "Der Score ist der Durchschnitt aller Werte mit einer Standard-Gewichtung. Mit dem Quiz rechnen wir nach deinen Wünschen."}
@@ -80,27 +80,27 @@ export default function ScoreExplain({
           const share = shareOf[k] ?? 0;
           return (
             <details key={k} className="group border-b border-line py-1 last:border-0">
-              <summary className="flex cursor-pointer list-none items-center gap-3 py-2.5 text-sm [&::-webkit-details-marker]:hidden">
+              <summary className="flex cursor-pointer list-none items-center gap-3 py-3 text-[15px] [&::-webkit-details-marker]:hidden">
                 <span className="flex w-32 shrink-0 items-center gap-2">
                   <Icon name={CRITERION_ICON[k]} size={18} className="shrink-0" />
                   <span className="min-w-0">
-                    <span className="block truncate font-semibold">{label(k)}</span>
-                    <span className="block text-[11px] text-muted">
+                    <span className="block truncate font-extrabold">{label(k)}</span>
+                    <span className="block text-[12px] font-semibold text-muted">
                       {k === must ? <b className="text-sun-soft">Muss · </b> : null}
                       {d.score === null ? "nicht eingerechnet" : share > 0 ? `zählt ${share} %` : "zählt nicht"}
                     </span>
                   </span>
                 </span>
-                <span className="h-2 flex-1 overflow-hidden rounded-full bg-raised">
+                <span className="h-2.5 flex-1 overflow-hidden rounded-full bg-raised">
                   {d.score !== null && (
-                    <span className={`bar-grow block h-full rounded-full ${d.score <= 4 ? "bg-faint" : "bg-sun"}`} style={{ width: `${d.score * 10}%` }} />
+                    <span className={`bar-grow block h-full rounded-full ${d.score <= 4 ? "bg-bad" : "bg-ink"}`} style={{ width: `${d.score * 10}%` }} />
                   )}
                 </span>
-                <span className="w-7 text-right font-extrabold tabular-nums">{d.score ?? "–"}</span>
-                <Icon name="down" size={14} className="text-faint transition group-open:rotate-180" />
+                <span className="w-7 text-right font-black tabular-nums">{d.score ?? "–"}</span>
+                <Icon name="down" size={16} className="text-muted transition-transform duration-300 group-open:rotate-180" />
               </summary>
               <div className="pb-3 pl-1">
-                <ul className="space-y-1 text-sm">
+                <ul className="space-y-1 text-[15px] font-semibold">
                   {d.reasons.map((r) => (
                     <li key={r} className="flex gap-2">
                       <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-muted" />
@@ -113,7 +113,7 @@ export default function ScoreExplain({
             </details>
           );
         })}
-        <p className="py-3 text-xs leading-relaxed text-muted">
+        <p className="py-3 text-[13px] font-semibold leading-relaxed text-muted">
           Tippe auf einen Wert für die Fakten dahinter. Daten aus OpenStreetMap, Entfernungen als Fußweg geschätzt.{" "}
           <Link href="/methode" className="font-semibold text-sun-soft underline underline-offset-4">
             So rechnen wir genau

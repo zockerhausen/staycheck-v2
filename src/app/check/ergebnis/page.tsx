@@ -25,7 +25,8 @@ import TipsSection from "@/components/TipsSection";
 import { RememberCheck } from "@/components/RecentChecks";
 import ScoreExplain from "@/components/ScoreExplain";
 import ReviewSummary from "@/components/ReviewSummary";
-import { reviewsFor } from "@/lib/reviews";
+import { fmtScore, reviewsFor } from "@/lib/reviews";
+import BookBar from "@/components/BookBar";
 import { HUBS, cityForPoint } from "@/lib/arrival";
 import { getTipsNear } from "@/lib/tips";
 import { EXTRA_LABEL, MUST_CAP, NO_EXTRAS, fullWeights, personalMatch } from "@/lib/profile";
@@ -133,15 +134,23 @@ export default async function CheckErgebnisPage({
       <RememberCheck name={name} sub={sub} lat={lat} lon={lon} kind={kind} match={match} label={v.label} />
       <div className="flex items-center justify-between">
         <BackButton fallback="/check" className="press flex h-11 w-11 items-center justify-center rounded-full bg-tan">
-          <Icon name="back" size={18} />
+          <Icon name="back" size={19} />
         </BackButton>
-        <span className="text-base font-bold">Lage-Check</span>
-        <span className="h-11 w-11" />
+        <span className="flex items-center gap-2">
+          <Link
+            href={`/duell/hotels?h=${encodeURIComponent([lat.toFixed(6), lon.toFixed(6), kind, name.slice(0, 80)].join("|"))}`}
+            aria-label="Mit anderer Unterkunft vergleichen"
+            className="press flex h-11 w-11 items-center justify-center rounded-full bg-tan"
+          >
+            <Icon name="duel" size={20} fill="transparent" />
+          </Link>
+          <PlaceSaveButton compact place={{ name, subtitle: sub, lat, lon, kind, match }} initiallySaved={isSaved} loggedIn={Boolean(user)} returnTo={returnTo} />
+        </span>
       </div>
 
       <section>
         <Reveal name={name} match={match} celebrate={match >= 64} eyebrow={v.label} caption={pm ? "Dein Match" : "Lage-Score"} sub={sub} />
-        <div className="mt-3 flex flex-wrap justify-center gap-2 text-[13px] font-semibold">
+        <div className="mt-3 flex flex-wrap justify-center gap-2 text-[13px] font-bold">
           {pm && <span className="rounded-full bg-tan px-3 py-1.5">Lage allgemein {general}</span>}
           <span className="rounded-full bg-tan px-3 py-1.5 text-muted">
             {measured} von {usedKeys.length} Werten gemessen
@@ -167,42 +176,17 @@ export default async function CheckErgebnisPage({
         )}
         <div className="mt-4 flex flex-wrap justify-center gap-2">
           {strengths.map((c) => (
-            <span key={c.key} className="inline-flex items-center gap-1.5 rounded-full bg-peach px-3 py-1.5 text-sm font-bold text-peach-ink">
+            <span key={c.key} className="inline-flex items-center gap-1.5 rounded-full bg-peach px-3 py-1.5 text-sm font-extrabold text-peach-ink">
               <Icon name={CRITERION_ICON[c.key]} size={16} /> {c.label}
             </span>
           ))}
           {weakness && (
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-tan px-3 py-1.5 text-sm font-semibold text-muted">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-bad/10 px-3 py-1.5 text-sm font-extrabold text-bad">
               <Icon name={CRITERION_ICON[weakness.key]} size={16} /> schwach: {weakness.label}
             </span>
           )}
         </div>
       </section>
-
-      <div className="space-y-3">
-        <a
-          href={bookingUrl(name, sub)}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="press flex w-full items-center justify-center gap-2 rounded-full bg-ink py-4 font-bold text-sand"
-        >
-          <Icon name="external" size={18} /> Bei Booking ansehen
-        </a>
-        <div className="grid grid-cols-2 gap-2.5">
-          <Link
-            href={`/duell/hotels?h=${encodeURIComponent([lat.toFixed(6), lon.toFixed(6), kind, name.slice(0, 80)].join("|"))}`}
-            className="press flex items-center justify-center gap-2 rounded-full bg-tan py-4 font-bold"
-          >
-            <Icon name="duel" size={18} /> Vergleichen
-          </Link>
-          <PlaceSaveButton
-            place={{ name, subtitle: sub, lat, lon, kind, match }}
-            initiallySaved={isSaved}
-            loggedIn={Boolean(user)}
-            returnTo={returnTo}
-          />
-        </div>
-      </div>
 
       {reviews && <ReviewSummary reviews={reviews} />}
 
@@ -260,11 +244,16 @@ export default async function CheckErgebnisPage({
         title="Tipps zu dieser Lage"
       />
 
-      <div className="space-y-3">
-        <Link href="/check" className="flex items-center justify-center gap-2 py-2 text-sm font-semibold text-muted">
-          <Icon name="refresh" size={18} /> Andere Unterkunft prüfen
-        </Link>
-      </div>
+      <Link href="/check" className="press flex w-full items-center justify-center gap-2 rounded-2xl border border-line py-4 text-[15px] font-extrabold">
+        <Icon name="refresh" size={18} /> Andere Unterkunft prüfen
+      </Link>
+      <div className="h-16" aria-hidden />
+      <BookBar
+        title={reviews ? `Gäste ${fmtScore(reviews.fair)} von 10${reviews.demo ? " (Beispiel)" : ""}` : `Lage ${match} von 100`}
+        sub={isStay ? "Preise bei Booking ansehen" : "Unterkünfte hier bei Booking"}
+        href={bookingUrl(isStay ? name : "", sub)}
+        label="Preise vergleichen"
+      />
     </div>
   );
 }
@@ -280,6 +269,6 @@ function bookingUrl(name: string, sub: string) {
       .map((x) => x.replace(/\b\d[\d\s-]*\b/g, "").trim())
       .filter(Boolean)
       .pop() ?? "";
-  const ss = (ort && !name.toLowerCase().includes(ort.toLowerCase()) ? `${name}, ${ort}` : name).slice(0, 160);
+  const ss = (!name ? ort : ort && !name.toLowerCase().includes(ort.toLowerCase()) ? `${name}, ${ort}` : name).slice(0, 160);
   return `https://www.booking.com/searchresults.html?${new URLSearchParams({ ss, lang: "de", group_adults: "1", no_rooms: "1" })}`;
 }
