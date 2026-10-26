@@ -1,5 +1,6 @@
 import BackButton from "@/components/BackButton";
 import Icon from "@/components/Icon";
+import SafeImg from "@/components/SafeImg";
 import type { AreaPhoto } from "@/lib/photos";
 import type { IconName } from "@/lib/icons";
 
@@ -32,10 +33,10 @@ export default function AreaHero({
       <div className="relative h-[300px] overflow-hidden" style={{ background: `linear-gradient(160deg, ${tint} 0%, var(--color-tan) 100%)` }}>
         {photo ? (
           <>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={photo.url} alt="" className="absolute inset-0 h-full w-full object-cover" />
+            <SafeImg src={photo.url} eager className="absolute inset-0 h-full w-full object-cover" />
             <span className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-black/35 to-transparent" />
             <a
+              data-credit
               href={photo.source}
               target="_blank"
               rel="noopener noreferrer"

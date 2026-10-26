@@ -5,6 +5,7 @@ import Link from "next/link";
 import Icon from "@/components/Icon";
 import { TRAITS, characterOf, characterTint, traitsOf, type TraitKey } from "@/lib/character";
 import type { AreaPhoto } from "@/lib/photos";
+import SafeImg from "@/components/SafeImg";
 
 export type ExplorerDistrict = {
   slug: string;
@@ -98,10 +99,9 @@ export default function DistrictExplorer({
                 >
                   {d.photo ? (
                     <>
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={d.photo.url} alt="" loading={i < 2 ? "eager" : "lazy"} className="absolute inset-0 h-full w-full object-cover" />
-                      <span className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-black/0" />
-                      <span className="absolute bottom-2 right-3 max-w-[60%] truncate text-[10px] font-semibold text-white/80">
+                      <SafeImg src={d.photo.url} eager={i < 2} className="absolute inset-0 h-full w-full object-cover" />
+                      <span data-credit className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-black/0" />
+                      <span data-credit className="absolute bottom-2 right-3 max-w-[60%] truncate text-[10px] font-semibold text-white/80">
                         Foto: {d.photo.credit}, {d.photo.license}
                       </span>
                     </>
@@ -111,7 +111,7 @@ export default function DistrictExplorer({
                   {i === 0 && !filter && topLabel && (
                     <span className="absolute left-3 top-3 rounded-full bg-white px-3 py-1.5 text-[13px] font-extrabold text-[#17171b] shadow-soft">{topLabel}</span>
                   )}
-                  <span className={`relative text-[15px] font-extrabold ${d.photo ? "text-white" : "text-ink/80"}`}>{characterOf(d.scores, pool)}</span>
+                  <span className={`relative text-[15px] font-extrabold ${d.photo ? "on-photo text-white" : "text-ink/80"}`}>{characterOf(d.scores, pool)}</span>
                 </span>
                 <span className="mt-3 flex items-start justify-between gap-3">
                   <span className="min-w-0">

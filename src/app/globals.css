@@ -380,3 +380,8 @@ input[type="range"] {
 @media (prefers-reduced-motion: reduce) {
   .heart-pop, .press, .btn-chunky { animation: none; transition: none; }
 }
+
+/* Foto nicht geladen: Text wieder in normaler Farbe auf der Farbfläche */
+.img-failed .on-photo {
+  color: var(--color-ink);
+}
