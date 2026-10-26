@@ -75,7 +75,7 @@ Später schneller: eigenen Overpass-Server betreiben (ca. 20–50 €/Monat) und
 
 ## Offen vor dem Teilen der App
 
-- **Vorab-Berechnung neu starten** (Wunsch von Pauljonas: erinnern, er gibt das Startsignal): Seit den Zonen (Speicher-Schlüssel `auto-city-v1`) sind die beliebten Städte wieder kalt. Nur Lissabon ist fertig. Danach auch `/ergebnis?stadt=berlin` und `bangkok` einmal aufrufen.
+- **Datenbank-Sicherheitspaket** `supabase/migrations/20261026_sicherheit.sql` noch einspielen (Supabase → SQL Editor), Freigabe über das Werkzeug wurde abgebrochen.
 
 
 ## Beliebte Reiseziele vorab berechnet
@@ -85,3 +85,11 @@ Später schneller: eigenen Overpass-Server betreiben (ca. 20–50 €/Monat) und
 - Gespeichert im Vercel-Zwischenspeicher: Viertel 30 Tage, Unterkünfte 14 Tage; danach wird beim nächsten Besuch im Hintergrund neu gerechnet.
 - Unterkünfte werden unabhängig vom Reise-Profil gespeichert und erst beim Aufruf nach Profil sortiert.
 - Nach Änderungen an `autoDistricts`/`hotelsScored` (neuer Speicher-Schlüssel) die Liste neu vorwärmen.
+
+## Vorberechnung über GitHub (seit 26.10.2026)
+
+- Workflow „Städte vorberechnen“ (`.github/workflows/vorberechnen.yml`, manuell starten, optional nur bestimmte Slugs).
+- Lädt OpenStreetMap-Regionen von Geofabrik, schneidet jede Stadt aus (osmium), rechnet mit `scripts/precompute/build.ts` (gleiche Formeln wie die App) und speichert `data/cities/<slug>.json.gz` + `index.json`.
+- Enthält: Viertel, Raster/Ecken, Ortsnamen, alle Unterkünfte mit voller Bewertung (für den Lage-Check), Sehenswürdigkeiten, Flughäfen (OurAirports).
+- App liest zuerst diese Dateien (`src/lib/precomputed.ts`), erst danach Overpass. Geprüfte Städte: Radius `VERIFIED_RADIUS` (8 km), sonst `CITY_RADIUS` (3,5 km).
+- Neue Stadt dazu: in `src/lib/popular.ts` eintragen, Workflow mit `nur=<slug>` starten.
