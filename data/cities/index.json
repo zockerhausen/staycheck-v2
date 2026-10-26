@@ -1,5 +1,13 @@
 [
  {
+  "slug": "amsterdam",
+  "lat": 52.3731,
+  "lon": 4.8925,
+  "radius": 3500,
+  "generated": "2026-10-26",
+  "hotels": 473
+ },
+ {
   "slug": "barcelona",
   "lat": 41.3826,
   "lon": 2.1771,
@@ -32,11 +40,27 @@
   "hotels": 783
  },
  {
+  "slug": "porto",
+  "lat": 41.1502,
+  "lon": -8.6103,
+  "radius": 3500,
+  "generated": "2026-10-26",
+  "hotels": 650
+ },
+ {
   "slug": "sevilla",
   "lat": 37.3886,
   "lon": -5.9953,
   "radius": 3500,
   "generated": "2026-10-26",
   "hotels": 363
+ },
+ {
+  "slug": "valencia",
+  "lat": 39.4697,
+  "lon": -0.3763,
+  "radius": 3500,
+  "generated": "2026-10-26",
+  "hotels": 191
  }
 ]
