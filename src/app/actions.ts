@@ -297,7 +297,12 @@ export async function addTip(input: TipInput, returnTo: string): Promise<string 
     category: input.category,
     body,
   });
-  if (error) return "Speichern hat nicht geklappt. Versuch es nochmal.";
+  if (error) {
+    // Die Datenbank prüft dieselben Regeln (auch wenn jemand die App umgeht)
+    if (/zu viele/i.test(error.message)) return "Du hast gerade viele Tipps geschrieben. Versuch es später nochmal.";
+    if (/links/i.test(error.message)) return "Bitte keine Links in Tipps.";
+    return "Speichern hat nicht geklappt. Versuch es nochmal.";
+  }
   return null; // die Seite lädt sich selbst neu (router.refresh), ohne Zwischenspeicher zu leeren
 }
 
@@ -319,5 +324,6 @@ export async function deleteTip(tipId: string, path: string) {
   if (!user) return;
   if (typeof tipId !== "string" || !UUID.test(tipId)) return;
   void path;
-  await supabase.from("place_tips").delete().eq("id", tipId).eq("user_id", user.id);
+  // Nur eigene Tipps: das prüft die Datenbank (Zugriffsregel), user_id ist nicht mehr lesbar
+  await supabase.from("place_tips").delete().eq("id", tipId);
 }
