@@ -8,6 +8,30 @@
   "hotels": 473
  },
  {
+  "slug": "athen",
+  "lat": 37.9756,
+  "lon": 23.7348,
+  "radius": 3500,
+  "generated": "2026-10-26",
+  "hotels": 493
+ },
+ {
+  "slug": "auckland",
+  "lat": -36.8485,
+  "lon": 174.7633,
+  "radius": 3500,
+  "generated": "2026-10-26",
+  "hotels": 200
+ },
+ {
+  "slug": "bangkok",
+  "lat": 13.745,
+  "lon": 100.53,
+  "radius": 6000,
+  "generated": "2026-10-26",
+  "hotels": 1973
+ },
+ {
   "slug": "barcelona",
   "lat": 41.3826,
   "lon": 2.1771,
@@ -24,12 +48,180 @@
   "hotels": 740
  },
  {
+  "slug": "bogota",
+  "lat": 4.6097,
+  "lon": -74.0817,
+  "radius": 3500,
+  "generated": "2026-10-26",
+  "hotels": 337
+ },
+ {
+  "slug": "budapest",
+  "lat": 47.4979,
+  "lon": 19.0402,
+  "radius": 3500,
+  "generated": "2026-10-26",
+  "hotels": 478
+ },
+ {
+  "slug": "buenos-aires",
+  "lat": -34.6096,
+  "lon": -58.3888,
+  "radius": 3500,
+  "generated": "2026-10-26",
+  "hotels": 552
+ },
+ {
+  "slug": "chiang-mai",
+  "lat": 18.7883,
+  "lon": 98.9859,
+  "radius": 3500,
+  "generated": "2026-10-26",
+  "hotels": 1468
+ },
+ {
+  "slug": "cusco",
+  "lat": -13.5163,
+  "lon": -71.9785,
+  "radius": 3500,
+  "generated": "2026-10-26",
+  "hotels": 442
+ },
+ {
+  "slug": "dublin",
+  "lat": 53.3494,
+  "lon": -6.2606,
+  "radius": 3500,
+  "generated": "2026-10-26",
+  "hotels": 418
+ },
+ {
+  "slug": "edinburgh",
+  "lat": 55.9533,
+  "lon": -3.1884,
+  "radius": 3500,
+  "generated": "2026-10-26",
+  "hotels": 459
+ },
+ {
+  "slug": "florenz",
+  "lat": 43.7698,
+  "lon": 11.2556,
+  "radius": 3500,
+  "generated": "2026-10-26",
+  "hotels": 434
+ },
+ {
+  "slug": "hamburg",
+  "lat": 53.5502,
+  "lon": 10.0013,
+  "radius": 3500,
+  "generated": "2026-10-26",
+  "hotels": 346
+ },
+ {
+  "slug": "hanoi",
+  "lat": 21.0283,
+  "lon": 105.854,
+  "radius": 3500,
+  "generated": "2026-10-26",
+  "hotels": 657
+ },
+ {
+  "slug": "hoi-an",
+  "lat": 15.8801,
+  "lon": 108.338,
+  "radius": 3500,
+  "generated": "2026-10-26",
+  "hotels": 353
+ },
+ {
+  "slug": "hongkong",
+  "lat": 22.2818,
+  "lon": 114.1583,
+  "radius": 3500,
+  "generated": "2026-10-26",
+  "hotels": 543
+ },
+ {
+  "slug": "istanbul",
+  "lat": 41.02,
+  "lon": 28.975,
+  "radius": 3500,
+  "generated": "2026-10-26",
+  "hotels": 1437
+ },
+ {
+  "slug": "kapstadt",
+  "lat": -33.9288,
+  "lon": 18.4172,
+  "radius": 3500,
+  "generated": "2026-10-26",
+  "hotels": 281
+ },
+ {
+  "slug": "kopenhagen",
+  "lat": 55.6867,
+  "lon": 12.5701,
+  "radius": 3500,
+  "generated": "2026-10-26",
+  "hotels": 167
+ },
+ {
+  "slug": "krakau",
+  "lat": 50.0619,
+  "lon": 19.9369,
+  "radius": 3500,
+  "generated": "2026-10-26",
+  "hotels": 512
+ },
+ {
+  "slug": "kuala-lumpur",
+  "lat": 3.1517,
+  "lon": 101.6942,
+  "radius": 3500,
+  "generated": "2026-10-26",
+  "hotels": 576
+ },
+ {
+  "slug": "kyoto",
+  "lat": 35.0116,
+  "lon": 135.7681,
+  "radius": 3500,
+  "generated": "2026-10-26",
+  "hotels": 926
+ },
+ {
+  "slug": "lima",
+  "lat": -12.0551,
+  "lon": -77.0265,
+  "radius": 3500,
+  "generated": "2026-10-26",
+  "hotels": 226
+ },
+ {
   "slug": "lissabon",
   "lat": 38.7078,
   "lon": -9.1366,
   "radius": 3500,
   "generated": "2026-10-26",
   "hotels": 709
+ },
+ {
+  "slug": "ljubljana",
+  "lat": 46.0511,
+  "lon": 14.5058,
+  "radius": 3500,
+  "generated": "2026-10-26",
+  "hotels": 160
+ },
+ {
+  "slug": "london",
+  "lat": 51.5074,
+  "lon": -0.1278,
+  "radius": 3500,
+  "generated": "2026-10-26",
+  "hotels": 1333
  },
  {
   "slug": "madrid",
@@ -40,12 +232,156 @@
   "hotels": 783
  },
  {
+  "slug": "marrakesch",
+  "lat": 31.6258,
+  "lon": -7.9892,
+  "radius": 3500,
+  "generated": "2026-10-26",
+  "hotels": 816
+ },
+ {
+  "slug": "medellin",
+  "lat": 6.2442,
+  "lon": -75.5812,
+  "radius": 3500,
+  "generated": "2026-10-26",
+  "hotels": 247
+ },
+ {
+  "slug": "melbourne",
+  "lat": -37.8142,
+  "lon": 144.9632,
+  "radius": 3500,
+  "generated": "2026-10-26",
+  "hotels": 266
+ },
+ {
+  "slug": "mexiko-stadt",
+  "lat": 19.4326,
+  "lon": -99.1332,
+  "radius": 3500,
+  "generated": "2026-10-26",
+  "hotels": 283
+ },
+ {
+  "slug": "muenchen",
+  "lat": 48.1371,
+  "lon": 11.5754,
+  "radius": 3500,
+  "generated": "2026-10-26",
+  "hotels": 325
+ },
+ {
+  "slug": "neapel",
+  "lat": 40.8359,
+  "lon": 14.2488,
+  "radius": 3500,
+  "generated": "2026-10-26",
+  "hotels": 418
+ },
+ {
+  "slug": "new-york",
+  "lat": 40.7128,
+  "lon": -74.006,
+  "radius": 3500,
+  "generated": "2026-10-26",
+  "hotels": 275
+ },
+ {
+  "slug": "oaxaca",
+  "lat": 17.0605,
+  "lon": -96.7254,
+  "radius": 3500,
+  "generated": "2026-10-26",
+  "hotels": 276
+ },
+ {
+  "slug": "osaka",
+  "lat": 34.6938,
+  "lon": 135.5015,
+  "radius": 3500,
+  "generated": "2026-10-26",
+  "hotels": 578
+ },
+ {
+  "slug": "paris",
+  "lat": 48.8535,
+  "lon": 2.3484,
+  "radius": 3500,
+  "generated": "2026-10-26",
+  "hotels": 1886
+ },
+ {
+  "slug": "phnom-penh",
+  "lat": 11.57,
+  "lon": 104.925,
+  "radius": 3500,
+  "generated": "2026-10-26",
+  "hotels": 381
+ },
+ {
+  "slug": "phuket",
+  "lat": 7.8848,
+  "lon": 98.3892,
+  "radius": 3500,
+  "generated": "2026-10-26",
+  "hotels": 119
+ },
+ {
   "slug": "porto",
   "lat": 41.1502,
   "lon": -8.6103,
   "radius": 3500,
   "generated": "2026-10-26",
   "hotels": 650
+ },
+ {
+  "slug": "prag",
+  "lat": 50.0875,
+  "lon": 14.4213,
+  "radius": 3500,
+  "generated": "2026-10-26",
+  "hotels": 714
+ },
+ {
+  "slug": "rio",
+  "lat": -22.93,
+  "lon": -43.185,
+  "radius": 3500,
+  "generated": "2026-10-26",
+  "hotels": 222
+ },
+ {
+  "slug": "rom",
+  "lat": 41.8933,
+  "lon": 12.4829,
+  "radius": 3500,
+  "generated": "2026-10-26",
+  "hotels": 1006
+ },
+ {
+  "slug": "saigon",
+  "lat": 10.7756,
+  "lon": 106.7019,
+  "radius": 3500,
+  "generated": "2026-10-26",
+  "hotels": 582
+ },
+ {
+  "slug": "san-francisco",
+  "lat": 37.7879,
+  "lon": -122.4075,
+  "radius": 3500,
+  "generated": "2026-10-26",
+  "hotels": 490
+ },
+ {
+  "slug": "seoul",
+  "lat": 37.5667,
+  "lon": 126.9783,
+  "radius": 3500,
+  "generated": "2026-10-26",
+  "hotels": 384
  },
  {
   "slug": "sevilla",
@@ -56,11 +392,83 @@
   "hotels": 363
  },
  {
+  "slug": "siem-reap",
+  "lat": 13.3633,
+  "lon": 103.8564,
+  "radius": 3500,
+  "generated": "2026-10-26",
+  "hotels": 536
+ },
+ {
+  "slug": "singapur",
+  "lat": 1.2899,
+  "lon": 103.8519,
+  "radius": 3500,
+  "generated": "2026-10-26",
+  "hotels": 555
+ },
+ {
+  "slug": "split",
+  "lat": 43.5116,
+  "lon": 16.44,
+  "radius": 3500,
+  "generated": "2026-10-26",
+  "hotels": 180
+ },
+ {
+  "slug": "sydney",
+  "lat": -33.8698,
+  "lon": 151.2083,
+  "radius": 3500,
+  "generated": "2026-10-26",
+  "hotels": 272
+ },
+ {
+  "slug": "taipeh",
+  "lat": 25.0375,
+  "lon": 121.5637,
+  "radius": 3500,
+  "generated": "2026-10-26",
+  "hotels": 231
+ },
+ {
+  "slug": "tiflis",
+  "lat": 41.6935,
+  "lon": 44.8014,
+  "radius": 3500,
+  "generated": "2026-10-26",
+  "hotels": 675
+ },
+ {
+  "slug": "tokio",
+  "lat": 35.6769,
+  "lon": 139.7639,
+  "radius": 3500,
+  "generated": "2026-10-26",
+  "hotels": 635
+ },
+ {
+  "slug": "ubud",
+  "lat": -8.517,
+  "lon": 115.2551,
+  "radius": 3500,
+  "generated": "2026-10-26",
+  "hotels": 686
+ },
+ {
   "slug": "valencia",
   "lat": 39.4697,
   "lon": -0.3763,
   "radius": 3500,
   "generated": "2026-10-26",
   "hotels": 191
+ },
+ {
+  "slug": "wien",
+  "lat": 48.2084,
+  "lon": 16.3725,
+  "radius": 3500,
+  "generated": "2026-10-26",
+  "hotels": 506
  }
 ]
