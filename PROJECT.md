@@ -93,3 +93,9 @@ Später schneller: eigenen Overpass-Server betreiben (ca. 20–50 €/Monat) und
 - Enthält: Viertel, Raster/Ecken, Ortsnamen, alle Unterkünfte mit voller Bewertung (für den Lage-Check), Sehenswürdigkeiten, Flughäfen (OurAirports).
 - App liest zuerst diese Dateien (`src/lib/precomputed.ts`), erst danach Overpass. Geprüfte Städte: Radius `VERIFIED_RADIUS` (8 km), sonst `CITY_RADIUS` (3,5 km).
 - Neue Stadt dazu: in `src/lib/popular.ts` eintragen, Workflow mit `nur=<slug>` starten.
+
+## Design „Leicht & klar“ (Okt. 2026)
+- Hell und dunkel: Farben als Variablen in `globals.css` (`--sc-*`), Tailwind-Namen (sand, paper, tan, ink, sun …) zeigen darauf. Ohne Wahl folgt die App dem Handy; Wahl im Profil/Konto (`ThemeSwitch`, Cookie `sc_theme`), Karte wechselt mit (OpenFreeMap positron/dark).
+- Schrift Figtree, standardmäßig halbfett (600), Überschriften 900. Symbole Linienstärke 2.4. Nutzer will es ausdrücklich kräftig, nicht dünn.
+- Bausteine: `AreaHero` (Foto + drei Zahlen), `ViewTabs` (gleitender Reiter), `StayRow`, `BookBar` (feste Preis-Leiste), `DistrictExplorer` variant „feed“ (Airbnb-Karten mit Kategorien).
+- Fotos der Ecken/Viertel: `src/lib/photos.ts` (Wikipedia-Titelbild, sonst Wikimedia-Commons in der Nähe; nur freie Lizenzen, Urheber wird angezeigt, 30 Tage Speicher).
