@@ -143,7 +143,7 @@ const sights = data.pois
   }))
   .filter((s) => /^[\p{Script=Latin}\p{N}\p{P}\p{Zs}\p{S}]+$/u.test(s.n))
   .sort((a, b) => b.w - a.w)
-  .slice(0, 300);
+  .slice(0, 1500); // genug, damit auch in großen Städten jede Ecke ihre Nachbarschaft hat
 
 // Flughafen: aus der freien OurAirports-Liste (größere Flughäfen mit Linienflügen), die nächsten im Umkreis von 80 km
 function csvRow(line: string): string[] {
