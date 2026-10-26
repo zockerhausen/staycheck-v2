@@ -69,8 +69,7 @@ jobs:
       - name: Städte berechnen
         run: |
           mkdir -p out
-          osmium tags-filter /tmp/region.osm.pbf nwr/aeroway=aerodrome -o /tmp/air.pbf --overwrite
-          osmium export /tmp/air.pbf -f geojsonseq -o /tmp/air.seq --overwrite --geometry-types=point,polygon
+          curl -sSfL -A "$UA" -o /tmp/airports.csv https://davidmegginson.github.io/ourairports-data/airports.csv
           for slug in $(echo "${{ matrix.cities }}" | tr ',' ' '); do
             CITY=$(python3 -c "import json; print(json.dumps(next(c for c in json.load(open('/tmp/cities.json')) if c['slug']=='$slug')))")
             BBOX=$(python3 -c "import json,math; c=json.loads('''$CITY'''); m=c['radius']+2000; dl=m/110540; do=m/(111320*math.cos(math.radians(c['lat']))); print(f\"{c['lon']-do},{c['lat']-dl},{c['lon']+do},{c['lat']+dl}\")")
@@ -85,7 +84,7 @@ jobs:
               nwr/historic=monument,castle,ruins,city_gate,archaeological_site nwr/shop nwr/office=coworking \
               -o /tmp/f.pbf --overwrite
             osmium export /tmp/f.pbf -f geojsonseq -o /tmp/f.seq --overwrite --geometry-types=point,linestring,polygon
-            node --max-old-space-size=6000 /tmp/build.mjs "$CITY" /tmp/f.seq /tmp/air.seq "out/$slug.json" || echo "::warning title=$slug::Berechnung fehlgeschlagen"
+            node --max-old-space-size=6000 /tmp/build.mjs "$CITY" /tmp/f.seq /tmp/airports.csv "out/$slug.json" || echo "::warning title=$slug::Berechnung fehlgeschlagen"
           done
       - uses: actions/upload-artifact@v4
         with:

@@ -1,6 +1,6 @@
 // Vorberechnung einer Stadt aus heruntergeladenen OpenStreetMap-Daten (osmium export → geojsonseq).
 // Nutzt exakt dieselben Rechenwege wie die App (autoCityFromData, hotelsFromData), nur ohne Overpass-Server.
-// Aufruf: node build.mjs <stadt.json> <features.geojsonseq> <flughaefen.geojsonseq> <ausgabe.json>
+// Aufruf: node build.mjs <stadt.json> <features.geojsonseq> <airports.csv (OurAirports)> <ausgabe.json>
 import { readFileSync, writeFileSync } from "node:fs";
 import { autoCityFromData, hotelsFromData, split, type OverpassElement } from "../../src/lib/geo";
 import { distance, type Line, type Poi } from "../../src/lib/score";
@@ -133,26 +133,61 @@ const sights = data.pois
     lat: Math.round(p.lat * 1e5) / 1e5,
     lon: Math.round(p.lon * 1e5) / 1e5,
     k: p.tags.tourism ?? p.tags.historic ?? "",
-    w: p.tags.wikidata || p.tags.wikipedia ? 1 : 0, // bekannt (hat Wikipedia/Wikidata)
+    // Wie bekannt? Wikipedia-Artikel, Wikidata, echte Attraktion/Aussicht/Museum und viele Angaben in der Karte
+    w:
+      (p.tags.wikipedia ? 3 : 0) +
+      (p.tags.wikidata ? 1 : 0) +
+      (/^(attraction|viewpoint|museum|zoo)$/.test(p.tags.tourism ?? "") ? 2 : 0) +
+      (/^(castle|city_gate)$/.test(p.tags.historic ?? "") ? 1 : 0) +
+      Math.min(3, Math.floor(Object.keys(p.tags).length / 8)),
   }))
   .filter((s) => /^[\p{Script=Latin}\p{N}\p{P}\p{Zs}\p{S}]+$/u.test(s.n))
   .sort((a, b) => b.w - a.w)
   .slice(0, 300);
 
-// Flughafen: nächster mit IATA-Code im Umkreis von 80 km
-const airports = readSeq(airportsPath)
-  .map(toElement)
-  .filter((e): e is NonNullable<ReturnType<typeof toElement>> => e !== null && Boolean(e.tags?.iata) && e.tags?.aeroway === "aerodrome")
-  .map((e) => ({
-    n: (e.tags!["name:de"] ?? e.tags!["name:en"] ?? e.tags!.name ?? e.tags!.iata).slice(0, 80),
-    iata: e.tags!.iata,
-    lat: Math.round(e.c.lat * 1e4) / 1e4,
-    lon: Math.round(e.c.lon * 1e4) / 1e4,
-    km: Math.round(distance(city.lat, city.lon, e.c.lat, e.c.lon) / 100) / 10,
-  }))
-  .filter((a) => a.km <= 80)
-  .sort((a, b) => a.km - b.km)
-  .slice(0, 2);
+// Flughafen: aus der freien OurAirports-Liste (größere Flughäfen mit Linienflügen), die nächsten im Umkreis von 80 km
+function csvRow(line: string): string[] {
+  const out: string[] = [];
+  let cur = "";
+  let q = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (ch === '"') {
+      if (q && line[i + 1] === '"') {
+        cur += '"';
+        i++;
+      } else q = !q;
+    } else if (ch === "," && !q) {
+      out.push(cur);
+      cur = "";
+    } else cur += ch;
+  }
+  out.push(cur);
+  return out;
+}
+const csv = readFileSync(airportsPath, "utf8").split("\n");
+const head = csvRow(csv[0]);
+const col = (n: string) => head.indexOf(n);
+const airports = csv
+  .slice(1)
+  .map(csvRow)
+  .filter((r) => /^(large_airport|medium_airport)$/.test(r[col("type")] ?? "") && r[col("iata_code")] && r[col("scheduled_service")] === "yes")
+  .map((r) => {
+    const la = Number(r[col("latitude_deg")]);
+    const lo = Number(r[col("longitude_deg")]);
+    return {
+      n: r[col("name")].slice(0, 80),
+      iata: r[col("iata_code")],
+      lat: Math.round(la * 1e4) / 1e4,
+      lon: Math.round(lo * 1e4) / 1e4,
+      km: Math.round(distance(city.lat, city.lon, la, lo) / 100) / 10,
+      big: r[col("type")] === "large_airport" ? 1 : 0,
+    };
+  })
+  .filter((x) => Number.isFinite(x.km) && x.km <= 80)
+  .sort((x, y) => y.big - x.big || x.km - y.km)
+  .slice(0, 2)
+  .map(({ big: _big, ...x }) => x);
 
 const round = (v: number | null) => (v === null ? null : Math.round(v * 10) / 10);
 const out = {

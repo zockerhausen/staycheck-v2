@@ -7,6 +7,7 @@ import type { District, Weights } from "./data";
 import { unstable_cache } from "next/cache";
 import { after } from "next/server";
 import { pickZones, ZONE_KEYS, type ZonePoint } from "./zones";
+import { precomputedCity, precomputedCovering } from "./precomputed";
 import { distance, scoreFromData, type Highlight, type Line, type Poi, type ScoreResult } from "./score";
 
 const UA = "StayCheck/0.1 (https://github.com/zockerhausen/staycheck-v2)";
@@ -597,8 +598,12 @@ const autoCityStored = unstable_cache(
   ["auto-city-v2"],
   { revalidate: 30 * 86400 }, // Viertel ändern sich selten; danach wird im Hintergrund neu berechnet
 );
-export const autoCityCached = (lat: number, lon: number, radius = 3500) =>
-  once(`city:${lat},${lon},${radius}`, () => autoCityStored(lat, lon, radius));
+export const autoCityCached = async (lat: number, lon: number, radius = 3500): Promise<AutoCity> => {
+  // Vorberechnet (GitHub, aus OpenStreetMap-Dateien)? Dann sofort und ohne Kartenserver.
+  const pre = await precomputedCity(lat, lon, radius);
+  if (pre) return pre.city;
+  return once(`city:${lat},${lon},${radius}`, () => autoCityStored(lat, lon, radius));
+};
 export const autoDistrictsCached = (lat: number, lon: number) => autoCityCached(lat, lon).then((c) => c.districts);
 
 /**
@@ -634,11 +639,23 @@ export const hotelsNearCached = async (
   weights: Weights,
   radius: number,
   areaName: string,
-) =>
-  rankHotels(
+) => {
+  const pre = await precomputedCovering(center.lat, center.lon);
+  if (pre) {
+    const list: HotelResult[] = pre.hotels
+      .filter((h) => distance(center.lat, center.lon, h.lat, h.lon) <= radius)
+      .map((h) => {
+        // In geprüften Städten kommt die Sicherheit aus unserer Viertel-Bewertung
+        const scores = { ...h.scores, ...(district?.scores?.safety != null ? { safety: district.scores.safety } : {}) } as LocationScores;
+        return { ...h, subtitle: h.subtitle || areaName, scores, match: 0 };
+      });
+    return rankHotels(list, weights);
+  }
+  return rankHotels(
     await once(`hotels:${center.lat},${center.lon},${radius}`, () => hotelsScoredStored(center, district, radius, areaName)),
     weights,
   );
+};
 
 /** Wartet höchstens ms Millisekunden. Danach „slow“ – die Arbeit läuft weiter und landet im Zwischenspeicher. */
 export async function withDeadline<T>(work: Promise<T>, ms: number): Promise<T | "slow"> {
