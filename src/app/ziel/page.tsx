@@ -12,6 +12,7 @@ import Icon from "@/components/Icon";
 import DistrictExplorer from "@/components/DistrictExplorer";
 import KiezMap from "@/components/KiezMap";
 import CitySwitcher from "@/components/CitySwitcher";
+import StayButton from "@/components/StayButton";
 
 // Kartendaten-Abfragen werden zwischengespeichert (1 Tag), die Seite selbst ist dynamisch.
 export const fetchCache = "default-cache";
@@ -29,16 +30,19 @@ export default async function ZielPage({ searchParams }: { searchParams: Promise
   if (known) redirect(`/?ziel=${known.slug}`);
 
   const header = (
-    <div className="flex items-center justify-between">
-      <Link href={user ? "/konto" : "/login"} aria-label="Konto" className="press flex h-11 w-11 items-center justify-center rounded-full bg-tan">
-        <Icon name="user" size={20} />
-      </Link>
+    <div className="flex items-center gap-2.5">
       <CitySwitcher
+        variant="bar"
         current={ziel.ort}
+        hint={ziel.land ? `${ziel.land}, wo willst du schlafen?` : "Wo willst du schlafen?"}
         verified={cities.filter((c) => c.districtCount > 0).map((c) => ({ slug: c.slug, name: c.name, country: c.country }))}
       />
-      <Link href="/check" aria-label="Lage-Check" className="press flex h-11 w-11 items-center justify-center rounded-full bg-tan">
-        <Icon name="search" size={20} />
+      <Link
+        href={user ? "/konto" : "/login"}
+        aria-label="Konto"
+        className="press flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-full border border-line bg-sand shadow-soft"
+      >
+        <Icon name="user" size={21} fill="transparent" />
       </Link>
     </div>
   );
@@ -74,7 +78,7 @@ export default async function ZielPage({ searchParams }: { searchParams: Promise
   const districtList = (
     <>
       <DistrictExplorer
-        variant={spots.length ? "list" : "cards"}
+        variant={spots.length ? "list" : "feed"}
         filters={!spots.length}
         districts={sorted.map((d) => ({
           slug: d.slug,
@@ -86,7 +90,7 @@ export default async function ZielPage({ searchParams }: { searchParams: Promise
           href: viertelHref(d),
         }))}
       />
-      <p className="mt-3 flex items-start gap-2 px-1 text-xs leading-relaxed text-muted">
+      <p className="mt-3 flex items-start gap-2 px-1 text-[13px] font-semibold leading-relaxed text-muted">
         <Icon name="flag" size={14} className="mt-0.5 shrink-0" />
         <span>
           Automatisch aus OpenStreetMap berechnet, gröber als bei geprüften Städten. Sicherheit kennen wir hier noch nicht.{" "}
@@ -101,9 +105,6 @@ export default async function ZielPage({ searchParams }: { searchParams: Promise
   return (
     <div className="fade-up">
       {header}
-      <p className="mt-7 text-[13px] font-extrabold text-sun-soft">Deine Reise{ziel.land ? ` · ${ziel.land}` : ""}</p>
-      <h1 className="mega mt-1 text-[clamp(2.2rem,10vw,2.7rem)] [overflow-wrap:anywhere]">Wo schläfst du in {ziel.ort}?</h1>
-
       {slow ? (
         <StillLoading
           title={`Wir erkunden ${ziel.ort} …`}
@@ -121,97 +122,76 @@ export default async function ZielPage({ searchParams }: { searchParams: Promise
         </div>
       ) : (
         <>
-          <Link
-            href={topSpot ? spotHref(topSpot) : top ? viertelHref(top) : `/quiz?${zq}`}
-            className="press glow-card mt-6 flex items-center gap-3.5 rounded-[18px] px-3.5 py-3.5"
-          >
-            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-peach text-sun-soft">
-              <Icon name="discover" size={24} />
-            </span>
-            <span className="min-w-0 flex-1">
-              <span className="block text-[15px] font-bold">
-                {topSpot ? `Deine Ecke: ${topSpot.name} · ${topSpot.match} %` : top ? `Dein Viertel: ${top.name} · ${top.match} %` : "Welches Viertel passt zu mir?"}
+          {!weights && (
+            <Link href={`/quiz?${zq}`} className="press mt-5 flex items-center gap-3.5 rounded-[20px] bg-peach px-4 py-3.5">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-sun text-white">
+                <Icon name="discover" size={22} fill="transparent" />
               </span>
-              <span className="block text-[13px] text-muted">
-                {top ? "Passt am besten zu deinem Reise-Profil" : "7 kurze Fragen, dann zeigen wir dir dein Viertel"}
+              <span className="min-w-0 flex-1">
+                <b className="block text-[16px] font-black">Welche Ecke passt zu dir?</b>
+                <span className="block text-[14px] font-semibold text-muted">7 kurze Fragen, dann sortieren wir für dich</span>
               </span>
-            </span>
-            <Icon name="chevron" size={16} className="text-faint" />
-          </Link>
-          {top && (
-            <div className="mt-2.5 flex items-center justify-center gap-4 text-[13px] font-semibold text-muted">
-              <Link href="/profil" className="flex items-center gap-1.5">
-                <Icon name="sliders" size={14} /> Reise-Profil ändern
-              </Link>
-              <span className="text-faint">·</span>
-              <Link href={`/quiz?${zq}`} className="flex items-center gap-1.5">
-                <Icon name="refresh" size={14} /> Quiz neu machen
-              </Link>
-            </div>
+              <Icon name="chevron" size={16} className="text-muted" />
+            </Link>
           )}
 
-          {spots.length > 0 && (
-            <section className="mt-7">
-              <h2 className="font-display text-[19px] font-extrabold">{weights ? "Deine besten Ecken" : `Die besten Ecken in ${ziel.ort}`}</h2>
-              <p className="mb-3 mt-1 text-[13px] text-muted">Kleine Gegenden statt ganzer Stadtteile, genau dort, wo es passt.</p>
-              <div className="mb-4">
-                <KiezMap
-                  points={spots.map((sp) => ({ slug: sp.slug, name: sp.name, lat: sp.lat, lng: sp.lon, match: sp.match, label: sp.name }))}
-                  highlight={topSpot?.slug}
-                  center={[ziel.lon, ziel.lat]}
-                  zoom={11.5}
-                  height="h-60"
-                  zones={zones}
-                  fit
-                />
-                <ZoneLegend personal={Boolean(weights)} shown={zones.length > 0} />
-              </div>
+          <section className="mt-7">
+            <h1 className="text-[26px] font-black leading-tight tracking-tight [overflow-wrap:anywhere]">
+              {spots.length ? (weights ? "Deine besten Ecken" : `Die besten Ecken in ${ziel.ort}`) : top ? "Alle Viertel für dich" : `Viertel in ${ziel.ort}`}
+            </h1>
+            <p className="mb-4 mt-1 text-[15px] font-semibold text-muted">
+              {spots.length ? "Kleine Gegenden statt ganzer Stadtteile, genau dort, wo es passt." : "Automatisch aus OpenStreetMap berechnet."}
+            </p>
+            {spots.length > 0 ? (
               <DistrictExplorer
-                variant="cards"
+                variant="feed"
+                topLabel={weights ? "Passt am besten zu dir" : "Beste Lage"}
                 districts={spots.map((sp) => ({
                   slug: sp.slug,
                   city: "",
                   name: sp.name,
                   short: sp.area ? `In ${sp.area}` : "",
                   scores: sp.scores,
-                  match: weights ? sp.match : undefined,
+                  match: sp.match,
                   href: spotHref(sp),
                 }))}
               />
-            </section>
-          )}
+            ) : (
+              districtList
+            )}
+          </section>
 
-          {spots.length > 0 ? (
-            <details className="group mt-7">
-            <summary className="press flex cursor-pointer list-none items-center gap-3 rounded-[18px] bg-paper px-4 py-3.5 [&::-webkit-details-marker]:hidden">
-              <Icon name="map" size={20} className="text-muted" />
-              <span className="min-w-0 flex-1">
-                <span className="block text-[15px] font-bold">{`Alle ${sorted.length} Stadtteile ansehen`}</span>
-                <span className="block text-[13px] text-muted">Die ganze Stadt in größeren Stücken</span>
-              </span>
-              <Icon name="chevron" size={16} className="text-faint transition-transform group-open:rotate-90" />
-            </summary>
+          <section id="karte" className="mt-10 scroll-mt-4">
+            <h2 className="mb-3 text-[20px] font-black tracking-tight">Auf der Karte</h2>
+            <KiezMap
+              points={
+                spots.length
+                  ? spots.map((sp) => ({ slug: sp.slug, name: sp.name, lat: sp.lat, lng: sp.lon, match: sp.match, label: sp.name }))
+                  : sorted.map((d) => ({ slug: d.slug, name: d.name, lat: d.lat, lng: d.lon, match: d.match ?? 0, label: d.name }))
+              }
+              highlight={topSpot?.slug}
+              center={[ziel.lon, ziel.lat]}
+              zoom={11.5}
+              height="h-72"
+              zones={zones}
+              fit
+            />
+            <ZoneLegend personal={Boolean(weights)} shown={zones.length > 0} />
+          </section>
+          <StayButton targetId="karte" label="Karte" icon="map" tone="ink" />
+
+          {spots.length > 0 && (
+            <details className="group mt-8">
+              <summary className="press flex cursor-pointer list-none items-center gap-3 rounded-[20px] bg-paper px-4 py-4 [&::-webkit-details-marker]:hidden">
+                <Icon name="map" size={22} />
+                <span className="min-w-0 flex-1">
+                  <span className="block text-[16px] font-black">{`Alle ${sorted.length} Stadtteile ansehen`}</span>
+                  <span className="block text-[14px] font-semibold text-muted">Die ganze Stadt in größeren Stücken</span>
+                </span>
+                <Icon name="chevron" size={16} className="text-muted transition-transform group-open:rotate-90" />
+              </summary>
               <div className="mt-2">{districtList}</div>
             </details>
-          ) : (
-            <section className="mt-7">
-              <h2 className="mb-3 font-display text-[19px] font-extrabold">{top ? "Alle Viertel für dich" : "Oder selbst stöbern"}</h2>
-              {districtList}
-            </section>
-          )}
-
-          {spots.length === 0 && (
-            <section className="mt-7">
-              <KiezMap
-                points={sorted.map((d) => ({ slug: d.slug, name: d.name, lat: d.lat, lng: d.lon, match: d.match ?? 0, label: d.name }))}
-                center={[ziel.lon, ziel.lat]}
-                zoom={11.5}
-                height="h-64"
-                zones={zones}
-                fit
-              />
-              <ZoneLegend personal={Boolean(weights)} shown={zones.length > 0} />
-            </section>
           )}
         </>
       )}

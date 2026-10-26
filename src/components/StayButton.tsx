@@ -3,12 +3,24 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import Icon from "@/components/Icon";
+import type { IconName } from "@/lib/icons";
 
 /**
  * Schwebender Knopf über der unteren Leiste: führt zu den Unterkünften.
  * Erscheint erst nach etwas Scrollen und verschwindet, solange die Unterkünfte im Bild sind.
  */
-export default function StayButton({ targetId, label }: { targetId: string; label: string }) {
+export default function StayButton({
+  targetId,
+  label,
+  icon = "hotel",
+  tone = "accent",
+}: {
+  targetId: string;
+  label: string;
+  icon?: IconName;
+  /** „ink“ = dunkle Pille wie bei Airbnb („Karte“), sonst orange */
+  tone?: "accent" | "ink";
+}) {
   const [show, setShow] = useState(false);
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
@@ -36,7 +48,7 @@ export default function StayButton({ targetId, label }: { targetId: string; labe
   // Per Portal an den Seitenrand gehängt (der animierte Seitenrahmen würde „fixed“ sonst verschieben)
   return createPortal(
     <div
-      className={`pointer-events-none fixed inset-x-0 bottom-[calc(76px+env(safe-area-inset-bottom))] z-30 flex justify-center px-4 transition-all duration-200 ${
+      className={`pointer-events-none fixed inset-x-0 bottom-[calc(88px+env(safe-area-inset-bottom))] z-30 flex justify-center px-4 transition-all duration-200 ${
         show ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0"
       }`}
     >
@@ -44,9 +56,11 @@ export default function StayButton({ targetId, label }: { targetId: string; labe
         type="button"
         tabIndex={show ? 0 : -1}
         onClick={() => document.getElementById(targetId)?.scrollIntoView({ behavior: "smooth", block: "start" })}
-        className={`press flex ${show ? "pointer-events-auto" : "pointer-events-none"} items-center gap-2 rounded-full bg-sun px-5 py-3 text-[15px] font-bold text-white shadow-[0_10px_30px_rgba(242,102,47,.45)]`}
+        className={`press flex ${show ? "pointer-events-auto" : "pointer-events-none"} items-center gap-2 rounded-full px-5 py-3 text-[15px] font-extrabold shadow-[0_10px_30px_rgba(0,0,0,.28)] ${
+          tone === "ink" ? "bg-ink text-sand" : "bg-sun text-white"
+        }`}
       >
-        <Icon name="hotel" size={18} /> {label}
+        {label} <Icon name={icon} size={18} fill="transparent" />
       </button>
     </div>,
     document.body,

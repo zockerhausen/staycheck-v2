@@ -11,6 +11,7 @@ import LegalLinks from "@/components/LegalLinks";
 import CitySwitcher from "@/components/CitySwitcher";
 import KiezMap from "@/components/KiezMap";
 import ZoneLegend from "@/components/ZoneLegend";
+import StayButton from "@/components/StayButton";
 import { cityDataQuick, DEFAULT_WEIGHTS } from "@/lib/geo";
 import { findSpots, pickZones } from "@/lib/zones";
 import { redirect } from "next/navigation";
@@ -98,149 +99,108 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
   const tip = tipDistrict ? (await getTipsForDistrict(tipDistrict.id).catch(() => []))[0] : undefined;
   const tipCat = tip ? TIP_CATEGORIES.find((c) => c.key === tip.category) : undefined;
 
+  const allDistricts = (ranked ?? districts).map((d) => ({
+    slug: d.slug,
+    city: d.city,
+    name: d.name,
+    short: d.short_description,
+    scores: d.scores,
+    match: "match" in d ? (d as { match: number }).match : undefined,
+  }));
+  const mapPoints = spots.length
+    ? spots.map((sp) => ({ slug: sp.slug, name: sp.name, lat: sp.lat, lng: sp.lon, match: sp.match, label: sp.name }))
+    : (ranked ?? districts)
+        .filter((d) => d.lat !== null && d.lng !== null)
+        .map((d) => ({
+          slug: d.slug,
+          name: d.name,
+          lat: d.lat as number,
+          lng: d.lng as number,
+          match: "match" in d ? (d as { match: number }).match : 0,
+          label: d.name.split(" (")[0].split(" /")[0],
+        }));
+
   return (
     <div className="fade-up">
-      {header}
+      <div className="flex items-center gap-2.5">
+        <CitySwitcher variant="bar" current={city.name} verified={verified} />
+        <Link
+          href={weights ? "/profil" : `/quiz?stadt=${city.slug}`}
+          aria-label="Reise-Profil"
+          className="press flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-full border border-line bg-sand shadow-soft"
+        >
+          <Icon name="sliders" size={21} fill="transparent" />
+        </Link>
+      </div>
 
-      <p className="mt-7 text-[13px] font-extrabold text-sun-soft">Deine Reise · {city.country}</p>
-      <h1 className="mega mt-1 text-[clamp(2.2rem,10vw,2.7rem)]">Wo schläfst du in {city.name}?</h1>
-
-      <Link
-        href={topSpot ? spotHref(topSpot) : top ? `/kiez/${top.slug}?stadt=${city.slug}` : `/quiz?stadt=${city.slug}`}
-        className="press glow-card mt-6 flex items-center gap-3.5 rounded-[18px] px-3.5 py-3.5"
-      >
-        <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-peach text-sun-soft">
-          <Icon name="discover" size={24} />
-        </span>
-        <span className="min-w-0 flex-1">
-          <span className="block text-[15px] font-bold">
-            {topSpot
-              ? `Deine Ecke: ${topSpot.name} · ${topSpot.match} %`
-              : top
-                ? `Dein Viertel: ${top.name.split(" (")[0]} · ${top.match} %`
-                : "Welches Viertel passt zu mir?"}
+      {!weights && (
+        <Link href={`/quiz?stadt=${city.slug}`} className="press mt-5 flex items-center gap-3.5 rounded-[20px] bg-peach px-4 py-3.5">
+          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-sun text-white">
+            <Icon name="discover" size={22} fill="transparent" />
           </span>
-          <span className="block text-[13px] text-muted">
-            {topSpot
-              ? `${topSpot.area ? `In ${topSpot.area} · ` : ""}passt am besten zu deinem Reise-Profil`
-              : top
-                ? "Passt am besten zu deinem Reise-Profil"
-                : "7 kurze Fragen, dann zeigen wir dir dein Viertel"}
+          <span className="min-w-0 flex-1">
+            <b className="block text-[16px] font-black">Welche Ecke passt zu dir?</b>
+            <span className="block text-[14px] font-semibold text-muted">7 kurze Fragen, dann sortieren wir für dich</span>
           </span>
-        </span>
-        <Icon name="chevron" size={16} className="text-faint" />
-      </Link>
-      {top && (
-        <div className="mt-2.5 flex items-center justify-center gap-4 text-[13px] font-semibold text-muted">
-          <Link href="/profil" className="flex items-center gap-1.5">
-            <Icon name="sliders" size={14} /> Reise-Profil ändern
-          </Link>
-          <span className="text-faint">·</span>
-          <Link href={`/quiz?stadt=${city.slug}`} className="flex items-center gap-1.5">
-            <Icon name="refresh" size={14} /> Quiz neu machen
-          </Link>
-        </div>
+          <Icon name="chevron" size={16} className="text-muted" />
+        </Link>
       )}
 
-      {spots.length > 0 ? (
-        <>
-          <section className="mt-7">
-            <h2 className="font-display text-[19px] font-extrabold">{weights ? "Deine besten Ecken" : `Die besten Ecken in ${city.name}`}</h2>
-            <p className="mb-3 mt-1 text-[13px] text-muted">Kleine Gegenden statt ganzer Bezirke, genau dort, wo es passt.</p>
-            <div className="mb-4">
-              <KiezMap
-                points={spots.map((sp) => ({ slug: sp.slug, name: sp.name, lat: sp.lat, lng: sp.lon, match: sp.match, label: sp.name }))}
-                highlight={topSpot?.slug}
-                center={[city.lng, city.lat]}
-                zoom={city.zoom}
-                height="h-60"
-                zones={zones}
-                fit
-              />
-              <ZoneLegend personal={Boolean(weights)} shown={zones.length > 0} />
-            </div>
-            <DistrictExplorer
-              variant="cards"
-              districts={spots.map((sp) => ({
-                slug: sp.slug,
-                city: city.slug,
-                name: sp.name,
-                short: sp.area ? `In ${sp.area}` : "",
-                scores: sp.scores,
-                match: weights ? sp.match : undefined,
-                href: spotHref(sp),
-              }))}
-            />
-          </section>
-          <details className="group mt-7">
-            <summary className="press flex cursor-pointer list-none items-center gap-3 rounded-[18px] bg-paper px-4 py-3.5 [&::-webkit-details-marker]:hidden">
-              <Icon name="map" size={20} className="text-muted" />
-              <span className="min-w-0 flex-1">
-                <span className="block text-[15px] font-bold">{`Alle ${(ranked ?? districts).length} Bezirke ansehen`}</span>
-                <span className="block text-[13px] text-muted">Die ganze Stadt in größeren Stücken</span>
-              </span>
-              <Icon name="chevron" size={16} className="text-faint transition-transform group-open:rotate-90" />
-            </summary>
-            <p className="mb-1 mt-3 px-1 text-[13px] text-muted">Von uns bewertet, mit Sicherheit und Tipps von Reisenden.</p>
-            <DistrictExplorer
-              variant="list"
-              filters={false}
-              districts={(ranked ?? districts).map((d) => ({
-                slug: d.slug,
-                city: d.city,
-                name: d.name,
-                short: d.short_description,
-                scores: d.scores,
-                match: "match" in d ? (d as { match: number }).match : undefined,
-              }))}
-            />
-          </details>
-        </>
-      ) : (
-        <section className="mt-7">
-        <h2 className="mb-3 font-display text-[19px] font-extrabold">{top ? "Alle Viertel für dich" : "Oder selbst stöbern"}</h2>
-        <div className="mb-4">
-          <KiezMap
-            points={(ranked ?? districts)
-              .filter((d) => d.lat !== null && d.lng !== null)
-              .map((d) => ({
-                slug: d.slug,
-                name: d.name,
-                lat: d.lat as number,
-                lng: d.lng as number,
-                match: "match" in d ? (d as { match: number }).match : 0,
-                label: d.name.split(" (")[0].split(" /")[0],
-              }))}
-            highlight={top?.slug}
-            center={[city.lng, city.lat]}
-            zoom={city.zoom}
-            height="h-60"
-            zones={zones}
-            fit
-          />
-          <ZoneLegend personal={Boolean(weights)} shown={zones.length > 0} />
-        </div>
+      <section className="mt-7">
+        <h1 className="text-[26px] font-black leading-tight tracking-tight">
+          {spots.length ? (weights ? "Deine besten Ecken" : `Die besten Ecken in ${city.name}`) : top ? "Alle Viertel für dich" : `Viertel in ${city.name}`}
+        </h1>
+        <p className="mb-4 mt-1 text-[15px] font-semibold text-muted">
+          {spots.length ? "Kleine Gegenden statt ganzer Bezirke, genau dort, wo es passt." : "Von uns bewertet, mit Sicherheit und Tipps von Reisenden."}
+        </p>
         <DistrictExplorer
-          variant="cards"
-          districts={(ranked ?? districts).map((d) => ({
-            slug: d.slug,
-            city: d.city,
-            name: d.name,
-            short: d.short_description,
-            scores: d.scores,
-            match: "match" in d ? (d as { match: number }).match : undefined,
-          }))}
+          variant="feed"
+          topLabel={weights ? "Passt am besten zu dir" : "Beste Lage"}
+          districts={
+            spots.length
+              ? spots.map((sp) => ({
+                  slug: sp.slug,
+                  city: city.slug,
+                  name: sp.name,
+                  short: sp.area ? `In ${sp.area}` : "",
+                  scores: sp.scores,
+                  match: sp.match,
+                  href: spotHref(sp),
+                }))
+              : allDistricts
+          }
         />
       </section>
+
+      <section id="karte" className="mt-10 scroll-mt-4">
+        <h2 className="mb-3 text-[20px] font-black tracking-tight">Auf der Karte</h2>
+        <KiezMap points={mapPoints} highlight={topSpot?.slug ?? top?.slug} center={[city.lng, city.lat]} zoom={city.zoom} height="h-72" zones={zones} fit />
+        <ZoneLegend personal={Boolean(weights)} shown={zones.length > 0} />
+      </section>
+      <StayButton targetId="karte" label="Karte" icon="map" tone="ink" />
+
+      {spots.length > 0 && (
+        <details className="group mt-8">
+          <summary className="press flex cursor-pointer list-none items-center gap-3 rounded-[20px] bg-paper px-4 py-4 [&::-webkit-details-marker]:hidden">
+            <Icon name="map" size={22} />
+            <span className="min-w-0 flex-1">
+              <span className="block text-[16px] font-black">{`Alle ${allDistricts.length} Bezirke ansehen`}</span>
+              <span className="block text-[14px] font-semibold text-muted">Die ganze Stadt in größeren Stücken</span>
+            </span>
+            <Icon name="chevron" size={16} className="text-muted transition-transform group-open:rotate-90" />
+          </summary>
+          <p className="mb-1 mt-3 px-1 text-[14px] font-semibold text-muted">Von uns bewertet, mit Sicherheit und Tipps von Reisenden.</p>
+          <DistrictExplorer variant="list" filters={false} districts={allDistricts} />
+        </details>
       )}
 
       <RecentChecks />
 
       {tip && tipDistrict && (
         <section className="mt-7">
-          <h2 className="mb-3 font-display text-[19px] font-extrabold">Tipp von Reisenden</h2>
+          <h2 className="mb-3 text-[20px] font-black tracking-tight">Tipp von Reisenden</h2>
           <Link href={`/kiez/${tipDistrict.slug}?stadt=${city.slug}`} className="press block rounded-[18px] bg-paper px-4 py-3.5">
-            <span className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide text-muted">
+            <span className="flex items-center gap-1.5 text-[13px] font-extrabold text-muted">
               <Icon name={tipCat?.icon ?? "tip"} size={14} /> {tipCat?.label ?? "Tipp"} · {tipDistrict.name.split(" (")[0]}
             </span>
             <span className="mt-1.5 block text-[15px] leading-snug">{tip.body}</span>

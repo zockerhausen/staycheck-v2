@@ -11,7 +11,18 @@ import { clearTrip } from "@/app/actions";
  * Stadt oben antippen = Fenster von unten zum Wechseln. Schließen behält die aktuelle Stadt,
  * eine neue Auswahl wird gemerkt (auf allen Seiten gleich).
  */
-export default function CitySwitcher({ current, verified }: { current: string; verified: { slug: string; name: string; country: string }[] }) {
+export default function CitySwitcher({
+  current,
+  verified,
+  variant = "pill",
+  hint = "Wo willst du schlafen?",
+}: {
+  current: string;
+  verified: { slug: string; name: string; country: string }[];
+  /** „bar“ = große Suchleiste oben auf der Startseite (wie bei Airbnb) */
+  variant?: "pill" | "bar";
+  hint?: string;
+}) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [shown, setShown] = useState(false); // für die Animation
@@ -38,15 +49,30 @@ export default function CitySwitcher({ current, verified }: { current: string; v
 
   return (
     <>
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        aria-haspopup="dialog"
-        className="press flex max-w-[55vw] items-center gap-1.5 rounded-full bg-tan px-4 py-2.5 text-sm font-semibold"
-      >
-        <Icon name="plane" size={15} className="shrink-0" /> <span className="truncate">{current}</span>
-        <Icon name="down" size={14} className="shrink-0" />
-      </button>
+      {variant === "bar" ? (
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          aria-haspopup="dialog"
+          className="press flex min-w-0 flex-1 items-center gap-3 rounded-full border border-line bg-sand py-2.5 pl-4 pr-5 text-left shadow-soft"
+        >
+          <Icon name="search" size={22} className="shrink-0" fill="transparent" />
+          <span className="min-w-0 leading-tight">
+            <b className="block truncate text-[16px] font-black">{current}</b>
+            <span className="block truncate text-[13px] font-semibold text-muted">{hint}</span>
+          </span>
+        </button>
+      ) : (
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          aria-haspopup="dialog"
+          className="press flex max-w-[55vw] items-center gap-1.5 rounded-full bg-tan px-4 py-2.5 text-sm font-bold"
+        >
+          <Icon name="plane" size={15} className="shrink-0" /> <span className="truncate">{current}</span>
+          <Icon name="down" size={14} className="shrink-0" />
+        </button>
+      )}
 
       {open &&
         createPortal(
@@ -58,13 +84,13 @@ export default function CitySwitcher({ current, verified }: { current: string; v
             className={`absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-200 ${shown ? "opacity-100" : "opacity-0"}`}
           />
           <div
-            className={`absolute inset-x-0 bottom-0 mx-auto max-h-[88dvh] max-w-md overflow-y-auto rounded-t-[28px] border-t border-line bg-paper px-4 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-3 shadow-[0_-20px_60px_rgba(0,0,0,.6)] transition-transform duration-200 ease-out ${
+            className={`absolute inset-x-0 bottom-0 mx-auto max-h-[88dvh] max-w-md overflow-y-auto rounded-t-[28px] border-t border-line bg-sand px-4 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-3 shadow-[0_-20px_60px_rgba(0,0,0,.25)] transition-transform duration-200 ease-out ${
               shown ? "translate-y-0" : "translate-y-full"
             }`}
           >
             <div className="mx-auto mb-4 h-1.5 w-10 rounded-full bg-raised" />
             <div className="flex items-center justify-between">
-              <h2 className="font-display text-[22px] font-extrabold">Wohin geht&apos;s?</h2>
+              <h2 className="font-display text-[22px] font-black">Wohin geht&apos;s?</h2>
               <button type="button" onClick={close} aria-label="Schließen" className="press flex h-10 w-10 items-center justify-center rounded-full bg-tan">
                 <Icon name="close" size={16} />
               </button>
