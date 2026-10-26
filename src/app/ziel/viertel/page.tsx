@@ -10,6 +10,7 @@ import { pickZones, ZONE_KEYS } from "@/lib/zones";
 import ZoneLegend from "@/components/ZoneLegend";
 import AskDistrict from "@/components/AskDistrict";
 import StayButton from "@/components/StayButton";
+import { dedupeStays } from "@/lib/geo";
 import { fmtScore, reviewsForMany, stayKey, TOP_FAIR } from "@/lib/reviews";
 import StayTip from "@/components/StayTip";
 import { inBudget, PRICE_LABEL, priceClass } from "@/lib/price";
@@ -110,6 +111,7 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
   // Budget aus dem Reise-Profil: eigener Filter, Preisklasse an jeder Unterkunft (geschätzt)
   const band = (await getExtras()).preis ?? null;
   const clsOf = (h: HotelResult) => priceClass(h.kind, h.stars ?? 0);
+  hotels = dedupeStays(hotels);
   // Bewertungen aller Plattformen (zusammengerechnet) für die besten Unterkünfte
   const rev = await reviewsForMany(hotels.slice(0, 80).map((h) => ({ name: h.name, lat: h.lat, lon: h.lon, kind: h.kind })));
   const revOf = (h: HotelResult) => rev.get(stayKey(h));
@@ -256,7 +258,7 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
                 </li>
               ))}
             </ol>
-            <p className="mt-3 text-xs text-muted">Tippe auf eine Unterkunft für Details, Begründung und Preise.</p>
+            <p className="mt-3 text-xs text-muted">Tippe auf eine Unterkunft für Details, Begründung und Preise.{[...rev.values()].some((r) => r.demo) ? " Gäste-Werte sind vorerst Beispieldaten." : ""}</p>
           </>
         )}
       </section>

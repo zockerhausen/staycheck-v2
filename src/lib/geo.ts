@@ -715,3 +715,24 @@ export async function withDeadline<T>(work: Promise<T>, ms: number): Promise<T |
   }
 }
 
+
+/**
+ * Dieselbe Unterkunft steht in OpenStreetMap manchmal doppelt (als Punkt und als Gebäude,
+ * oder „Eurostar“/„Eurostars“). Gleicher Name (ohne Kleinkram) und näher als 150 m = doppelt.
+ */
+export function dedupeStays<T extends { name: string; lat: number; lon: number }>(list: T[]): T[] {
+  const key = (n: string) =>
+    n
+      .toLowerCase()
+      .normalize("NFKD")
+      .split(/[^a-z0-9]+/)
+      .map((w) => w.replace(/s$/, ""))
+      .join("");
+  const out: T[] = [];
+  for (const h of list) {
+    const k = key(h.name);
+    if (out.some((o) => key(o.name) === k && distance(o.lat, o.lon, h.lat, h.lon) < 150)) continue;
+    out.push(h);
+  }
+  return out;
+}
