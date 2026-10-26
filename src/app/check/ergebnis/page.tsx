@@ -177,7 +177,7 @@ export default async function CheckErgebnisPage({
 
       <div className="space-y-3">
         <a
-          href={`https://www.booking.com/searchresults.html?ss=${encodeURIComponent(`${name} ${sub.split(",").slice(-2).join(" ")}`.trim().slice(0, 160))}`}
+          href={bookingUrl(name, sub)}
           target="_blank"
           rel="noopener noreferrer"
           className="press flex w-full items-center justify-center gap-2 rounded-full bg-ink py-4 font-bold text-sand"
@@ -261,4 +261,19 @@ export default async function CheckErgebnisPage({
       </div>
     </div>
   );
+}
+
+/**
+ * Booking-Suche: nur Name + Ort. Mit Straße und Hausnummer findet Booking oft gar nichts.
+ * Der Ort ist der letzte Teil der Adresse ohne Postleitzahl.
+ */
+function bookingUrl(name: string, sub: string) {
+  const ort =
+    sub
+      .split(/[,·]/)
+      .map((x) => x.replace(/\b\d[\d\s-]*\b/g, "").trim())
+      .filter(Boolean)
+      .pop() ?? "";
+  const ss = (ort && !name.toLowerCase().includes(ort.toLowerCase()) ? `${name}, ${ort}` : name).slice(0, 160);
+  return `https://www.booking.com/searchresults.html?${new URLSearchParams({ ss, lang: "de", group_adults: "1", no_rooms: "1" })}`;
 }
