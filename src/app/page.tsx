@@ -1,3 +1,4 @@
+import { VERIFIED_RADIUS } from "@/lib/popular";
 import Link from "next/link";
 import { getChosenCity, getChosenZiel, getCities, getCriteria, getDistricts, getProfile, getUser } from "@/lib/data";
 import { rankDistricts } from "@/lib/matching";
@@ -83,13 +84,13 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
 
   // Schritt 2: Reiseziel gewählt
   const { weights } = await getProfile(criteria);
-  const [districts, cd] = await Promise.all([getDistricts(city.slug), cityDataQuick(city.lat, city.lng, 6000)]);
+  const [districts, cd] = await Promise.all([getDistricts(city.slug), cityDataQuick(city.lat, city.lng, VERIFIED_RADIUS)]);
   const w = weights ?? DEFAULT_WEIGHTS;
   const zones = cd ? pickZones(cd.zones, w) : [];
   // Kleine Ecken statt ganzer Bezirke (sobald das Raster der Stadt berechnet ist)
   const spots = cd ? findSpots(cd.zones, w, cd.places, cd.step) : [];
   const spotHref = (sp: (typeof spots)[number]) =>
-    `/ziel/viertel?${zielQuery({ ort: city.name, land: city.country, lat: Number(city.lat.toFixed(4)), lon: Number(city.lng.toFixed(4)) })}&${new URLSearchParams({ name: sp.name, vlat: sp.lat.toFixed(5), vlon: sp.lon.toFixed(5), rad: "6000" })}`;
+    `/ziel/viertel?${zielQuery({ ort: city.name, land: city.country, lat: Number(city.lat.toFixed(4)), lon: Number(city.lng.toFixed(4)) })}&${new URLSearchParams({ name: sp.name, vlat: sp.lat.toFixed(5), vlon: sp.lon.toFixed(5), rad: String(VERIFIED_RADIUS) })}`;
   const topSpot = weights && spots[0] ? spots[0] : null;
   const ranked = weights ? rankDistricts(districts, weights) : null;
   const top = ranked?.[0] ?? null;

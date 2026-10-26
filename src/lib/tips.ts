@@ -3,7 +3,19 @@ import type { Tip } from "@/lib/tips-shared";
 
 export * from "@/lib/tips-shared";
 
-const COLUMNS = "id, user_id, author_name, place_name, category, body, created_at";
+// Ohne user_id: wer einen Tipp geschrieben hat, bleibt verborgen (auch nicht als Kennung).
+const COLUMNS = "id, author_name, place_name, category, body, created_at";
+
+/** Kennungen der eigenen Tipps (zum Löschen). Über eine Datenbank-Funktion, damit user_id nie öffentlich lesbar sein muss. */
+export async function getMyTipIds(userId: string | null): Promise<Set<string>> {
+  if (!userId) return new Set();
+  const supabase = await createClient();
+  const { data, error } = await supabase.rpc("my_tip_ids");
+  if (!error && Array.isArray(data)) return new Set((data as { id: string }[]).map((r) => r.id ?? (r as unknown as string)));
+  // Rückfall, solange die Datenbank-Funktion noch nicht eingerichtet ist
+  const { data: own } = await supabase.from("place_tips").select("id").eq("user_id", userId).limit(500);
+  return new Set((own ?? []).map((r) => r.id as string));
+}
 
 /** Tipps im Umkreis (ca. Meter) eines Punktes */
 export async function getTipsNear(lat: number, lon: number, radius = 400): Promise<Tip[]> {

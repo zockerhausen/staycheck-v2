@@ -1,3 +1,4 @@
+import { VERIFIED_RADIUS } from "@/lib/popular";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import {
@@ -41,7 +42,7 @@ export default async function ErgebnisPage({
   ]);
 
   const { weights, source } = await resolveWeights(params, criteria);
-  const zones = await cityZones(city.lat, city.lng, 6000, weights ?? DEFAULT_WEIGHTS);
+  const zones = await cityZones(city.lat, city.lng, VERIFIED_RADIUS, weights ?? DEFAULT_WEIGHTS);
   const explorer = (list: typeof districts, withMatch?: Record<string, number>) =>
     list.map((d) => ({ slug: d.slug, city: d.city, name: d.name, short: d.short_description, scores: d.scores, match: withMatch?.[d.slug] }));
 

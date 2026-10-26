@@ -1,3 +1,4 @@
+import { VERIFIED_RADIUS } from "@/lib/popular";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getCities, getCriteria, getDistricts, getExtras, getFavoriteIds, getSavedPlaces, getUser, resolveWeights, weightsToQuery } from "@/lib/data";
@@ -73,7 +74,7 @@ export default async function KiezPage({
   const cityRow = cities.find((c) => c.slug === district.city);
   const [tips, zones] = await Promise.all([
     getTipsForDistrict(district.id),
-    cityRow ? cityZones(cityRow.lat, cityRow.lng, 6000, weights) : Promise.resolve([]),
+    cityRow ? cityZones(cityRow.lat, cityRow.lng, VERIFIED_RADIUS, weights) : Promise.resolve([]),
   ]);
 
   let hotels: HotelResult[] = [];

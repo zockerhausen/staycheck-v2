@@ -1,5 +1,5 @@
 // Liste der vorzuberechnenden Städte (beliebte Ziele + geprüfte Städte) als JSON auf stdout.
-import { POPULAR } from "../../src/lib/popular";
+import { CITY_RADIUS, POPULAR, VERIFIED_RADIUS } from "../../src/lib/popular";
 
 // Geprüfte Städte aus der Datenbank (Mittelpunkt wie in cities.lat/lng), mit größerem Raster
 const VERIFIED = [
@@ -8,7 +8,7 @@ const VERIFIED = [
 ];
 
 const out = [
-  ...VERIFIED.map((c) => ({ ...c, radius: 6000 })),
-  ...POPULAR.map((p) => ({ slug: p.slug, ort: p.ort, land: p.land, lat: p.lat, lon: p.lon, radius: 3500 })),
+  ...VERIFIED.map((c) => ({ ...c, radius: VERIFIED_RADIUS })),
+  ...POPULAR.map((p) => ({ slug: p.slug, ort: p.ort, land: p.land, lat: p.lat, lon: p.lon, radius: CITY_RADIUS })),
 ];
 process.stdout.write(JSON.stringify(out));

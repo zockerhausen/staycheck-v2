@@ -132,7 +132,7 @@ export function findSpots(
     // Kein Kiez direkt hier: gehört das Stück zu einer schon gefundenen Ecke in der Nähe, nicht doppelt zeigen
     if (!fine && spots.some((s) => dist(s, center) < 1500)) continue;
     const name = fine?.n ?? (big ? `Rund um ${big.n}` : "Gute Ecke");
-    if (spots.some((s) => s.name === name)) continue; // gleicher Name = gleiche Gegend
+    if (spots.some((s) => s.name === name || s.slug === slugify(name))) continue; // gleicher Name = gleiche Gegend
     spots.push({
       slug: slugify(name),
       name,

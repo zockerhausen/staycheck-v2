@@ -1,6 +1,7 @@
+import { VERIFIED_RADIUS } from "@/lib/popular";
 import { NextResponse } from "next/server";
 import { after } from "next/server";
-import { autoCityCached, autoDistrictsCached, overpassPing, DEFAULT_WEIGHTS, hotelsNearCached, locationMatch, withDeadline, type AutoDistrict } from "@/lib/geo";
+import { autoCityCached, autoDistrictsCached, DEFAULT_WEIGHTS, hotelsNearCached, locationMatch, withDeadline, type AutoDistrict } from "@/lib/geo";
 import { POPULAR } from "@/lib/popular";
 import { getCities } from "@/lib/data";
 import { rateLimit, tooMany } from "@/lib/ratelimit";
@@ -16,14 +17,13 @@ export const maxDuration = 120;
  */
 export async function GET(request: Request) {
   if (!rateLimit(request, "vorwaermen", 30)) return tooMany();
-  if (new URL(request.url).searchParams.has("ping")) return NextResponse.json(await overpassPing());
   const slug = new URL(request.url).searchParams.get("stadt") ?? "";
   const city = POPULAR.find((p) => p.slug === slug);
   if (!city) {
     // Geprüfte Städte (Berlin, Bangkok): nur die Zonen für die Karte, gleiche Werte wie in cityZones()
     const verified = (await getCities()).find((c) => c.slug === slug && c.districtCount > 0);
     if (!verified) return NextResponse.json({ error: "Unbekannte Stadt" }, { status: 404 });
-    const work = autoCityCached(Number(verified.lat.toFixed(4)), Number(verified.lng.toFixed(4)), 6000).then(
+    const work = autoCityCached(Number(verified.lat.toFixed(4)), Number(verified.lng.toFixed(4)), VERIFIED_RADIUS).then(
       (c) => ({ zonen: c.zones.length }),
       (e: unknown) => ({ fehler: String((e as Error)?.message ?? e).slice(0, 200) }),
     );

@@ -4,6 +4,10 @@
 // Koordinaten = Mittelpunkt für die Viertel-Suche (Umkreis 3,5 km), bewusst dort, wo Reisende wohnen.
 // Läuft im Browser und auf dem Server.
 
+/** Größe des vorberechneten Gebiets (Radius in m): geprüfte Großstädte (Berlin, Bangkok) und alle anderen */
+export const VERIFIED_RADIUS = 8000;
+export const CITY_RADIUS = 3500;
+
 export type Popular = { slug: string; ort: string; land: string; lat: number; lon: number; aka?: string[] };
 
 export const POPULAR: Popular[] = [

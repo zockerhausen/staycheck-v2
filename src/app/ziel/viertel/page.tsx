@@ -1,3 +1,4 @@
+import { CITY_RADIUS, VERIFIED_RADIUS } from "@/lib/popular";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getCriteria, getExtras, getProfile, getSavedPlaces, getUser } from "@/lib/data";
@@ -43,10 +44,10 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
   if (!ziel || !name || !Number.isFinite(vlat) || !Number.isFinite(vlon) || Math.abs(vlat) > 85 || Math.abs(vlon) > 180) redirect("/?ziel=neu");
   const zq = zielQuery(ziel);
   // Größeres Raster für geprüfte Großstädte (Berlin, Bangkok), sonst Standard
-  const rad = params.rad === "6000" ? 6000 : 3500;
+  const rad = params.rad === String(VERIFIED_RADIUS) ? VERIFIED_RADIUS : CITY_RADIUS;
   const back = `/ziel?${zq}`;
   const filter = typeof params.typ === "string" && (params.typ === "budget" || FILTERS.some((f) => f.key === params.typ)) ? params.typ : "alle";
-  const self = `/ziel/viertel?${zq}&${new URLSearchParams({ name, vlat: vlat.toFixed(5), vlon: vlon.toFixed(5), ...(rad === 6000 ? { rad: "6000" } : {}) })}`;
+  const self = `/ziel/viertel?${zq}&${new URLSearchParams({ name, vlat: vlat.toFixed(5), vlon: vlon.toFixed(5), ...(rad === VERIFIED_RADIUS ? { rad: String(VERIFIED_RADIUS) } : {}) })}`;
 
   if (!(await pageRateLimit("ziel-viertel", 15))) {
     return <p className="card mt-8 p-5 text-sm text-muted">Zu viele Anfragen in kurzer Zeit. Warte eine Minute und lade die Seite neu.</p>;

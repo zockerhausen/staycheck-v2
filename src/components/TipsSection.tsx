@@ -2,10 +2,10 @@ import Link from "next/link";
 import Icon from "@/components/Icon";
 import TipForm from "@/components/TipForm";
 import TipActions from "@/components/TipActions";
-import { TIP_CATEGORIES, timeAgo, type Tip } from "@/lib/tips";
+import { getMyTipIds, TIP_CATEGORIES, timeAgo, type Tip } from "@/lib/tips";
 
 /** Tipps von Reisenden: Liste + Formular. Für einen Ort (Lage-Check) oder ein Viertel. */
-export default function TipsSection({
+export default async function TipsSection({
   tips,
   userId,
   lat,
@@ -25,6 +25,7 @@ export default function TipsSection({
   title?: string;
 }) {
   const cat = Object.fromEntries(TIP_CATEGORIES.map((c) => [c.key, c]));
+  const mine = await getMyTipIds(userId);
 
   return (
     <section>
@@ -51,7 +52,7 @@ export default function TipsSection({
               </div>
               <p className="mt-2 [overflow-wrap:anywhere]">{t.body}</p>
               {t.place_name && <p className="mt-1 truncate text-xs text-muted">bei {t.place_name}</p>}
-              <TipActions tipId={t.id} own={t.user_id === userId} loggedIn={Boolean(userId)} path={returnTo.split("?")[0]} />
+              <TipActions tipId={t.id} own={mine.has(t.id)} loggedIn={Boolean(userId)} path={returnTo.split("?")[0]} />
             </li>
           ))}
         </ul>

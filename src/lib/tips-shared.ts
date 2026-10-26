@@ -3,7 +3,6 @@ import type { IconName } from "@/lib/icons";
 // Teile, die auch im Browser genutzt werden (ohne Datenbank-Zugriff)
 export type Tip = {
   id: string;
-  user_id: string;
   author_name: string | null;
   place_name: string | null;
   category: TipCategory;

@@ -85,7 +85,17 @@ async function sniffPage(url: URL): Promise<{ title?: string; lat?: number; lon?
   try {
     const res = await safeFetch(url);
     if (!res || !res.ok) return {};
-    const html = (await res.text()).slice(0, 400_000);
+    // Höchstens 400 KB lesen (große Seiten nicht komplett in den Speicher laden)
+    let html = "";
+    const reader = res.body?.getReader();
+    const dec = new TextDecoder();
+    while (reader && html.length < 400_000) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      html += dec.decode(value, { stream: true });
+    }
+    await reader?.cancel().catch(() => undefined);
+    html = html.slice(0, 400_000);
     const meta = (prop: string) =>
       html.match(new RegExp(`<meta[^>]+(?:property|name)=["']${prop}["'][^>]+content=["']([^"']+)["']`, "i"))?.[1];
     const lat = Number(meta("place:location:latitude") ?? meta("og:latitude") ?? html.match(/"latitude"\s*:\s*"?(-?\d+\.\d+)/)?.[1]);

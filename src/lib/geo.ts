@@ -715,24 +715,3 @@ export async function withDeadline<T>(work: Promise<T>, ms: number): Promise<T |
   }
 }
 
-/** Kurzer Gesundheitscheck der Kartenserver (Antwortzeit einer winzigen Abfrage). */
-export async function overpassPing() {
-  const q = encodeURIComponent('[out:json][timeout:10];node(52.52,13.40,52.521,13.401);out skel 1;');
-  return Promise.all(
-    [
-      ...OVERPASS_FAST,
-      OVERPASS_FALLBACK,
-      "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
-      "https://overpass.osm.jp/api/interpreter",
-      "https://overpass.openstreetmap.ru/api/interpreter",
-    ].map(async (e) => {
-      const t = Date.now();
-      try {
-        const r = await fetch(`${e}?data=${q}`, { headers: { "User-Agent": UA }, cache: "no-store", signal: AbortSignal.timeout(20_000) });
-        return { server: new URL(e).host, status: r.status, ms: Date.now() - t };
-      } catch (err) {
-        return { server: new URL(e).host, status: String((err as Error).message).slice(0, 60), ms: Date.now() - t };
-      }
-    }),
-  );
-}

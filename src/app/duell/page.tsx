@@ -1,3 +1,4 @@
+import { CITY_RADIUS, VERIFIED_RADIUS } from "@/lib/popular";
 import Link from "next/link";
 import { getChosenCity, getChosenZiel, getCities, getCriteria, getDistricts, resolveWeights } from "@/lib/data";
 import DuelTabs from "@/components/DuelTabs";
@@ -39,7 +40,7 @@ export default async function DuellPage({ searchParams }: { searchParams: Promis
   const cityName = active?.name ?? ziel?.ort ?? "";
   const lat = active ? active.lat : ziel!.lat;
   const lon = active ? active.lng : ziel!.lon;
-  const radius = active ? 6000 : 3500;
+  const radius = active ? VERIFIED_RADIUS : CITY_RADIUS;
   const zq = active
     ? zielQuery({ ort: active.name, land: active.country, lat: Number(active.lat.toFixed(4)), lon: Number(active.lng.toFixed(4)) })
     : zielQuery(ziel!);
@@ -47,7 +48,7 @@ export default async function DuellPage({ searchParams }: { searchParams: Promis
   const [dbDistricts, cd] = await Promise.all([active ? getDistricts(active.slug) : Promise.resolve([]), cityDataQuick(lat, lon, radius, 6000)]);
 
   const spotHref = (name: string, la: number, lo: number) =>
-    `/ziel/viertel?${zq}&${new URLSearchParams({ name, vlat: la.toFixed(5), vlon: lo.toFixed(5), ...(radius === 6000 ? { rad: "6000" } : {}) })}`;
+    `/ziel/viertel?${zq}&${new URLSearchParams({ name, vlat: la.toFixed(5), vlon: lo.toFixed(5), ...(radius === VERIFIED_RADIUS ? { rad: String(VERIFIED_RADIUS) } : {}) })}`;
   const contestants: Contestant[] = [
     ...(cd ? findSpots(cd.zones, w, cd.places, cd.step, 8) : []).map((s) => ({
       key: `e-${s.slug}`,
