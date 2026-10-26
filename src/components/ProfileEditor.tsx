@@ -61,7 +61,7 @@ export default function ProfileEditor({
           <Icon name={p.icon} size={28} />
         </span>
         <span>
-          <span className="block text-xs font-bold uppercase tracking-[0.08em] text-[#ffb08f]">Dein Reise-Typ</span>
+          <span className="block text-[13px] font-extrabold text-sun-soft">Dein Reise-Typ</span>
           <span className="block font-display text-xl font-extrabold leading-tight">{p.name}</span>
           <span className="mt-0.5 block text-[13px] text-muted">{p.text}</span>
         </span>
@@ -121,7 +121,7 @@ export default function ProfileEditor({
                 aria-pressed={state !== "off"}
                 onClick={() => toggleExtra(e.key)}
                 className={`press flex items-center gap-1.5 rounded-full border-[1.5px] px-3.5 py-2.5 text-sm font-semibold ${
-                  state === "must" ? "border-sun bg-sun text-white" : state === "on" ? "border-sun bg-[#24140d] text-sun-soft" : "border-tan bg-tan"
+                  state === "must" ? "border-sun bg-sun text-white" : state === "on" ? "border-sun bg-peach text-sun-soft" : "border-tan bg-tan"
                 }`}
               >
                 <Icon name={state === "must" ? "flag" : e.icon} size={16} /> {state === "must" ? `Muss: ${e.label}` : e.label}

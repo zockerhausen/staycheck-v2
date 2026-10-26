@@ -26,10 +26,10 @@ export default function DistrictVibe({ name, scores }: { name: string; scores: R
         <div className="mt-5 space-y-3 border-t border-line pt-4">
           {good.length > 0 && (
             <div>
-              <p className="mb-2 text-xs font-bold uppercase tracking-[0.06em] text-[#3ecf8e]">Passt gut zu</p>
+              <p className="mb-2 text-[13px] font-extrabold text-good">Passt gut zu</p>
               <div className="flex flex-wrap gap-2">
                 {good.map((f) => (
-                  <span key={f.label} className="flex items-center gap-1.5 rounded-full bg-[#3ecf8e]/10 px-3 py-1.5 text-[13px] font-semibold text-[#9be8c4]">
+                  <span key={f.label} className="flex items-center gap-1.5 rounded-full bg-good/10 px-3 py-1.5 text-[13px] font-semibold text-good">
                     <Icon name={f.icon} size={14} /> {f.label}
                   </span>
                 ))}
@@ -38,10 +38,10 @@ export default function DistrictVibe({ name, scores }: { name: string; scores: R
           )}
           {bad.length > 0 && (
             <div>
-              <p className="mb-2 text-xs font-bold uppercase tracking-[0.06em] text-[#ffb547]">Eher nicht für</p>
+              <p className="mb-2 text-[13px] font-extrabold text-warn">Eher nicht für</p>
               <div className="flex flex-wrap gap-2">
                 {bad.map((f) => (
-                  <span key={f.label} className="flex items-center gap-1.5 rounded-full bg-[#ffb547]/10 px-3 py-1.5 text-[13px] font-semibold text-[#ffd08a]">
+                  <span key={f.label} className="flex items-center gap-1.5 rounded-full bg-warn/10 px-3 py-1.5 text-[13px] font-semibold text-warn">
                     <Icon name={f.icon} size={14} /> {f.label}
                   </span>
                 ))}

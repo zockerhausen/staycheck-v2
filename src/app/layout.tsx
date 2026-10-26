@@ -1,13 +1,13 @@
 import type { Metadata, Viewport } from "next";
-import { Manrope } from "next/font/google";
+import { Figtree } from "next/font/google";
+import { cookies } from "next/headers";
 import BottomNav from "@/components/BottomNav";
 import { NavTracker } from "@/components/BackButton";
 import { getUser } from "@/lib/data";
 import "./globals.css";
 
-// Eine Schrift für alles (ruhig und modern), Überschriften extra fett
-const head = Manrope({ subsets: ["latin"], weight: ["600", "700", "800"], variable: "--font-head" });
-const body = Manrope({ subsets: ["latin"], weight: ["400", "500", "600", "700"], variable: "--font-body" });
+// Eine Schrift für alles: freundlich, modern und kräftig (gut lesbar)
+const body = Figtree({ subsets: ["latin", "latin-ext"], weight: ["500", "600", "700", "800", "900"], variable: "--font-body" });
 
 export const metadata: Metadata = {
   title: "StayCheck – Schlaf da, wo es passt",
@@ -15,17 +15,23 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0c0c0e",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#131417" },
+  ],
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const user = await getUser();
+  const [user, jar] = await Promise.all([getUser(), cookies()]);
+  // Darstellung: ausdrücklich gewählt (Cookie) oder wie am Handy eingestellt
+  const t = jar.get("sc_theme")?.value;
+  const theme = t === "light" || t === "dark" ? t : undefined;
 
   return (
-    <html lang="de" className={`${head.variable} ${body.variable}`}>
+    <html lang="de" className={body.variable} data-theme={theme}>
       <body className="min-h-dvh font-sans antialiased">
         <main className="mx-auto w-full max-w-md px-4 pb-28 pt-[max(1.25rem,env(safe-area-inset-top))]">{children}</main>
         <NavTracker />

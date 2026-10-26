@@ -117,7 +117,7 @@ export default function AskDistrict({ target, place, enabled }: { target: Target
                     {m.text}
                   </p>
                 ) : (
-                  <div key={i} className={`max-w-[95%] rounded-2xl rounded-bl-md px-3.5 py-3 text-[15px] leading-relaxed ${m.fehler ? "bg-peach text-peach-ink" : "bg-tan text-[#dcdce0]"}`}>
+                  <div key={i} className={`max-w-[95%] rounded-2xl rounded-bl-md px-3.5 py-3 text-[15px] leading-relaxed ${m.fehler ? "bg-peach text-peach-ink" : "bg-tan text-ink"}`}>
                     {m.text ? (
                       <Rich text={m.text} />
                     ) : (

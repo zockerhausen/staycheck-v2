@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getCriteria, getExtras, getProfile, getUser } from "@/lib/data";
 import ProfileEditor from "@/components/ProfileEditor";
 import Icon from "@/components/Icon";
+import ThemeSwitch from "@/components/ThemeSwitch";
 
 export const dynamic = "force-dynamic";
 
@@ -20,6 +21,11 @@ export default async function ProfilPage() {
         So wichtig ist dir das auf Reisen. Danach richten sich alle Kiez-Empfehlungen und Lage-Checks.
         {user ? " Gespeichert in deinem Konto." : " Gespeichert auf diesem Gerät. Mit Konto auch auf allen anderen."}
       </p>
+
+      <section className="mt-6">
+        <h2 className="mb-2 text-sm font-extrabold text-muted">Darstellung</h2>
+        <ThemeSwitch />
+      </section>
 
       {weights ? (
         <ProfileEditor criteria={criteria} initial={weights} initialExtras={extras} />

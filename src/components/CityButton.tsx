@@ -27,7 +27,7 @@ export default function CityButton({
         void rememberCity(city);
       }}
       className={`press flex items-center gap-4 rounded-3xl border p-5 ${
-        highlight ? "border-[#4a2a1a] bg-gradient-to-br from-[#3a1c0e] to-[#1a1210]" : "border-line bg-paper"
+        highlight ? "border-sun/30 bg-gradient-to-br from-peach to-paper" : "border-line bg-paper"
       }`}
     >
       <span

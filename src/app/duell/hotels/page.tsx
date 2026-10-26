@@ -99,7 +99,7 @@ export default async function HotelDuellPage({
       <section className="card p-4">
         <div className={`grid ${cols} gap-2 text-center`}>
           {results.map((r, i) => (
-            <div key={i} className={`rounded-2xl px-2 py-3 ${r === winner && !tie ? "bg-gradient-to-br from-[#3a1c0e] to-tan outline outline-[1.5px] outline-sun" : "bg-tan"}`}>
+            <div key={i} className={`rounded-2xl px-2 py-3 ${r === winner && !tie ? "bg-gradient-to-br from-peach to-tan outline outline-[1.5px] outline-sun" : "bg-tan"}`}>
               <p className="text-xs font-bold text-muted">#{i + 1}</p>
               <p className="line-clamp-2 text-sm font-bold leading-tight [overflow-wrap:anywhere]">{r.place.name}</p>
               <p className="mt-1 font-display text-[30px] font-extrabold leading-none">{r.match ?? "–"}</p>

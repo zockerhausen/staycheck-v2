@@ -12,9 +12,9 @@ const SOURCE: Record<Source, string> = {
   keine: "keine Daten",
 };
 const COVERAGE_STYLE: Record<Coverage["level"], string> = {
-  gut: "bg-[#3ecf8e]/10 text-[#3ecf8e]",
+  gut: "bg-good/10 text-good",
   mittel: "bg-tan text-muted",
-  duenn: "bg-[#ffb547]/10 text-[#ffb547]",
+  duenn: "bg-warn/10 text-warn",
 };
 const COVERAGE_LABEL: Record<Coverage["level"], string> = { gut: "Datenlage gut", mittel: "Datenlage mittel", duenn: "Datenlage dünn" };
 
@@ -71,7 +71,7 @@ export default function ScoreExplain({
             : "Der Score ist der Durchschnitt aller Werte mit einer Standard-Gewichtung. Mit dem Quiz rechnen wir nach deinen Wünschen."}
         </p>
         {capped !== null && (
-          <p className="pt-2 text-xs font-semibold text-[#ffb547]">
+          <p className="pt-2 text-xs font-semibold text-warn">
             Gerechnet wären es {capped}. Weil dein Muss fehlt, zählen höchstens {MUST_CAP}.
           </p>
         )}

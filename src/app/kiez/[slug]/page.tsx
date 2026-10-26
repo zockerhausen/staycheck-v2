@@ -137,20 +137,20 @@ export default async function KiezPage({
         <div className="flex items-center justify-between">
           <BackButton
             fallback={`/ergebnis?stadt=${district.city}${amp}`}
-            className="press flex h-11 w-11 items-center justify-center rounded-full bg-black/35 backdrop-blur"
+            className="press flex h-11 w-11 items-center justify-center rounded-full bg-sand/85 shadow-soft backdrop-blur"
           >
             <Icon name="back" size={18} />
           </BackButton>
           {user && <FavoriteButton districtId={district.id} isFavorite={favorites.has(district.id)} />}
         </div>
-        <p className="mt-16 text-xs font-bold uppercase tracking-[0.08em] text-[#ffb08f]">
+        <p className="mt-16 text-[13px] font-extrabold text-sun-soft">
           {cityName} · {resolved ? `${match} % Match` : characterOf(district.scores, cityPool)}
         </p>
         <h1 className="mega mt-1 text-[clamp(2.4rem,12vw,3.3rem)] [overflow-wrap:anywhere]">{district.name.split(" (")[0]}</h1>
-        <p className="mt-2 text-[15px] leading-relaxed text-[#c9c0bb]">{district.short_description}</p>
+        <p className="mt-2 text-[15px] leading-relaxed text-muted">{district.short_description}</p>
         <div className="mt-4 flex flex-wrap gap-2">
           {traitsOf(district.scores, cityPool).map((t) => (
-            <span key={t.key} className="flex items-center gap-1.5 rounded-full bg-black/30 px-3 py-1.5 text-[13px] font-semibold">
+            <span key={t.key} className="flex items-center gap-1.5 rounded-full bg-sand/70 px-3 py-1.5 text-[13px] font-bold">
               <Icon name={t.icon} size={14} /> {t.label}
             </span>
           ))}

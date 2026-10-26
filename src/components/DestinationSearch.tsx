@@ -111,7 +111,7 @@ export default function DestinationSearch({
         {loading && <span className="h-5 w-5 animate-spin rounded-full border-[3px] border-raised border-t-sun" />}
       </div>
 
-      {error && <p className="mt-3 px-1 text-sm font-semibold text-[#ffb547]">{error}</p>}
+      {error && <p className="mt-3 px-1 text-sm font-semibold text-warn">{error}</p>}
 
       {results.length > 0 && (
         <ul className="fade-up mt-2 overflow-hidden rounded-[18px] bg-paper">

@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { getUser } from "@/lib/data";
 import { signout } from "@/app/actions";
 import Icon from "@/components/Icon";
+import ThemeSwitch from "@/components/ThemeSwitch";
 import DeleteAccount from "@/components/DeleteAccount";
 import LegalLinks from "@/components/LegalLinks";
 
@@ -19,6 +20,11 @@ export default async function KontoPage() {
       </span>
       <h1 className="mega mt-3 text-[2.1rem]">Dein Konto</h1>
       <p className="mt-1 text-muted">{user.email}</p>
+
+      <section className="mt-6">
+        <h2 className="mb-2 text-sm font-extrabold text-muted">Darstellung</h2>
+        <ThemeSwitch />
+      </section>
 
       <div className="mt-8 space-y-3">
         <Link href="/favoriten" className="btn-chunky btn-chunky-light w-full">

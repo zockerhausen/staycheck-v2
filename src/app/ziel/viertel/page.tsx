@@ -145,19 +145,19 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
         className="-mx-4 -mt-[max(1.25rem,env(safe-area-inset-top))] px-4 pb-2 pt-[max(1.25rem,env(safe-area-inset-top))]"
         style={{ background: `linear-gradient(180deg, ${characterTint(scores, pool)} 0%, #1a120e 55%, #0c0c0e 100%)` }}
       >
-        <BackButton fallback={back} className="press flex h-11 w-11 items-center justify-center rounded-full bg-black/35 backdrop-blur">
+        <BackButton fallback={back} className="press flex h-11 w-11 items-center justify-center rounded-full bg-sand/85 shadow-soft backdrop-blur">
           <Icon name="back" size={18} />
         </BackButton>
-        <p className="mt-16 text-xs font-bold uppercase tracking-[0.08em] text-[#ffb08f]">
+        <p className="mt-16 text-[13px] font-extrabold text-sun-soft">
           {ziel.ort} · {match !== null ? `${match} % Match` : district ? characterOf(scores, pool) : "Viertel"}
         </p>
         <h1 className="mega mt-1 text-[clamp(2.2rem,11vw,3.1rem)] [overflow-wrap:anywhere]">{name}</h1>
         {district && (
-          <p className="mt-2 text-[15px] text-[#c9c0bb]">{district.distKm < 1.5 ? "Im Zentrum" : `${String(district.distKm).replace(".", ",")} km vom Zentrum`}</p>
+          <p className="mt-2 text-[15px] text-muted">{district.distKm < 1.5 ? "Im Zentrum" : `${String(district.distKm).replace(".", ",")} km vom Zentrum`}</p>
         )}
         <div className="mt-4 flex flex-wrap gap-2">
           {traitsOf(scores, pool).map((t) => (
-            <span key={t.key} className="flex items-center gap-1.5 rounded-full bg-black/30 px-3 py-1.5 text-[13px] font-semibold">
+            <span key={t.key} className="flex items-center gap-1.5 rounded-full bg-sand/70 px-3 py-1.5 text-[13px] font-bold">
               <Icon name={t.icon} size={14} /> {t.label}
             </span>
           ))}

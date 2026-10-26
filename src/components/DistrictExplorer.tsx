@@ -83,16 +83,16 @@ export default function DistrictExplorer({
               id={`kiez-${d.slug}`}
               href={href(d)}
               className="press flex h-[200px] w-[72%] max-w-[260px] shrink-0 snap-start flex-col justify-end rounded-[22px] p-4"
-              style={{ background: `linear-gradient(160deg, ${characterTint(d.scores, pool)} 0%, #161618 85%)` }}
+              style={{ background: `linear-gradient(160deg, ${characterTint(d.scores, pool)} 0%, var(--color-paper) 85%)` }}
             >
-              <span className="text-xs font-bold uppercase tracking-[0.06em] text-[#ffb08f]">{characterOf(d.scores, pool)}</span>
+              <span className="text-[13px] font-extrabold text-sun-soft">{characterOf(d.scores, pool)}</span>
               <b className="mt-1 font-display text-[22px] font-extrabold leading-tight tracking-tight">{d.name.split(" (")[0]}</b>
               <span className="mt-1 line-clamp-2 text-[13px] text-muted">{d.short}</span>
               <span className="mt-3 flex flex-wrap gap-1.5">
                 {tr(d)
                   .slice(0, 3)
                   .map((t) => (
-                    <span key={t.key} className="flex items-center gap-1 rounded-full bg-black/30 px-2 py-1 text-[11px] font-semibold">
+                    <span key={t.key} className="flex items-center gap-1 rounded-full bg-sand/70 px-2 py-1 text-[11px] font-bold">
                       <Icon name={t.icon} size={12} /> {t.label}
                     </span>
                   ))}

@@ -34,7 +34,7 @@ export default function Icon({
           d={p.d}
           fill={"f" in p && p.f ? "var(--icon-fill, rgba(242,102,47,.22))" : "none"}
           stroke={"s" in p && p.s ? "currentColor" : "none"}
-          strokeWidth={1.9}
+          strokeWidth={2.4}
           strokeLinecap="round"
           strokeLinejoin="round"
         />

@@ -1,67 +1,167 @@
 @import "tailwindcss";
 
-/* Design „Dunkel & Premium“ (Vorbild Revolut/Spotify): dunkel, ruhig, Orange nur als Akzent.
+/* Design „Leicht & klar“ (Vorbild Airbnb/Revolut): hell oder dunkel, kräftige Schrift, Orange als Akzent.
    Die Namen der Farben sind geblieben, damit alle Seiten automatisch mitziehen:
-   sand = Hintergrund, paper = Karte, tan = zweite Fläche, ink = Text, sun = Akzent, peach = weicher Akzent. */
+   sand = Hintergrund, paper = Karte, tan = zweite Fläche, ink = Text, sun = Akzent, peach = weicher Akzent.
+   Die Werte kommen aus Variablen, die je nach Darstellung (hell/dunkel) wechseln. */
 @theme {
-  --color-sand: #0c0c0e;
-  --color-paper: #161618;
-  --color-tan: #1c1c1f;
-  --color-raised: #2a2a2e;
-  --color-line: #232327;
-  --color-ink: #f5f5f5;
-  --color-muted: #9a9aa0;
-  --color-faint: #6c6c72;
-  --color-sun: #f2662f;
-  --color-sun-dark: #9c3a14;
-  --color-sun-soft: #ff8a5c;
-  --color-peach: #2a1810;
-  --color-peach-ink: #ff8a5c;
+  --color-sand: var(--sc-bg);
+  --color-paper: var(--sc-card);
+  --color-tan: var(--sc-surface);
+  --color-raised: var(--sc-raised);
+  --color-line: var(--sc-line);
+  --color-ink: var(--sc-text);
+  --color-muted: var(--sc-muted);
+  --color-faint: var(--sc-faint);
+  --color-sun: var(--sc-accent);
+  --color-sun-dark: var(--sc-accent-dark);
+  --color-sun-soft: var(--sc-accent-text);
+  --color-peach: var(--sc-accent-bg);
+  --color-peach-ink: var(--sc-accent-text);
+  --color-good: var(--sc-good);
+  --color-warn: var(--sc-warn);
+  --color-bad: var(--sc-bad);
   --font-sans: var(--font-body), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-head), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Hell */
+:root {
+  --sc-bg: #ffffff;
+  --sc-card: #f5f5f7;
+  --sc-surface: #efeff2;
+  --sc-raised: #e3e3e8;
+  --sc-line: #e6e6eb;
+  --sc-text: #17171b;
+  --sc-muted: #55555f;
+  --sc-faint: #8b8b95;
+  --sc-accent: #ff5a2c;
+  --sc-accent-dark: #c63e16;
+  --sc-accent-text: #e2461a;
+  --sc-accent-bg: #fff0ea;
+  --sc-good: #0b8f57;
+  --sc-warn: #a86400;
+  --sc-bad: #d93b3f;
+  --sc-shadow: 0 6px 24px rgba(23, 23, 27, 0.08), 0 1px 3px rgba(23, 23, 27, 0.06);
+  --sc-glass: rgba(255, 255, 255, 0.9);
+  --sc-on-photo: rgba(255, 255, 255, 0.95);
+  --tint-feiern: #ffe3d6;
+  --tint-essen: #ffecd2;
+  --tint-ruhig: #dde8fb;
+  --tint-gruen: #daf1e2;
+  --tint-guenstig: #eef0d2;
+  --tint-zentral: #ece0f6;
+  --tint-none: #ececf0;
+  --icon-fill: rgba(255, 90, 44, 0.18);
+  color-scheme: light;
+}
+
+/* Dunkel: ausdrücklich gewählt … */
+:root[data-theme="dark"] {
+  --sc-bg: #131417;
+  --sc-card: #1d1e23;
+  --sc-surface: #25262c;
+  --sc-raised: #30313a;
+  --sc-line: #2b2c33;
+  --sc-text: #f4f4f6;
+  --sc-muted: #b4b4be;
+  --sc-faint: #7e7e89;
+  --sc-accent: #ff6a3d;
+  --sc-accent-dark: #b8441f;
+  --sc-accent-text: #ff8f63;
+  --sc-accent-bg: #3a2119;
+  --sc-good: #3fd18d;
+  --sc-warn: #ffb547;
+  --sc-bad: #ff6b6e;
+  --sc-shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
+  --sc-glass: rgba(29, 30, 35, 0.9);
+  --tint-feiern: #4a2314;
+  --tint-essen: #45290f;
+  --tint-ruhig: #1b2740;
+  --tint-gruen: #163322;
+  --tint-guenstig: #2d3013;
+  --tint-zentral: #351c3d;
+  --tint-none: #27282e;
+  --icon-fill: rgba(255, 106, 61, 0.24);
+  color-scheme: dark;
+}
+/* … oder vom Handy übernommen, solange nichts gewählt ist */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --sc-bg: #131417;
+    --sc-card: #1d1e23;
+    --sc-surface: #25262c;
+    --sc-raised: #30313a;
+    --sc-line: #2b2c33;
+    --sc-text: #f4f4f6;
+    --sc-muted: #b4b4be;
+    --sc-faint: #7e7e89;
+    --sc-accent: #ff6a3d;
+    --sc-accent-dark: #b8441f;
+    --sc-accent-text: #ff8f63;
+    --sc-accent-bg: #3a2119;
+    --sc-good: #3fd18d;
+    --sc-warn: #ffb547;
+    --sc-bad: #ff6b6e;
+    --sc-shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
+    --sc-glass: rgba(29, 30, 35, 0.9);
+    --tint-feiern: #4a2314;
+    --tint-essen: #45290f;
+    --tint-ruhig: #1b2740;
+    --tint-gruen: #163322;
+    --tint-guenstig: #2d3013;
+    --tint-zentral: #351c3d;
+    --tint-none: #27282e;
+    --icon-fill: rgba(255, 106, 61, 0.24);
+    color-scheme: dark;
+  }
 }
 
 html,
 body {
   background: var(--color-sand);
   color: var(--color-ink);
-  color-scheme: dark;
   -webkit-tap-highlight-color: transparent;
   -webkit-font-smoothing: antialiased;
 }
-
-/* Akzentfläche der eigenen Icons */
-:root {
-  --icon-fill: rgba(242, 102, 47, 0.22);
+/* Kräftige Schrift überall: gut lesbar, auch unterwegs in der Sonne */
+body {
+  font-weight: 600;
+  font-size: 16px;
 }
 
 input[type="search"]::-webkit-search-cancel-button {
   -webkit-appearance: none;
 }
 
-/* Große Zahl, Ringe, Karten im neuen Design */
+/* Große Überschriften, Karten im neuen Design */
 .mega {
   font-family: var(--font-display);
-  font-weight: 800;
-  letter-spacing: -0.04em;
-  line-height: 1.02;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 1.04;
 }
 .card {
   background: var(--color-paper);
-  border-radius: 1.5rem;
+  border-radius: 1.25rem;
 }
 .hero-glow {
-  background: linear-gradient(180deg, #5a2a14 0%, #2a160d 55%, var(--color-sand) 100%);
+  background: linear-gradient(180deg, var(--color-peach) 0%, var(--color-sand) 100%);
 }
+/* Hervorgehobene Karte (Empfehlung): schwebt leicht über dem Grund */
 .glow-card {
-  background: linear-gradient(135deg, #2a1810 0%, var(--color-paper) 70%);
-  border: 1px solid var(--color-raised);
+  background: var(--color-sand);
+  border: 1px solid var(--color-line);
+  box-shadow: var(--sc-shadow);
+}
+.shadow-soft {
+  box-shadow: var(--sc-shadow);
 }
 .press {
-  transition: transform 120ms ease;
+  transition: transform 180ms cubic-bezier(0.3, 1.5, 0.6, 1);
 }
 .press:active {
-  transform: scale(0.97);
+  transform: scale(0.96);
 }
 @keyframes bar-grow {
   from { transform: scaleX(0); }
@@ -88,26 +188,25 @@ input[type="range"] {
   width: 100%;
 }
 
-/* Dicke Knöpfe, die sich beim Tippen „eindrücken“ (wie bei Duolingo) */
+/* Hauptknopf: flach, kräftig, gibt beim Tippen nach */
 .btn-chunky {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  border-radius: 1.1rem;
-  padding: 1rem 1.25rem;
+  min-height: 3.25rem;
+  padding: 0.85rem 1.25rem;
   font-family: var(--font-display);
-  font-weight: 700;
+  font-weight: 800;
   font-size: 1.05rem;
-  border-radius: 999px;
+  border-radius: 0.9rem;
   background: var(--color-sun);
   color: #fff;
-  box-shadow: 0 5px 0 var(--color-sun-dark), 0 10px 24px rgba(242, 102, 47, 0.22);
-  transition: transform 100ms ease, box-shadow 100ms ease;
+  transition: transform 180ms cubic-bezier(0.3, 1.5, 0.6, 1), filter 150ms;
 }
 .btn-chunky:active {
-  transform: translateY(3px);
-  box-shadow: 0 2px 0 var(--color-sun-dark);
+  transform: scale(0.97);
+  filter: brightness(0.95);
 }
 .btn-chunky-light {
   background: var(--color-tan);
@@ -125,21 +224,19 @@ input[type="range"] {
   width: 100%;
   align-items: center;
   gap: 0.9rem;
-  border-radius: 1.1rem;
+  border-radius: 1rem;
   padding: 1rem 1.1rem;
   text-align: left;
-  font-weight: 700;
+  font-weight: 800;
   background: var(--color-paper);
-  border: 1.5px solid var(--color-line);
-  box-shadow: 0 4px 0 #050506;
-  transition: transform 100ms ease, box-shadow 100ms ease, border-color 150ms;
+  border: 2px solid transparent;
+  transition: transform 180ms cubic-bezier(0.3, 1.5, 0.6, 1), border-color 150ms, background 150ms;
 }
 .tile:active {
-  transform: translateY(3px);
-  box-shadow: 0 1px 0 #050506;
+  transform: scale(0.98);
 }
 .tile[data-selected="true"] {
-  background: #24140d;
+  background: var(--color-peach);
   border-color: var(--color-sun);
 }
 
@@ -181,12 +278,12 @@ input[type="range"] {
   height: 26px;
   padding: 0 9px;
   border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(28, 28, 31, 0.92);
-  backdrop-filter: blur(6px);
-  color: rgba(245, 245, 245, var(--t, 1));
-  font: 800 12px var(--font-body), system-ui, sans-serif;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--color-line);
+  background: var(--color-sand);
+  color: var(--color-ink);
+  opacity: var(--t, 1);
+  font: 900 12px var(--font-body), system-ui, sans-serif;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.22);
   cursor: pointer;
   transition: transform 0.15s ease;
 }
@@ -198,10 +295,11 @@ input[type="range"] {
   min-width: 48px;
   padding: 0 12px;
   border: 0;
-  background: linear-gradient(180deg, #ff7a45, #f2662f);
+  background: var(--color-sun);
   color: #fff;
+  opacity: 1;
   font-size: 14px;
-  box-shadow: 0 0 0 6px rgba(242, 102, 47, 0.22), 0 8px 22px rgba(242, 102, 47, 0.45);
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--color-sun) 25%, transparent), 0 8px 22px rgba(0, 0, 0, 0.25);
   z-index: 2;
 }
 .sc-pin-top::after {
@@ -212,23 +310,23 @@ input[type="range"] {
   width: 10px;
   height: 10px;
   margin-left: -5px;
-  background: #f2662f;
+  background: var(--color-sun);
   transform: rotate(45deg);
   border-radius: 2px;
   z-index: -1;
 }
 .maplibregl-ctrl-attrib {
-  background: rgba(12, 12, 14, 0.7) !important;
-  color: #8d8d94 !important;
+  background: var(--sc-glass) !important;
+  color: var(--color-muted) !important;
 }
 .maplibregl-ctrl-attrib a {
-  color: #8d8d94 !important;
+  color: var(--color-muted) !important;
 }
 
 /* Zoom-Knöpfe der Vollbild-Karte im dunklen Look */
 .maplibregl-ctrl-group {
-  background: rgba(12, 12, 14, 0.75) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  background: var(--sc-glass) !important;
+  border: 1px solid var(--color-line) !important;
   border-radius: 14px !important;
   backdrop-filter: blur(8px);
   margin-bottom: max(1.25rem, env(safe-area-inset-bottom)) !important;
@@ -238,24 +336,47 @@ input[type="range"] {
   height: 40px !important;
 }
 .maplibregl-ctrl-group button + button {
-  border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-top: 1px solid var(--color-line) !important;
 }
-.maplibregl-ctrl-group .maplibregl-ctrl-icon {
+:root[data-theme="dark"] .maplibregl-ctrl-group .maplibregl-ctrl-icon {
   filter: invert(1);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .maplibregl-ctrl-group .maplibregl-ctrl-icon {
+    filter: invert(1);
+  }
 }
 
 /* Info-Knopf der Karte dunkel statt weiß */
 .maplibregl-ctrl-attrib-button {
-  background-color: rgba(12, 12, 14, 0.75) !important;
   border-radius: 999px !important;
-  filter: invert(1) hue-rotate(180deg);
 }
 .maplibregl-ctrl-attrib.maplibregl-compact {
-  background: rgba(12, 12, 14, 0.75) !important;
+  background: var(--sc-glass) !important;
   border-radius: 999px !important;
 }
 .maplibregl-cooperative-gesture-screen {
-  background: rgba(12, 12, 14, 0.6) !important;
-  color: #f5f5f5 !important;
-  font: 600 15px var(--font-body), system-ui, sans-serif !important;
+  background: rgba(12, 12, 14, 0.55) !important;
+  color: #ffffff !important;
+  font: 700 15px var(--font-body), system-ui, sans-serif !important;
+}
+
+/* Feste Leiste über der Navigation (z. B. „Preise vergleichen“) */
+.glass {
+  background: var(--sc-glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* Herz und Zählen: kleine Belohnungen */
+@keyframes heart-pop {
+  0% { transform: scale(0.6); }
+  60% { transform: scale(1.25); }
+  100% { transform: scale(1); }
+}
+.heart-pop {
+  animation: heart-pop 450ms cubic-bezier(0.3, 1.8, 0.5, 1);
+}
+@media (prefers-reduced-motion: reduce) {
+  .heart-pop, .press, .btn-chunky { animation: none; transition: none; }
 }

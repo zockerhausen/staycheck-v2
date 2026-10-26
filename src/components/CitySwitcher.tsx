@@ -70,7 +70,7 @@ export default function CitySwitcher({ current, verified }: { current: string; v
               </button>
             </div>
             <p className="mt-3 flex items-center gap-2 rounded-2xl bg-tan px-3.5 py-3 text-sm">
-              <Icon name="check" size={16} className="shrink-0 text-[#3ecf8e]" /> Aktuell: <b>{current}</b>
+              <Icon name="check" size={16} className="shrink-0 text-good" /> Aktuell: <b>{current}</b>
             </p>
             <div className="mt-4">
               <DestinationSearch verified={verified} onPick={close} />

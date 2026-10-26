@@ -51,13 +51,6 @@ export function characterOf(scores: Scores, pool?: Scores[]): string {
 /** Dezenter Farbverlauf je Typ (dunkel, damit es ruhig bleibt). */
 export function characterTint(scores: Scores, pool?: Scores[]): string {
   const key = traitsOf(scores, pool)[0]?.key;
-  const tints: Record<TraitKey, string> = {
-    feiern: "#4a1f10",
-    essen: "#43260f",
-    ruhig: "#18243a",
-    gruen: "#15301f",
-    guenstig: "#2c2f12",
-    zentral: "#331a3a",
-  };
-  return key ? tints[key] : "#26262a";
+  // Farben stehen in globals.css (hell und dunkel)
+  return key ? `var(--tint-${key})` : "var(--tint-none)";
 }

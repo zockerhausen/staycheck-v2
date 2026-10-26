@@ -38,7 +38,7 @@ export default async function NearbyFacts({ lat, lon, name }: { lat: number; lon
       <h2 className="font-display text-[19px] font-extrabold">Rund um {name}</h2>
       {sights.length > 0 && (
         <>
-          <p className="mt-3 text-xs font-bold uppercase tracking-[0.06em] text-muted">In 15 Minuten zu Fuß</p>
+          <p className="mt-3 text-[13px] font-extrabold text-muted">In 15 Minuten zu Fuß</p>
           <ul className="mt-2 divide-y divide-line">
             {sights.map((s) => (
               <li key={`${s.n}-${s.lat}`} className="flex items-center gap-3 py-2.5">

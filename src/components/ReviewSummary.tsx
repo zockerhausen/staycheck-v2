@@ -6,11 +6,11 @@ const fmtCount = (n: number) => n.toLocaleString("de-DE");
 /** Bewertungen aller Plattformen auf einen Blick (Lage-Check einer Unterkunft) */
 export default function ReviewSummary({ reviews }: { reviews: StayReviews }) {
   const agree = agreement(reviews.spread);
-  const tone = agree.tone === "good" ? "text-[#3ecf8e]" : agree.tone === "mid" ? "text-muted" : "text-[#ffb547]";
+  const tone = agree.tone === "good" ? "text-good" : agree.tone === "mid" ? "text-muted" : "text-warn";
   return (
     <section className="card p-5">
       {reviews.demo && (
-        <p className="mb-4 flex items-start gap-2 rounded-[14px] border border-[#ffb547]/30 bg-[#ffb547]/10 px-3 py-2 text-xs font-semibold text-[#ffb547]">
+        <p className="mb-4 flex items-start gap-2 rounded-[14px] border border-warn/30 bg-warn/10 px-3 py-2 text-xs font-semibold text-warn">
           <Icon name="flag" size={14} className="mt-0.5 shrink-0" />
           Beispieldaten: Diese Bewertungen sind ausgedacht und nur in der Vorschau zu sehen. Echte Bewertungen folgen.
         </p>

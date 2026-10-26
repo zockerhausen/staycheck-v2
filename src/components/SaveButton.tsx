@@ -25,7 +25,7 @@ export default function SaveButton({
 
   if (saved) {
     return (
-      <p className="flex items-center justify-center gap-2 rounded-full bg-peach py-4 font-bold text-peach-ink"><Icon name="heart" size={20} fill="#f2662f" /> In deinem Konto gespeichert</p>
+      <p className="flex items-center justify-center gap-2 rounded-full bg-peach py-4 font-bold text-peach-ink"><Icon name="heart" size={20} fill="var(--color-sun)" /> In deinem Konto gespeichert</p>
     );
   }
 

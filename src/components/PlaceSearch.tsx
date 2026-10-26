@@ -156,7 +156,7 @@ export default function PlaceSearch({
       </div>
 
       {(note || error) && (
-        <p className={`mt-3 px-1 text-sm font-semibold ${error ? "text-[#ffb547]" : "text-muted"}`}>{error || note}</p>
+        <p className={`mt-3 px-1 text-sm font-semibold ${error ? "text-warn" : "text-muted"}`}>{error || note}</p>
       )}
 
       {results.length > 0 && (

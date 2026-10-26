@@ -144,8 +144,8 @@ export default function QuizClient({ city, cityName, next: nextUrl }: { city: st
   if (isReveal) {
     return (
       <div className="flex min-h-[calc(100dvh-3rem)] flex-col text-center">
-        <p className="mt-10 text-xs font-bold uppercase tracking-[0.08em] text-[#ffb08f]">Dein Reise-Typ</p>
-        <span className="pop-in mx-auto mt-6 flex h-24 w-24 items-center justify-center rounded-[30px] bg-gradient-to-br from-[#5a2a14] to-tan text-sun-soft">
+        <p className="mt-10 text-[13px] font-extrabold text-sun-soft">Dein Reise-Typ</p>
+        <span className="pop-in mx-auto mt-6 flex h-24 w-24 items-center justify-center rounded-[30px] bg-gradient-to-br from-peach to-tan text-sun-soft">
           <Icon name={p.icon} size={48} />
         </span>
         <h1 className="pop-in mega mt-5 text-[2.2rem]">{p.name}</h1>
@@ -193,7 +193,7 @@ export default function QuizClient({ city, cityName, next: nextUrl }: { city: st
         </div>
       </div>
 
-      <p className="mt-7 text-xs font-bold uppercase tracking-[0.08em] text-muted">
+      <p className="mt-7 text-[13px] font-extrabold text-muted">
         {step === 0 ? `Dein Reise-Profil · ${cityName} · 40 Sek.` : isExtras ? "Fast geschafft" : `Frage ${step + 1} von ${total}`}
       </p>
 
@@ -214,7 +214,7 @@ export default function QuizClient({ city, cityName, next: nextUrl }: { city: st
                     state === "must"
                       ? "border-sun bg-sun text-white"
                       : state === "on"
-                        ? "border-sun bg-[#24140d] text-sun-soft"
+                        ? "border-sun bg-peach text-sun-soft"
                         : "border-tan bg-tan"
                   }`}
                 >
@@ -272,7 +272,7 @@ export default function QuizClient({ city, cityName, next: nextUrl }: { city: st
             {!hint && step < 2 && <p className="px-1 text-[13px] text-muted">Passt beides? Tippe kurz danach eine zweite Antwort an.</p>}
             {hint && (
               <p className="fade-up flex items-center gap-2 rounded-2xl bg-tan px-3.5 py-3 text-sm" role="status">
-                <Icon name="check" size={16} className="shrink-0 text-[#3ecf8e]" /> {hint}
+                <Icon name="check" size={16} className="shrink-0 text-good" /> {hint}
               </p>
             )}
           </div>

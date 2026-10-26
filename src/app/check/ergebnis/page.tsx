@@ -148,8 +148,8 @@ export default async function CheckErgebnisPage({
           </span>
         </div>
         {pm?.mustMissing && mustDetail && (
-          <div className="mt-4 rounded-[18px] border border-[#ffb547]/25 bg-[#ffb547]/10 p-4 text-sm">
-            <b className="flex items-center gap-2 text-[#ffb547]">
+          <div className="mt-4 rounded-[18px] border border-warn/25 bg-warn/10 p-4 text-sm">
+            <b className="flex items-center gap-2 text-warn">
               <Icon name="flag" size={16} /> Dein Muss fehlt: {EXTRA_LABEL[pm.mustMissing]}
             </b>
             <p className="mt-1 text-muted">
@@ -161,7 +161,7 @@ export default async function CheckErgebnisPage({
           </div>
         )}
         {pm && extras.must && !pm.mustMissing && mustDetail && (
-          <p className="mt-3 flex items-center justify-center gap-1.5 text-sm font-semibold text-[#3ecf8e]">
+          <p className="mt-3 flex items-center justify-center gap-1.5 text-sm font-semibold text-good">
             <Icon name="check" size={16} /> Dein Muss passt: {mustDetail.reasons[0]}
           </p>
         )}

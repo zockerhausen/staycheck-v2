@@ -1,8 +1,34 @@
-// StayCheck-Look für die kostenlose OpenFreeMap-Karte („dark“).
+// StayCheck-Look für die kostenlose OpenFreeMap-Karte (hell: „positron“, dunkel: „dark“).
 // Wir laden den fertigen Stil und färben nur um. Fehlt eine Ebene (Stil geändert), wird sie einfach übersprungen.
 import type { Map as MlMap } from "maplibre-gl";
 
-const C = {
+export const MAP_STYLE = {
+  light: "https://tiles.openfreemap.org/styles/positron",
+  dark: "https://tiles.openfreemap.org/styles/dark",
+};
+
+const LIGHT = {
+  bg: "#f3f3f5",
+  land: "#efeff2",
+  water: "#cfe2f2",
+  waterLabel: "#4f7ea3",
+  park: "#d9eedd",
+  building: "#e4e4e9",
+  buildingLine: "#d8d8de",
+  minor: "#ffffff",
+  major: "#ffffff",
+  majorCase: "#dcdce2",
+  motorway: "#ffd8c6",
+  transit: "#ff9d76",
+  label: "#26262c",
+  labelSoft: "#6a6a74",
+  halo: "#ffffff",
+  path: "#ececf0",
+  roadLabel: "#7a7a84",
+  extrude: "#dedee4",
+};
+
+const DARK = {
   bg: "#0e0e10",
   land: "#121215",
   water: "#0f2230",
@@ -18,6 +44,9 @@ const C = {
   label: "#c9c9cf",
   labelSoft: "#8d8d94",
   halo: "#0c0c0e",
+  path: "#1d1d21",
+  roadLabel: "#77777e",
+  extrude: "#1e1e23",
 };
 
 // Deutscher Name, sonst lateinische Schreibweise, sonst Originalname
@@ -40,7 +69,8 @@ function layout(m: MlMap, id: string, prop: string, value: unknown) {
   }
 }
 
-export function applyStayCheckTheme(m: MlMap) {
+export function applyStayCheckTheme(m: MlMap, dark = true) {
+  const C = dark ? DARK : LIGHT;
   const layers = m.getStyle().layers ?? [];
   const ids = layers.map((l) => l.id);
 
@@ -58,7 +88,7 @@ export function applyStayCheckTheme(m: MlMap) {
 
   // Straßen
   paint(m, "highway_minor", "line-color", C.minor);
-  paint(m, "highway_path", "line-color", "#1d1d21");
+  paint(m, "highway_path", "line-color", C.path);
   paint(m, "highway_major_inner", "line-color", C.major);
   paint(m, "highway_major_casing", "line-color", C.majorCase);
   paint(m, "highway_major_subtle", "line-color", C.major);
@@ -81,7 +111,7 @@ export function applyStayCheckTheme(m: MlMap) {
   for (const id of ids.filter((i) => i.startsWith("place_"))) paint(m, id, "text-color", C.label);
   paint(m, "place_suburb", "text-color", C.labelSoft);
   paint(m, "place_other", "text-color", C.labelSoft);
-  paint(m, "highway_name_other", "text-color", "#77777e");
+  paint(m, "highway_name_other", "text-color", C.roadLabel);
   paint(m, "water_name", "text-color", C.waterLabel);
 
   // 3D-Gebäude ab Zoom 15 (sichtbar, wenn die Karte geneigt ist)
@@ -96,7 +126,7 @@ export function applyStayCheckTheme(m: MlMap) {
           "source-layer": "building",
           minzoom: 15,
           paint: {
-            "fill-extrusion-color": "#1e1e23",
+            "fill-extrusion-color": C.extrude,
             "fill-extrusion-height": ["coalesce", ["get", "render_height"], 8],
             "fill-extrusion-base": ["coalesce", ["get", "render_min_height"], 0],
             "fill-extrusion-opacity": ["interpolate", ["linear"], ["zoom"], 15, 0, 16, 0.85],

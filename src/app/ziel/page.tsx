@@ -101,7 +101,7 @@ export default async function ZielPage({ searchParams }: { searchParams: Promise
   return (
     <div className="fade-up">
       {header}
-      <p className="mt-7 text-xs font-bold uppercase tracking-[0.08em] text-[#ffb08f]">Deine Reise{ziel.land ? ` · ${ziel.land}` : ""}</p>
+      <p className="mt-7 text-[13px] font-extrabold text-sun-soft">Deine Reise{ziel.land ? ` · ${ziel.land}` : ""}</p>
       <h1 className="mega mt-1 text-[clamp(2.2rem,10vw,2.7rem)] [overflow-wrap:anywhere]">Wo schläfst du in {ziel.ort}?</h1>
 
       {slow ? (

@@ -28,7 +28,7 @@ export default function FavoriteButton({
       aria-pressed={fav}
       aria-label={fav ? "Aus Favoriten entfernen" : "Zu Favoriten hinzufügen"}
       className={`flex items-center gap-1.5 rounded-full px-3.5 py-2 text-sm font-bold transition active:scale-95 ${
-        fav ? "bg-sun text-white" : "bg-black/35 text-ink backdrop-blur"
+        fav ? "bg-sun text-white" : "bg-sand/85 text-ink shadow-soft backdrop-blur"
       }`}
     >
       <Icon name="heart" size={16} fill={fav ? "#ffffff" : "transparent"} />

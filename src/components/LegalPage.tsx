@@ -18,7 +18,7 @@ export default function LegalPage({ title, updated, children }: { title: string;
           Entwurf: Die Angaben zum Betreiber fehlen noch. Diese Seite ist so noch nicht vollständig.
         </p>
       )}
-      <div className="legal mt-6 space-y-6 text-[15px] leading-relaxed text-[#d4d4d8]">{children}</div>
+      <div className="legal mt-6 space-y-6 text-[15px] leading-relaxed text-ink/85">{children}</div>
       <nav className="mt-10 flex gap-5 text-sm font-semibold text-muted">
         <Link href="/impressum">Impressum</Link>
         <Link href="/datenschutz">Datenschutz</Link>

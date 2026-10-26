@@ -152,7 +152,7 @@ export default async function DuellPage({ searchParams }: { searchParams: Promis
               {i === 1 && <span className="text-sm font-extrabold text-faint">VS</span>}
               <div
                 className={`min-w-0 rounded-3xl px-3 py-4 text-center ${
-                  winner?.key === c.key ? "bg-gradient-to-br from-[#3a1c0e] to-paper outline outline-[1.5px] outline-sun" : "bg-paper"
+                  winner?.key === c.key ? "bg-gradient-to-br from-peach to-paper outline outline-[1.5px] outline-sun" : "bg-paper"
                 }`}
               >
                 <b className="block font-display text-[40px] font-extrabold leading-none tracking-tight">{m}</b>
