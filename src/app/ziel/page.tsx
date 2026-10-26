@@ -14,6 +14,7 @@ import DistrictExplorer from "@/components/DistrictExplorer";
 import KiezMap from "@/components/KiezMap";
 import CitySwitcher from "@/components/CitySwitcher";
 import StayButton from "@/components/StayButton";
+import ThemeToggle from "@/components/ThemeToggle";
 
 // Kartendaten-Abfragen werden zwischengespeichert (1 Tag), die Seite selbst ist dynamisch.
 export const fetchCache = "default-cache";
@@ -45,6 +46,7 @@ export default async function ZielPage({ searchParams }: { searchParams: Promise
       >
         <Icon name="user" size={21} fill="transparent" />
       </Link>
+      <ThemeToggle className="h-[52px] w-[52px]" />
     </div>
   );
 

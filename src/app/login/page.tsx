@@ -3,6 +3,7 @@ import { getUser } from "@/lib/data";
 import AuthForm from "@/components/AuthForm";
 import Icon from "@/components/Icon";
 import Link from "next/link";
+import ThemeSwitch from "@/components/ThemeSwitch";
 import LegalLinks from "@/components/LegalLinks";
 
 export const dynamic = "force-dynamic";
@@ -36,6 +37,10 @@ export default async function LoginPage({
         </Link>
         .
       </p>
+      <section className="mt-10">
+        <h2 className="mb-2 text-sm font-extrabold text-muted">Darstellung</h2>
+        <ThemeSwitch />
+      </section>
       <LegalLinks className="mt-10" />
     </div>
   );

@@ -19,20 +19,7 @@ export default function ThemeSwitch() {
 
   function choose(m: Mode) {
     setMode(m);
-    const root = document.documentElement;
-    if (m === "auto") {
-      delete root.dataset.theme;
-      document.cookie = "sc_theme=; Max-Age=0; Path=/; SameSite=Lax; Secure";
-    } else {
-      root.dataset.theme = m;
-      document.cookie = `sc_theme=${m}; Max-Age=31536000; Path=/; SameSite=Lax; Secure`;
-    }
-    window.dispatchEvent(new Event("sc-theme"));
-    try {
-      navigator.vibrate?.(8);
-    } catch {
-      /* egal */
-    }
+    applyTheme(m);
   }
 
   const i = OPTIONS.findIndex((o) => o.key === mode);
@@ -57,6 +44,24 @@ export default function ThemeSwitch() {
       ))}
     </div>
   );
+}
+
+/** Darstellung setzen und merken (Cookie, damit der Server sie beim nächsten Laden gleich mitschickt) */
+export function applyTheme(m: Mode) {
+  const root = document.documentElement;
+  if (m === "auto") {
+    delete root.dataset.theme;
+    document.cookie = "sc_theme=; Max-Age=0; Path=/; SameSite=Lax; Secure";
+  } else {
+    root.dataset.theme = m;
+    document.cookie = `sc_theme=${m}; Max-Age=31536000; Path=/; SameSite=Lax; Secure`;
+  }
+  window.dispatchEvent(new Event("sc-theme"));
+  try {
+    navigator.vibrate?.(8);
+  } catch {
+    /* egal */
+  }
 }
 
 /** Ist gerade die dunkle Darstellung aktiv? (gewählt oder vom Handy) */

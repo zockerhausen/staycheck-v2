@@ -12,6 +12,7 @@ import CitySwitcher from "@/components/CitySwitcher";
 import KiezMap from "@/components/KiezMap";
 import ZoneLegend from "@/components/ZoneLegend";
 import StayButton from "@/components/StayButton";
+import ThemeToggle from "@/components/ThemeToggle";
 import { cityDataQuick, DEFAULT_WEIGHTS } from "@/lib/geo";
 import { findSpots, pickZones } from "@/lib/zones";
 import { redirect } from "next/navigation";
@@ -49,11 +50,9 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
       {city ? (
         <CitySwitcher current={city.name} verified={verified} />
       ) : (
-        <span className="text-base font-bold">StayCheck</span>
+        <span className="text-[17px] font-black">StayCheck</span>
       )}
-      <Link href="/check" aria-label="Lage-Check" className="press flex h-11 w-11 items-center justify-center rounded-full bg-tan">
-        <Icon name="search" size={20} />
-      </Link>
+      <ThemeToggle className="h-11 w-11" />
     </div>
   );
 
@@ -139,6 +138,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
         >
           <Icon name="sliders" size={21} fill="transparent" />
         </Link>
+        <ThemeToggle className="h-[52px] w-[52px]" />
       </div>
 
       {!weights && (
