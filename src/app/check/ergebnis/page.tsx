@@ -249,8 +249,8 @@ export default async function CheckErgebnisPage({
       </Link>
       <div className="h-16" aria-hidden />
       <BookBar
-        title={reviews ? `Gäste ${fmtScore(reviews.fair)} von 10${reviews.demo ? " (Beispiel)" : ""}` : `Lage ${match} von 100`}
-        sub={isStay ? "Preise bei Booking ansehen" : "Unterkünfte hier bei Booking"}
+        title={reviews ? `Lage ${match}, Gäste ${fmtScore(reviews.fair)}` : `Lage ${match} von 100`}
+        sub={reviews?.demo ? "Gäste-Wert ist ein Beispiel" : isStay ? "Preise bei Booking" : "Unterkünfte in der Nähe"}
         href={bookingUrl(isStay ? name : "", sub)}
         label="Preise vergleichen"
       />
