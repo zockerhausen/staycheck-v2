@@ -78,7 +78,7 @@ export async function searchPlaces(query: string, near?: { lat: number; lon: num
 
 // ---------- Overpass ----------
 
-type OverpassElement = {
+export type OverpassElement = {
   type: string;
   lat?: number;
   lon?: number;
@@ -152,7 +152,7 @@ function polygonArea(pts: { lat: number; lon: number }[]) {
 }
 
 /** Overpass-Antwort → Punkte (mit Umriss bei Flächen) und Linien (Straßen, Gleise) */
-function split(elements: OverpassElement[]): { pois: Poi[]; lines: Line[] } {
+export function split(elements: OverpassElement[]): { pois: Poi[]; lines: Line[] } {
   const pois: Poi[] = [];
   const lines: Line[] = [];
   for (const e of elements) {
@@ -316,9 +316,11 @@ async function hotelsScored(
 nwr(around:${radius},${c})[tourism~"^(hotel|hostel|guest_house|apartment)$"][name];
 out tags center;`;
   const [hotelEls, raw] = await Promise.all([overpass(hotelsQuery), overpass(poiQuery(center.lat, center.lon, radius))]);
-  const data = split(raw);
-  const hotels = split(hotelEls).pois;
+  return hotelsFromData(split(hotelEls).pois, split(raw), district, areaName)
+}
 
+/** Rechenteil: Unterkünfte mit Lage-Werten aus fertigen Kartendaten (auch für die Vorberechnung). */
+export function hotelsFromData(hotels: Poi[], data: { pois: Poi[]; lines: Line[] }, district: District | null, areaName: string, limit = 150) {
   return hotels
     .map((h) => {
       const a = scoreLocation(h.lat, h.lon, data, district);
@@ -335,7 +337,7 @@ out tags center;`;
       };
     })
     .sort((a, b) => b.match - a.match)
-    .slice(0, 150); // genug Auswahl, damit jedes Profil seine besten findet
+    .slice(0, limit); // genug Auswahl, damit jedes Profil seine besten findet
 }
 
 /** Nach dem Reise-Profil sortieren (schnell, läuft bei jedem Aufruf). */
@@ -427,6 +429,41 @@ export async function autoCity(lat: number, lon: number, radius = 3500, max = 14
     ...tiles.flatMap((bb) => [ask(bb, FOOD), ask(bb, REST)]),
   ]);
 
+  const groups: { lat: number; lon: number }[][] = Array.from({ length: CATS }, () => []);
+  const seen = Array.from({ length: CATS }, () => new Set<string>()); // Flächen an Stück-Grenzen nicht doppelt zählen
+  for (const [k, els] of tileEls.entries()) {
+    const order = k % 2 === 0 ? FOOD : REST;
+    let pos = 0;
+    for (const e of els) {
+      if (e.type === "sep") {
+        pos += 1;
+        continue;
+      }
+      const g = order[pos];
+      const la = e.lat ?? e.center?.lat;
+      const lo = e.lon ?? e.center?.lon;
+      if (g === undefined || !Number.isFinite(la) || !Number.isFinite(lo)) continue;
+      const id = `${e.type}:${la},${lo}`;
+      if (seen[g].has(id)) continue;
+      seen[g].add(id);
+      groups[g].push({ lat: la as number, lon: lo as number });
+    }
+  }
+  return autoCityFromData(lat, lon, radius, max, places, groups);
+}
+
+/**
+ * Der Rechenteil von autoCity, getrennt vom Abfragen: bekommt benannte Orte und die gezählten Punkte
+ * (Reihenfolge wie RADII). So rechnet die Vorberechnung über GitHub mit heruntergeladenen Kartendaten genau gleich.
+ */
+export function autoCityFromData(
+  lat: number,
+  lon: number,
+  radius: number,
+  max: number,
+  places: OverpassElement[],
+  groups: { lat: number; lon: number }[][],
+): AutoCity {
   const rank: Record<string, number> = { suburb: 0, quarter: 1, neighbourhood: 2 };
   const candidates = places
     .filter((p) => Number.isFinite(p.lat) && Number.isFinite(p.lon) && p.tags?.name)
@@ -449,26 +486,6 @@ export async function autoCity(lat: number, lon: number, radius = 3500, max = 14
     picked.push(p);
   }
 
-  const groups: { lat: number; lon: number }[][] = Array.from({ length: CATS }, () => []);
-  const seen = Array.from({ length: CATS }, () => new Set<string>()); // Flächen an Stück-Grenzen nicht doppelt zählen
-  for (const [k, els] of tileEls.entries()) {
-    const order = k % 2 === 0 ? FOOD : REST;
-    let pos = 0;
-    for (const e of els) {
-      if (e.type === "sep") {
-        pos += 1;
-        continue;
-      }
-      const g = order[pos];
-      const la = e.lat ?? e.center?.lat;
-      const lo = e.lon ?? e.center?.lon;
-      if (g === undefined || !Number.isFinite(la) || !Number.isFinite(lo)) continue;
-      const id = `${e.type}:${la},${lo}`;
-      if (seen[g].has(id)) continue;
-      seen[g].add(id);
-      groups[g].push({ lat: la as number, lon: lo as number });
-    }
-  }
   // Punkte in Kacheln (ca. 1 km) einsortieren, damit das Zählen auch für hunderte Rasterpunkte schnell bleibt
   const CELL = 0.01;
   const buckets = groups.map((g) => {

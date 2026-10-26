@@ -1,0 +1,129 @@
+name: Städte vorberechnen
+# Lädt OpenStreetMap-Regionen (Geofabrik), schneidet die Städte aus und rechnet mit denselben Formeln wie die App:
+# Viertel, Raster/Ecken, alle Unterkünfte mit Lage-Score, Sehenswürdigkeiten, Flughafen. Ergebnis: data/cities/*.json
+on:
+  workflow_dispatch:
+    inputs:
+      nur:
+        description: "Nur diese Städte (Komma-Liste von Slugs, leer = alle)"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+concurrency:
+  group: vorberechnen
+  cancel-in-progress: false
+
+env:
+  UA: "StayCheck-Vorberechnung (https://github.com/zockerhausen/staycheck-v2)"
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Städte und Regionen planen
+        id: plan
+        run: |
+          pip install --quiet shapely==2.0.6
+          npx --yes esbuild@0.24.2 scripts/precompute/list-cities.ts --bundle --platform=node --format=esm --outfile=/tmp/list.mjs --log-level=error
+          node /tmp/list.mjs > /tmp/cities.json
+          if [ -n "${{ inputs.nur }}" ]; then
+            python3 -c "import json,sys; keep=set('${{ inputs.nur }}'.split(',')); c=json.load(open('/tmp/cities.json')); json.dump([x for x in c if x['slug'] in keep], open('/tmp/cities.json','w'))"
+          fi
+          echo "matrix=$(python3 scripts/precompute/plan.py /tmp/cities.json)" >> "$GITHUB_OUTPUT"
+
+  region:
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    strategy:
+      fail-fast: false
+      max-parallel: 6
+      matrix:
+        include: ${{ fromJson(needs.plan.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Werkzeuge
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq osmium-tool > /dev/null
+          npx --yes esbuild@0.24.2 scripts/precompute/list-cities.ts --bundle --platform=node --format=esm --outfile=/tmp/list.mjs --log-level=error
+          npx --yes esbuild@0.24.2 scripts/precompute/build.ts --bundle --platform=node --format=esm --outfile=/tmp/build.mjs \
+            --alias:next/cache=./scripts/precompute/stubs/cache.js --alias:next/server=./scripts/precompute/stubs/server.js --alias:@=./src --log-level=error
+          node /tmp/list.mjs > /tmp/cities.json
+      - name: Region herunterladen (${{ matrix.region }})
+        run: curl -sSfL -A "$UA" -o /tmp/region.osm.pbf "${{ matrix.url }}" && ls -lh /tmp/region.osm.pbf
+      - name: Städte berechnen
+        run: |
+          mkdir -p out
+          osmium tags-filter /tmp/region.osm.pbf nwr/aeroway=aerodrome -o /tmp/air.pbf --overwrite
+          osmium export /tmp/air.pbf -f geojsonseq -o /tmp/air.seq --overwrite --geometry-types=point,polygon
+          for slug in $(echo "${{ matrix.cities }}" | tr ',' ' '); do
+            CITY=$(python3 -c "import json; print(json.dumps(next(c for c in json.load(open('/tmp/cities.json')) if c['slug']=='$slug')))")
+            BBOX=$(python3 -c "import json,math; c=json.loads('''$CITY'''); m=c['radius']+2000; dl=m/110540; do=m/(111320*math.cos(math.radians(c['lat']))); print(f\"{c['lon']-do},{c['lat']-dl},{c['lon']+do},{c['lat']+dl}\")")
+            osmium extract -b "$BBOX" /tmp/region.osm.pbf -o /tmp/city.pbf --overwrite
+            osmium tags-filter /tmp/city.pbf \
+              n/place=suburb,quarter,neighbourhood \
+              nwr/amenity=bar,pub,nightclub,biergarten,restaurant,cafe,fast_food,food_court,ferry_terminal,coworking_space \
+              n/railway=station,halt,tram_stop w/railway=rail,light_rail,subway,tram n/public_transport=station \
+              n/highway=bus_stop w/highway=motorway,trunk,primary,secondary \
+              nwr/natural=beach,water,wood nwr/landuse=forest nwr/leisure=fitness_centre,park,garden,nature_reserve \
+              nwr/tourism=hostel,guest_house,hotel,apartment,attraction,museum,viewpoint,gallery,zoo \
+              nwr/historic=monument,castle,ruins,city_gate,archaeological_site nwr/shop nwr/office=coworking \
+              -o /tmp/f.pbf --overwrite
+            osmium export /tmp/f.pbf -f geojsonseq -o /tmp/f.seq --overwrite --geometry-types=point,linestring,polygon
+            node --max-old-space-size=6000 /tmp/build.mjs "$CITY" /tmp/f.seq /tmp/air.seq "out/$slug.json" || echo "::warning title=$slug::Berechnung fehlgeschlagen"
+          done
+      - uses: actions/upload-artifact@v4
+        with:
+          name: staedte-${{ matrix.region }}
+          path: out/*.json
+          if-no-files-found: warn
+          retention-days: 3
+
+  speichern:
+    needs: region
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: staedte-*
+          path: /tmp/staedte
+          merge-multiple: true
+      - name: In die App übernehmen
+        run: |
+          mkdir -p data/cities
+          cp /tmp/staedte/*.json data/cities/ 2>/dev/null || true
+          python3 - <<'PY'
+          import json, glob, os
+          idx = []
+          for f in sorted(glob.glob("data/cities/*.json")):
+              if f.endswith("index.json"):
+                  continue
+              d = json.load(open(f))
+              idx.append({"slug": d["slug"], "lat": d["lat"], "lon": d["lon"], "radius": d["radius"], "generated": d["generated"], "hotels": len(d["hotels"])})
+          json.dump(idx, open("data/cities/index.json", "w"), ensure_ascii=False, indent=1)
+          print(f"{len(idx)} Städte im Index")
+          PY
+          git config user.name "zockerhausen"
+          git config user.email "pauljonas.beth@me.com"
+          git add data/cities
+          git diff --cached --quiet && echo "Nichts Neues" && exit 0
+          git commit -m "Vorberechnete Städte aktualisiert (OpenStreetMap über Geofabrik)" -m "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>" -m "Claude-Session: https://claude.ai/code/session_01NHFJiDqfkhiYUvj1E1dwBL"
+          git pull --rebase -q origin "${GITHUB_REF_NAME}"
+          git push -q origin "HEAD:${GITHUB_REF_NAME}"
