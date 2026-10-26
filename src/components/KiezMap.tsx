@@ -73,7 +73,7 @@ function MapCanvas({
             [Math.min(...lons), Math.min(...lats)],
             [Math.max(...lons), Math.max(...lats)],
           ],
-          { padding: { top: 40, bottom: 40, left: 50, right: 50 }, duration: 0, maxZoom: 14 },
+          { padding: { top: 50, bottom: 50, left: 60, right: 60 }, duration: 0, maxZoom: 12.6 },
         );
       }
       if (full) m.addControl(new maplibregl.NavigationControl({ showCompass: false }), "bottom-right");

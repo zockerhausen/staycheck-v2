@@ -16,6 +16,7 @@ export type PreHotel = {
   kind: "hotel" | "hostel" | "guest_house" | "apartment" | "address" | "other";
   scores: Record<string, number | null>;
   highlights: Highlight[];
+  stars: number; // 0 = unbekannt
 };
 export type PreCity = {
   slug: string;
@@ -32,7 +33,7 @@ export type PreCity = {
 };
 
 type IndexRow = { slug: string; lat: number; lon: number; radius: number };
-type RawCity = Omit<PreCity, "hotels"> & { scoreKeys: string[]; hotels: [string, string, number, number, string, (number | null)[], Highlight[]][] };
+type RawCity = Omit<PreCity, "hotels"> & { scoreKeys: string[]; hotels: [string, string, number, number, string, (number | null)[], Highlight[], number?][] };
 
 const DIR = path.join(process.cwd(), "data", "cities");
 let index: IndexRow[] | null = null;
@@ -58,7 +59,7 @@ function load(slug: string): Promise<PreCity | null> {
           const raw = JSON.parse(txt) as RawCity;
           return {
             ...raw,
-            hotels: raw.hotels.map(([name, subtitle, lat, lon, kind, vals, highlights]) => ({
+            hotels: raw.hotels.map(([name, subtitle, lat, lon, kind, vals, highlights, stars]) => ({
               name,
               subtitle,
               lat,
@@ -66,6 +67,7 @@ function load(slug: string): Promise<PreCity | null> {
               kind: kind as PreHotel["kind"],
               scores: Object.fromEntries(raw.scoreKeys.map((k, i) => [k, vals[i]])),
               highlights,
+              stars: stars ?? 0,
             })),
           };
         })

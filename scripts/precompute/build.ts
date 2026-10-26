@@ -119,7 +119,7 @@ const around = (lat: number, lon: number) => {
 
 const STAY = /^(hotel|hostel|guest_house|apartment)$/;
 const stays = data.pois.filter((p) => STAY.test(p.tags.tourism ?? "") && p.tags.name && distance(city.lat, city.lon, p.lat, p.lon) <= city.radius + 300);
-const hotels = stays.flatMap((h) => hotelsFromData([h], around(h.lat, h.lon), null, "", 1));
+const hotels = stays.flatMap((h) => hotelsFromData([h], around(h.lat, h.lon), null, "", 1).map((r) => ({ ...r, stars: Number.parseFloat(h.tags.stars ?? "") || 0 })));
 const scoreKeys = [...new Set(hotels.flatMap((h) => Object.keys(h.scores)))];
 
 // ---------- Ehrliche Zusatzdaten ----------
@@ -201,7 +201,7 @@ const out = {
   generated: new Date().toISOString().slice(0, 10),
   city: auto,
   scoreKeys,
-  // Kompakt: [Name, Straße, lat, lon, Art, Werte (Reihenfolge scoreKeys), Highlights]
+  // Kompakt: [Name, Straße, lat, lon, Art, Werte (Reihenfolge scoreKeys), Highlights, Sterne]
   hotels: hotels.map((h) => [
     h.name.slice(0, 90),
     h.subtitle.slice(0, 90),
@@ -210,6 +210,7 @@ const out = {
     h.kind,
     scoreKeys.map((k) => round((h.scores as Record<string, number | null>)[k] ?? null)),
     h.highlights,
+    Math.min(5, Math.max(0, h.stars)),
   ]),
   sights,
   airports,
