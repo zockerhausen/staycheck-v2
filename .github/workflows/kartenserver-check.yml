@@ -1,0 +1,15 @@
+name: Kartenserver-Check
+on: workflow_dispatch
+permissions:
+  contents: read
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Overpass-Server anpingen
+        run: |
+          Q='[out:json][timeout:10];node(52.52,13.40,52.521,13.401);out skel 1;'
+          for s in https://overpass.kumi.systems/api/interpreter https://overpass-api.de/api/interpreter https://overpass.private.coffee/api/interpreter https://maps.mail.ru/osm/tools/overpass/api/interpreter; do
+            echo "== $s"; curl -s -m 25 -o /dev/null -w "%{http_code} %{time_total}s\n" --data-urlencode "data=$Q" "$s" || echo "fehler"
+          done
+          curl -s -m 15 https://overpass-api.de/api/status | head -20 || true
