@@ -268,10 +268,57 @@ const scoreCached = unstable_cache(
   { revalidate: 86400 },
 );
 
+/** Sicherheit kommt in geprüften Städten aus unserer Viertel-Bewertung. */
+function withDistrictSafety(r: ScoreResult, district: District | null): LocationAnalysis {
+  const safety = district?.scores?.safety;
+  if (safety == null) return { ...r, district };
+  return {
+    ...r,
+    scores: { ...r.scores, safety },
+    details: { ...r.details, safety: { score: safety, source: "viertel", reasons: [`Unsere Einschätzung für ${district!.name}`] } },
+    district,
+  };
+}
+
+/**
+ * Grobe Schätzung aus dem vorberechneten Raster (Messpunkte im Umkreis von 450 m),
+ * wenn die genaue Messung gerade nicht möglich ist. Ehrlich als „dünne Datenlage“ markiert.
+ */
+export async function estimateLocation(lat: number, lon: number, districts: District[]): Promise<LocationAnalysis | null> {
+  const pre = await precomputedCovering(lat, lon);
+  if (!pre) return null;
+  const near = pre.city.zones.filter((z) => distance(z.lat, z.lon, lat, lon) <= 450);
+  if (!near.length) return null;
+  const scores: Record<string, number | null> = {};
+  const details: ScoreResult["details"] = {};
+  ZONE_KEYS.forEach((k, i) => {
+    const v = Math.round((near.reduce((s, z) => s + z.s[i], 0) / near.length) * 10) / 10;
+    scores[k] = v;
+    details[k] = { score: v, source: "messung", reasons: [`Durchschnitt von ${near.length} Messpunkten im Umkreis von 450 m (Raster, nicht genau diese Adresse)`] };
+  });
+  scores.safety = null;
+  details.safety = { score: null, source: "keine", reasons: ["Für diese Stelle haben wir keine Einschätzung"] };
+  return withDistrictSafety(
+    {
+      scores,
+      details,
+      highlights: [],
+      coverage: { level: "duenn", text: "Grobe Schätzung aus unserem Raster, weil die genaue Messung gerade nicht verfügbar ist." },
+      counts: { bars: 0, clubs: 0, food: 0, hostels: 0 },
+      nearestRail: null,
+    },
+    nearestDistrict(lat, lon, districts),
+  );
+}
+
 export async function analyzeLocation(lat: number, lon: number, districts: District[]): Promise<LocationAnalysis> {
   const la = Math.round(lat * 1e5) / 1e5;
   const lo = Math.round(lon * 1e5) / 1e5;
   const district = nearestDistrict(la, lo, districts);
+  // Unterkunft aus der Vorberechnung? Dann die volle Bewertung sofort (ohne Kartenserver)
+  const pre = await precomputedCovering(la, lo);
+  const hit = pre?.hotels.find((h) => h.full && distance(la, lo, h.lat, h.lon) <= 40);
+  if (hit?.full) return withDistrictSafety(hit.full, district);
   const r = await once(`score:${la},${lo}`, () => scoreCached(la, lo, district ? { name: district.name, scores: district.scores } : null));
   return { ...r, district };
 }

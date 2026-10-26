@@ -84,12 +84,12 @@ jobs:
               nwr/historic=monument,castle,ruins,city_gate,archaeological_site nwr/shop nwr/office=coworking \
               -o /tmp/f.pbf --overwrite
             osmium export /tmp/f.pbf -f geojsonseq -o /tmp/f.seq --overwrite --geometry-types=point,linestring,polygon
-            node --max-old-space-size=6000 /tmp/build.mjs "$CITY" /tmp/f.seq /tmp/airports.csv "out/$slug.json" || echo "::warning title=$slug::Berechnung fehlgeschlagen"
+            node --max-old-space-size=6000 /tmp/build.mjs "$CITY" /tmp/f.seq /tmp/airports.csv "out/$slug.json.gz" || echo "::warning title=$slug::Berechnung fehlgeschlagen"
           done
       - uses: actions/upload-artifact@v4
         with:
           name: staedte-${{ matrix.region }}
-          path: out/*.json
+          path: out/*.json.gz
           if-no-files-found: warn
           retention-days: 3
 
@@ -107,14 +107,15 @@ jobs:
       - name: In die App übernehmen
         run: |
           mkdir -p data/cities
-          cp /tmp/staedte/*.json data/cities/ 2>/dev/null || true
+          cp /tmp/staedte/*.json.gz data/cities/ 2>/dev/null || true
           python3 - <<'PY'
-          import json, glob, os
+          import json, glob, gzip, os
           idx = []
-          for f in sorted(glob.glob("data/cities/*.json")):
-              if f.endswith("index.json"):
-                  continue
-              d = json.load(open(f))
+          for f in sorted(glob.glob("data/cities/*.json.gz")):
+              d = json.load(gzip.open(f))
+              old = f[:-3]
+              if os.path.exists(old):
+                  os.remove(old)  # alte, ungepackte Fassung
               idx.append({"slug": d["slug"], "lat": d["lat"], "lon": d["lon"], "radius": d["radius"], "generated": d["generated"], "hotels": len(d["hotels"])})
           json.dump(idx, open("data/cities/index.json", "w"), ensure_ascii=False, indent=1)
           print(f"{len(idx)} Städte im Index")

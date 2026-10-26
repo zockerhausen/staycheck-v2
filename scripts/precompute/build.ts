@@ -1,8 +1,9 @@
 // Vorberechnung einer Stadt aus heruntergeladenen OpenStreetMap-Daten (osmium export → geojsonseq).
-// Nutzt exakt dieselben Rechenwege wie die App (autoCityFromData, hotelsFromData), nur ohne Overpass-Server.
+// Nutzt exakt dieselben Rechenwege wie die App (autoCityFromData, scoreLocation), nur ohne Overpass-Server.
 // Aufruf: node build.mjs <stadt.json> <features.geojsonseq> <airports.csv (OurAirports)> <ausgabe.json>
 import { readFileSync, writeFileSync } from "node:fs";
-import { autoCityFromData, hotelsFromData, split, type OverpassElement } from "../../src/lib/geo";
+import { gzipSync } from "node:zlib";
+import { autoCityFromData, locationMatch, DEFAULT_WEIGHTS, scoreLocation, split, type OverpassElement } from "../../src/lib/geo";
 import { distance, type Line, type Poi } from "../../src/lib/score";
 
 type City = { slug: string; ort: string; land: string; lat: number; lon: number; radius: number };
@@ -119,7 +120,27 @@ const around = (lat: number, lon: number) => {
 
 const STAY = /^(hotel|hostel|guest_house|apartment)$/;
 const stays = data.pois.filter((p) => STAY.test(p.tags.tourism ?? "") && p.tags.name && distance(city.lat, city.lon, p.lat, p.lon) <= city.radius + 300);
-const hotels = stays.flatMap((h) => hotelsFromData([h], around(h.lat, h.lon), null, "", 1).map((r) => ({ ...r, stars: Number.parseFloat(h.tags.stars ?? "") || 0 })));
+// Volle Bewertung je Unterkunft (wie beim Lage-Check): Werte, Begründungen, Datenlage, nächster Bahnhof
+const KIND = (t: Record<string, string>) => (STAY.test(t.tourism ?? "") ? t.tourism : "other");
+const hotels = stays.map((h) => {
+  const a = scoreLocation(h.lat, h.lon, around(h.lat, h.lon), null);
+  const street = [h.tags["addr:street"], h.tags["addr:housenumber"]].filter(Boolean).join(" ");
+  return {
+    name: h.tags.name,
+    subtitle: street,
+    lat: h.lat,
+    lon: h.lon,
+    kind: KIND(h.tags),
+    scores: a.scores,
+    match: locationMatch(a.scores, DEFAULT_WEIGHTS),
+    highlights: a.highlights,
+    details: a.details,
+    coverage: a.coverage,
+    counts: a.counts,
+    nearestRail: a.nearestRail,
+    stars: Number.parseFloat(h.tags.stars ?? "") || 0,
+  };
+});
 const scoreKeys = [...new Set(hotels.flatMap((h) => Object.keys(h.scores)))];
 
 // ---------- Ehrliche Zusatzdaten ----------
@@ -201,7 +222,8 @@ const out = {
   generated: new Date().toISOString().slice(0, 10),
   city: auto,
   scoreKeys,
-  // Kompakt: [Name, Straße, lat, lon, Art, Werte (Reihenfolge scoreKeys), Highlights, Sterne]
+  // Kompakt: [Name, Straße, lat, lon, Art, Werte (Reihenfolge scoreKeys), Highlights, Sterne, Details]
+  // Details: [je Wert [Quelle, Begründungen mit \u0001 getrennt]], Datenlage, Zählungen, nächster Bahnhof
   hotels: hotels.map((h) => [
     h.name.slice(0, 90),
     h.subtitle.slice(0, 90),
@@ -209,13 +231,22 @@ const out = {
     Math.round(h.lon * 1e5) / 1e5,
     h.kind,
     scoreKeys.map((k) => round((h.scores as Record<string, number | null>)[k] ?? null)),
-    h.highlights,
+    h.highlights.slice(0, 6),
     Math.min(5, Math.max(0, h.stars)),
+    [
+      scoreKeys.map((k) => {
+        const d = h.details[k];
+        return d ? [d.source, d.reasons.join("\u0001")] : null;
+      }),
+      h.coverage,
+      h.counts,
+      h.nearestRail ? [h.nearestRail.name, Math.round(h.nearestRail.dist)] : null,
+    ],
   ]),
   sights,
   airports,
 };
-writeFileSync(outPath, JSON.stringify(out));
+writeFileSync(outPath, gzipSync(JSON.stringify(out), { level: 9 })); // gepackt: ca. 5× kleiner
 console.log(
   `${city.slug}: ${auto.districts.length} Viertel, ${auto.zones.length} Rasterpunkte, ${hotels.length} Unterkünfte, ${sights.length} Sehenswürdigkeiten, Flughafen ${airports[0]?.iata ?? "–"} · ${Math.round((Date.now() - t0) / 1000)} s`,
 );

@@ -2,8 +2,9 @@
 // Werden zuerst genutzt – dann braucht die App für diese Städte keine fremden Kartenserver.
 // Nur auf dem Server (liest Dateien).
 import { readFile } from "node:fs/promises";
+import { gunzipSync } from "node:zlib";
 import path from "node:path";
-import { distance, type Highlight } from "./score";
+import { distance, type Coverage, type Detail, type Highlight, type ScoreResult, type Source } from "./score";
 import type { AutoCity } from "./geo";
 
 export type PreSight = { n: string; lat: number; lon: number; k: string; w: number };
@@ -17,6 +18,7 @@ export type PreHotel = {
   scores: Record<string, number | null>;
   highlights: Highlight[];
   stars: number; // 0 = unbekannt
+  full: ScoreResult | null; // volle Bewertung (Begründungen, Datenlage) für den Lage-Check
 };
 export type PreCity = {
   slug: string;
@@ -33,7 +35,18 @@ export type PreCity = {
 };
 
 type IndexRow = { slug: string; lat: number; lon: number; radius: number };
-type RawCity = Omit<PreCity, "hotels"> & { scoreKeys: string[]; hotels: [string, string, number, number, string, (number | null)[], Highlight[], number?][] };
+type RawCity = Omit<PreCity, "hotels"> & { scoreKeys: string[]; hotels: [
+    string,
+    string,
+    number,
+    number,
+    string,
+    (number | null)[],
+    Highlight[],
+    number?,
+    [([Source, string] | null)[], Coverage, ScoreResult["counts"], [string, number] | null]?,
+  ][];
+};
 
 const DIR = path.join(process.cwd(), "data", "cities");
 let index: IndexRow[] | null = null;
@@ -54,21 +67,43 @@ function load(slug: string): Promise<PreCity | null> {
   if (!cache.has(slug)) {
     cache.set(
       slug,
-      readFile(path.join(DIR, `${slug}.json`), "utf8")
+      readFile(path.join(DIR, `${slug}.json.gz`))
+        .then((buf) => gunzipSync(buf).toString("utf8"))
+        .catch(() => readFile(path.join(DIR, `${slug}.json`), "utf8"))
         .then((txt) => {
           const raw = JSON.parse(txt) as RawCity;
           return {
             ...raw,
-            hotels: raw.hotels.map(([name, subtitle, lat, lon, kind, vals, highlights, stars]) => ({
-              name,
-              subtitle,
-              lat,
-              lon,
-              kind: kind as PreHotel["kind"],
-              scores: Object.fromEntries(raw.scoreKeys.map((k, i) => [k, vals[i]])),
-              highlights,
-              stars: stars ?? 0,
-            })),
+            hotels: raw.hotels.map(([name, subtitle, lat, lon, kind, vals, highlights, stars, full]) => {
+              const scores = Object.fromEntries(raw.scoreKeys.map((k, i) => [k, vals[i]]));
+              const details: Record<string, Detail> = {};
+              if (full) {
+                raw.scoreKeys.forEach((k, i) => {
+                  const d = full[0][i];
+                  if (d) details[k] = { score: vals[i], source: d[0], reasons: d[1] ? d[1].split("\u0001") : [] };
+                });
+              }
+              return {
+                name,
+                subtitle,
+                lat,
+                lon,
+                kind: kind as PreHotel["kind"],
+                scores,
+                highlights: highlights.slice(0, 2),
+                stars: stars ?? 0,
+                full: full
+                  ? {
+                      scores,
+                      details,
+                      highlights,
+                      coverage: full[1],
+                      counts: full[2],
+                      nearestRail: full[3] ? { name: full[3][0], dist: full[3][1] } : null,
+                    }
+                  : null,
+              };
+            }),
           };
         })
         .catch(() => null),

@@ -11,7 +11,7 @@ import {
   weightsToQuery,
 } from "@/lib/data";
 import { after } from "next/server";
-import { analyzeLocation, DEFAULT_WEIGHTS, locationMatch, verdict, withDeadline } from "@/lib/geo";
+import { analyzeLocation, DEFAULT_WEIGHTS, estimateLocation, locationMatch, verdict, withDeadline } from "@/lib/geo";
 import StillLoading from "@/components/StillLoading";
 import { CRITERION_ICON } from "@/lib/icons";
 import Icon from "@/components/Icon";
@@ -59,7 +59,15 @@ export default async function CheckErgebnisPage({
   // Öffentliche Kartenserver sind manchmal langsam: nach 45 s zeigen wir einen Ladehinweis,
   // rechnen im Hintergrund weiter und laden die Seite automatisch neu (Ergebnis ist dann gespeichert).
   const work = analyzeLocation(lat, lon, districts).catch(() => null);
-  const raced = await withDeadline(work, 9_000);
+  let raced = await withDeadline(work, 9_000);
+  // Genaue Messung zu langsam oder nicht möglich: grobe Schätzung aus der Vorberechnung (ehrlich markiert)
+  if (raced === "slow" || raced === null) {
+    const est = await estimateLocation(lat, lon, districts).catch(() => null);
+    if (est) {
+      if (raced === "slow") after(() => work);
+      raced = est;
+    }
+  }
   if (raced === "slow") {
     after(() => work);
     return (
