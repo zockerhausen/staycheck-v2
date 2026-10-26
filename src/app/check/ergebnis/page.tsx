@@ -174,6 +174,31 @@ export default async function CheckErgebnisPage({
         </div>
       </section>
 
+      <div className="space-y-3">
+        <a
+          href={`https://www.booking.com/searchresults.html?ss=${encodeURIComponent(`${name} ${sub.split(",").slice(-2).join(" ")}`.trim().slice(0, 160))}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="press flex w-full items-center justify-center gap-2 rounded-full bg-ink py-4 font-bold text-sand"
+        >
+          <Icon name="external" size={18} /> Bei Booking ansehen
+        </a>
+        <div className="grid grid-cols-2 gap-2.5">
+          <Link
+            href={`/duell/hotels?h=${encodeURIComponent([lat.toFixed(6), lon.toFixed(6), kind, name.slice(0, 80)].join("|"))}`}
+            className="press flex items-center justify-center gap-2 rounded-full bg-tan py-4 font-bold"
+          >
+            <Icon name="duel" size={18} /> Vergleichen
+          </Link>
+          <PlaceSaveButton
+            place={{ name, subtitle: sub, lat, lon, kind, match }}
+            initiallySaved={isSaved}
+            loggedIn={Boolean(user)}
+            returnTo={returnTo}
+          />
+        </div>
+      </div>
+
       <KiezMap
         points={[{ slug: "ort", name, lat, lng: lon, match }]}
         highlight="ort"
@@ -229,28 +254,6 @@ export default async function CheckErgebnisPage({
       />
 
       <div className="space-y-3">
-        <a
-          href={`https://www.booking.com/searchresults.html?ss=${encodeURIComponent(`${name} ${sub.split(",").slice(-2).join(" ")}`.trim().slice(0, 160))}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="press flex w-full items-center justify-center gap-2 rounded-full bg-ink py-4 font-bold text-sand"
-        >
-          <Icon name="external" size={18} /> Bei Booking ansehen
-        </a>
-        <div className="grid grid-cols-2 gap-2.5">
-          <Link
-            href={`/duell/hotels?h=${encodeURIComponent([lat.toFixed(6), lon.toFixed(6), kind, name.slice(0, 80)].join("|"))}`}
-            className="press flex items-center justify-center gap-2 rounded-full bg-tan py-4 font-bold"
-          >
-            <Icon name="duel" size={18} /> Vergleichen
-          </Link>
-          <PlaceSaveButton
-            place={{ name, subtitle: sub, lat, lon, kind, match }}
-            initiallySaved={isSaved}
-            loggedIn={Boolean(user)}
-            returnTo={returnTo}
-          />
-        </div>
         <Link href="/check" className="flex items-center justify-center gap-2 py-2 text-sm font-semibold text-muted">
           <Icon name="refresh" size={18} /> Andere Unterkunft prüfen
         </Link>
