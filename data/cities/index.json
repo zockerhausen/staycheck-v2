@@ -27,9 +27,9 @@
   "slug": "bangkok",
   "lat": 13.745,
   "lon": 100.53,
-  "radius": 6000,
+  "radius": 8000,
   "generated": "2026-10-26",
-  "hotels": 1973
+  "hotels": 2079
  },
  {
   "slug": "barcelona",
@@ -43,9 +43,9 @@
   "slug": "berlin",
   "lat": 52.51,
   "lon": 13.405,
-  "radius": 6000,
+  "radius": 8000,
   "generated": "2026-10-26",
-  "hotels": 740
+  "hotels": 882
  },
  {
   "slug": "bogota",
