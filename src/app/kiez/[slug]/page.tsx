@@ -121,7 +121,7 @@ export default async function KiezPage({
     ...FILTERS.filter((f) => f.key !== "top" || rev.size > 0),
   ];
   // Unser Tipp: gute Lage + top bewertet + im Budget
-  const tipStay = hotels
+  const tipStay = shown
     .filter((h) => (revOf(h)?.fair ?? 0) >= TOP_FAIR && (revOf(h)?.total ?? 0) >= 100 && inBudget(band, clsOf(h)) !== false)
     .map((h) => ({ h, value: h.match * 0.6 + (revOf(h)!.fair * 10) * 0.4 }))
     .sort((a, b) => b.value - a.value)[0]?.h;
