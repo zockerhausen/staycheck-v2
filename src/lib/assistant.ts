@@ -1,6 +1,8 @@
 // „Frag das Viertel“: Reise-Assistent auf Basis unserer Viertel-Daten, mit Websuche für Aktuelles.
 // Läuft nur auf dem Server. Der API-Schlüssel (ANTHROPIC_API_KEY) verlässt den Server nie.
-import { autoCityCached, distance, withDeadline } from "@/lib/geo";
+import { autoCityCached, DEFAULT_WEIGHTS, distance, withDeadline } from "@/lib/geo";
+import { findSpots } from "@/lib/zones";
+import { CITY_RADIUS, VERIFIED_RADIUS } from "@/lib/popular";
 import { getCities, getCriteria, getDistricts } from "@/lib/data";
 import { getTipsForDistrict, TIP_CATEGORIES } from "@/lib/tips";
 
@@ -9,7 +11,8 @@ export const assistantEnabled = () => Boolean(process.env.ANTHROPIC_API_KEY);
 
 export type AskTarget =
   | { art: "kiez"; slug: string; stadt?: string }
-  | { art: "auto"; ort: string; land: string; lat: number; lon: number; name: string; vlat: number; vlon: number };
+  | { art: "auto"; ort: string; land: string; lat: number; lon: number; name: string; vlat: number; vlon: number }
+  | { art: "stadt"; ort: string; land: string; lat: number; lon: number; rad: number };
 
 const LABEL: Record<string, string> = {
   transit: "Anbindung",
@@ -41,6 +44,13 @@ export function parseTarget(raw: unknown): AskTarget | null {
     if (lat === null || lon === null || vlat === null || vlon === null || !ort || !name) return null;
     return { art: "auto", ort, land, lat: Math.round(lat * 1e4) / 1e4, lon: Math.round(lon * 1e4) / 1e4, name, vlat, vlon };
   }
+  if (r.art === "stadt") {
+    const lat = num(r.lat, 85), lon = num(r.lon, 180);
+    const ort = clean(r.ort, 80), land = clean(r.land, 60);
+    const rad = r.rad === VERIFIED_RADIUS ? VERIFIED_RADIUS : CITY_RADIUS; // nur unsere zwei festen Größen
+    if (lat === null || lon === null || !ort) return null;
+    return { art: "stadt", ort, land, lat: Math.round(lat * 1e4) / 1e4, lon: Math.round(lon * 1e4) / 1e4, rad };
+  }
   return null;
 }
 
@@ -71,6 +81,33 @@ export async function buildContext(t: AskTarget): Promise<{ place: string; data:
     };
   }
 
+  if (t.art === "stadt") {
+    const c = await withDeadline(autoCityCached(t.lat, t.lon, t.rad).catch(() => null), 4000);
+    const data = c && c !== "slow" ? c : null;
+    const fmt = (sc: Record<string, number | null>) =>
+      Object.entries(sc)
+        .filter(([k, v]) => k !== "safety" && v !== null)
+        .map(([k, v]) => `${LABEL[k] ?? k} ${Math.round(v as number)}`)
+        .join(", ");
+    const spots = data ? findSpots(data.zones, DEFAULT_WEIGHTS, data.places, data.step).slice(0, 8) : [];
+    const districts = data ? [...data.districts].sort((a, b) => a.distKm - b.distKm).slice(0, 12) : [];
+    return {
+      place: `${t.ort}${t.land ? `, ${t.land}` : ""}`,
+      data: [
+        `Stadt: ${t.ort} (${t.land})`,
+        "Herkunft: automatisch aus OpenStreetMap gezählt. Sicherheit kennt StayCheck hier nur in geprüften Städten.",
+        spots.length ? "Beste Ecken nach allgemeiner Lage (Werte 1 bis 10; Ruhe: 10 = sehr ruhig; Günstig: 10 = viele günstige Unterkünfte):" : "",
+        ...spots.map((sp) => `- ${clean(sp.name, 60)}${sp.area ? ` (in ${clean(sp.area, 60)})` : ""}: Lage ${sp.match} von 100; ${fmt(sp.scores)}`),
+        districts.length ? "Stadtteile (Entfernung zum Zentrum):" : "",
+        ...districts.map((d) => `- ${clean(d.name, 60)}, ${d.distKm} km: ${fmt(d.scores)}`),
+        !data ? "Werte gerade nicht verfügbar." : "",
+      ]
+        .filter(Boolean)
+        .join("\n"),
+      tips: "",
+    };
+  }
+
   const city = await withDeadline(autoCityCached(t.lat, t.lon).catch(() => null), 4000);
   const d = city && city !== "slow" ? city.districts.find((x) => distance(x.lat, x.lon, t.vlat, t.vlon) < 300) : undefined;
   const lines = d
@@ -91,7 +128,7 @@ export async function buildContext(t: AskTarget): Promise<{ place: string; data:
 }
 
 export function systemPrompt(place: string, data: string, tips: string) {
-  return `Du bist der Reise-Assistent der App StayCheck. Reisende fragen dich zu einem Viertel, in dem sie vielleicht übernachten wollen: ${place}.
+  return `Du bist der Reise-Assistent der App StayCheck. Reisende fragen dich zu einem Ort, an dem sie vielleicht übernachten wollen: ${place}. Dein wichtigstes Ziel: ihnen helfen, die richtige Gegend und Unterkunft zu finden.
 
 So antwortest du:
 - In der Sprache der Frage, freundlich und direkt, wie ein gut informierter Freund vor Ort. Kurz: höchstens etwa 120 Wörter, bei Bedarf eine kurze Liste. Kein Markdown außer **fett** und Listen mit „- “.

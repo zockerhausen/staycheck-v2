@@ -1,3 +1,4 @@
+import { CITY_RADIUS } from "@/lib/popular";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getCities, getCriteria, getProfile, getUser } from "@/lib/data";
@@ -12,8 +13,9 @@ import { pageRateLimit } from "@/lib/ratelimit-page";
 import Icon from "@/components/Icon";
 import DistrictExplorer from "@/components/DistrictExplorer";
 import KiezMap from "@/components/KiezMap";
+import AskDistrict from "@/components/AskDistrict";
+import { assistantEnabled } from "@/lib/assistant";
 import CitySwitcher from "@/components/CitySwitcher";
-import StayButton from "@/components/StayButton";
 import ThemeToggle from "@/components/ThemeToggle";
 
 // Kartendaten-Abfragen werden zwischengespeichert (1 Tag), die Seite selbst ist dynamisch.
@@ -144,10 +146,36 @@ export default async function ZielPage({ searchParams }: { searchParams: Promise
             </Link>
           )}
 
-          <section className="mt-7">
-            <h1 className="text-[26px] font-black leading-tight tracking-tight [overflow-wrap:anywhere]">
+          <section id="karte" className="mt-6">
+            <h1 className="mb-3 text-[26px] font-black leading-tight tracking-tight [overflow-wrap:anywhere]">Wo schläfst du in {ziel.ort}?</h1>
+          <KiezMap
+            points={
+              spots.length
+                ? spots.map((sp) => ({ slug: sp.slug, name: sp.name, lat: sp.lat, lng: sp.lon, match: sp.match, label: sp.name }))
+                : sorted.map((d) => ({ slug: d.slug, name: d.name, lat: d.lat, lng: d.lon, match: d.match ?? 0, label: d.name }))
+            }
+            highlight={topSpot?.slug}
+            center={[ziel.lon, ziel.lat]}
+            zoom={11.5}
+            height="h-80"
+            zones={zones}
+            fit
+          />
+            <ZoneLegend personal={Boolean(weights)} shown={zones.length > 0} />
+          </section>
+
+          <div className="mt-6">
+            <AskDistrict
+              target={{ art: "stadt", ort: ziel.ort, land: ziel.land ?? "", lat: ziel.lat, lon: ziel.lon, rad: CITY_RADIUS }}
+              place={ziel.ort}
+              enabled={assistantEnabled()}
+            />
+          </div>
+
+          <section className="mt-9">
+            <h2 className="text-[24px] font-black leading-tight tracking-tight [overflow-wrap:anywhere]">
               {spots.length ? (weights ? "Deine besten Ecken" : `Die besten Ecken in ${ziel.ort}`) : top ? "Alle Viertel für dich" : `Viertel in ${ziel.ort}`}
-            </h1>
+            </h2>
             <p className="mb-4 mt-1 text-[15px] font-semibold text-muted">
               {spots.length ? "Kleine Gegenden statt ganzer Stadtteile, genau dort, wo es passt." : "Automatisch aus OpenStreetMap berechnet."}
             </p>
@@ -171,24 +199,6 @@ export default async function ZielPage({ searchParams }: { searchParams: Promise
             )}
           </section>
 
-          <section id="karte" className="mt-10 scroll-mt-4">
-            <h2 className="mb-3 text-[20px] font-black tracking-tight">Auf der Karte</h2>
-            <KiezMap
-              points={
-                spots.length
-                  ? spots.map((sp) => ({ slug: sp.slug, name: sp.name, lat: sp.lat, lng: sp.lon, match: sp.match, label: sp.name }))
-                  : sorted.map((d) => ({ slug: d.slug, name: d.name, lat: d.lat, lng: d.lon, match: d.match ?? 0, label: d.name }))
-              }
-              highlight={topSpot?.slug}
-              center={[ziel.lon, ziel.lat]}
-              zoom={11.5}
-              height="h-72"
-              zones={zones}
-              fit
-            />
-            <ZoneLegend personal={Boolean(weights)} shown={zones.length > 0} />
-          </section>
-          <StayButton targetId="karte" label="Karte" icon="map" tone="ink" />
 
           {spots.length > 0 && (
             <details className="group mt-8">

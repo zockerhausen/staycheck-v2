@@ -284,6 +284,12 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
         </Link>
       )}
 
+      <AskDistrict
+        target={{ art: "auto", ort: ziel.ort, land: ziel.land, lat: ziel.lat, lon: ziel.lon, name, vlat, vlon }}
+        place={name}
+        enabled={assistantEnabled()}
+      />
+
       <ViewTabs
         tabs={[
           { key: "stay", label: "Unterkünfte", content: staysTab },
@@ -293,11 +299,6 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
             content: (
               <div className="space-y-5">
                 {district ? <DistrictVibe name={name} scores={scores} /> : <p className="card p-4 text-[15px] text-muted">Für diese Ecke haben wir zu wenig Daten.</p>}
-                <AskDistrict
-                  target={{ art: "auto", ort: ziel.ort, land: ziel.land, lat: ziel.lat, lon: ziel.lon, name, vlat, vlon }}
-                  place={name}
-                  enabled={assistantEnabled()}
-                />
               </div>
             ),
           },

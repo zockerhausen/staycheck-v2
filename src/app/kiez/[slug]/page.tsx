@@ -250,6 +250,8 @@ export default async function KiezPage({
         </Link>
       )}
 
+      <AskDistrict target={{ art: "kiez", slug: district.slug, stadt: district.city }} place={short} enabled={assistantEnabled()} />
+
       <ViewTabs
         tabs={[
           { key: "stay", label: "Unterkünfte", content: staysTab },
@@ -259,7 +261,6 @@ export default async function KiezPage({
             content: (
               <div className="space-y-5">
                 <DistrictVibe name={short} scores={district.scores} />
-                <AskDistrict target={{ art: "kiez", slug: district.slug, stadt: district.city }} place={short} enabled={assistantEnabled()} />
                 <TipsSection
                   tips={tips}
                   userId={user?.id ?? null}
