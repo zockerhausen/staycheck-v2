@@ -12,6 +12,7 @@ import CitySwitcher from "@/components/CitySwitcher";
 import KiezMap from "@/components/KiezMap";
 import ThemeToggle from "@/components/ThemeToggle";
 import ProfileBar from "@/components/ProfileBar";
+import MapStage from "@/components/MapStage";
 import { cityDataQuick, DEFAULT_WEIGHTS } from "@/lib/geo";
 import { findSpots, pickZones } from "@/lib/zones";
 import { redirect } from "next/navigation";
@@ -143,12 +144,12 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
       <ProfileBar weights={weights} extras={extras} quizHref={`/quiz?stadt=${city.slug}`} />
 
       <h1 className="mt-6 text-[26px] font-black leading-tight tracking-tight [overflow-wrap:anywhere]">Wo schläfst du in {city.name}?</h1>
-      <section id="karte" className="-mx-4 mt-3">
+      <MapStage id="karte">
         <KiezMap points={mapPoints} highlight={topSpot?.slug ?? top?.slug} center={[city.lng, city.lat]} zoom={city.zoom} height="h-[420px]" zones={zones} fit flush legend={zones.length ? (weights ? "Orange = passt zu dir" : "Orange = beste Lage") : undefined} />
-      </section>
+      </MapStage>
 
       {/* Liste als Blatt, das über die Karte geschoben ist: Karte und Ecken gehören sichtbar zusammen */}
-      <section className="relative z-[1] -mx-4 -mt-7 rounded-t-[28px] bg-sand px-4 pt-3 shadow-[0_-10px_30px_rgba(0,0,0,0.12)]">
+      <section className="relative z-[1] -mx-4 -mt-7 min-h-[70vh] rounded-t-[28px] bg-sand px-4 pb-4 pt-3 shadow-[0_-10px_30px_rgba(0,0,0,0.12)]">
         <div className="mx-auto mb-4 h-1.5 w-10 rounded-full bg-raised" />
         <h2 className="text-[24px] font-black leading-tight tracking-tight">
           {spots.length ? (weights ? "Deine besten Ecken" : `Die besten Ecken in ${city.name}`) : top ? "Alle Viertel für dich" : `Viertel in ${city.name}`}
@@ -174,7 +175,6 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
               : allDistricts
           }
         />
-      </section>
 
 
       {spots.length > 0 && (
@@ -206,6 +206,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
         </section>
       )}
       <LegalLinks className="mt-12" />
+      </section>
     </div>
   );
 }

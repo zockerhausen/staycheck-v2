@@ -14,6 +14,7 @@ import KiezMap from "@/components/KiezMap";
 import CitySwitcher from "@/components/CitySwitcher";
 import ThemeToggle from "@/components/ThemeToggle";
 import ProfileBar from "@/components/ProfileBar";
+import MapStage from "@/components/MapStage";
 import LegalLinks from "@/components/LegalLinks";
 
 // Kartendaten-Abfragen werden zwischengespeichert (1 Tag), die Seite selbst ist dynamisch.
@@ -134,7 +135,7 @@ export default async function ZielPage({ searchParams }: { searchParams: Promise
           <ProfileBar weights={weights} extras={extras} quizHref={`/quiz?${zq}`} />
 
           <h1 className="mt-6 text-[26px] font-black leading-tight tracking-tight [overflow-wrap:anywhere]">Wo schläfst du in {ziel.ort}?</h1>
-          <section id="karte" className="-mx-4 mt-3">
+          <MapStage id="karte">
             <KiezMap
             points={
               spots.length
@@ -150,10 +151,10 @@ export default async function ZielPage({ searchParams }: { searchParams: Promise
             flush
             legend={zones.length ? (weights ? "Orange = passt zu dir" : "Orange = beste Lage") : undefined}
           />
-          </section>
+          </MapStage>
 
           {/* Liste als Blatt, das über die Karte geschoben ist: Karte und Ecken gehören sichtbar zusammen */}
-          <section className="relative z-[1] -mx-4 -mt-7 rounded-t-[28px] bg-sand px-4 pt-3 shadow-[0_-10px_30px_rgba(0,0,0,0.12)]">
+          <section className="relative z-[1] -mx-4 -mt-7 min-h-[70vh] rounded-t-[28px] bg-sand px-4 pb-4 pt-3 shadow-[0_-10px_30px_rgba(0,0,0,0.12)]">
             <div className="mx-auto mb-4 h-1.5 w-10 rounded-full bg-raised" />
             <h2 className="text-[24px] font-black leading-tight tracking-tight [overflow-wrap:anywhere]">
               {spots.length ? (weights ? "Deine besten Ecken" : `Die besten Ecken in ${ziel.ort}`) : top ? "Alle Viertel für dich" : `Viertel in ${ziel.ort}`}
@@ -179,7 +180,6 @@ export default async function ZielPage({ searchParams }: { searchParams: Promise
             ) : (
               districtList
             )}
-          </section>
 
 
           {spots.length > 0 && (
@@ -195,9 +195,12 @@ export default async function ZielPage({ searchParams }: { searchParams: Promise
               <div className="mt-2">{districtList}</div>
             </details>
           )}
+          </section>
         </>
       )}
-      <LegalLinks className="mt-12" />
+      <div className="relative z-[1] -mx-4 bg-sand px-4">
+        <LegalLinks className="pt-12" />
+      </div>
     </div>
   );
 }
