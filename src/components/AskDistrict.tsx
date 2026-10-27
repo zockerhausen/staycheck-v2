@@ -119,7 +119,7 @@ export default function AskDistrict({ target, place, enabled }: { target: Target
       </div>
 
       {!enabled ? (
-        <p className="mt-4 rounded-2xl bg-tan px-3.5 py-3 text-sm text-muted">Bald verfügbar: Hier kannst du dann Fragen zum Viertel stellen.</p>
+        <p className="mt-4 rounded-2xl bg-tan px-3.5 py-3 text-sm text-muted">Bald verfügbar: Hier kannst du dann Fragen zu {place} stellen.</p>
       ) : (
         <>
           {msgs.length > 0 && (
