@@ -3,9 +3,9 @@ name: Website-Wissen recherchieren
 # Die App rechnet diese Werte 50/50 in den Lage-Score ein und zeigt die Quellen an.
 # Braucht das Repository-Secret ANTHROPIC_API_KEY (Settings → Secrets and variables → Actions).
 on:
-  # Alle 3 Monate (5. Januar, April, Juli, Oktober, 04:23 UTC)
-  schedule:
-    - cron: "23 4 5 1,4,7,10 *"
+  # Vorerst nur von Hand starten (verschoben, siehe PROJECT.md). Später wieder alle 3 Monate:
+  # schedule:
+  #   - cron: "23 4 5 1,4,7,10 *"
   workflow_dispatch:
     inputs:
       nur:

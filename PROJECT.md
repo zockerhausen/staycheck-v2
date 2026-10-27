@@ -104,3 +104,8 @@ Später schneller: eigenen Overpass-Server betreiben (ca. 20–50 €/Monat) und
 - `.github/workflows/vorberechnen.yml` läuft am 2. jedes Monats (03:17 UTC) auf `main` und schreibt `data/cities` auf `main` und `design-dunkel`.
 - Darum vor jedem `git push origin design-dunkel:main` erst `git pull origin design-dunkel` (bzw. `main` einmischen), sonst wird der Push abgelehnt.
 - Neue Seiten: `/hilfe`, `/nutzungsbedingungen` (Links in `LegalLinks` und `LegalPage`). Konto nur ab 16 (Häkchen bei Registrierung, Prüfung in `signup`).
+
+## Website-Wissen (gebaut, aber verschoben)
+- Recherche: `scripts/insights/research.ts`, Workflow `.github/workflows/webwissen.yml` (nur manuell, Zeitplan auskommentiert). Ergebnis `data/insights/<stadt>.json`.
+- App rechnet vorhandene Recherchen 50/50 ein (`src/lib/insights.ts`, beim Laden in `precomputed.ts`); ohne Dateien ändert sich nichts.
+- Offen: GitHub-Secret `ANTHROPIC_API_KEY`; Nutzer will es später, evtl. günstige Variante (Wikivoyage + Wikipedia + kleines Modell statt Websuche, ca. 5–15 $).
