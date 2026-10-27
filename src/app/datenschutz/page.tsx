@@ -45,6 +45,11 @@ export default function DatenschutzPage() {
           Kartenausschnitt du ansiehst. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO (eine Karte anzeigen).
         </p>
         <p>
+          Fotos von Vierteln stammen von Wikipedia bzw. Wikimedia Commons (freie Lizenzen, Urheber steht am Bild). Unser Server lädt sie dort und liefert
+          sie selbst aus. Dein Browser verbindet sich dafür nicht mit Wikimedia, deine IP-Adresse wird also nicht weitergegeben. Schriften liegen ebenfalls
+          auf unserem Server, es werden keine Google Fonts nachgeladen.
+        </p>
+        <p>
           „Mein Standort“ fragt dein Gerät nur, wenn du darauf tippst und es erlaubst. Der Standort wird nur für diesen einen Lage-Check verwendet und nicht
           gespeichert.
         </p>
@@ -73,6 +78,7 @@ export default function DatenschutzPage() {
           Für ein Konto speichern wir deine E-Mail-Adresse, ein verschlüsseltes Passwort, dein Reise-Profil, gemerkte Orte und Viertel sowie Tipps, die du
           schreibst. Rechtsgrundlage ist der Nutzungsvertrag (Art. 6 Abs. 1 lit. b DSGVO). Die Daten liegen bei Supabase Inc. (USA) in einem Rechenzentrum in
           Singapur. Für die Übermittlung gelten die EU-Standardvertragsklauseln. Zur Bestätigung deiner E-Mail-Adresse verschickt Supabase eine E-Mail.
+          Ein Konto gibt es ab 16 Jahren (Art. 8 DSGVO). Ohne Konto ist StayCheck für alle nutzbar.
         </p>
         <p>
           Tipps erscheinen öffentlich, aber ohne deinen Namen oder deine E-Mail-Adresse. Wenn du einen Tipp meldest, speichern wir die Meldung mit deinem

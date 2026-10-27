@@ -33,6 +33,8 @@ export async function signup(_prev: FormState, formData: FormData): Promise<Form
   const origin = /^[a-z0-9.-]+(:\d+)?$/i.test(host) ? `https://${host}` : "";
   const password = String(formData.get("password") ?? "");
   if (password.length < 8) return { error: "Das Passwort braucht mindestens 8 Zeichen." };
+  // Konto erst ab 16 (DSGVO Art. 8, in Deutschland 16 Jahre)
+  if (formData.get("alter") !== "on") return { error: "Ein Konto gibt es ab 16 Jahren. Alles andere kannst du auch ohne Konto nutzen." };
 
   const { data, error } = await supabase.auth.signUp({
     email: String(formData.get("email") ?? ""),

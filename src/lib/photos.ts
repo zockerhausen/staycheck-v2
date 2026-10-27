@@ -127,7 +127,9 @@ const photoCached = unstable_cache(
 export function areaPhoto(name: string, city: string, lat: number, lon: number, radius = 350): Promise<AreaPhoto | null> {
   const clean = name.replace(/[\u0000-\u001f<>|]/g, "").trim().slice(0, 80);
   if (!clean) return Promise.resolve(null);
-  return photoCached(clean, city.slice(0, 60), Number(lat.toFixed(4)), Number(lon.toFixed(4)), radius).catch(() => null);
+  return photoCached(clean, city.slice(0, 60), Number(lat.toFixed(4)), Number(lon.toFixed(4)), radius)
+    .then((p) => (p ? { ...p, url: `/api/bild?u=${encodeURIComponent(p.url)}` } : null)) // über unseren Server, nicht direkt von Wikimedia
+    .catch(() => null);
 }
 
 /**

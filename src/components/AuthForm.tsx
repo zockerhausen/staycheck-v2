@@ -49,6 +49,13 @@ export default function AuthForm({ next, defaultMode = "login" }: { next: string
           />
         </label>
 
+        {!isLogin && (
+          <label className="flex items-start gap-3 rounded-2xl bg-paper p-3.5 text-[14px] font-semibold">
+            <input name="alter" type="checkbox" required className="mt-0.5 h-5 w-5 shrink-0 accent-[var(--color-sun)]" />
+            <span>Ich bin mindestens 16 Jahre alt.</span>
+          </label>
+        )}
+
         {state?.error && <p className="rounded-2xl bg-peach p-3 text-sm font-semibold text-peach-ink">{state.error}</p>}
         {state?.message && <p className="rounded-2xl bg-tan p-3 text-sm font-semibold">{state.message}</p>}
 
