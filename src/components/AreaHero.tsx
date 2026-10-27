@@ -1,6 +1,7 @@
 import BackButton from "@/components/BackButton";
 import Icon from "@/components/Icon";
 import SafeImg from "@/components/SafeImg";
+import MapStage from "@/components/MapStage";
 import type { AreaPhoto } from "@/lib/photos";
 import type { IconName } from "@/lib/icons";
 
@@ -18,6 +19,7 @@ export default function AreaHero({
   tiles,
   traits,
   action,
+  children,
 }: {
   name: string;
   where: string;
@@ -27,10 +29,13 @@ export default function AreaHero({
   tiles: HeroTile[];
   traits: { key: string; label: string; icon: IconName }[];
   action?: React.ReactNode;
+  /** Alles weitere der Seite: liegt im Blatt, das über das Foto geschoben wird */
+  children?: React.ReactNode;
 }) {
   return (
-    <section className="-mx-4 -mt-[max(1.25rem,env(safe-area-inset-top))]">
-      <div className="relative h-[300px] overflow-hidden" style={{ background: `linear-gradient(160deg, ${tint} 0%, var(--color-tan) 100%)` }}>
+    <>
+    <MapStage className="-mx-4 -mt-[max(1.25rem,env(safe-area-inset-top))]" overlap={24}>
+      <div className="relative h-[320px] overflow-hidden" style={{ background: `linear-gradient(160deg, ${tint} 0%, var(--color-tan) 100%)` }}>
         {photo ? (
           <>
             <SafeImg src={photo.url} eager className="absolute inset-0 h-full w-full object-cover" />
@@ -55,8 +60,9 @@ export default function AreaHero({
           {action}
         </div>
       </div>
+    </MapStage>
 
-      <div className="relative -mt-6 rounded-t-[26px] bg-sand px-4 pt-6">
+      <div className="relative z-[1] -mx-4 -mt-6 min-h-[80vh] rounded-t-[26px] bg-sand px-4 pb-6 pt-6 shadow-[0_-10px_30px_rgba(0,0,0,0.12)]">
         <h1 className="mega text-[clamp(2rem,9vw,2.6rem)] [overflow-wrap:anywhere]">{name}</h1>
         <p className="mt-1 text-[16px] font-semibold text-muted">{where}</p>
         {traits.length > 0 && (
@@ -76,7 +82,8 @@ export default function AreaHero({
             </div>
           ))}
         </div>
+        {children && <div className="mt-6 space-y-6">{children}</div>}
       </div>
-    </section>
+    </>
   );
 }

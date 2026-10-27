@@ -261,7 +261,7 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
   );
 
   return (
-    <div className="fade-up space-y-6">
+    <div className="fade-up">
       <AreaHero
         name={name}
         where={`${ziel.ort}${district ? `, ${district.distKm < 1.5 ? "im Zentrum" : `${String(district.distKm).replace(".", ",")} km vom Zentrum`}` : ""}`}
@@ -274,46 +274,47 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
           { value: guestAvg !== null ? fmtScore(guestAvg) : "–", label: demo ? "Gäste (Beispiel)" : "Gäste im Schnitt" },
           { value: typicalPrice ?? "–", label: "Meiste Unterkünfte" },
         ]}
-      />
+      >
+        {!profile && (
+          <Link href={`/quiz?${zq}`} className="press flex items-center justify-between gap-3 rounded-2xl bg-paper px-4 py-3.5 text-[15px] font-extrabold">
+            Passt das zu mir?
+            <span className="flex items-center gap-1 text-sun-soft">
+              Quiz in 30 Sek. <Icon name="chevron" size={14} />
+            </span>
+          </Link>
+        )}
 
-      {!profile && (
-        <Link href={`/quiz?${zq}`} className="press flex items-center gap-3 rounded-[20px] bg-peach px-4 py-3.5">
-          <Icon name="discover" size={22} className="text-sun-soft" />
-          <span className="min-w-0 flex-1 text-[15px] font-extrabold">Passt das zu mir? Reise-Profil in 30 Sekunden</span>
-          <Icon name="chevron" size={16} className="text-muted" />
-        </Link>
-      )}
+        <AskDistrict
+          target={{ art: "auto", ort: ziel.ort, land: ziel.land, lat: ziel.lat, lon: ziel.lon, name, vlat, vlon }}
+          place={name}
+          enabled={assistantEnabled()}
+        />
 
-      <AskDistrict
-        target={{ art: "auto", ort: ziel.ort, land: ziel.land, lat: ziel.lat, lon: ziel.lon, name, vlat, vlon }}
-        place={name}
-        enabled={assistantEnabled()}
-      />
-
-      <ViewTabs
-        tabs={[
-          { key: "stay", label: "Unterkünfte", content: staysTab },
-          {
-            key: "vibe",
-            label: "Tag und Nacht",
-            content: (
-              <div className="space-y-5">
-                {district ? <DistrictVibe name={name} scores={scores} /> : <p className="card p-4 text-[15px] text-muted">Für diese Ecke haben wir zu wenig Daten.</p>}
-              </div>
-            ),
-          },
-          {
-            key: "near",
-            label: "Umgebung",
-            content: (
-              <div>
-                <NearbyFacts lat={vlat} lon={vlon} name={name} />
-                {valuesCard}
-              </div>
-            ),
-          },
-        ]}
-      />
+        <ViewTabs
+          tabs={[
+            { key: "stay", label: "Unterkünfte", content: staysTab },
+            {
+              key: "vibe",
+              label: "Tag und Nacht",
+              content: (
+                <div className="space-y-5">
+                  {district ? <DistrictVibe name={name} scores={scores} /> : <p className="card p-4 text-[15px] text-muted">Für diese Ecke haben wir zu wenig Daten.</p>}
+                </div>
+              ),
+            },
+            {
+              key: "near",
+              label: "Umgebung",
+              content: (
+                <div>
+                  <NearbyFacts lat={vlat} lon={vlon} name={name} />
+                  {valuesCard}
+                </div>
+              ),
+            },
+          ]}
+        />
+      </AreaHero>
     </div>
   );
 }

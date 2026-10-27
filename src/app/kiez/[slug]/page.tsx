@@ -226,7 +226,7 @@ export default async function KiezPage({
   );
 
   return (
-    <div className="fade-up space-y-6">
+    <div className="fade-up">
       <AreaHero
         name={short}
         where={district.short_description ?? cityName}
@@ -240,60 +240,61 @@ export default async function KiezPage({
           { value: guestAvg !== null ? fmtScore(guestAvg) : "–", label: demo ? "Gäste (Beispiel)" : "Gäste im Schnitt" },
           { value: typicalPrice ?? "–", label: "Meiste Unterkünfte" },
         ]}
-      />
+      >
+        {!resolved && (
+          <Link href={`/quiz?stadt=${district.city}`} className="press flex items-center justify-between gap-3 rounded-2xl bg-paper px-4 py-3.5 text-[15px] font-extrabold">
+            Passt das zu mir?
+            <span className="flex items-center gap-1 text-sun-soft">
+              Quiz in 30 Sek. <Icon name="chevron" size={14} />
+            </span>
+          </Link>
+        )}
 
-      {!resolved && (
-        <Link href={`/quiz?stadt=${district.city}`} className="press flex items-center gap-3 rounded-[20px] bg-peach px-4 py-3.5">
-          <Icon name="discover" size={22} className="text-sun-soft" />
-          <span className="min-w-0 flex-1 text-[15px] font-extrabold">Passt das zu mir? Reise-Profil in 30 Sekunden</span>
-          <Icon name="chevron" size={16} className="text-muted" />
-        </Link>
-      )}
+        <AskDistrict target={{ art: "kiez", slug: district.slug, stadt: district.city }} place={short} enabled={assistantEnabled()} />
 
-      <AskDistrict target={{ art: "kiez", slug: district.slug, stadt: district.city }} place={short} enabled={assistantEnabled()} />
-
-      <ViewTabs
-        tabs={[
-          { key: "stay", label: "Unterkünfte", content: staysTab },
-          {
-            key: "vibe",
-            label: "Tag und Nacht",
-            content: (
-              <div className="space-y-5">
-                <DistrictVibe name={short} scores={district.scores} />
-                <TipsSection
-                  tips={tips}
-                  userId={user?.id ?? null}
-                  lat={district.lat!}
-                  lon={district.lng!}
-                  placeName={district.name}
-                  districtId={district.id}
-                  returnTo={`/kiez/${slug}?stadt=${district.city}`}
-                  title={`Tipps zu ${short}`}
-                />
-              </div>
-            ),
-          },
-          {
-            key: "near",
-            label: "Umgebung",
-            content: (
-              <div className="space-y-5">
-                <NearbyFacts lat={district.lat!} lon={district.lng!} name={short} />
-                <div className="card p-5">
-                  <ScoreBars criteria={criteria} scores={district.scores} />
-                  <p className="mt-3 text-[13px] font-semibold leading-relaxed text-muted">
-                    Viertel-Werte sind unsere Einschätzung fürs ganze Viertel. Jede Unterkunft prüfen wir zusätzlich einzeln mit Kartendaten.{" "}
-                    <Link href="/methode" className="font-bold text-sun-soft underline underline-offset-4">
-                      So rechnen wir
-                    </Link>
-                  </p>
+        <ViewTabs
+          tabs={[
+            { key: "stay", label: "Unterkünfte", content: staysTab },
+            {
+              key: "vibe",
+              label: "Tag und Nacht",
+              content: (
+                <div className="space-y-5">
+                  <DistrictVibe name={short} scores={district.scores} />
+                  <TipsSection
+                    tips={tips}
+                    userId={user?.id ?? null}
+                    lat={district.lat!}
+                    lon={district.lng!}
+                    placeName={district.name}
+                    districtId={district.id}
+                    returnTo={`/kiez/${slug}?stadt=${district.city}`}
+                    title={`Tipps zu ${short}`}
+                  />
                 </div>
-              </div>
-            ),
-          },
-        ]}
-      />
+              ),
+            },
+            {
+              key: "near",
+              label: "Umgebung",
+              content: (
+                <div className="space-y-5">
+                  <NearbyFacts lat={district.lat!} lon={district.lng!} name={short} />
+                  <div className="card p-5">
+                    <ScoreBars criteria={criteria} scores={district.scores} />
+                    <p className="mt-3 text-[13px] font-semibold leading-relaxed text-muted">
+                      Viertel-Werte sind unsere Einschätzung fürs ganze Viertel. Jede Unterkunft prüfen wir zusätzlich einzeln mit Kartendaten.{" "}
+                      <Link href="/methode" className="font-bold text-sun-soft underline underline-offset-4">
+                        So rechnen wir
+                      </Link>
+                    </p>
+                  </div>
+                </div>
+              ),
+            },
+          ]}
+        />
+      </AreaHero>
     </div>
   );
 }
