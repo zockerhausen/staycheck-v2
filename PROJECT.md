@@ -99,3 +99,8 @@ Später schneller: eigenen Overpass-Server betreiben (ca. 20–50 €/Monat) und
 - Schrift Figtree, standardmäßig halbfett (600), Überschriften 900. Symbole Linienstärke 2.4. Nutzer will es ausdrücklich kräftig, nicht dünn.
 - Bausteine: `AreaHero` (Foto + drei Zahlen), `ViewTabs` (gleitender Reiter), `StayRow`, `BookBar` (feste Preis-Leiste), `DistrictExplorer` variant „feed“ (Airbnb-Karten mit Kategorien).
 - Fotos der Ecken/Viertel: `src/lib/photos.ts` (Wikipedia-Titelbild, sonst Wikimedia-Commons in der Nähe; nur freie Lizenzen, Urheber wird angezeigt, 30 Tage Speicher).
+
+## Monatliche Auffrischung der Kartendaten
+- `.github/workflows/vorberechnen.yml` läuft am 2. jedes Monats (03:17 UTC) auf `main` und schreibt `data/cities` auf `main` und `design-dunkel`.
+- Darum vor jedem `git push origin design-dunkel:main` erst `git pull origin design-dunkel` (bzw. `main` einmischen), sonst wird der Push abgelehnt.
+- Neue Seiten: `/hilfe`, `/nutzungsbedingungen` (Links in `LegalLinks` und `LegalPage`). Konto nur ab 16 (Häkchen bei Registrierung, Prüfung in `signup`).
