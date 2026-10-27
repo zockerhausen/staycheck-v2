@@ -385,3 +385,9 @@ input[type="range"] {
 .img-failed .on-photo {
   color: var(--color-ink);
 }
+
+/* Karte, über die unten die Liste geschoben ist: Bedienelemente unten etwas höher */
+.sc-flush .maplibregl-ctrl-bottom-right,
+.sc-flush .maplibregl-ctrl-bottom-left {
+  bottom: 30px;
+}

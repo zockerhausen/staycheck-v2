@@ -21,6 +21,8 @@ function MapCanvas({
   zoneStep = 350,
   full = false,
   fit = false,
+  flush = false,
+  legend,
 }: {
   points: MapPoint[];
   highlight?: string;
@@ -34,6 +36,10 @@ function MapCanvas({
   full?: boolean;
   /** Ausschnitt so wählen, dass alle Punkte sichtbar sind */
   fit?: boolean;
+  /** Randlos, unten geht es nahtlos in die Liste über (die Liste überlappt die Karte etwas) */
+  flush?: boolean;
+  /** Kurzer Hinweis oben links auf der Karte (z. B. was Orange bedeutet) */
+  legend?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const onSelectRef = useRef(onSelect);
@@ -74,10 +80,12 @@ function MapCanvas({
             [Math.min(...lons), Math.min(...lats)],
             [Math.max(...lons), Math.max(...lats)],
           ],
-          { padding: { top: 50, bottom: 50, left: 60, right: 60 }, duration: 0, maxZoom: 12.6 },
+          { padding: { top: flush ? 70 : 50, bottom: flush ? 80 : 50, left: 50, right: 50 }, duration: 0, maxZoom: 12.6 },
         );
       }
       if (full) m.addControl(new maplibregl.NavigationControl({ showCompass: false }), "bottom-right");
+      // Quellenangabe als kleines „i“ statt eines breiten Balkens über der Karte (antippen zeigt den Text)
+      m.once("load", () => ref.current?.querySelector(".maplibregl-ctrl-attrib")?.classList.remove("maplibregl-compact-show"));
       // Darstellung gewechselt (hell/dunkel): passenden Kartenstil laden
       const onTheme = () => m.setStyle(isDarkNow() ? MAP_STYLE.dark : MAP_STYLE.light);
       window.addEventListener("sc-theme", onTheme);
@@ -121,7 +129,7 @@ function MapCanvas({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [points, highlight, zones, full, fit]);
 
-  return <div ref={ref} className={`${height} w-full overflow-hidden bg-paper ${full ? "" : "rounded-3xl"}`} />;
+  return <div ref={ref} className={`${height} w-full overflow-hidden bg-paper ${flush ? "sc-flush" : ""} ${full || flush ? "" : "rounded-3xl"}`} />;
 }
 
 type KiezMapProps = Parameters<typeof MapCanvas>[0];
@@ -154,6 +162,12 @@ export default function KiezMap(props: KiezMapProps) {
   return (
     <div className="relative">
       <MapCanvas {...props} />
+      {props.legend && (
+        <span className="pointer-events-none absolute left-3 top-3 z-10 flex max-w-[70%] items-center gap-1.5 rounded-full bg-sand/90 px-3 py-1.5 text-[12px] font-extrabold shadow-soft backdrop-blur">
+          <span className="h-2.5 w-4 shrink-0 rounded-full bg-sun/60 blur-[1px]" />
+          {props.legend}
+        </span>
+      )}
       <button
         type="button"
         onClick={() => setOpen(true)}
@@ -167,7 +181,7 @@ export default function KiezMap(props: KiezMapProps) {
       {open &&
         createPortal(
           <div className="fixed inset-0 z-[100] bg-sand" role="dialog" aria-modal="true" aria-label="Karte">
-            <MapCanvas {...props} height="h-full" onSelect={selectFromFull} full />
+            <MapCanvas {...props} height="h-full" onSelect={selectFromFull} full flush={false} />
             <button
               type="button"
               onClick={() => setOpen(false)}

@@ -10,7 +10,6 @@ import DestinationSearch from "@/components/DestinationSearch";
 import LegalLinks from "@/components/LegalLinks";
 import CitySwitcher from "@/components/CitySwitcher";
 import KiezMap from "@/components/KiezMap";
-import ZoneLegend from "@/components/ZoneLegend";
 import ThemeToggle from "@/components/ThemeToggle";
 import ProfileBar from "@/components/ProfileBar";
 import { cityDataQuick, DEFAULT_WEIGHTS } from "@/lib/geo";
@@ -143,13 +142,14 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
 
       <ProfileBar weights={weights} extras={extras} quizHref={`/quiz?stadt=${city.slug}`} />
 
-      <section id="karte" className="mt-6">
-        <h1 className="mb-3 text-[26px] font-black leading-tight tracking-tight [overflow-wrap:anywhere]">Wo schläfst du in {city.name}?</h1>
-      <KiezMap points={mapPoints} highlight={topSpot?.slug ?? top?.slug} center={[city.lng, city.lat]} zoom={city.zoom} height="h-80" zones={zones} fit />
-        <ZoneLegend personal={Boolean(weights)} shown={zones.length > 0} />
+      <h1 className="mt-6 text-[26px] font-black leading-tight tracking-tight [overflow-wrap:anywhere]">Wo schläfst du in {city.name}?</h1>
+      <section id="karte" className="-mx-4 mt-3">
+        <KiezMap points={mapPoints} highlight={topSpot?.slug ?? top?.slug} center={[city.lng, city.lat]} zoom={city.zoom} height="h-[420px]" zones={zones} fit flush legend={zones.length ? (weights ? "Orange = passt zu dir" : "Orange = beste Lage") : undefined} />
       </section>
 
-      <section className="mt-9">
+      {/* Liste als Blatt, das über die Karte geschoben ist: Karte und Ecken gehören sichtbar zusammen */}
+      <section className="relative z-[1] -mx-4 -mt-7 rounded-t-[28px] bg-sand px-4 pt-3 shadow-[0_-10px_30px_rgba(0,0,0,0.12)]">
+        <div className="mx-auto mb-4 h-1.5 w-10 rounded-full bg-raised" />
         <h2 className="text-[24px] font-black leading-tight tracking-tight">
           {spots.length ? (weights ? "Deine besten Ecken" : `Die besten Ecken in ${city.name}`) : top ? "Alle Viertel für dich" : `Viertel in ${city.name}`}
         </h2>
