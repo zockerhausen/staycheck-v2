@@ -14,6 +14,7 @@ import DistrictExplorer from "@/components/DistrictExplorer";
 import KiezMap from "@/components/KiezMap";
 import CitySwitcher from "@/components/CitySwitcher";
 import ThemeToggle from "@/components/ThemeToggle";
+import LegalLinks from "@/components/LegalLinks";
 
 // Kartendaten-Abfragen werden zwischengespeichert (1 Tag), die Seite selbst ist dynamisch.
 export const fetchCache = "default-cache";
@@ -204,6 +205,7 @@ export default async function ZielPage({ searchParams }: { searchParams: Promise
           )}
         </>
       )}
+      <LegalLinks className="mt-12" />
     </div>
   );
 }

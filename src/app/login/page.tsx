@@ -31,7 +31,11 @@ export default async function LoginPage({
       )}
       <AuthForm next={next} defaultMode={params.next ? "signup" : "login"} />
       <p className="mt-5 text-center text-xs leading-relaxed text-muted">
-        Mit dem Konto speichern wir deine E-Mail und was du anlegst. Mehr in der{" "}
+        Mit dem Konto gelten unsere{" "}
+        <Link href="/nutzungsbedingungen" className="underline">
+          Nutzungsbedingungen
+        </Link>
+        . Wir speichern deine E-Mail und was du anlegst, mehr in der{" "}
         <Link href="/datenschutz" className="underline">
           Datenschutzerklärung
         </Link>

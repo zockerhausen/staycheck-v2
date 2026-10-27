@@ -33,6 +33,9 @@ export default async function KontoPage() {
         <Link href="/profil" className="btn-chunky btn-chunky-light w-full">
           <Icon name="star" size={22} /> Mein Reise-Profil
         </Link>
+        <Link href="/hilfe" className="btn-chunky btn-chunky-light w-full">
+          <Icon name="tip" size={22} /> Hilfe und Kontakt
+        </Link>
         <form action={signout}>
           <button className="w-full py-3 text-sm font-semibold text-muted">Abmelden</button>
         </form>

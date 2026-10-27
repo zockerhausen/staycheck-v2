@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import Icon from "@/components/Icon";
 import { legalComplete } from "@/lib/legal";
 
-/** Gemeinsamer Rahmen für Impressum und Datenschutz: gut lesbar, dunkel, ohne Ablenkung. */
+/** Gemeinsamer Rahmen für Hilfe, Impressum, Datenschutz und Nutzungsbedingungen: gut lesbar, ohne Ablenkung. */
 export default function LegalPage({ title, updated, children }: { title: string; updated?: string; children: ReactNode }) {
   return (
     <div className="fade-up pb-10">
@@ -19,9 +19,11 @@ export default function LegalPage({ title, updated, children }: { title: string;
         </p>
       )}
       <div className="legal mt-6 space-y-6 text-[15px] leading-relaxed text-ink/85">{children}</div>
-      <nav className="mt-10 flex gap-5 text-sm font-semibold text-muted">
+      <nav className="mt-10 flex flex-wrap gap-x-5 gap-y-2 text-sm font-bold text-muted">
+        <Link href="/hilfe">Hilfe</Link>
         <Link href="/impressum">Impressum</Link>
         <Link href="/datenschutz">Datenschutz</Link>
+        <Link href="/nutzungsbedingungen">Nutzungsbedingungen</Link>
         <Link href="/methode">So rechnen wir</Link>
       </nav>
     </div>
@@ -31,7 +33,7 @@ export default function LegalPage({ title, updated, children }: { title: string;
 export function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
     <section>
-      <h2 className="mb-2 font-display text-[18px] font-extrabold text-ink">{title}</h2>
+      <h2 className="mb-2 text-[19px] font-black text-ink">{title}</h2>
       <div className="space-y-3">{children}</div>
     </section>
   );

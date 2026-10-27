@@ -2,6 +2,9 @@ name: Städte vorberechnen
 # Lädt OpenStreetMap-Regionen (Geofabrik), schneidet die Städte aus und rechnet mit denselben Formeln wie die App:
 # Viertel, Raster/Ecken, alle Unterkünfte mit Lage-Score, Sehenswürdigkeiten, Flughafen. Ergebnis: data/cities/*.json
 on:
+  # Jeden Monat neu rechnen (am 2., 03:17 UTC), damit neue Hotels, Hostels und Bars auftauchen
+  schedule:
+    - cron: "17 3 2 * *"
   workflow_dispatch:
     inputs:
       nur:
@@ -34,12 +37,15 @@ jobs:
           python-version: "3.12"
       - name: Städte und Regionen planen
         id: plan
+        env:
+          NUR: ${{ inputs.nur }}
         run: |
           pip install --quiet shapely==2.0.6
           npx --yes esbuild@0.24.2 scripts/precompute/list-cities.ts --bundle --platform=node --format=esm --outfile=/tmp/list.mjs --log-level=error
           node /tmp/list.mjs > /tmp/cities.json
-          if [ -n "${{ inputs.nur }}" ]; then
-            python3 -c "import json,sys; keep=set('${{ inputs.nur }}'.split(',')); c=json.load(open('/tmp/cities.json')); json.dump([x for x in c if x['slug'] in keep], open('/tmp/cities.json','w'))"
+          # Eingabe nur über eine Umgebungsvariable lesen (nie direkt ins Skript einsetzen)
+          if [ -n "$NUR" ]; then
+            python3 -c "import json,os; keep=set(os.environ['NUR'].split(',')); c=json.load(open('/tmp/cities.json')); json.dump([x for x in c if x['slug'] in keep], open('/tmp/cities.json','w'))"
           fi
           echo "matrix=$(python3 scripts/precompute/plan.py /tmp/cities.json)" >> "$GITHUB_OUTPUT"
 
@@ -127,3 +133,12 @@ jobs:
           git commit -m "Vorberechnete Städte aktualisiert (OpenStreetMap über Geofabrik)" -m "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>" -m "Claude-Session: https://claude.ai/code/session_01NHFJiDqfkhiYUvj1E1dwBL"
           git pull --rebase -q origin "${GITHUB_REF_NAME}"
           git push -q origin "HEAD:${GITHUB_REF_NAME}"
+          # Dieselben Daten auch auf den Vorschau-Zweig, damit beide gleich sind (nur der Ordner data/cities)
+          NEW=$(git rev-parse HEAD)
+          if [ "${GITHUB_REF_NAME}" != "design-dunkel" ] && git fetch -q origin design-dunkel; then
+            git checkout -q -B vorschau FETCH_HEAD
+            git checkout -q "$NEW" -- data/cities
+            git add data/cities
+            git diff --cached --quiet || git commit -q -m "Vorberechnete Städte aktualisiert (OpenStreetMap über Geofabrik)" -m "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>" -m "Claude-Session: https://claude.ai/code/session_01NHFJiDqfkhiYUvj1E1dwBL"
+            git push -q origin vorschau:design-dunkel || echo "::warning::Vorschau-Zweig nicht aktualisiert"
+          fi
