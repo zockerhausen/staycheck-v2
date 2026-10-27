@@ -1,4 +1,3 @@
-import { CITY_RADIUS } from "@/lib/popular";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getCities, getCriteria, getProfile, getUser } from "@/lib/data";
@@ -13,8 +12,6 @@ import { pageRateLimit } from "@/lib/ratelimit-page";
 import Icon from "@/components/Icon";
 import DistrictExplorer from "@/components/DistrictExplorer";
 import KiezMap from "@/components/KiezMap";
-import AskDistrict from "@/components/AskDistrict";
-import { assistantEnabled } from "@/lib/assistant";
 import CitySwitcher from "@/components/CitySwitcher";
 import ThemeToggle from "@/components/ThemeToggle";
 
@@ -163,14 +160,6 @@ export default async function ZielPage({ searchParams }: { searchParams: Promise
           />
             <ZoneLegend personal={Boolean(weights)} shown={zones.length > 0} />
           </section>
-
-          <div className="mt-6">
-            <AskDistrict
-              target={{ art: "stadt", ort: ziel.ort, land: ziel.land ?? "", lat: ziel.lat, lon: ziel.lon, rad: CITY_RADIUS }}
-              place={ziel.ort}
-              enabled={assistantEnabled()}
-            />
-          </div>
 
           <section className="mt-9">
             <h2 className="text-[24px] font-black leading-tight tracking-tight [overflow-wrap:anywhere]">

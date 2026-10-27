@@ -10,8 +10,6 @@ import DestinationSearch from "@/components/DestinationSearch";
 import LegalLinks from "@/components/LegalLinks";
 import CitySwitcher from "@/components/CitySwitcher";
 import KiezMap from "@/components/KiezMap";
-import AskDistrict from "@/components/AskDistrict";
-import { assistantEnabled } from "@/lib/assistant";
 import ZoneLegend from "@/components/ZoneLegend";
 import ThemeToggle from "@/components/ThemeToggle";
 import { cityDataQuick, DEFAULT_WEIGHTS } from "@/lib/geo";
@@ -160,14 +158,6 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
       <KiezMap points={mapPoints} highlight={topSpot?.slug ?? top?.slug} center={[city.lng, city.lat]} zoom={city.zoom} height="h-80" zones={zones} fit />
         <ZoneLegend personal={Boolean(weights)} shown={zones.length > 0} />
       </section>
-
-      <div className="mt-6">
-        <AskDistrict
-          target={{ art: "stadt", ort: city.name, land: city.country ?? "", lat: city.lat, lon: city.lng, rad: VERIFIED_RADIUS }}
-          place={city.name}
-          enabled={assistantEnabled()}
-        />
-      </div>
 
       <section className="mt-9">
         <h2 className="text-[24px] font-black leading-tight tracking-tight">

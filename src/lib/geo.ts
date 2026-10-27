@@ -393,7 +393,7 @@ function rankHotels(list: HotelResult[], weights: Weights): HotelResult[] {
   return list
     .map((h) => ({ ...h, match: locationMatch(h.scores, weights) }))
     .sort((a, b) => b.match - a.match)
-    .slice(0, 40);
+    .slice(0, 300); // alle im Umkreis: Filter (z. B. Hostels) sollen nicht nur unter den 40 besten suchen
 }
 
 export async function hotelsNear(
