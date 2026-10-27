@@ -28,7 +28,7 @@ const nextConfig: NextConfig = {
   eslint: { ignoreDuringBuilds: true },
   poweredByHeader: false,
   // Vorberechnete Städte mit ausliefern (werden zur Laufzeit gelesen)
-  outputFileTracingIncludes: { "/**/*": ["./data/cities/**/*"] },
+  outputFileTracingIncludes: { "/**/*": ["./data/cities/**/*", "./data/insights/**/*"] },
   // Schon besuchte Seiten 30 Sek. im Browser behalten: Zurück und Vor gehen sofort
   // (Änderungen über Server-Aktionen, z. B. Quiz, leeren diesen Speicher automatisch)
   experimental: {

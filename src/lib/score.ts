@@ -9,7 +9,13 @@ export type Poi = { lat: number; lon: number; tags: Tags; bbox?: [number, number
 export type Line = { tags: Tags; points: { lat: number; lon: number }[] };
 
 export type Source = "messung" | "viertel" | "gemischt" | "keine";
-export type Detail = { score: number | null; source: Source; reasons: string[] };
+export type Detail = {
+  score: number | null;
+  source: Source;
+  reasons: string[];
+  /** Was Reiseseiten zu diesem Wert sagen (zu 50 % eingerechnet), siehe lib/insights.ts */
+  web?: import("./insight-types").WebPart;
+};
 export type Coverage = { level: "gut" | "mittel" | "duenn"; text: string };
 export type ScoreDistrict = { name: string; scores: Record<string, number> };
 

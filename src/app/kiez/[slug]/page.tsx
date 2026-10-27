@@ -25,6 +25,8 @@ import ScoreBars from "@/components/ScoreBars";
 import AreaHero from "@/components/AreaHero";
 import StayRow from "@/components/StayRow";
 import ViewTabs from "@/components/ViewTabs";
+import WebInsight from "@/components/WebInsight";
+import { insightNear } from "@/lib/insights";
 import { areaPhoto } from "@/lib/photos";
 import TipsSection from "@/components/TipsSection";
 import { getTipsForDistrict } from "@/lib/tips";
@@ -132,6 +134,7 @@ export default async function KiezPage({
   const match = matchScore(district, weights);
 
   const short = district.name.split(" (")[0];
+  const webInsight = await insightNear(district.lat!, district.lng!, short).catch(() => null);
   const photoWork = areaPhoto(short, cityName, district.lat, district.lng, 600);
   const photoRaced = await withDeadline(photoWork, 2500);
   if (photoRaced === "slow") after(() => photoWork);
@@ -260,6 +263,7 @@ export default async function KiezPage({
               label: "Tag und Nacht",
               content: (
                 <div className="space-y-5">
+                  <WebInsight insight={webInsight} />
                   <DistrictVibe name={short} scores={district.scores} />
                   <TipsSection
                     tips={tips}

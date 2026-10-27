@@ -69,6 +69,7 @@ export default function ScoreExplain({
           {personal
             ? "Der Score ist der Durchschnitt aller Werte, gewichtet nach deinem Reise-Profil. Was dir wichtig ist, zählt mehr."
             : "Der Score ist der Durchschnitt aller Werte mit einer Standard-Gewichtung. Mit dem Quiz rechnen wir nach deinen Wünschen."}
+          {Object.values(details).some((d) => d.web) && " Wo seriöse Reiseseiten etwas dazu sagen, zählen sie zur Hälfte mit. Tippe auf einen Wert für die Quellen."}
         </p>
         {capped !== null && (
           <p className="pt-2 text-xs font-semibold text-warn">
@@ -96,7 +97,7 @@ export default function ScoreExplain({
                     <span className={`bar-grow block h-full rounded-full ${d.score <= 4 ? "bg-bad" : "bg-ink"}`} style={{ width: `${d.score * 10}%` }} />
                   )}
                 </span>
-                <span className="w-7 text-right font-black tabular-nums">{d.score ?? "–"}</span>
+                <span className="w-8 text-right font-black tabular-nums">{d.score === null ? "–" : String(Math.round(d.score * 10) / 10).replace(".", ",")}</span>
                 <Icon name="down" size={16} className="text-muted transition-transform duration-300 group-open:rotate-180" />
               </summary>
               <div className="pb-3 pl-1">
@@ -108,7 +109,37 @@ export default function ScoreExplain({
                     </li>
                   ))}
                 </ul>
-                <span className="mt-2 inline-block rounded-full bg-tan px-2.5 py-1 text-[11px] font-bold text-muted">Quelle: {SOURCE[d.source]}</span>
+                {d.web && (
+                  <div className="mt-3 rounded-2xl bg-tan p-3 text-[14px]">
+                    <p className="font-extrabold">
+                      Reiseseiten: {String(d.web.score).replace(".", ",")}/10
+                      {d.web.measured !== null && (
+                        <span className="font-semibold text-muted">
+                          {" "}
+                          (gemessen {String(d.web.measured).replace(".", ",")}, zusammen {String(d.score).replace(".", ",")})
+                        </span>
+                      )}
+                    </p>
+                    <p className="mt-0.5 font-semibold text-muted">{d.web.why}</p>
+                    <p className="mt-2 flex flex-wrap gap-1.5">
+                      {d.web.sources.map((src) => (
+                        <a
+                          key={src.url}
+                          href={src.url}
+                          target="_blank"
+                          rel="noopener noreferrer nofollow"
+                          className="max-w-full truncate rounded-full bg-sand px-2.5 py-1 text-[12px] font-bold text-ink"
+                        >
+                          {src.url.replace(/^https?:\/\/(www\.)?/, "").split("/")[0]}
+                        </a>
+                      ))}
+                    </p>
+                  </div>
+                )}
+                <span className="mt-2 inline-block rounded-full bg-tan px-2.5 py-1 text-[11px] font-bold text-muted">
+                  Quelle: {SOURCE[d.source]}
+                  {d.web ? " + Reiseseiten (50 %)" : ""}
+                </span>
               </div>
             </details>
           );

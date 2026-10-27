@@ -134,6 +134,21 @@ export default function MethodePage() {
       </section>
 
       <section className="card mt-7 p-5">
+        <h2 className="font-display text-[19px] font-extrabold">Was Reiseseiten sagen (50 %)</h2>
+        <p className="mt-2 text-sm leading-relaxed">
+          Zählen allein reicht nicht: 30 Bars können Touristenfallen sein, ein Park kann nachts gemieden werden. Darum recherchiert eine KI mit Websuche
+          für jede wichtige Gegend, was seriöse Reisequellen sagen, etwa Wikivoyage, Lonely Planet, Time Out oder offizielle Tourismusseiten. Werbe- und
+          KI-Textseiten bleiben außen vor.
+        </p>
+        <ul className="mt-3 space-y-2 text-sm leading-relaxed">
+          <li>• Ein Wert zählt nur, wenn mindestens zwei unabhängige Websites etwas dazu sagen.</li>
+          <li>• Jede Quelle muss wirklich in den Suchergebnissen vorkommen, erfundene Links werden verworfen.</li>
+          <li>• Im Score zählt dieser Wert zur Hälfte, die andere Hälfte ist unsere Messung. Gilt für alles im Umkreis von 900 m um die Gegend.</li>
+          <li>• Bei jedem Wert siehst du beide Zahlen und alle Quellen zum Anklicken. Alle drei Monate wird neu recherchiert.</li>
+        </ul>
+      </section>
+
+      <section className="card mt-7 p-5">
         <h2 className="font-display text-[19px] font-extrabold">„So fühlt es sich an“</h2>
         <p className="mt-2 text-sm leading-relaxed">
           Der Tagesablauf folgt fest aus den Werten, zum Beispiel: Essen ab 8 = „viele Cafés in Laufweite“, Ruhe bis 3 oder Nachtleben ab 9 =

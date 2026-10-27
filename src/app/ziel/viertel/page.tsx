@@ -26,6 +26,8 @@ import KiezMap from "@/components/KiezMap";
 import AreaHero from "@/components/AreaHero";
 import StayRow from "@/components/StayRow";
 import ViewTabs from "@/components/ViewTabs";
+import WebInsight from "@/components/WebInsight";
+import { insightNear } from "@/lib/insights";
 import { areaPhoto } from "@/lib/photos";
 
 export const fetchCache = "default-cache";
@@ -141,6 +143,7 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
   const pool = districts.map((d) => d.scores);
 
   // Kopf: Foto, drei Zahlen (Lage, Gäste, Preis)
+  const webInsight = await insightNear(vlat!, vlon!, name).catch(() => null);
   const photoWork = areaPhoto(name, ziel.ort, vlat, vlon);
   const photoRaced = await withDeadline(photoWork, 2500);
   if (photoRaced === "slow") after(() => photoWork);
@@ -298,6 +301,7 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
               label: "Tag und Nacht",
               content: (
                 <div className="space-y-5">
+                  <WebInsight insight={webInsight} />
                   {district ? <DistrictVibe name={name} scores={scores} /> : <p className="card p-4 text-[15px] text-muted">Für diese Ecke haben wir zu wenig Daten.</p>}
                 </div>
               ),

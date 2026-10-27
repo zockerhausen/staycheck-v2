@@ -1,0 +1,64 @@
+name: Website-Wissen recherchieren
+# Recherchiert mit Claude + Websuche, was seriöse Reiseseiten über die Viertel und Ecken sagen (data/insights/*.json).
+# Die App rechnet diese Werte 50/50 in den Lage-Score ein und zeigt die Quellen an.
+# Braucht das Repository-Secret ANTHROPIC_API_KEY (Settings → Secrets and variables → Actions).
+on:
+  # Alle 3 Monate (5. Januar, April, Juli, Oktober, 04:23 UTC)
+  schedule:
+    - cron: "23 4 5 1,4,7,10 *"
+  workflow_dispatch:
+    inputs:
+      nur:
+        description: "Nur diese Städte (Komma-Liste von Slugs, leer = alle)"
+        required: false
+        default: ""
+      max_usd:
+        description: "Kostenlimit für diesen Lauf in US-Dollar"
+        required: false
+        default: "150"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: webwissen
+  cancel-in-progress: false
+
+jobs:
+  recherche:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Skript bauen
+        run: npx --yes esbuild@0.24.2 scripts/insights/research.ts --bundle --platform=node --format=esm --outfile=/tmp/research.mjs --alias:@=./src --log-level=error
+      - name: Recherchieren
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          NUR: ${{ inputs.nur }}
+          MAX_USD: ${{ inputs.max_usd || '150' }}
+        run: node /tmp/research.mjs
+      - name: Speichern
+        if: always()
+        run: |
+          git config user.name "zockerhausen"
+          git config user.email "pauljonas.beth@me.com"
+          git add data/insights 2>/dev/null || true
+          git diff --cached --quiet && echo "Nichts Neues" && exit 0
+          MSG="Website-Wissen aktualisiert (Reiseseiten-Recherche)"
+          git commit -q -m "$MSG" -m "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>" -m "Claude-Session: https://claude.ai/code/session_01NHFJiDqfkhiYUvj1E1dwBL"
+          git pull --rebase -q origin "${GITHUB_REF_NAME}"
+          git push -q origin "HEAD:${GITHUB_REF_NAME}"
+          # Dieselben Daten auch auf den jeweils anderen Zweig (nur der Ordner data/insights)
+          NEW=$(git rev-parse HEAD)
+          OTHER=$([ "${GITHUB_REF_NAME}" = "main" ] && echo design-dunkel || echo main)
+          if git fetch -q origin "$OTHER"; then
+            git checkout -q -B other FETCH_HEAD
+            git checkout -q "$NEW" -- data/insights
+            git add data/insights
+            git diff --cached --quiet || git commit -q -m "$MSG" -m "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>" -m "Claude-Session: https://claude.ai/code/session_01NHFJiDqfkhiYUvj1E1dwBL"
+            git push -q origin "other:$OTHER" || echo "::warning::$OTHER nicht aktualisiert"
+          fi
