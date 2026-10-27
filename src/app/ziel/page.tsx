@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { getCities, getCriteria, getProfile, getUser } from "@/lib/data";
+import { getCities, getCriteria, getExtras, getProfile, getUser } from "@/lib/data";
 import { after } from "next/server";
 import { autoCityCached, DEFAULT_WEIGHTS, distance, locationMatch, withDeadline, type AutoCity } from "@/lib/geo";
 import { findSpots, pickZones } from "@/lib/zones";
@@ -14,6 +14,7 @@ import DistrictExplorer from "@/components/DistrictExplorer";
 import KiezMap from "@/components/KiezMap";
 import CitySwitcher from "@/components/CitySwitcher";
 import ThemeToggle from "@/components/ThemeToggle";
+import ProfileBar from "@/components/ProfileBar";
 import LegalLinks from "@/components/LegalLinks";
 
 // Kartendaten-Abfragen werden zwischengespeichert (1 Tag), die Seite selbst ist dynamisch.
@@ -61,7 +62,7 @@ export default async function ZielPage({ searchParams }: { searchParams: Promise
 
   const criteria = await getCriteria();
   const work = autoCityCached(ziel.lat, ziel.lon).catch(() => null as AutoCity | null);
-  const [{ weights }, raced] = await Promise.all([getProfile(criteria), withDeadline(work, 9_000)]);
+  const [{ weights }, raced, extras] = await Promise.all([getProfile(criteria), withDeadline(work, 9_000), getExtras()]);
   // Erste Berechnung einer Stadt zu langsam? Im Hintergrund fertig rechnen, Seite lädt von selbst neu.
   if (raced === "slow") after(() => work);
   const slow = raced === "slow";
@@ -131,18 +132,7 @@ export default async function ZielPage({ searchParams }: { searchParams: Promise
         </div>
       ) : (
         <>
-          {!weights && (
-            <Link href={`/quiz?${zq}`} className="press mt-5 flex items-center gap-3.5 rounded-[20px] bg-peach px-4 py-3.5">
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-sun text-white">
-                <Icon name="discover" size={22} fill="transparent" />
-              </span>
-              <span className="min-w-0 flex-1">
-                <b className="block text-[16px] font-black">Welche Ecke passt zu dir?</b>
-                <span className="block text-[14px] font-semibold text-muted">7 kurze Fragen, dann sortieren wir für dich</span>
-              </span>
-              <Icon name="chevron" size={16} className="text-muted" />
-            </Link>
-          )}
+          <ProfileBar weights={weights} extras={extras} quizHref={`/quiz?${zq}`} />
 
           <section id="karte" className="mt-6">
             <h1 className="mb-3 text-[26px] font-black leading-tight tracking-tight [overflow-wrap:anywhere]">Wo schläfst du in {ziel.ort}?</h1>

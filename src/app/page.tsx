@@ -1,6 +1,6 @@
 import { VERIFIED_RADIUS } from "@/lib/popular";
 import Link from "next/link";
-import { getChosenCity, getChosenZiel, getCities, getCriteria, getDistricts, getProfile, getUser } from "@/lib/data";
+import { getChosenCity, getChosenZiel, getCities, getCriteria, getDistricts, getExtras, getProfile, getUser } from "@/lib/data";
 import { rankDistricts } from "@/lib/matching";
 import { getTipsForDistrict, TIP_CATEGORIES } from "@/lib/tips";
 import Icon from "@/components/Icon";
@@ -12,6 +12,7 @@ import CitySwitcher from "@/components/CitySwitcher";
 import KiezMap from "@/components/KiezMap";
 import ZoneLegend from "@/components/ZoneLegend";
 import ThemeToggle from "@/components/ThemeToggle";
+import ProfileBar from "@/components/ProfileBar";
 import { cityDataQuick, DEFAULT_WEIGHTS } from "@/lib/geo";
 import { findSpots, pickZones } from "@/lib/zones";
 import { redirect } from "next/navigation";
@@ -84,7 +85,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
   }
 
   // Schritt 2: Reiseziel gewählt
-  const { weights } = await getProfile(criteria);
+  const [{ weights }, extras] = await Promise.all([getProfile(criteria), getExtras()]);
   const [districts, cd] = await Promise.all([getDistricts(city.slug), cityDataQuick(city.lat, city.lng, VERIFIED_RADIUS)]);
   const w = weights ?? DEFAULT_WEIGHTS;
   const zones = cd ? pickZones(cd.zones, w) : [];
@@ -131,27 +132,16 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
       <div className="flex items-center gap-2.5">
         <CitySwitcher variant="bar" current={city.name} verified={verified} />
         <Link
-          href={weights ? "/profil" : `/quiz?stadt=${city.slug}`}
-          aria-label="Reise-Profil"
+          href={user ? "/konto" : "/login"}
+          aria-label="Konto"
           className="press flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-full border border-line bg-sand shadow-soft"
         >
-          <Icon name="sliders" size={21} fill="transparent" />
+          <Icon name="user" size={21} fill="transparent" />
         </Link>
         <ThemeToggle className="h-[52px] w-[52px]" />
       </div>
 
-      {!weights && (
-        <Link href={`/quiz?stadt=${city.slug}`} className="press mt-5 flex items-center gap-3.5 rounded-[20px] bg-peach px-4 py-3.5">
-          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-sun text-white">
-            <Icon name="discover" size={22} fill="transparent" />
-          </span>
-          <span className="min-w-0 flex-1">
-            <b className="block text-[16px] font-black">Welche Ecke passt zu dir?</b>
-            <span className="block text-[14px] font-semibold text-muted">7 kurze Fragen, dann sortieren wir für dich</span>
-          </span>
-          <Icon name="chevron" size={16} className="text-muted" />
-        </Link>
-      )}
+      <ProfileBar weights={weights} extras={extras} quizHref={`/quiz?stadt=${city.slug}`} />
 
       <section id="karte" className="mt-6">
         <h1 className="mb-3 text-[26px] font-black leading-tight tracking-tight [overflow-wrap:anywhere]">Wo schläfst du in {city.name}?</h1>
