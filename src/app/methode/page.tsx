@@ -82,7 +82,7 @@ export default function MethodePage() {
             <b>1. Umgebung messen.</b> Wir laden alle Einträge aus OpenStreetMap rund um die Adresse: Bahnhöfe, Bars, Restaurants, Parks, große Straßen, Gleise. In vorberechneten Städten ergänzen wir Bars, Restaurants und Hostels aus Overture Maps, wenn sie in OpenStreetMap fehlen. Was in beiden steht, zählen wir nur einmal, unsichere Einträge lassen wir weg.
           </li>
           <li>
-            <b>2. Sieben Werte von 1 bis 10.</b> Nach festen Regeln (siehe unten). Entfernungen rechnen wir als Fußweg: Luftlinie plus 25 %, 80 m pro Minute.
+            <b>2. Sieben Werte von 1 bis 10.</b> Nach festen Regeln (siehe unten). Entfernungen rechnen wir als Fußweg: Luftlinie plus 25 %, 80 m pro Minute. In vorberechneten Städten prüfen wir zusätzlich das echte Wegenetz: Was nur mit großem Umweg erreichbar ist (zum Beispiel auf der anderen Flussseite ohne Brücke oder hinter Gleisen), zählen wir nicht mit.
           </li>
           <li>
             <b>Zwei Zahlen.</b> „Lage allgemein“ ist für alle gleich (Standard-Gewichtung, ohne Extras). „Dein Match“ rechnet mit deinem Reise-Profil.

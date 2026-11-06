@@ -1,17 +1,18 @@
 // Vorberechnung einer Stadt aus heruntergeladenen OpenStreetMap-Daten (osmium export → geojsonseq).
 // Nutzt exakt dieselben Rechenwege wie die App (autoCityFromData, scoreLocation), nur ohne Overpass-Server.
-// Aufruf: node build.mjs <stadt.json> <features.geojsonseq> <airports.csv (OurAirports)> <ausgabe.json> [overture.geojsonseq]
+// Aufruf: node build.mjs <stadt.json> <features.geojsonseq> <airports.csv (OurAirports)> <ausgabe.json> [overture.geojsonseq] [fusswege.geojsonseq]
 // Optional: Orte aus Overture Maps (Bars, Essen, Hostels) als Ergänzung. Was es in OpenStreetMap schon gibt, wird nicht doppelt gezählt.
 import { readFileSync, writeFileSync } from "node:fs";
 import { gzipSync } from "node:zlib";
 import { autoCityFromData, locationMatch, DEFAULT_WEIGHTS, scoreLocation, split, type OverpassElement } from "../../src/lib/geo";
 import { distance, type Line, type Poi } from "../../src/lib/score";
+import { loadWalkGraph, reachable } from "./walk";
 
 type City = { slug: string; ort: string; land: string; lat: number; lon: number; radius: number };
 type Geo = { type: string; coordinates: unknown };
 type Feature = { id?: string; geometry: Geo; properties: Record<string, string> };
 
-const [cityArg, featuresPath, airportsPath, outPath, overturePath] = process.argv.slice(2);
+const [cityArg, featuresPath, airportsPath, outPath, overturePath, walkPath] = process.argv.slice(2);
 const city: City = JSON.parse(cityArg);
 
 function readSeq(path: string): Feature[] {
@@ -184,8 +185,16 @@ const STAY = /^(hotel|hostel|guest_house|apartment)$/;
 const stays = data.pois.filter((p) => STAY.test(p.tags.tourism ?? "") && p.tags.name && distance(city.lat, city.lon, p.lat, p.lon) <= city.radius + 300);
 // Volle Bewertung je Unterkunft (wie beim Lage-Check): Werte, Begründungen, Datenlage, nächster Bahnhof
 const KIND = (t: Record<string, string>) => (STAY.test(t.tourism ?? "") ? t.tourism : "other");
+// Fußwege-Netz: nur zählen, was ohne großen Umweg erreichbar ist (fehlt das Netz, wie bisher Luftlinie)
+const tw = Date.now();
+const walkGraph = walkPath ? await loadWalkGraph(walkPath).catch(() => null) : null;
+console.log(`${city.slug}: Fußwege-Netz ${walkGraph ? `${walkGraph.lat.length} Punkte` : "nicht genutzt"} · ${Math.round((Date.now() - tw) / 1000)} s`);
+let droppedTotal = 0;
 const hotels = stays.map((h) => {
-  const a = scoreLocation(h.lat, h.lon, around(h.lat, h.lon), null);
+  const env = around(h.lat, h.lon);
+  const r = reachable(walkGraph, h.lat, h.lon, env.pois);
+  droppedTotal += r.dropped;
+  const a = scoreLocation(h.lat, h.lon, { pois: r.pois, lines: env.lines }, null);
   const street = [h.tags["addr:street"], h.tags["addr:housenumber"]].filter(Boolean).join(" ") || (h.tags["addr:full"] ?? "").split(",")[0];
   return {
     name: h.tags.name,
@@ -204,6 +213,7 @@ const hotels = stays.map((h) => {
   };
 });
 const scoreKeys = [...new Set(hotels.flatMap((h) => Object.keys(h.scores)))];
+if (walkGraph) console.log(`${city.slug}: ${droppedTotal} Orte wegen großem Umweg nicht gezählt (über alle Unterkünfte)`);
 
 // ---------- Ehrliche Zusatzdaten ----------
 // Sehenswürdigkeiten mit Namen (für „In 15 Minuten zu Fuß“)
@@ -283,7 +293,7 @@ const out = {
   radius: city.radius,
   generated: new Date().toISOString().slice(0, 10),
   // Woher die Orte kommen (für die Quellenangabe in der App)
-  sources: { osm: osmEls.length, overture: overture.length, overtureAdded: added },
+  sources: { osm: osmEls.length, overture: overture.length, overtureAdded: added, walk: Boolean(walkGraph) },
   city: auto,
   scoreKeys,
   // Kompakt: [Name, Straße, lat, lon, Art, Werte (Reihenfolge scoreKeys), Highlights, Sterne, Details]

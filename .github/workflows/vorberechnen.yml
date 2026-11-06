@@ -99,11 +99,14 @@ jobs:
               nwr/historic=monument,castle,ruins,city_gate,archaeological_site nwr/shop nwr/office=coworking \
               -o /tmp/f.pbf --overwrite
             osmium export /tmp/f.pbf -f geojsonseq -o /tmp/f.seq --overwrite --geometry-types=point,linestring,polygon
+            # Alle Wege für das Fußwege-Netz (was ist ohne großen Umweg erreichbar?)
+            osmium tags-filter /tmp/city.pbf w/highway -o /tmp/w.pbf --overwrite
+            osmium export /tmp/w.pbf -f geojsonseq -o /tmp/walk.seq --overwrite --geometry-types=linestring || : > /tmp/walk.seq
             : > /tmp/ov.seq
             if [ -n "$OVERTURE_RELEASE" ]; then
               timeout 600 python3 scripts/precompute/overture.py "$OVERTURE_RELEASE" "$BBOX" /tmp/ov.seq || echo "::warning title=$slug::Overture übersprungen"
             fi
-            node --max-old-space-size=6000 /tmp/build.mjs "$CITY" /tmp/f.seq /tmp/airports.csv "out/$slug.json.gz" /tmp/ov.seq || echo "::warning title=$slug::Berechnung fehlgeschlagen"
+            node --max-old-space-size=6000 /tmp/build.mjs "$CITY" /tmp/f.seq /tmp/airports.csv "out/$slug.json.gz" /tmp/ov.seq /tmp/walk.seq || echo "::warning title=$slug::Berechnung fehlgeschlagen"
           done
       - uses: actions/upload-artifact@v4
         with:
