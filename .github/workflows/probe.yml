@@ -4,9 +4,8 @@ jobs:
   p:
     runs-on: ubuntu-latest
     steps:
-      - run: |
-          UA="StayCheck/1.0 (https://github.com/zockerhausen/staycheck-v2)"
-          for T in Lisbon/Alfama Berlin/Mitte Bangkok/Silom; do
-          echo "== $T"; curl -sS -A "$UA" "https://en.wikivoyage.org/w/api.php?format=json&formatversion=2&action=query&prop=extracts&explaintext=1&exsectionformat=wiki&titles=$T&redirects=1" | python3 -c "import json,sys; e=json.load(sys.stdin)['query']['pages'][0].get('extract',''); print(len(e)); print(e[:900])"
-          done
-          echo "== de Berlin/Mitte"; curl -sS -A "$UA" "https://de.wikivoyage.org/w/api.php?format=json&formatversion=2&action=query&prop=extracts&explaintext=1&exsectionformat=wiki&titles=Berlin/Mitte&redirects=1" | python3 -c "import json,sys; e=json.load(sys.stdin)['query']['pages'][0].get('extract',''); print(len(e)); print(e[:900])"
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node gt.mjs
