@@ -109,3 +109,15 @@ Später schneller: eigenen Overpass-Server betreiben (ca. 20–50 €/Monat) und
 - Recherche: `scripts/insights/research.ts`, Workflow `.github/workflows/webwissen.yml` (nur manuell, Zeitplan auskommentiert). Ergebnis `data/insights/<stadt>.json`.
 - App rechnet vorhandene Recherchen 50/50 ein (`src/lib/insights.ts`, beim Laden in `precomputed.ts`); ohne Dateien ändert sich nichts.
 - Offen: GitHub-Secret `ANTHROPIC_API_KEY`; Nutzer will es später, evtl. günstige Variante (Wikivoyage + Wikipedia + kleines Modell statt Websuche, ca. 5–15 $).
+
+## Design „Violett Glas“ (seit 6.11.2026 live)
+Aus dem Design-System von passt.: Violett #5340f2 für alles Antippbare, Pink #ff3d9a nur als Ring/Punkt für „das Beste für dich“, Weiß und Glas für den Rest, Schrift Geist 400–800.
+Startseite mit violettem Plakat (beste Ecke + Lage-Zahl), schwebende Glas-Leiste mit Lage-Check in der Mitte (statt Plus).
+Altes Design „Leicht & klar“: Zweig `design-leicht-klar` (Vorschau staycheck-v2-git-design-leicht-klar-passt.vercel.app), zurück: `src/` von dort übernehmen.
+
+## Offene Datenquellen (Nov. 2026)
+- **Overture Maps Places** (CDLA Permissive 2.0): in der Vorberechnung Bars, Essen, Hostels/Gästehäuser ergänzen, wo OSM sie nicht kennt (gleiche Art bis 35 m oder gleicher Name bis 150 m = doppelt, Vertrauen ≥ 0,75). Skript `scripts/precompute/overture.py` (DuckDB, öffentlicher S3-Speicher, neueste Ausgabe automatisch).
+- **Overture Divisions**: Viertel- und Kiez-Namen (neighborhood, microhood) als zusätzliche Kandidaten für die Viertel. Statt Who's On First, weil aktueller und in derselben Abfrage.
+- **Fußwege-Netz** aus OSM (`scripts/precompute/walk.ts`): Orte 150–900 m entfernt zählen nur, wenn der Fußweg höchstens 1,6 × Luftlinie + 150 m ist. Nur großes zusammenhängendes Netz; fällt an einer Stelle > 35 % weg, wird dort nichts aussortiert (Datenlücke). Statt Valhalla, weil ohne Server.
+- **Wikivoyage** (CC BY-SA 4.0): Einleitung + Überblick des nächsten Stadtteil-Artikels auf Viertel-Seiten („Aus dem Reiseführer“), mit Quelle und Lizenz. Fließt nicht in den Score ein. `src/lib/wikivoyage.ts`.
+- **Fahrzeiten**: Schätzung aus der Entfernung („ca.“) zu Zentrum und Flughafen für alle vorberechneten Städte, Route-Link zu Google Maps. Transitous geht nicht: nur für nicht-kommerzielle Apps.
