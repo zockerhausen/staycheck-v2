@@ -15,6 +15,8 @@ export async function hubsNear(lat: number, lon: number, verifiedSlug?: string |
   const airports: Hub[] = (pre.airports ?? [])
     .filter((a) => Number.isFinite(a.lat) && Number.isFinite(a.lon) && distance(a.lat, a.lon, lat, lon) < 60_000)
     .slice(0, 2)
+    // Zweiter Flughafen nur, wenn er nicht viel weiter weg ist (sonst eher ein kleiner Regionalflughafen)
+    .filter((a, i, all) => i === 0 || a.km <= all[0].km * 1.8)
     .map((a) => ({ id: `ap-${a.iata || a.n}`, name: a.iata ? `${a.n} (${a.iata})` : a.n, kind: "airport", lat: a.lat, lon: a.lon }));
   // Zentrum nur zeigen, wenn man nicht schon mittendrin ist
   const center: Hub[] =
