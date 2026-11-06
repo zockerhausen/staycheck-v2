@@ -6,8 +6,7 @@ jobs:
     steps:
       - run: |
           UA="StayCheck/1.0 (https://github.com/zockerhausen/staycheck-v2)"
-          for L in de en; do
-            echo "== $L geosearch"; curl -sS -A "$UA" "https://$L.wikivoyage.org/w/api.php?format=json&formatversion=2&action=query&list=geosearch&gscoord=38.7114%7C-9.13&gsradius=4000&gslimit=30" | head -c 1500; echo
+          for T in Lisbon/Alfama Berlin/Mitte Bangkok/Silom; do
+          echo "== $T"; curl -sS -A "$UA" "https://en.wikivoyage.org/w/api.php?format=json&formatversion=2&action=query&prop=extracts&explaintext=1&exsectionformat=wiki&titles=$T&redirects=1" | python3 -c "import json,sys; e=json.load(sys.stdin)['query']['pages'][0].get('extract',''); print(len(e)); print(e[:900])"
           done
-          echo "== de extract"; curl -sS -A "$UA" "https://de.wikivoyage.org/w/api.php?format=json&formatversion=2&action=query&prop=extracts&exintro=1&explaintext=1&titles=Lissabon/Alfama&redirects=1" | head -c 800; echo
-          echo "== en extract"; curl -sS -A "$UA" "https://en.wikivoyage.org/w/api.php?format=json&formatversion=2&action=query&prop=extracts&exintro=1&explaintext=1&titles=Lisbon/Alfama&redirects=1" | head -c 800; echo
+          echo "== de Berlin/Mitte"; curl -sS -A "$UA" "https://de.wikivoyage.org/w/api.php?format=json&formatversion=2&action=query&prop=extracts&explaintext=1&exsectionformat=wiki&titles=Berlin/Mitte&redirects=1" | python3 -c "import json,sys; e=json.load(sys.stdin)['query']['pages'][0].get('extract',''); print(len(e)); print(e[:900])"
