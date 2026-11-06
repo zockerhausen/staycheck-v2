@@ -28,8 +28,8 @@
   "lat": 13.745,
   "lon": 100.53,
   "radius": 8000,
-  "generated": "2026-11-02",
-  "hotels": 2078
+  "generated": "2026-11-06",
+  "hotels": 2239
  },
  {
   "slug": "barcelona",
@@ -44,8 +44,8 @@
   "lat": 52.51,
   "lon": 13.405,
   "radius": 8000,
-  "generated": "2026-11-02",
-  "hotels": 882
+  "generated": "2026-11-06",
+  "hotels": 926
  },
  {
   "slug": "bogota",
