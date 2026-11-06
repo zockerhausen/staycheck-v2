@@ -613,7 +613,45 @@ export function autoCityFromData(
     .sort((a, b) => a.d - b.d)
     .slice(0, 250)
     .map((p) => ({ n: p.name.slice(0, 60), lat: Math.round(p.lat * 1e5) / 1e5, lon: Math.round(p.lon * 1e5) / 1e5, l: p.level }));
-  const fixed = fixedPoints.length ? Object.fromEntries(fixedPoints.map((p) => [p.slug, scorePoint(p)])) : undefined;
+  // Handgeprüfte Viertel: Durchschnitt über das Viertel (Punkte alle 300 m im Umkreis von 800 m),
+  // damit ein ungünstig gesetzter Mittelpunkt (z. B. knapp neben dem Bahnhof) den Wert nicht verzerrt
+  const scoreArea = (c: { lat: number; lon: number }) => {
+    const pts: { lat: number; lon: number }[] = [];
+    const dLat = 300 / 110540;
+    const dLon = 300 / (111320 * Math.cos((c.lat * Math.PI) / 180));
+    for (let i = -3; i <= 3; i++)
+      for (let j = -3; j <= 3; j++) {
+        const p = { lat: c.lat + i * dLat, lon: c.lon + j * dLon };
+        if (distance(c.lat, c.lon, p.lat, p.lon) <= 800) pts.push(p);
+      }
+    const all = pts.map((p) => countsAt(p));
+    const avg = all[0].map((_, g) => all.reduce((a, c7) => a + c7[g], 0) / all.length);
+    const per = all.map((c7) => autoScores(c7));
+    const scores: Record<string, number | null> = {};
+    for (const k of Object.keys(per[0])) {
+      const vals = per.map((x) => x[k]).filter((v): v is number => typeof v === "number");
+      scores[k] = vals.length ? Math.round((vals.reduce((a, b) => a + b, 0) / vals.length) * 10) / 10 : null;
+    }
+    const [bars, food, stations, trams, buses, parks, hostels] = avg.map((x) => Math.round(x * 10) / 10);
+    const n = (x: number) => String(x).replace(".", ",");
+    const where = `im Schnitt an ${pts.length} Punkten im Viertel`;
+    const share = (g: number) => Math.round((all.filter((c7) => c7[g] > 0).length / all.length) * 100);
+    const reasons: Record<string, string> = {
+      transit:
+        stations >= 0.5
+          ? `${n(stations)} Bahnhöfe in 800 m (${where}), an ${share(2)} % der Punkte mindestens einer`
+          : trams > 0
+            ? `Straßenbahn an ${share(3)} % der Punkte in 400 m, kaum Bahnhöfe`
+            : `${n(buses)} Bushaltestellen in 400 m (${where}), kaum Bahn`,
+      nightlife: `${n(bars)} Bars und Clubs in 600 m (${where})`,
+      food: `${n(food)} Restaurants und Cafés in 500 m (${where})`,
+      nature: `${n(parks)} Parks in 700 m (${where})`,
+      quiet: "Grob geschätzt aus der Zahl der Bars und Restaurants: je mehr, desto lauter",
+      budget: `${n(hostels)} Hostels und Pensionen in 900 m (${where})`,
+    };
+    return { scores, reasons };
+  };
+  const fixed = fixedPoints.length ? Object.fromEntries(fixedPoints.map((p) => [p.slug, scoreArea(p)])) : undefined;
   return { districts, zones, step: STEP, places: named, ...(fixed ? { fixed } : {}) };
 }
 
