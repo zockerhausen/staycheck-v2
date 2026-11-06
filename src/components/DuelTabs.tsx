@@ -15,7 +15,7 @@ export default function DuelTabs({ active }: { active: "hotels" | "kieze" }) {
     </Link>
   );
   return (
-    <nav className="grid grid-cols-2 rounded-full bg-paper p-1" aria-label="Duell-Art">
+    <nav className="grid grid-cols-2 rounded-full bg-peach p-1" aria-label="Duell-Art">
       {tab("hotels", "/duell/hotels", "Unterkünfte", "hotel")}
       {tab("kieze", "/duell", "Viertel", "discover")}
     </nav>
