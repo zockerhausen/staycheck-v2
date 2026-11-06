@@ -43,10 +43,10 @@ export default function PlaceSaveButton({
         aria-pressed={saved}
         aria-label={saved ? "Nicht mehr merken" : "Merken"}
         className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full transition active:scale-90 ${
-          saved ? "bg-sun text-white" : "bg-tan text-ink"
+          saved ? "bg-sun text-white" : "bg-paper text-sun-soft shadow-[inset_0_0_0_2px_var(--color-raised)]"
         }`}
       >
-        <Icon name="heart" size={21} fill={saved ? "#ffffff" : "transparent"} className={saved ? "heart-pop" : ""} />
+        <Icon name="heart" size={20} fill={saved ? "#ffffff" : "transparent"} className={saved ? "heart-pop" : ""} />
       </button>
     );
   }
@@ -57,9 +57,9 @@ export default function PlaceSaveButton({
       onClick={click}
       disabled={pending}
       aria-pressed={saved}
-      className={`press flex w-full items-center justify-center gap-2 rounded-2xl py-4 font-extrabold ${saved ? "bg-peach text-sun-soft" : "bg-tan"}`}
+      className={`press flex min-h-[3.85rem] w-full items-center justify-center gap-2 rounded-full font-extrabold ${saved ? "bg-sun text-white" : "bg-peach text-sun-soft"}`}
     >
-      <Icon name="heart" size={18} fill={saved ? "var(--color-sun)" : undefined} className={saved ? "heart-pop" : ""} />
+      <Icon name="heart" size={19} fill={saved ? "var(--color-pink)" : "transparent"} className={saved ? "heart-pop" : ""} />
       {saved ? "Gemerkt" : "Merken"}
     </button>
   );

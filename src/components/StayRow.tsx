@@ -28,18 +28,18 @@ export default function StayRow({
   save: React.ComponentProps<typeof PlaceSaveButton>;
 }) {
   return (
-    <li id={id} className="flex items-center gap-3 border-b border-line py-3.5 last:border-0">
+    <li id={id} className="flex items-center gap-3 border-b border-line py-3 last:border-0">
       <Link href={href} className="press flex min-w-0 flex-1 items-center gap-3">
-        <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-tan">
-          <Icon name="hotel" size={26} />
+        <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-[16px] bg-peach text-sun-soft">
+          <Icon name="hotel" size={26} fill="transparent" />
         </span>
         <span className="min-w-0 flex-1">
-          <span className="block truncate text-[16px] font-black">{name}</span>
+          <span className="block truncate text-[16px] font-bold">{name}</span>
           <span className="block truncate text-[14px] font-semibold text-muted">
             {[kind, price, overBudget ? "über Budget" : null, note || null].filter(Boolean).join(", ")}
           </span>
           <span className="mt-1 flex items-center gap-2 text-[13px] font-bold">
-            <span className="rounded-full bg-peach px-2 py-0.5 font-black text-sun-soft">Lage {match}</span>
+            <span className="rounded-full bg-peach px-[9px] py-0.5 font-extrabold text-sun-soft">Lage {match}</span>
             {reviews && (
               <span className="flex items-center gap-1">
                 <Icon name="star" size={14} fill="currentColor" />

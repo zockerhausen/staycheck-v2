@@ -36,7 +36,7 @@ export default function ReviewSummary({ reviews }: { reviews: StayReviews }) {
           const row = (
             <>
               <span className="w-[92px] shrink-0 truncate text-sm font-semibold">{meta.label}</span>
-              <span className="h-2 flex-1 overflow-hidden rounded-full bg-raised">
+              <span className="h-2 flex-1 overflow-hidden rounded-full bg-peach">
                 <span className="block h-full rounded-full bg-sun" style={{ width: `${Math.max(4, p.score * 10)}%` }} />
               </span>
               <span className="w-[86px] shrink-0 text-right text-sm tabular-nums">

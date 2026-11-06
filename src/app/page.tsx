@@ -12,6 +12,8 @@ import CitySwitcher from "@/components/CitySwitcher";
 import KiezMap from "@/components/KiezMap";
 import ThemeToggle from "@/components/ThemeToggle";
 import ProfileBar from "@/components/ProfileBar";
+import HomePoster from "@/components/HomePoster";
+import { traitsOf } from "@/lib/character";
 import MapStage from "@/components/MapStage";
 import { cityDataQuick, DEFAULT_WEIGHTS } from "@/lib/geo";
 import { findSpots, pickZones } from "@/lib/zones";
@@ -44,13 +46,13 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
 
   const header = (
     <div className="flex items-center justify-between">
-      <Link href={user ? "/konto" : "/login"} aria-label="Konto" className="press flex h-11 w-11 items-center justify-center rounded-full bg-tan">
+      <Link href={user ? "/konto" : "/login"} aria-label="Konto" className="press flex h-11 w-11 items-center justify-center rounded-full glass border border-[var(--sc-glass-line)] shadow-soft">
         <Icon name="user" size={20} />
       </Link>
       {city ? (
         <CitySwitcher current={city.name} verified={verified} />
       ) : (
-        <span className="text-[17px] font-black">StayCheck</span>
+        <span className="text-[18px] font-extrabold tracking-[-0.03em]">StayCheck<span className="text-pink">.</span></span>
       )}
       <ThemeToggle className="h-11 w-11" />
     </div>
@@ -114,6 +116,19 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
     scores: d.scores,
     match: "match" in d ? (d as { match: number }).match : undefined,
   }));
+  // Beste Ecke fürs Plakat oben (ohne Profil: beste Lage allgemein)
+  const posterSpot = spots[0];
+  const spotPool = spots.map((sp) => sp.scores);
+  const best = posterSpot
+    ? {
+        name: posterSpot.name,
+        meta: [posterSpot.area ? `In ${posterSpot.area}` : "", traitsOf(posterSpot.scores, spotPool).slice(0, 2).map((t) => t.label).join(", ")].filter(Boolean).join(" · "),
+        score: posterSpot.match,
+        href: spotHref(posterSpot),
+      }
+    : top
+      ? { name: top.name, meta: top.short_description ?? "", score: top.match, href: `/kiez/${top.slug}?stadt=${city.slug}` }
+      : null;
   const mapPoints = spots.length
     ? spots.map((sp) => ({ slug: sp.slug, name: sp.name, lat: sp.lat, lng: sp.lon, match: sp.match, label: sp.name }))
     : (ranked ?? districts)
@@ -129,29 +144,18 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
 
   return (
     <div className="fade-up">
-      <div className="flex items-center gap-2.5">
-        <CitySwitcher variant="bar" current={city.name} verified={verified} />
-        <Link
-          href={user ? "/konto" : "/login"}
-          aria-label="Konto"
-          className="press flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-full border border-line bg-sand shadow-soft"
-        >
-          <Icon name="user" size={21} fill="transparent" />
-        </Link>
-        <ThemeToggle className="h-[52px] w-[52px]" />
-      </div>
-
+      <HomePoster city={city.name} verified={verified} loggedIn={Boolean(user)} best={best} personal={Boolean(weights)} />
       <ProfileBar weights={weights} extras={extras} quizHref={`/quiz?stadt=${city.slug}`} />
 
-      <h1 className="mt-6 text-[26px] font-black leading-tight tracking-tight [overflow-wrap:anywhere]">Wo schläfst du in {city.name}?</h1>
+      <h1 className="mt-6 text-[22px] font-extrabold leading-tight tracking-[-0.03em] [overflow-wrap:anywhere]">Wo schläfst du in {city.name}?</h1>
       <MapStage id="karte">
-        <KiezMap points={mapPoints} highlight={topSpot?.slug ?? top?.slug} center={[city.lng, city.lat]} zoom={city.zoom} height="h-[420px]" zones={zones} fit flush legend={zones.length ? (weights ? "Orange = passt zu dir" : "Orange = beste Lage") : undefined} />
+        <KiezMap points={mapPoints} highlight={topSpot?.slug ?? top?.slug} center={[city.lng, city.lat]} zoom={city.zoom} height="h-[420px]" zones={zones} fit flush legend={zones.length ? (weights ? "Violett = passt zu dir" : "Violett = beste Lage") : undefined} />
       </MapStage>
 
       {/* Liste als Blatt, das über die Karte geschoben ist: Karte und Ecken gehören sichtbar zusammen */}
-      <section className="relative z-[1] -mx-4 -mt-7 min-h-[70vh] rounded-t-[28px] bg-sand px-4 pb-4 pt-3 shadow-[0_-10px_30px_rgba(0,0,0,0.12)]">
-        <div className="mx-auto mb-4 h-1.5 w-10 rounded-full bg-raised" />
-        <h2 className="text-[24px] font-black leading-tight tracking-tight">
+      <section id="ecken" className="shadow-sheet relative z-[1] -mx-4 -mt-[30px] min-h-[70vh] scroll-mt-4 rounded-t-[32px] bg-sand px-5 pb-4 pt-2.5">
+        <div className="mx-auto mb-4 h-[5px] w-[42px] rounded-full bg-line" />
+        <h2 className="text-[22px] font-extrabold leading-tight tracking-[-0.03em]">
           {spots.length ? (weights ? "Deine besten Ecken" : `Die besten Ecken in ${city.name}`) : top ? "Alle Viertel für dich" : `Viertel in ${city.name}`}
         </h2>
         <p className="mb-4 mt-1 text-[15px] font-semibold text-muted">
@@ -179,10 +183,10 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
 
       {spots.length > 0 && (
         <details className="group mt-8">
-          <summary className="press flex cursor-pointer list-none items-center gap-3 rounded-[20px] bg-paper px-4 py-4 [&::-webkit-details-marker]:hidden">
+          <summary className="press card flex cursor-pointer list-none items-center gap-3 !rounded-[24px] px-4 py-4 text-sun-soft [&::-webkit-details-marker]:hidden">
             <Icon name="map" size={22} />
             <span className="min-w-0 flex-1">
-              <span className="block text-[16px] font-black">{`Alle ${allDistricts.length} Bezirke ansehen`}</span>
+              <span className="block text-[16px] font-extrabold text-ink">{`Alle ${allDistricts.length} Bezirke ansehen`}</span>
               <span className="block text-[14px] font-semibold text-muted">Die ganze Stadt in größeren Stücken</span>
             </span>
             <Icon name="chevron" size={16} className="text-muted transition-transform group-open:rotate-90" />
@@ -196,7 +200,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
 
       {tip && tipDistrict && (
         <section className="mt-7">
-          <h2 className="mb-3 text-[20px] font-black tracking-tight">Tipp von Reisenden</h2>
+          <h2 className="mb-3 text-[1.35rem] font-extrabold tracking-[-0.03em]">Tipp von Reisenden</h2>
           <Link href={`/kiez/${tipDistrict.slug}?stadt=${city.slug}`} className="press block rounded-[18px] bg-paper px-4 py-3.5">
             <span className="flex items-center gap-1.5 text-[13px] font-extrabold text-muted">
               <Icon name={tipCat?.icon ?? "tip"} size={14} /> {tipCat?.label ?? "Tipp"} · {tipDistrict.name.split(" (")[0]}

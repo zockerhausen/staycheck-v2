@@ -60,12 +60,12 @@ export default function HilfePage() {
       <div className="grid grid-cols-2 gap-2.5">
         <a href={mail("StayCheck: Frage")} className="press rounded-[20px] bg-paper p-4">
           <Icon name="tip" size={24} className="text-sun" />
-          <b className="mt-2 block text-[16px] font-black text-ink">Frage stellen</b>
+          <b className="mt-2 block text-[16px] font-extrabold text-ink">Frage stellen</b>
           <span className="block text-[13px] font-semibold text-muted">per E-Mail</span>
         </a>
         <a href={mail("StayCheck: Fehler gefunden")} className="press rounded-[20px] bg-paper p-4">
           <Icon name="flag" size={24} className="text-sun" />
-          <b className="mt-2 block text-[16px] font-black text-ink">Fehler melden</b>
+          <b className="mt-2 block text-[16px] font-extrabold text-ink">Fehler melden</b>
           <span className="block text-[13px] font-semibold text-muted">Was ist passiert?</span>
         </a>
       </div>

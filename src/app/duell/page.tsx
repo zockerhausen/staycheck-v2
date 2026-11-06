@@ -214,7 +214,7 @@ export default async function DuellPage({ searchParams }: { searchParams: Promis
 function Bar({ value, win, side }: { value: number; win: boolean; side: "left" | "right" }) {
   return (
     <div className={`flex items-center gap-2 ${side === "left" ? "flex-row-reverse" : ""}`}>
-      <div className="flex h-2 flex-1 overflow-hidden rounded-full bg-raised" style={{ justifyContent: side === "left" ? "flex-end" : "flex-start" }}>
+      <div className="flex h-2 flex-1 overflow-hidden rounded-full bg-peach" style={{ justifyContent: side === "left" ? "flex-end" : "flex-start" }}>
         <div className={`h-full rounded-full ${win ? "bg-sun" : "bg-faint"}`} style={{ width: `${value * 10}%` }} />
       </div>
       <span className={`w-5 text-center text-sm tabular-nums ${win ? "font-extrabold text-sun-soft" : "font-semibold"}`}>{value}</span>

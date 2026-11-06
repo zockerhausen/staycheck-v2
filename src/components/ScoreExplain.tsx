@@ -55,7 +55,7 @@ export default function ScoreExplain({
 
   return (
     <section className="space-y-3">
-      <h2 className="text-[20px] font-black tracking-tight">Warum {match}?</h2>
+      <h2 className="text-[1.35rem] font-extrabold tracking-[-0.03em]">Warum {match}?</h2>
 
       <div className={`flex items-start gap-2.5 rounded-[18px] px-4 py-3 text-[14px] font-semibold ${COVERAGE_STYLE[coverage.level]}`}>
         <Icon name={coverage.level === "duenn" ? "flag" : "check"} size={18} className="mt-0.5 shrink-0" />
@@ -92,12 +92,12 @@ export default function ScoreExplain({
                     </span>
                   </span>
                 </span>
-                <span className="h-2.5 flex-1 overflow-hidden rounded-full bg-raised">
+                <span className="h-2.5 flex-1 overflow-hidden rounded-full bg-peach">
                   {d.score !== null && (
-                    <span className={`bar-grow block h-full rounded-full ${d.score <= 4 ? "bg-bad" : "bg-ink"}`} style={{ width: `${d.score * 10}%` }} />
+                    <span className={`bar-grow block h-full rounded-full ${d.score <= 4 ? "bg-bad" : "bg-sun"}`} style={{ width: `${d.score * 10}%` }} />
                   )}
                 </span>
-                <span className="w-8 text-right font-black tabular-nums">{d.score === null ? "–" : String(Math.round(d.score * 10) / 10).replace(".", ",")}</span>
+                <span className="w-8 text-right font-extrabold tabular-nums">{d.score === null ? "–" : String(Math.round(d.score * 10) / 10).replace(".", ",")}</span>
                 <Icon name="down" size={16} className="text-muted transition-transform duration-300 group-open:rotate-180" />
               </summary>
               <div className="pb-3 pl-1">

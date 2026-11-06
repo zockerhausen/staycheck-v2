@@ -1,13 +1,13 @@
 import type { Metadata, Viewport } from "next";
-import { Figtree } from "next/font/google";
+import { Geist } from "next/font/google";
 import { cookies } from "next/headers";
 import BottomNav from "@/components/BottomNav";
 import { NavTracker } from "@/components/BackButton";
 import { getUser } from "@/lib/data";
 import "./globals.css";
 
-// Eine Schrift für alles: freundlich, modern und kräftig (gut lesbar)
-const body = Figtree({ subsets: ["latin", "latin-ext"], weight: ["500", "600", "700", "800", "900"], variable: "--font-body" });
+// Eine Schrift für alles: Geist – klar, modern, in kräftigen Schnitten (nie dünn)
+const body = Geist({ subsets: ["latin", "latin-ext"], weight: ["400", "500", "600", "700", "800"], variable: "--font-body" });
 
 export const metadata: Metadata = {
   title: "StayCheck – Schlaf da, wo es passt",
@@ -16,8 +16,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#131417" },
+    { media: "(prefers-color-scheme: light)", color: "#f0f0f0" },
+    { media: "(prefers-color-scheme: dark)", color: "#0f0c24" },
   ],
   width: "device-width",
   initialScale: 1,

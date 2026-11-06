@@ -7,11 +7,11 @@ export default function ViewTabs({ tabs }: { tabs: { key: string; label: string;
   const [active, setActive] = useState(0);
   return (
     <div>
-      <div className="sticky top-0 z-10 -mx-4 bg-sand/95 px-4 py-2 backdrop-blur-xl">
-        <div className="relative grid rounded-2xl bg-tan p-1" style={{ gridTemplateColumns: `repeat(${tabs.length}, 1fr)` }} role="tablist">
+      <div className="sticky top-0 z-10 -mx-4 mt-[22px] bg-sand/90 px-4 py-2.5 backdrop-blur-xl">
+        <div className="relative grid rounded-full bg-peach p-1" style={{ gridTemplateColumns: `repeat(${tabs.length}, 1fr)` }} role="tablist">
           <span
             aria-hidden
-            className="absolute bottom-1 left-1 top-1 rounded-xl bg-sand shadow-soft transition-transform duration-[450ms] [transition-timing-function:cubic-bezier(.3,1.35,.5,1)]"
+            className="shadow-primary absolute bottom-1 left-1 top-1 rounded-full bg-sun transition-transform duration-[420ms] [transition-timing-function:cubic-bezier(.22,1,.36,1)]"
             style={{ width: `calc((100% - 0.5rem) / ${tabs.length})`, transform: `translateX(${active * 100}%)` }}
           />
           {tabs.map((t, i) => (
@@ -28,7 +28,7 @@ export default function ViewTabs({ tabs }: { tabs: { key: string; label: string;
                   /* egal */
                 }
               }}
-              className={`relative z-[1] py-2.5 text-[14px] font-extrabold transition-colors ${active === i ? "text-ink" : "text-muted"}`}
+              className={`relative z-[1] min-h-[40px] text-[14.5px] font-extrabold transition-colors duration-200 ${active === i ? "text-white" : "text-sun-soft"}`}
             >
               {t.label}
             </button>

@@ -8,7 +8,7 @@ import { legalComplete } from "@/lib/legal";
 export default function LegalPage({ title, updated, children }: { title: string; updated?: string; children: ReactNode }) {
   return (
     <div className="fade-up pb-10">
-      <BackButton fallback="/" className="press flex h-11 w-11 items-center justify-center rounded-full bg-tan">
+      <BackButton fallback="/" className="press flex h-11 w-11 items-center justify-center rounded-full glass border border-[var(--sc-glass-line)] shadow-soft">
         <Icon name="back" size={18} />
       </BackButton>
       <h1 className="mega mt-6 text-[2.1rem]">{title}</h1>
@@ -33,7 +33,7 @@ export default function LegalPage({ title, updated, children }: { title: string;
 export function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
     <section>
-      <h2 className="mb-2 text-[19px] font-black text-ink">{title}</h2>
+      <h2 className="mb-2 text-[19px] font-extrabold text-ink">{title}</h2>
       <div className="space-y-3">{children}</div>
     </section>
   );

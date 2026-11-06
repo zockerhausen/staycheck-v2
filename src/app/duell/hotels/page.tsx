@@ -120,7 +120,7 @@ export default async function HotelDuellPage({
                 <div className={`grid ${cols} gap-2`}>
                   {values.map((v, i) => (
                     <div key={i} className="flex items-center gap-1.5">
-                      <div className="h-2 flex-1 overflow-hidden rounded-full bg-raised">
+                      <div className="h-2 flex-1 overflow-hidden rounded-full bg-peach">
                         {v !== null && (
                           <div
                             className={`h-full rounded-full ${v === best ? "bg-sun" : "bg-faint"}`}

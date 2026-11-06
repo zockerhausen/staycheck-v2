@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { applyTheme, isDarkNow } from "@/components/ThemeSwitch";
 
 /** Runder Knopf oben: wechselt mit einem Tipp zwischen hell und dunkel (Sonne/Mond). */
-export default function ThemeToggle({ className = "" }: { className?: string }) {
+export default function ThemeToggle({ className = "", onViolet = false }: { className?: string; onViolet?: boolean }) {
   const [dark, setDark] = useState<boolean | null>(null);
   useEffect(() => {
     setDark(isDarkNow());
@@ -18,7 +18,7 @@ export default function ThemeToggle({ className = "" }: { className?: string }) 
       type="button"
       onClick={() => applyTheme(isDarkNow() ? "light" : "dark")}
       aria-label={dark ? "Helle Darstellung" : "Dunkle Darstellung"}
-      className={`press flex shrink-0 items-center justify-center rounded-full border border-line bg-sand shadow-soft ${className}`}
+      className={`press flex shrink-0 items-center justify-center rounded-full border ${onViolet ? "border-white/30 bg-white/15 text-white" : "glass border-[var(--sc-glass-line)] shadow-soft"} ${className}`}
     >
       <svg width={21} height={21} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
         {dark ? (

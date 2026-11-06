@@ -20,7 +20,7 @@ export default function CitySwitcher({
   current: string;
   verified: { slug: string; name: string; country: string }[];
   /** „bar“ = große Suchleiste oben auf der Startseite (wie bei Airbnb) */
-  variant?: "pill" | "bar";
+  variant?: "pill" | "bar" | "poster";
   hint?: string;
 }) {
   const router = useRouter();
@@ -49,7 +49,20 @@ export default function CitySwitcher({
 
   return (
     <>
-      {variant === "bar" ? (
+      {variant === "poster" ? (
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          aria-haspopup="dialog"
+          aria-label={`Reiseziel: ${current}. Stadt wechseln`}
+          className="press mt-[18px] flex min-h-[3.3rem] w-full items-center gap-2.5 rounded-full border border-white/30 bg-white/15 px-[18px] text-left font-bold text-white"
+        >
+          <Icon name="search" size={22} className="shrink-0" fill="transparent" />
+          <span className="min-w-0 truncate text-[16px]">
+            {current} <span className="font-semibold opacity-75">· Stadt wechseln</span>
+          </span>
+        </button>
+      ) : variant === "bar" ? (
         <button
           type="button"
           onClick={() => setOpen(true)}
@@ -58,7 +71,7 @@ export default function CitySwitcher({
         >
           <Icon name="search" size={22} className="shrink-0" fill="transparent" />
           <span className="min-w-0 leading-tight">
-            <b className="block truncate text-[16px] font-black">{current}</b>
+            <b className="block truncate text-[16px] font-extrabold">{current}</b>
             <span className="block truncate text-[13px] font-semibold text-muted">{hint}</span>
           </span>
         </button>
@@ -90,8 +103,8 @@ export default function CitySwitcher({
           >
             <div className="mx-auto mb-4 h-1.5 w-10 rounded-full bg-raised" />
             <div className="flex items-center justify-between">
-              <h2 className="font-display text-[22px] font-black">Wohin geht&apos;s?</h2>
-              <button type="button" onClick={close} aria-label="Schließen" className="press flex h-10 w-10 items-center justify-center rounded-full bg-tan">
+              <h2 className="font-display text-[22px] font-extrabold">Wohin geht&apos;s?</h2>
+              <button type="button" onClick={close} aria-label="Schließen" className="press flex h-10 w-10 items-center justify-center rounded-full glass border border-[var(--sc-glass-line)] shadow-soft">
                 <Icon name="close" size={16} />
               </button>
             </div>

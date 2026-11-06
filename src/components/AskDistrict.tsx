@@ -104,22 +104,23 @@ export default function AskDistrict({ target, place, enabled }: { target: Target
   }
 
   return (
-    <section className="overflow-hidden rounded-[24px] border-2 border-sun/40 bg-gradient-to-br from-peach to-sand p-4 shadow-soft">
+    <section className="glass-card overflow-hidden p-4">
       <div className="flex items-center gap-3">
-        <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-sun text-white">
+        <span className="shadow-primary relative flex h-[2.9rem] w-[2.9rem] shrink-0 items-center justify-center rounded-[16px] bg-sun text-white">
+          <span aria-hidden className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full border-2 border-paper bg-pink" />
           <svg width={24} height={24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
             <path d="M12 3l1.8 4.6L18.5 9l-4.7 1.6L12 15l-1.8-4.4L5.5 9l4.7-1.4z" />
             <path d="M18.5 15.5l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z" />
           </svg>
         </span>
         <div className="min-w-0">
-          <h2 className="text-[20px] font-black leading-tight tracking-tight">{city ? `Frag StayCheck zu ${place}` : `Frag zu ${place}`}</h2>
+          <h2 className="text-[18px] font-extrabold leading-tight tracking-[-0.025em]">{city ? `Frag StayCheck zu ${place}` : `Frag zu ${place}`}</h2>
           <p className="truncate text-[14px] font-semibold text-muted">Dein Reise-Assistent, mit Live-Suche im Internet</p>
         </div>
       </div>
 
       {!enabled ? (
-        <p className="mt-4 rounded-2xl bg-tan px-3.5 py-3 text-sm text-muted">Bald verfügbar: Hier kannst du dann Fragen zu {place} stellen.</p>
+        <p className="mt-4 rounded-2xl bg-peach px-3.5 py-3 text-sm text-muted">Bald verfügbar: Hier kannst du dann Fragen zu {place} stellen.</p>
       ) : (
         <>
           {msgs.length > 0 && (
@@ -130,7 +131,7 @@ export default function AskDistrict({ target, place, enabled }: { target: Target
                     {m.text}
                   </p>
                 ) : (
-                  <div key={i} className={`max-w-[95%] rounded-2xl rounded-bl-md px-3.5 py-3 text-[15px] leading-relaxed ${m.fehler ? "bg-peach text-peach-ink" : "bg-sand text-ink shadow-soft"}`}>
+                  <div key={i} className={`max-w-[95%] rounded-2xl rounded-bl-md px-3.5 py-3 text-[15px] leading-relaxed ${m.fehler ? "bg-peach text-peach-ink" : "bg-paper text-ink shadow-soft"}`}>
                     {m.text ? (
                       <Rich text={m.text} />
                     ) : (
@@ -164,7 +165,7 @@ export default function AskDistrict({ target, place, enabled }: { target: Target
           {msgs.length === 0 && (
             <div className="mt-4 flex flex-wrap gap-2">
               {suggestions.slice(0, 4).map((s) => (
-                <button key={s} type="button" onClick={() => ask(s)} className="press rounded-full border border-line bg-sand px-3.5 py-2 text-left text-[14px] font-bold">
+                <button key={s} type="button" onClick={() => ask(s)} className="press min-h-[38px] rounded-full bg-peach px-3.5 py-2 text-left text-[14px] font-bold text-sun-soft">
                   {s}
                 </button>
               ))}
@@ -176,7 +177,7 @@ export default function AskDistrict({ target, place, enabled }: { target: Target
               e.preventDefault();
               void ask(q);
             }}
-            className="mt-3 flex items-center gap-2 rounded-[18px] border-2 border-line bg-sand py-1.5 pl-4 pr-1.5 focus-within:border-sun"
+            className="mt-3 flex items-center gap-2 rounded-full border border-line bg-paper py-1.5 pl-4 pr-1.5 focus-within:border-sun"
           >
             <label htmlFor="frag-input" className="sr-only">
               Deine Frage
@@ -195,7 +196,7 @@ export default function AskDistrict({ target, place, enabled }: { target: Target
               type="submit"
               disabled={busy || q.trim().length < 2}
               aria-label="Senden"
-              className="press flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-sun text-white disabled:opacity-40"
+              className="press flex h-[2.6rem] w-[2.6rem] shrink-0 items-center justify-center rounded-full bg-sun text-white disabled:opacity-40"
             >
               <Icon name="chevron" size={18} />
             </button>

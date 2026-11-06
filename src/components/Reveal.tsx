@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 
-const SIZE = 200;
-const R = SIZE / 2 - 14;
+const SIZE = 220;
+const R = SIZE / 2 - 12;
 const C = 2 * Math.PI * R;
 
 /** Der große Ergebnis-Moment: Ring füllt sich, Zahl zählt hoch, bei sehr guter Lage kurzes Vibrieren. */
@@ -49,34 +49,35 @@ export default function Reveal({
     <div className="fade-up text-center">
       <div className="relative mx-auto mt-2" style={{ width: SIZE, height: SIZE }}>
         <svg width={SIZE} height={SIZE} viewBox={`0 0 ${SIZE} ${SIZE}`} aria-hidden>
-          <circle cx={SIZE / 2} cy={SIZE / 2} r={R} fill="none" className="stroke-tan" strokeWidth={18} />
+          <circle cx={SIZE / 2} cy={SIZE / 2} r={R} fill="none" className="stroke-peach" strokeWidth={16} />
           <circle
             cx={SIZE / 2}
             cy={SIZE / 2}
             r={R}
             fill="none"
             className="stroke-sun"
-            strokeWidth={18}
+            strokeWidth={16}
             strokeLinecap="round"
             strokeDasharray={`${arc} ${C}`}
             transform={`rotate(-90 ${SIZE / 2} ${SIZE / 2})`}
           />
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="mega text-[64px] tabular-nums leading-none" aria-label={`${match} von 100`}>
+          <span className="mega text-[5rem] tabular-nums leading-[0.9] tracking-[-0.05em]" aria-label={`${match} von 100`}>
             {shown}
           </span>
-          <span className="mt-1 text-[14px] font-bold text-muted">{caption}</span>
+          <span className="mt-1.5 text-[14px] font-semibold text-muted">{caption}</span>
         </div>
       </div>
-      <h1 className="mega mt-5 text-[clamp(1.8rem,7.5vw,2.4rem)] [overflow-wrap:anywhere]">{name}</h1>
+      <h1 className="mega mt-5 text-[clamp(1.8rem,7.5vw,2.25rem)] [overflow-wrap:anywhere]">{name}</h1>
       {sub && <p className="mt-1 text-[15px] font-semibold text-muted">{sub}</p>}
       {eyebrow && (
         <span
-          className={`mt-3 inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[13px] font-extrabold ${
-            match >= 64 ? "bg-good/12 text-good" : match >= 45 ? "bg-tan text-ink" : "bg-warn/12 text-warn"
+          className={`mt-3 inline-flex items-center gap-[7px] rounded-full px-[13px] py-[7px] text-[14px] font-extrabold ${
+            match >= 45 ? "bg-peach text-sun-soft" : "bg-bad/10 text-bad"
           }`}
         >
+          {match >= 64 && <span className="dot-pink" aria-hidden />}
           {eyebrow}
         </span>
       )}

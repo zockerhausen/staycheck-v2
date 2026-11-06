@@ -62,7 +62,7 @@ export default function MethodePage() {
   return (
     <div className="fade-up">
       <div className="flex items-center justify-between">
-        <BackButton fallback="/check" className="press flex h-11 w-11 items-center justify-center rounded-full bg-tan">
+        <BackButton fallback="/check" className="press flex h-11 w-11 items-center justify-center rounded-full glass border border-[var(--sc-glass-line)] shadow-soft">
           <Icon name="back" size={18} />
         </BackButton>
         <span className="text-base font-bold">So rechnen wir</span>

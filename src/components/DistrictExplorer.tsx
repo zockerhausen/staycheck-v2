@@ -61,8 +61,8 @@ export default function DistrictExplorer({
   return (
     <div>
       {filters && available.length > 0 && (
-        <div className="-mx-4 flex gap-6 overflow-x-auto border-b border-line px-4 [scrollbar-width:none]" role="group" aria-label="Nach Eigenschaft filtern">
-          {[{ key: null, label: variant === "feed" ? "Für dich" : "Alle", icon: "star" as const }, ...available.map((t) => ({ key: t.key, label: t.label, icon: t.icon }))].map(
+        <div className="-mx-4 flex gap-[7px] overflow-x-auto px-4 py-0.5 [scrollbar-width:none]" role="group" aria-label="Nach Eigenschaft filtern">
+          {[{ key: null, label: variant === "feed" ? "Für dich" : "Alle", icon: null }, ...available.map((t) => ({ key: t.key, label: t.label, icon: t.icon }))].map(
             (t) => {
               const on = filter === t.key;
               return (
@@ -71,14 +71,10 @@ export default function DistrictExplorer({
                   type="button"
                   onClick={() => pick(on ? null : t.key)}
                   aria-pressed={on}
-                  className={`relative flex shrink-0 flex-col items-center gap-1.5 pb-3 pt-1 text-[13px] font-extrabold transition-colors ${on ? "text-ink" : "text-muted"}`}
+                  className={`press flex min-h-[38px] shrink-0 items-center gap-1.5 rounded-full px-3.5 text-[14.5px] font-bold transition-colors duration-200 ${on ? "bg-sun text-white" : "bg-peach text-sun-soft"}`}
                 >
-                  <Icon name={t.icon} size={24} fill={on ? undefined : "transparent"} />
+                  {t.icon && <Icon name={t.icon} size={17} fill="transparent" />}
                   {t.label}
-                  <span
-                    aria-hidden
-                    className={`absolute inset-x-0 -bottom-px h-[3px] rounded-full bg-ink transition-transform duration-300 [transition-timing-function:cubic-bezier(.3,1.4,.5,1)] ${on ? "scale-x-100" : "scale-x-0"}`}
-                  />
                 </button>
               );
             },
@@ -87,14 +83,15 @@ export default function DistrictExplorer({
       )}
 
       {variant === "feed" ? (
-        <div className="mt-5 grid gap-7">
+        <div className="mt-4 grid gap-6">
           {shown.map((d, i) => {
             const traits = tr(d);
             const main = traits[0];
+            const best = i === 0 && !filter && Boolean(topLabel);
             return (
               <Link key={d.slug} id={`kiez-${d.slug}`} href={href(d)} className="press fade-up block" style={{ animationDelay: `${Math.min(i, 6) * 40}ms` }}>
                 <span
-                  className="relative flex aspect-[16/10] items-end overflow-hidden rounded-[22px] p-4"
+                  className={`relative flex aspect-[16/10] items-end overflow-hidden rounded-[26px] p-4 ${best ? "shadow-[0_0_0_3px_var(--color-pink)]" : ""}`}
                   style={{ background: `linear-gradient(150deg, ${characterTint(d.scores, pool)} 0%, var(--color-tan) 100%)` }}
                 >
                   {d.photo ? (
@@ -108,27 +105,30 @@ export default function DistrictExplorer({
                   ) : (
                     <Icon name={main?.icon ?? "discover"} size={120} className="absolute -right-3 -top-2 text-ink/10" fill="transparent" />
                   )}
-                  {i === 0 && !filter && topLabel && (
-                    <span className="absolute left-3 top-3 rounded-full bg-white px-3 py-1.5 text-[13px] font-extrabold text-[#17171b] shadow-soft">{topLabel}</span>
+                  {best && (
+                    <span className="shadow-nav absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-[7px] text-[13.5px] font-extrabold text-[#17133a]">
+                      <span className="dot-pink" aria-hidden />
+                      {topLabel}
+                    </span>
                   )}
                   <span className={`relative text-[15px] font-extrabold ${d.photo ? "on-photo text-white" : "text-ink/80"}`}>{characterOf(d.scores, pool)}</span>
                 </span>
                 <span className="mt-3 flex items-start justify-between gap-3">
                   <span className="min-w-0">
-                    <b className="block truncate text-[18px] font-black tracking-tight">{d.name.split(" (")[0]}</b>
+                    <b className="block truncate text-[18px] font-extrabold tracking-tight">{d.name.split(" (")[0]}</b>
                     <span className="block truncate text-[15px] font-semibold text-muted">
                       {[d.short, traits.slice(0, 2).map((t) => t.label).join(", ")].filter(Boolean).join(". ") || "Von allem etwas"}
                     </span>
                   </span>
                   {d.match !== undefined && (
                     <span className="shrink-0 text-right">
-                      <b className="block text-[20px] font-black leading-none tabular-nums text-sun">{d.match}</b>
+                      <b className="block text-[24px] font-extrabold leading-none tracking-[-0.04em] tabular-nums text-sun-soft">{d.match}</b>
                       <span className="text-[12px] font-bold text-muted">Lage</span>
                     </span>
                   )}
                 </span>
                 {d.match !== undefined && (
-                  <span className="mt-2.5 block h-[7px] overflow-hidden rounded-full bg-tan">
+                  <span className="mt-2.5 block h-[7px] overflow-hidden rounded-full bg-peach">
                     <span className="bar-grow block h-full rounded-full bg-sun" style={{ width: `${d.match}%` }} />
                   </span>
                 )}
@@ -143,31 +143,31 @@ export default function DistrictExplorer({
               key={d.slug}
               id={`kiez-${d.slug}`}
               href={href(d)}
-              className="press flex h-[190px] w-[72%] max-w-[260px] shrink-0 snap-start flex-col justify-end rounded-[22px] p-4"
+              className="press flex h-[190px] w-[72%] max-w-[260px] shrink-0 snap-start flex-col justify-end rounded-[26px] p-4 shadow-soft"
               style={{ background: `linear-gradient(160deg, ${characterTint(d.scores, pool)} 0%, var(--color-paper) 90%)` }}
             >
               <span className="text-[13px] font-extrabold text-sun-soft">{characterOf(d.scores, pool)}</span>
-              <b className="mt-1 text-[21px] font-black leading-tight tracking-tight">{d.name.split(" (")[0]}</b>
+              <b className="mt-1 text-[21px] font-extrabold leading-tight tracking-tight">{d.name.split(" (")[0]}</b>
               <span className="mt-1 line-clamp-2 text-[14px] font-semibold text-muted">{d.short}</span>
               <span className="mt-3 flex flex-wrap items-center gap-1.5">
                 {tr(d)
                   .slice(0, 2)
                   .map((t) => (
-                    <span key={t.key} className="flex items-center gap-1 rounded-full bg-sand/80 px-2 py-1 text-[12px] font-bold">
+                    <span key={t.key} className="flex items-center gap-1 rounded-full bg-paper/85 px-2 py-1 text-[12px] font-bold">
                       <Icon name={t.icon} size={13} /> {t.label}
                     </span>
                   ))}
-                {d.match !== undefined && <span className="ml-auto rounded-full bg-sun px-2.5 py-1 text-[12px] font-black text-white">{d.match}</span>}
+                {d.match !== undefined && <span className="ml-auto rounded-full bg-sun px-2.5 py-1 text-[12px] font-extrabold text-white">{d.match}</span>}
               </span>
             </Link>
           ))}
         </div>
       ) : (
-        <ol className="mt-2">
+        <ol className="card mt-3 px-3.5 py-1">
           {shown.map((d) => (
             <li key={d.slug} id={`kiez-${d.slug}`} className="border-b border-line last:border-0">
               <Link href={href(d)} className="press flex items-center gap-3 py-3">
-                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl" style={{ background: characterTint(d.scores, pool) }}>
+                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[16px] text-sun-soft" style={{ background: characterTint(d.scores, pool) }}>
                   <Icon name={tr(d)[0]?.icon ?? "discover"} size={22} />
                 </span>
                 <span className="min-w-0 flex-1">
@@ -180,7 +180,7 @@ export default function DistrictExplorer({
                   </span>
                 </span>
                 {d.match !== undefined ? (
-                  <span className="w-12 text-right text-[18px] font-black tabular-nums text-sun">{d.match}</span>
+                  <span className="w-12 text-right text-[19px] font-extrabold tabular-nums text-sun-soft">{d.match}</span>
                 ) : (
                   <Icon name="chevron" size={16} className="text-faint" />
                 )}

@@ -164,7 +164,7 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
             href={`${self}&typ=${f.key}`}
             scroll={false}
             className={`press shrink-0 rounded-full border px-4 py-2.5 text-[14px] font-extrabold ${
-              filter === f.key ? "border-ink bg-ink text-sand" : "border-line bg-sand"
+              filter === f.key ? "border-sun bg-sun text-white" : "border-transparent bg-peach text-sun-soft"
             }`}
           >
             {f.label}
@@ -192,10 +192,10 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
             />
           )}
           <div className="mt-5 flex items-baseline justify-between">
-            <h2 className="text-[20px] font-black tracking-tight">Beste Lage im Viertel</h2>
+            <h2 className="text-[1.35rem] font-extrabold tracking-[-0.03em]">Beste Lage im Viertel</h2>
             <span className="text-[14px] font-bold text-muted">{shown.length} gefunden</span>
           </div>
-          <ol className="mt-1">
+          <ol className="card mt-3 px-3.5 py-1">
             {shown.slice(0, 25).map((h, i) => (
               <StayRow
                 key={`${h.lat}-${h.lon}`}
@@ -246,12 +246,12 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
               <span className="flex w-32 shrink-0 items-center gap-2 font-extrabold">
                 <Icon name={CRITERION_ICON[c.key]} size={19} /> {c.label}
               </span>
-              <span className="h-2.5 flex-1 overflow-hidden rounded-full bg-raised">
+              <span className="h-2.5 flex-1 overflow-hidden rounded-full bg-peach">
                 {v !== null && v !== undefined && (
-                  <span className={`bar-grow block h-full rounded-full ${v <= 4 ? "bg-bad" : "bg-ink"}`} style={{ width: `${v * 10}%` }} />
+                  <span className={`bar-grow block h-full rounded-full ${v <= 4 ? "bg-bad" : "bg-sun"}`} style={{ width: `${v * 10}%` }} />
                 )}
               </span>
-              <span className="w-7 text-right font-black tabular-nums">{v === null || v === undefined ? "–" : Math.round(v)}</span>
+              <span className="w-7 text-right font-extrabold tabular-nums">{v === null || v === undefined ? "–" : Math.round(v)}</span>
             </div>
             <p className="mt-1 pl-[27px] text-[13px] font-semibold text-muted">{district.reasons[c.key]}</p>
           </div>
@@ -279,7 +279,7 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
         ]}
       >
         {!profile && (
-          <Link href={`/quiz?${zq}`} className="press flex items-center justify-between gap-3 rounded-2xl bg-paper px-4 py-3.5 text-[15px] font-extrabold">
+          <Link href={`/quiz?${zq}`} className="press card flex items-center justify-between gap-3 !rounded-[24px] px-4 py-3.5 text-[15px] font-extrabold">
             Passt das zu mir?
             <span className="flex items-center gap-1 text-sun-soft">
               Quiz in 30 Sek. <Icon name="chevron" size={14} />

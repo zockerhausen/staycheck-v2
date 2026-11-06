@@ -55,7 +55,7 @@ export default async function ErgebnisPage({
     return (
       <div className="fade-up space-y-6">
         <div className="flex items-center justify-between">
-          <BackButton fallback="/" className="press flex h-11 w-11 items-center justify-center rounded-full bg-tan">
+          <BackButton fallback="/" className="press flex h-11 w-11 items-center justify-center rounded-full glass border border-[var(--sc-glass-line)] shadow-soft">
             <Icon name="back" size={18} />
           </BackButton>
           <Link href="/reise" className="press flex items-center gap-1.5 rounded-full bg-tan px-4 py-2.5 text-sm font-semibold">
@@ -102,13 +102,13 @@ export default async function ErgebnisPage({
   return (
     <div className="fade-up space-y-7">
       <div className="flex items-center justify-between">
-        <BackButton fallback="/" className="press flex h-11 w-11 items-center justify-center rounded-full bg-tan">
+        <BackButton fallback="/" className="press flex h-11 w-11 items-center justify-center rounded-full glass border border-[var(--sc-glass-line)] shadow-soft">
           <Icon name="back" size={18} />
         </BackButton>
         <Link href="/reise" className="press flex items-center gap-1.5 rounded-full bg-tan px-4 py-2.5 text-sm font-semibold">
           {city.name} <Icon name="down" size={14} />
         </Link>
-        <Link href="/profil" aria-label="Profil anpassen" className="press flex h-11 w-11 items-center justify-center rounded-full bg-tan">
+        <Link href="/profil" aria-label="Profil anpassen" className="press flex h-11 w-11 items-center justify-center rounded-full glass border border-[var(--sc-glass-line)] shadow-soft">
           <Icon name="sliders" size={18} />
         </Link>
       </div>

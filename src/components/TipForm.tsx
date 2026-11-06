@@ -74,7 +74,7 @@ export default function TipForm({
               }}
               aria-pressed={category === c.key}
               className={`flex items-center gap-1.5 rounded-full px-3.5 py-2 text-sm font-semibold ${
-                category === c.key ? "bg-ink text-sand" : "bg-tan"
+                category === c.key ? "bg-sun text-white" : "bg-peach text-sun-soft"
               }`}
             >
               <Icon name={c.icon} size={16}  /> {c.label}

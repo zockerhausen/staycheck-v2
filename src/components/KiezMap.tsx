@@ -30,7 +30,7 @@ function MapCanvas({
   center?: [number, number];
   zoom?: number;
   height?: string;
-  /** Passende Stellen (Raster), werden als weiche orange Flächen gezeichnet */
+  /** Passende Stellen (Raster), werden als weiche violette Flächen gezeichnet */
   zones?: ZonePoint[];
   zoneStep?: number;
   full?: boolean;
@@ -38,7 +38,7 @@ function MapCanvas({
   fit?: boolean;
   /** Randlos, unten geht es nahtlos in die Liste über (die Liste überlappt die Karte etwas) */
   flush?: boolean;
-  /** Kurzer Hinweis oben links auf der Karte (z. B. was Orange bedeutet) */
+  /** Kurzer Hinweis oben links auf der Karte (z. B. was Violett bedeutet) */
   legend?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -163,8 +163,8 @@ export default function KiezMap(props: KiezMapProps) {
     <div className="relative">
       <MapCanvas {...props} />
       {props.legend && (
-        <span className="pointer-events-none absolute left-3 top-3 z-10 flex max-w-[70%] items-center gap-1.5 rounded-full bg-sand/90 px-3 py-1.5 text-[12px] font-extrabold shadow-soft backdrop-blur">
-          <span className="h-2.5 w-4 shrink-0 rounded-full bg-sun/60 blur-[1px]" />
+        <span className="glass pointer-events-none absolute left-3 top-3 z-10 flex max-w-[70%] items-center gap-1.5 rounded-full border border-[var(--sc-glass-line)] px-3 py-[7px] text-[12.5px] font-extrabold shadow-soft">
+          <span className="h-2.5 w-4 shrink-0 rounded-full bg-[#8c7ff6] blur-[1px]" />
           {props.legend}
         </span>
       )}
@@ -172,7 +172,7 @@ export default function KiezMap(props: KiezMapProps) {
         type="button"
         onClick={() => setOpen(true)}
         aria-label="Karte vergrößern"
-        className="press absolute right-3 top-3 z-10 flex h-10 w-10 items-center justify-center rounded-full border border-line bg-sand/85 text-ink shadow-soft backdrop-blur"
+        className="glass press absolute right-3 top-3 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-[var(--sc-glass-line)] text-ink shadow-soft"
       >
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
           <path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7" />
@@ -223,16 +223,16 @@ function addZones(m: import("maplibre-gl").Map, zones: ZonePoint[], step: number
           "heatmap-weight": ["get", "w"],
           "heatmap-radius": ["interpolate", ["exponential", 2], ["zoom"], 8, px(8), 18, px(18)],
           "heatmap-intensity": ["interpolate", ["linear"], ["zoom"], 10, 1.4, 15, 1],
-          // Nur Orange, von durchsichtig bis kräftig – darunter bleibt die Karte lesbar
+          // Nur Violett, von durchsichtig bis kräftig – darunter bleibt die Karte lesbar
           "heatmap-color": [
             "interpolate",
             ["linear"],
             ["heatmap-density"],
-            0, "rgba(242,102,47,0)",
-            0.06, "rgba(242,102,47,0.12)",
-            0.25, "rgba(242,102,47,0.32)",
-            0.55, "rgba(255,122,69,0.48)",
-            1, "rgba(255,138,92,0.62)",
+            0, "rgba(140,127,246,0)",
+            0.06, "rgba(140,127,246,0.14)",
+            0.25, "rgba(140,127,246,0.32)",
+            0.55, "rgba(115,98,245,0.46)",
+            1, "rgba(98,80,245,0.6)",
           ],
           "heatmap-opacity": 1,
         },
@@ -262,7 +262,7 @@ function addLabels(m: import("maplibre-gl").Map, points: MapPoint[], select: (sl
       id: "sc-label-dots",
       type: "circle",
       source: "sc-labels",
-      paint: { "circle-radius": 4.5, "circle-color": "#ff5a2c", "circle-stroke-color": isDarkNow() ? "#131417" : "#ffffff", "circle-stroke-width": 2 },
+      paint: { "circle-radius": 4.5, "circle-color": "#5340f2", "circle-stroke-color": isDarkNow() ? "#0f0c24" : "#ffffff", "circle-stroke-width": 2 },
     });
     m.addLayer({
       id: "sc-label-text",
@@ -277,7 +277,7 @@ function addLabels(m: import("maplibre-gl").Map, points: MapPoint[], select: (sl
         "text-max-width": 8,
         "text-padding": 4,
       },
-      paint: { "text-color": isDarkNow() ? "#f4f4f6" : "#17171b", "text-halo-color": isDarkNow() ? "#131417" : "#ffffff", "text-halo-width": 2 },
+      paint: { "text-color": isDarkNow() ? "#f3f1ff" : "#17133a", "text-halo-color": isDarkNow() ? "#0f0c24" : "#ffffff", "text-halo-width": 2 },
     });
     for (const id of ["sc-label-dots", "sc-label-text"]) {
       m.on("click", id, (e) => {

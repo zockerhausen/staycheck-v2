@@ -11,9 +11,9 @@ import { pageRateLimit } from "@/lib/ratelimit-page";
 import Icon from "@/components/Icon";
 import DistrictExplorer from "@/components/DistrictExplorer";
 import KiezMap from "@/components/KiezMap";
-import CitySwitcher from "@/components/CitySwitcher";
-import ThemeToggle from "@/components/ThemeToggle";
 import ProfileBar from "@/components/ProfileBar";
+import HomePoster, { type PosterBest } from "@/components/HomePoster";
+import { traitsOf } from "@/lib/character";
 import MapStage from "@/components/MapStage";
 import LegalLinks from "@/components/LegalLinks";
 
@@ -32,24 +32,18 @@ export default async function ZielPage({ searchParams }: { searchParams: Promise
   const known = cities.find((c) => c.districtCount > 0 && distance(ziel.lat, ziel.lon, c.lat, c.lng) < 30_000);
   if (known) redirect(`/?ziel=${known.slug}`);
 
-  const header = (
-    <div className="flex items-center gap-2.5">
-      <CitySwitcher
-        variant="bar"
-        current={ziel.ort}
-        hint={ziel.land ? `${ziel.land}, wo willst du schlafen?` : "Wo willst du schlafen?"}
-        verified={cities.filter((c) => c.districtCount > 0).map((c) => ({ slug: c.slug, name: c.name, country: c.country }))}
-      />
-      <Link
-        href={user ? "/konto" : "/login"}
-        aria-label="Konto"
-        className="press flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-full border border-line bg-sand shadow-soft"
-      >
-        <Icon name="user" size={21} fill="transparent" />
-      </Link>
-      <ThemeToggle className="h-[52px] w-[52px]" />
-    </div>
+  const verifiedList = cities.filter((c) => c.districtCount > 0).map((c) => ({ slug: c.slug, name: c.name, country: c.country }));
+  const posterFor = (best: PosterBest | null, personal: boolean) => (
+    <HomePoster
+      city={ziel.ort}
+      hint={ziel.land ? `${ziel.land}, wo willst du schlafen?` : "Wo willst du schlafen?"}
+      verified={verifiedList}
+      loggedIn={Boolean(user)}
+      best={best}
+      personal={personal}
+    />
   );
+  const header = posterFor(null, false);
 
   if (!(await pageRateLimit("ziel", 12))) {
     return (
@@ -85,6 +79,18 @@ export default async function ZielPage({ searchParams }: { searchParams: Promise
     ziel.ort,
   );
   after(() => photosRest);
+  // Beste Ecke fürs Plakat oben (ohne Profil: beste Lage allgemein)
+  const posterSpot = spots[0];
+  const best: PosterBest | null = posterSpot
+    ? {
+        name: posterSpot.name,
+        meta: [posterSpot.area ? `In ${posterSpot.area}` : "", traitsOf(posterSpot.scores, spots.map((x) => x.scores)).slice(0, 2).map((t) => t.label).join(", ")].filter(Boolean).join(" · "),
+        score: posterSpot.match,
+        href: spotHref(posterSpot),
+      }
+    : top && top.match !== undefined
+      ? { name: top.name, meta: "", score: top.match, href: viertelHref(top) }
+      : null;
   const districtList = (
     <>
       <DistrictExplorer
@@ -114,7 +120,7 @@ export default async function ZielPage({ searchParams }: { searchParams: Promise
 
   return (
     <div className="fade-up">
-      {header}
+      {posterFor(best, Boolean(weights))}
       {slow ? (
         <StillLoading
           title={`Wir erkunden ${ziel.ort} …`}
@@ -134,7 +140,7 @@ export default async function ZielPage({ searchParams }: { searchParams: Promise
         <>
           <ProfileBar weights={weights} extras={extras} quizHref={`/quiz?${zq}`} />
 
-          <h1 className="mt-6 text-[26px] font-black leading-tight tracking-tight [overflow-wrap:anywhere]">Wo schläfst du in {ziel.ort}?</h1>
+          <h1 className="mt-6 text-[22px] font-extrabold leading-tight tracking-[-0.03em] [overflow-wrap:anywhere]">Wo schläfst du in {ziel.ort}?</h1>
           <MapStage id="karte">
             <KiezMap
             points={
@@ -149,14 +155,14 @@ export default async function ZielPage({ searchParams }: { searchParams: Promise
             zones={zones}
             fit
             flush
-            legend={zones.length ? (weights ? "Orange = passt zu dir" : "Orange = beste Lage") : undefined}
+            legend={zones.length ? (weights ? "Violett = passt zu dir" : "Violett = beste Lage") : undefined}
           />
           </MapStage>
 
           {/* Liste als Blatt, das über die Karte geschoben ist: Karte und Ecken gehören sichtbar zusammen */}
-          <section className="relative z-[1] -mx-4 -mt-7 min-h-[70vh] rounded-t-[28px] bg-sand px-4 pb-4 pt-3 shadow-[0_-10px_30px_rgba(0,0,0,0.12)]">
-            <div className="mx-auto mb-4 h-1.5 w-10 rounded-full bg-raised" />
-            <h2 className="text-[24px] font-black leading-tight tracking-tight [overflow-wrap:anywhere]">
+          <section id="ecken" className="shadow-sheet relative z-[1] -mx-4 -mt-[30px] min-h-[70vh] scroll-mt-4 rounded-t-[32px] bg-sand px-5 pb-4 pt-2.5">
+            <div className="mx-auto mb-4 h-[5px] w-[42px] rounded-full bg-line" />
+            <h2 className="text-[22px] font-extrabold leading-tight tracking-[-0.03em] [overflow-wrap:anywhere]">
               {spots.length ? (weights ? "Deine besten Ecken" : `Die besten Ecken in ${ziel.ort}`) : top ? "Alle Viertel für dich" : `Viertel in ${ziel.ort}`}
             </h2>
             <p className="mb-4 mt-1 text-[15px] font-semibold text-muted">
@@ -184,10 +190,10 @@ export default async function ZielPage({ searchParams }: { searchParams: Promise
 
           {spots.length > 0 && (
             <details className="group mt-8">
-              <summary className="press flex cursor-pointer list-none items-center gap-3 rounded-[20px] bg-paper px-4 py-4 [&::-webkit-details-marker]:hidden">
+              <summary className="press card flex cursor-pointer list-none items-center gap-3 !rounded-[24px] px-4 py-4 text-sun-soft [&::-webkit-details-marker]:hidden">
                 <Icon name="map" size={22} />
                 <span className="min-w-0 flex-1">
-                  <span className="block text-[16px] font-black">{`Alle ${sorted.length} Stadtteile ansehen`}</span>
+                  <span className="block text-[16px] font-extrabold text-ink">{`Alle ${sorted.length} Stadtteile ansehen`}</span>
                   <span className="block text-[14px] font-semibold text-muted">Die ganze Stadt in größeren Stücken</span>
                 </span>
                 <Icon name="chevron" size={16} className="text-muted transition-transform group-open:rotate-90" />

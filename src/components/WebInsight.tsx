@@ -19,7 +19,7 @@ export default function WebInsight({ insight }: { insight: AreaInsight | null })
   const date = new Date(insight.checked).toLocaleDateString("de-DE", { month: "long", year: "numeric" });
   return (
     <section className="card p-5">
-      <h2 className="flex items-center gap-2 text-[20px] font-black tracking-tight">
+      <h2 className="flex items-center gap-2 text-[1.35rem] font-extrabold tracking-[-0.03em]">
         <Icon name="discover" size={22} className="text-sun" /> Was Reiseseiten sagen
       </h2>
       {insight.summary && <p className="mt-2 text-[16px] font-semibold leading-snug">{insight.summary}</p>}
@@ -43,7 +43,7 @@ export default function WebInsight({ insight }: { insight: AreaInsight | null })
         <ul className="mt-4 space-y-2.5">
           {values.map(([k, v]) => (
             <li key={k} className="flex items-start gap-3">
-              <span className="w-10 shrink-0 rounded-lg bg-sand py-1 text-center text-[15px] font-black tabular-nums">{String(v!.v).replace(".", ",")}</span>
+              <span className="w-10 shrink-0 rounded-lg bg-sand py-1 text-center text-[15px] font-extrabold tabular-nums">{String(v!.v).replace(".", ",")}</span>
               <span className="min-w-0 text-[14px] font-semibold leading-snug">
                 <b className="font-extrabold">{LABEL[k] ?? k}:</b> <span className="text-muted">{v!.why}</span>
               </span>

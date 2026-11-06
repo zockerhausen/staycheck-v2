@@ -18,7 +18,7 @@ export default function ScoreBars({
             <dt className="flex w-32 shrink-0 items-center gap-2 truncate font-semibold">
               <Icon name={CRITERION_ICON[c.key]} size={18} /> {c.label}
             </dt>
-            <dd className="h-2 flex-1 overflow-hidden rounded-full bg-raised">
+            <dd className="h-2 flex-1 overflow-hidden rounded-full bg-peach">
               <div className={`bar-grow h-full rounded-full ${s <= 4 ? "bg-faint" : "bg-sun"}`} style={{ width: `${s * 10}%` }} />
             </dd>
             <span className="w-6 text-right font-extrabold tabular-nums">{s}</span>

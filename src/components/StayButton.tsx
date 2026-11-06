@@ -48,7 +48,7 @@ export default function StayButton({
   // Per Portal an den Seitenrand gehängt (der animierte Seitenrahmen würde „fixed“ sonst verschieben)
   return createPortal(
     <div
-      className={`pointer-events-none fixed inset-x-0 bottom-[calc(88px+env(safe-area-inset-bottom))] z-30 flex justify-center px-4 transition-all duration-200 ${
+      className={`pointer-events-none fixed inset-x-0 bottom-[calc(100px+env(safe-area-inset-bottom))] z-30 flex justify-center px-4 transition-all duration-200 ${
         show ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0"
       }`}
     >

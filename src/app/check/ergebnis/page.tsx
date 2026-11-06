@@ -133,14 +133,14 @@ export default async function CheckErgebnisPage({
     <div className="fade-up space-y-7">
       <RememberCheck name={name} sub={sub} lat={lat} lon={lon} kind={kind} match={match} label={v.label} />
       <div className="flex items-center justify-between">
-        <BackButton fallback="/check" className="press flex h-11 w-11 items-center justify-center rounded-full bg-tan">
+        <BackButton fallback="/check" className="press flex h-11 w-11 items-center justify-center rounded-full glass border border-[var(--sc-glass-line)] shadow-soft">
           <Icon name="back" size={19} />
         </BackButton>
         <span className="flex items-center gap-2">
           <Link
             href={`/duell/hotels?h=${encodeURIComponent([lat.toFixed(6), lon.toFixed(6), kind, name.slice(0, 80)].join("|"))}`}
             aria-label="Mit anderer Unterkunft vergleichen"
-            className="press flex h-11 w-11 items-center justify-center rounded-full bg-tan"
+            className="press flex h-11 w-11 items-center justify-center rounded-full glass border border-[var(--sc-glass-line)] shadow-soft"
           >
             <Icon name="duel" size={20} fill="transparent" />
           </Link>
@@ -151,8 +151,8 @@ export default async function CheckErgebnisPage({
       <section>
         <Reveal name={name} match={match} celebrate={match >= 64} eyebrow={v.label} caption={pm ? "Dein Match" : "Lage-Score"} sub={sub} />
         <div className="mt-3 flex flex-wrap justify-center gap-2 text-[13px] font-bold">
-          {pm && <span className="rounded-full bg-tan px-3 py-1.5">Lage allgemein {general}</span>}
-          <span className="rounded-full bg-tan px-3 py-1.5 text-muted">
+          {pm && <span className="rounded-full bg-peach px-3 py-1.5 text-sun-soft">Lage allgemein {general}</span>}
+          <span className="rounded-full bg-peach px-3 py-1.5 text-muted">
             {measured} von {usedKeys.length} Werten gemessen
           </span>
         </div>
@@ -201,7 +201,7 @@ export default async function CheckErgebnisPage({
       <ul className="card px-4">
         {analysis.highlights.map((h) => (
           <li key={h.text} className="flex items-center gap-3.5 border-b border-line py-3.5 last:border-0">
-            <Icon name={h.icon} size={22} className="text-muted" />
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] bg-peach text-sun-soft"><Icon name={h.icon} size={20} fill="transparent" /></span>
             <span className="text-[15px] font-semibold">{h.text}</span>
           </li>
         ))}
@@ -209,7 +209,7 @@ export default async function CheckErgebnisPage({
 
       {district && (
         <Link href={`/kiez/${district.slug}?stadt=${district.city}${amp}`} className="card press flex items-center gap-3.5 p-4">
-          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-peach text-sun-soft">
+          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[16px] bg-peach text-sun-soft">
             <Icon name="map" size={22} />
           </span>
           <span className="min-w-0 flex-1">
@@ -244,10 +244,10 @@ export default async function CheckErgebnisPage({
         title="Tipps zu dieser Lage"
       />
 
-      <Link href="/check" className="press flex w-full items-center justify-center gap-2 rounded-2xl border border-line py-4 text-[15px] font-extrabold">
+      <Link href="/check" className="press flex min-h-[3.85rem] w-full items-center justify-center gap-2 rounded-full bg-peach text-[15px] font-extrabold text-sun-soft">
         <Icon name="refresh" size={18} /> Andere Unterkunft prüfen
       </Link>
-      <div className="h-16" aria-hidden />
+      <div className="h-20" aria-hidden />
       <BookBar
         title={reviews ? `Lage ${match}, Gäste ${fmtScore(reviews.fair)}` : `Lage ${match} von 100`}
         sub={reviews?.demo ? "Gäste-Wert ist ein Beispiel" : isStay ? "Preise bei Booking" : "Unterkünfte in der Nähe"}

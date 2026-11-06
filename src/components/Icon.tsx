@@ -1,7 +1,7 @@
 import { ICONS, type IconName } from "@/lib/icons";
 
 /**
- * Eigenes StayCheck-Icon. Linienfarbe = currentColor, Akzentfläche = --icon-fill (Standard: weiches Orange).
+ * Eigenes StayCheck-Icon. Linienfarbe = currentColor, Akzentfläche = --icon-fill (Standard: weiches Violett).
  * Beispiel: <Icon name="hotel" size={28} />
  */
 export default function Icon({

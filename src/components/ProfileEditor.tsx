@@ -79,7 +79,7 @@ export default function ProfileEditor({
                 setSaved(false);
                 setWer(wer === w.key ? null : w.key);
               }}
-              className={`press flex items-center gap-1.5 rounded-full px-3.5 py-2.5 text-sm font-semibold ${wer === w.key ? "bg-ink text-sand" : "bg-tan"}`}
+              className={`press flex items-center gap-1.5 rounded-full px-3.5 py-2.5 text-sm font-semibold ${wer === w.key ? "bg-sun text-white" : "bg-peach text-sun-soft"}`}
             >
               <Icon name={w.icon} size={16} /> {w.label}
             </button>
@@ -100,7 +100,7 @@ export default function ProfileEditor({
                 setSaved(false);
                 setPreis(preis === b ? null : b);
               }}
-              className={`press rounded-full px-3.5 py-2.5 text-sm font-semibold ${preis === b ? "bg-ink text-sand" : "bg-tan"}`}
+              className={`press rounded-full px-3.5 py-2.5 text-sm font-semibold ${preis === b ? "bg-sun text-white" : "bg-peach text-sun-soft"}`}
             >
               {BAND_TEXT[b]}
             </button>

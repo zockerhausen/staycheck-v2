@@ -155,7 +155,7 @@ export default async function KiezPage({
             href={`/kiez/${slug}?stadt=${district.city}&typ=${f.key}${amp}`}
             scroll={false}
             className={`press shrink-0 rounded-full border px-4 py-2.5 text-[14px] font-extrabold ${
-              filter === f.key ? "border-ink bg-ink text-sand" : "border-line bg-sand"
+              filter === f.key ? "border-sun bg-sun text-white" : "border-transparent bg-peach text-sun-soft"
             }`}
           >
             {f.label}
@@ -183,10 +183,10 @@ export default async function KiezPage({
             />
           )}
           <div className="mt-5 flex items-baseline justify-between">
-            <h2 className="text-[20px] font-black tracking-tight">Beste Lage im Viertel</h2>
+            <h2 className="text-[1.35rem] font-extrabold tracking-[-0.03em]">Beste Lage im Viertel</h2>
             <span className="text-[14px] font-bold text-muted">{shown.length} gefunden</span>
           </div>
-          <ol className="mt-1">
+          <ol className="card mt-3 px-3.5 py-1">
             {shown.slice(0, 25).map((h, i) => (
               <StayRow
                 key={`${h.lat}-${h.lon}`}
@@ -245,7 +245,7 @@ export default async function KiezPage({
         ]}
       >
         {!resolved && (
-          <Link href={`/quiz?stadt=${district.city}`} className="press flex items-center justify-between gap-3 rounded-2xl bg-paper px-4 py-3.5 text-[15px] font-extrabold">
+          <Link href={`/quiz?stadt=${district.city}`} className="press card flex items-center justify-between gap-3 !rounded-[24px] px-4 py-3.5 text-[15px] font-extrabold">
             Passt das zu mir?
             <span className="flex items-center gap-1 text-sun-soft">
               Quiz in 30 Sek. <Icon name="chevron" size={14} />
