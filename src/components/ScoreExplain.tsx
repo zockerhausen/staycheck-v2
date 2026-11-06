@@ -109,6 +109,16 @@ export default function ScoreExplain({
                     </li>
                   ))}
                 </ul>
+                {d.link && (
+                  <a
+                    href={d.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-2 inline-flex items-center gap-1 text-[14px] font-bold text-sun-soft underline underline-offset-4"
+                  >
+                    Quelle lesen <Icon name="external" size={13} fill="transparent" />
+                  </a>
+                )}
                 {d.web && (
                   <div className="mt-3 rounded-2xl bg-tan p-3 text-[14px]">
                     <p className="font-extrabold">

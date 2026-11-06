@@ -105,7 +105,7 @@ export default async function FavoritenPage() {
                   )}
                 </div>
                 <p className="mb-4 mt-1 text-sm text-muted">{d.short_description}</p>
-                <ScoreBars criteria={criteria} scores={d.scores} />
+                <ScoreBars criteria={criteria} scores={d.scores} reasons={d.reasons} origin={d.origin} links={d.links} />
                 <div className="mt-4 flex items-center justify-between">
                   <Link href={`/kiez/${d.slug}${query ? `?${query}` : ""}`} className="flex items-center gap-1 text-sm font-bold text-sun">
                     <Icon name="hotel" size={18} /> Hotels finden

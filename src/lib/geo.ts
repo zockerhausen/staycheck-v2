@@ -8,7 +8,7 @@ import { unstable_cache } from "next/cache";
 import { after } from "next/server";
 import { pickZones, ZONE_KEYS, type ZonePoint } from "./zones";
 import { precomputedCity, precomputedCovering } from "./precomputed";
-import { distance, scoreFromData, type Highlight, type Line, type Poi, type ScoreResult } from "./score";
+import { distance, districtSafety, scoreFromData, type Highlight, type Line, type Poi, type ScoreResult } from "./score";
 
 const UA = "StayCheck/0.1 (https://github.com/zockerhausen/staycheck-v2)";
 // Kartendaten-Server. Im Moment die freien öffentlichen Server.
@@ -270,14 +270,9 @@ const scoreCached = unstable_cache(
 
 /** Sicherheit kommt in geprüften Städten aus unserer Viertel-Bewertung. */
 function withDistrictSafety(r: ScoreResult, district: District | null): LocationAnalysis {
-  const safety = district?.scores?.safety;
-  if (safety == null) return { ...r, district };
-  return {
-    ...r,
-    scores: { ...r.scores, safety },
-    details: { ...r.details, safety: { score: safety, source: "viertel", reasons: [`Unsere Einschätzung für ${district!.name}`] } },
-    district,
-  };
+  if (!district) return { ...r, district };
+  const safety = districtSafety(district);
+  return { ...r, scores: { ...r.scores, safety: safety.score }, details: { ...r.details, safety }, district };
 }
 
 /**
@@ -412,7 +407,14 @@ export async function hotelsNear(
 
 export type Zone = { lat: number; lon: number; s: number[] }; // s: Werte in der Reihenfolge ZONE_KEYS
 export type NamedPlace = { n: string; lat: number; lon: number; l: number }; // l: 0 Stadtteil, 1 Quartier, 2 Kiez
-export type AutoCity = { districts: AutoDistrict[]; zones: Zone[]; step: number; places?: NamedPlace[] };
+export type AutoCity = {
+  districts: AutoDistrict[];
+  zones: Zone[];
+  step: number;
+  places?: NamedPlace[];
+  /** Handgeprüfte Viertel (Berlin, Bangkok): gleiche Rechnung wie für automatische Viertel, nach Slug */
+  fixed?: Record<string, { scores: Record<string, number | null>; reasons: Record<string, string> }>;
+};
 
 export type AutoDistrict = {
   slug: string;
@@ -511,6 +513,7 @@ export function autoCityFromData(
   max: number,
   places: OverpassElement[],
   groups: { lat: number; lon: number }[][],
+  fixedPoints: { slug: string; lat: number; lon: number }[] = [],
 ): AutoCity {
   const rank: Record<string, number> = { suburb: 0, quarter: 1, neighbourhood: 2 };
   const candidates = places
@@ -558,24 +561,30 @@ export function autoCityFromData(
   const RADII = [600, 500, 800, 400, 400, 700, 900];
   const countsAt = (p: { lat: number; lon: number }) => RADII.map((r, g) => within(g, p, r));
 
+  // Werte und Gründe an einem Punkt (für automatische und handgeprüfte Viertel gleich)
+  const scorePoint = (p: { lat: number; lon: number }) => {
+    const c7 = countsAt(p);
+    const [bars, food, stations, trams, buses, parks, hostels] = c7;
+    const scores = autoScores(c7);
+    const reasons: Record<string, string> = {
+      transit: stations
+        ? `${stations} Bahnhof/Bahnhöfe in 800 m`
+        : trams
+          ? `Straßenbahn in 400 m, kein Bahnhof in 800 m`
+          : `${buses} Bushaltestelle(n) in 400 m, keine Bahn`,
+      nightlife: `${bars} Bars und Clubs in 600 m`,
+      food: `${food} Restaurants und Cafés in 500 m`,
+      nature: `${parks} Park(s) in 700 m`,
+      quiet: "Grob geschätzt: je mehr Bars und Restaurants, desto lauter",
+      budget: `${hostels} Hostels und Pensionen in 900 m`,
+      safety: "Für diese Stadt haben wir keine Einschätzung",
+    };
+    return { scores, reasons };
+  };
+
   const districts = picked
     .map((p) => {
-      const c7 = countsAt(p);
-      const [bars, food, stations, trams, buses, parks, hostels] = c7;
-      const scores = autoScores(c7);
-      const reasons: Record<string, string> = {
-        transit: stations
-          ? `${stations} Bahnhof/Bahnhöfe in 800 m`
-          : trams
-            ? `Straßenbahn in 400 m, kein Bahnhof in 800 m`
-            : `${buses} Bushaltestelle(n) in 400 m, keine Bahn`,
-        nightlife: `${bars} Bars und Clubs in 600 m`,
-        food: `${food} Restaurants und Cafés in 500 m`,
-        nature: `${parks} Park(s) in 700 m`,
-        quiet: "Grob geschätzt: je mehr Bars und Restaurants, desto lauter",
-        budget: `${hostels} Hostels und Pensionen in 900 m`,
-        safety: "Für diese Stadt haben wir keine Einschätzung",
-      };
+      const { scores, reasons } = scorePoint(p);
       return { slug: slugify(p.name), name: p.name, lat: p.lat, lon: p.lon, distKm: Math.round(p.d / 100) / 10, scores, reasons };
     })
     .filter((d) => (d.scores.food ?? 0) >= 3 || (d.scores.transit ?? 0) >= 6); // Viertel ohne alles weglassen
@@ -604,7 +613,8 @@ export function autoCityFromData(
     .sort((a, b) => a.d - b.d)
     .slice(0, 250)
     .map((p) => ({ n: p.name.slice(0, 60), lat: Math.round(p.lat * 1e5) / 1e5, lon: Math.round(p.lon * 1e5) / 1e5, l: p.level }));
-  return { districts, zones, step: STEP, places: named };
+  const fixed = fixedPoints.length ? Object.fromEntries(fixedPoints.map((p) => [p.slug, scorePoint(p)])) : undefined;
+  return { districts, zones, step: STEP, places: named, ...(fixed ? { fixed } : {}) };
 }
 
 /** Werte aus den gezählten Dingen (Reihenfolge wie RADII). Gleiche Formeln für Viertel und Raster. */

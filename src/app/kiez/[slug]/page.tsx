@@ -297,9 +297,9 @@ export default async function KiezPage({
                   <NearbyFacts lat={district.lat!} lon={district.lng!} name={short} />
                   <ArrivalCard hubs={hubs} lat={district.lat!} lon={district.lng!} title="So weit ist es" />
                   <div className="card p-5">
-                    <ScoreBars criteria={criteria} scores={district.scores} />
+                    <ScoreBars criteria={criteria} scores={district.scores} reasons={district.reasons} origin={district.origin} links={district.links} />
                     <p className="mt-3 text-[13px] font-semibold leading-relaxed text-muted">
-                      Viertel-Werte sind unsere Einschätzung fürs ganze Viertel. Jede Unterkunft prüfen wir zusätzlich einzeln mit Kartendaten.{" "}
+                      Tippe auf einen Wert, um zu sehen, woher er kommt. Die Werte gelten fürs ganze Viertel, jede Unterkunft prüfen wir zusätzlich einzeln.{" "}
                       <Link href="/methode" className="font-bold text-sun-soft underline underline-offset-4">
                         So rechnen wir
                       </Link>

@@ -15,9 +15,26 @@ export type Detail = {
   reasons: string[];
   /** Was Reiseseiten zu diesem Wert sagen (zu 50 % eingerechnet), siehe lib/insights.ts */
   web?: import("./insight-types").WebPart;
+  /** Quelle zum Nachlesen (z. B. bei Sicherheit) */
+  link?: string;
 };
 export type Coverage = { level: "gut" | "mittel" | "duenn"; text: string };
-export type ScoreDistrict = { name: string; scores: Record<string, number> };
+export type ScoreDistrict = { name: string; scores: Record<string, number>; reasons?: Record<string, string>; links?: Record<string, string> };
+
+/** Sicherheit eines geprüften Viertels: mit Begründung und Quelle, sonst ehrlich „keine verlässlichen Daten“ */
+export function districtSafety(district: ScoreDistrict | null): Detail {
+  if (!district) return { score: null, source: "keine", reasons: ["Für diese Gegend haben wir noch keine Einschätzung. Fließt nicht in den Score ein."] };
+  const score = district.scores.safety ?? null;
+  const note = district.reasons?.safety;
+  if (score == null)
+    return { score: null, source: "keine", reasons: [note ?? `Für ${district.name} gibt es keine verlässlichen Daten. Fließt nicht in den Score ein.`] };
+  return {
+    score,
+    source: "viertel",
+    reasons: [note ?? `Unsere Einschätzung für ${district.name}`, "Gilt fürs ganze Viertel, nicht für die einzelne Straße"],
+    ...(district.links?.safety ? { link: district.links.safety } : {}),
+  };
+}
 
 export type Highlight = { icon: "transit" | "nightlife" | "food" | "nature" | "walk" | "hotel" | "quiet"; text: string };
 
@@ -274,19 +291,15 @@ export function scoreFromData(lat: number, lon: number, pois: Poi[], lines: Line
   }
 
   // Sicherheit: nur aus unserer Viertel-Bewertung (OpenStreetMap kennt keine Sicherheit)
-  details.safety = district
-    ? { score: district.scores.safety ?? null, source: "viertel", reasons: [`Unsere Einschätzung für ${district.name}, nicht für die einzelne Straße`] }
-    : { score: null, source: "keine", reasons: ["Für diese Gegend haben wir noch keine Einschätzung. Fließt nicht in den Score ein."] };
+  details.safety = districtSafety(district);
 
   // Günstig: Viertel-Bewertung plus Zahl günstiger Unterkünfte (Hostels, Pensionen) im Umkreis
   const hostels = near(800, isBudgetStay).length;
   {
     const hostelScore = step(hostels, [[0, 4], [2, 6], [5, 8]], 9);
+    // Nur gemessen: Preise von Unterkünften kennen wir nicht, deshalb keine geschätzte Preisstufe mehr
     const reasons = [`${plural(hostels, "Hostel oder Pension", "Hostels und Pensionen")} in 800 m`];
-    if (district) reasons.unshift(`Preisniveau ${district.name}: ${district.scores.budget}/10 (unsere Einschätzung)`);
-    details.budget = district
-      ? { score: clamp((district.scores.budget * 2 + hostelScore) / 3), source: "gemischt", reasons }
-      : { score: hostelScore, source: "messung", reasons };
+    details.budget = { score: hostelScore, source: "messung", reasons };
   }
 
   // Extras: Wie weit ist das Nächste zu Fuß? (bis 3 Min. = 10 … bis 12 Min. = 5, sonst „nicht gefunden“ = 1)

@@ -1,0 +1,107 @@
+{
+ "_hinweis": "Mittelpunkte der handgeprüften Viertel (wie in Supabase). Die Vorberechnung rechnet für sie dieselben Kartenwerte wie für automatische Viertel.",
+ "bangkok": [
+  {
+   "slug": "altstadt",
+   "lat": 13.752,
+   "lon": 100.494
+  },
+  {
+   "slug": "ari",
+   "lat": 13.779,
+   "lon": 100.544
+  },
+  {
+   "slug": "chinatown",
+   "lat": 13.74,
+   "lon": 100.51
+  },
+  {
+   "slug": "khao-san",
+   "lat": 13.759,
+   "lon": 100.4977
+  },
+  {
+   "slug": "riverside",
+   "lat": 13.723,
+   "lon": 100.515
+  },
+  {
+   "slug": "siam",
+   "lat": 13.746,
+   "lon": 100.534
+  },
+  {
+   "slug": "silom",
+   "lat": 13.729,
+   "lon": 100.534
+  },
+  {
+   "slug": "sukhumvit",
+   "lat": 13.74,
+   "lon": 100.556
+  },
+  {
+   "slug": "thonglor",
+   "lat": 13.729,
+   "lon": 100.585
+  },
+  {
+   "slug": "victory-monument",
+   "lat": 13.765,
+   "lon": 100.538
+  }
+ ],
+ "berlin": [
+  {
+   "slug": "charlottenburg",
+   "lat": 52.516,
+   "lon": 13.304
+  },
+  {
+   "slug": "friedrichshain",
+   "lat": 52.515,
+   "lon": 13.454
+  },
+  {
+   "slug": "kreuzberg",
+   "lat": 52.499,
+   "lon": 13.403
+  },
+  {
+   "slug": "mitte",
+   "lat": 52.52,
+   "lon": 13.405
+  },
+  {
+   "slug": "moabit",
+   "lat": 52.528,
+   "lon": 13.342
+  },
+  {
+   "slug": "neukoelln",
+   "lat": 52.481,
+   "lon": 13.435
+  },
+  {
+   "slug": "prenzlauer-berg",
+   "lat": 52.539,
+   "lon": 13.424
+  },
+  {
+   "slug": "schoeneberg",
+   "lat": 52.483,
+   "lon": 13.353
+  },
+  {
+   "slug": "treptow",
+   "lat": 52.492,
+   "lon": 13.464
+  },
+  {
+   "slug": "wedding",
+   "lat": 52.55,
+   "lon": 13.359
+  }
+ ]
+}

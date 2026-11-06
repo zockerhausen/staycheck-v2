@@ -2,7 +2,7 @@
 // Nutzt exakt dieselben Rechenwege wie die App (autoCityFromData, scoreLocation), nur ohne Overpass-Server.
 // Aufruf: node build.mjs <stadt.json> <features.geojsonseq> <airports.csv (OurAirports)> <ausgabe.json> [overture.geojsonseq] [fusswege.geojsonseq]
 // Optional: Orte aus Overture Maps (Bars, Essen, Hostels) als Ergänzung. Was es in OpenStreetMap schon gibt, wird nicht doppelt gezählt.
-import { readFileSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { gzipSync } from "node:zlib";
 import { autoCityFromData, locationMatch, DEFAULT_WEIGHTS, scoreLocation, split, type OverpassElement } from "../../src/lib/geo";
 import { distance, type Line, type Poi } from "../../src/lib/score";
@@ -149,7 +149,12 @@ const CATS: ((e: OverpassElement) => boolean)[] = [
   (e) => /^(hostel|guest_house)$/.test(t(e, "tourism")) && e.type !== "relation",
 ];
 const groups = CATS.map((test) => els.filter(test).map((e) => ({ lat: e.c.lat, lon: e.c.lon })));
-const auto = autoCityFromData(city.lat, city.lon, city.radius, 14, places, groups);
+// Handgeprüfte Viertel (Berlin, Bangkok): dieselbe Rechnung an ihren Mittelpunkten
+const fixedFile = "data/fixed-districts.json";
+const fixedPoints: { slug: string; lat: number; lon: number }[] = existsSync(fixedFile)
+  ? ((JSON.parse(readFileSync(fixedFile, "utf8")) as Record<string, unknown>)[city.slug] as { slug: string; lat: number; lon: number }[] | undefined) ?? []
+  : [];
+const auto = autoCityFromData(city.lat, city.lon, city.radius, 14, places, groups, fixedPoints);
 
 // ---------- Alle Unterkünfte mit Lage-Werten ----------
 // Kartendaten für die Bewertung; je Unterkunft nur die Umgebung (schnell), große Flächen immer dazu

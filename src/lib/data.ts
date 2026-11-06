@@ -2,6 +2,7 @@ import { parseZiel, type Ziel } from "@/lib/ziel";
 import { cookies } from "next/headers";
 import { cache } from "react";
 import { cleanExtras, decodeExtras, type Extras } from "@/lib/profile";
+import { precomputedBySlug } from "./precomputed";
 import { createClient } from "@/lib/supabase/server";
 
 export type Criterion = {
@@ -30,6 +31,12 @@ export type District = {
   lat: number | null;
   lng: number | null;
   scores: Record<string, number>;
+  /** Warum dieser Wert? (z. B. „25 Bars und Clubs in 600 m“ oder Begründung mit Quelle) */
+  reasons?: Record<string, string>;
+  /** Woher der Wert kommt: aus Kartendaten berechnet, aus Quellen belegt oder nur geschätzt */
+  origin?: Record<string, "karte" | "quelle" | "schaetzung">;
+  /** Link zur Quelle (nur bei „quelle“) */
+  links?: Record<string, string>;
 };
 
 export type Weights = Record<string, number>;
@@ -81,30 +88,64 @@ type DistrictRow = {
   lat: number | null;
   lng: number | null;
   cities: { slug: string };
-  district_scores: { criterion_key: string; score: number }[];
+  district_scores: { criterion_key: string; score: number | null; note: string | null; source_url: string | null; checked_on: string | null }[];
 };
+
+// Diese Werte rechnet die Vorberechnung aus Kartendaten (gleiche Regeln wie für alle Städte)
+const MAP_KEYS = ["transit", "nightlife", "food", "nature", "quiet", "budget"];
 
 /** Bezirke einer Stadt – ohne Stadt-Slug: alle Städte */
 export async function getDistricts(citySlug?: string): Promise<District[]> {
   const supabase = await createClient();
   let query = supabase
     .from("districts")
-    .select("id, slug, name, short_description, lat, lng, cities!inner(slug), district_scores(criterion_key, score)")
+    .select("id, slug, name, short_description, lat, lng, cities!inner(slug), district_scores(criterion_key, score, note, source_url, checked_on)")
     .order("name");
   if (citySlug) query = query.eq("cities.slug", citySlug);
   const { data, error } = await query;
   if (error) throw new Error(error.message);
 
-  return ((data ?? []) as unknown as DistrictRow[]).map((d) => ({
-    id: d.id,
-    slug: d.slug,
-    name: d.name,
-    city: d.cities.slug,
-    short_description: d.short_description,
-    lat: d.lat,
-    lng: d.lng,
-    scores: Object.fromEntries(d.district_scores.map((s) => [s.criterion_key, s.score])),
-  }));
+  const rows = (data ?? []) as unknown as DistrictRow[];
+  // Kartenwerte aus der Vorberechnung (pro Stadt einmal laden)
+  const pre = new Map<string, Awaited<ReturnType<typeof precomputedBySlug>>>();
+  for (const slug of new Set(rows.map((d) => d.cities.slug))) pre.set(slug, await precomputedBySlug(slug).catch(() => null));
+
+  return rows.map((d) => {
+    const scores: Record<string, number> = {};
+    const reasons: Record<string, string> = {};
+    const origin: Record<string, "karte" | "quelle" | "schaetzung"> = {};
+    const links: Record<string, string> = {};
+    for (const s of d.district_scores) {
+      if (s.score != null) scores[s.criterion_key] = s.score;
+      if (s.note) reasons[s.criterion_key] = s.note;
+      if (s.source_url) links[s.criterion_key] = s.source_url;
+      origin[s.criterion_key] = s.note && s.source_url ? "quelle" : "schaetzung";
+    }
+    const fixed = pre.get(d.cities.slug)?.city.fixed?.[d.slug];
+    if (fixed) {
+      for (const k of MAP_KEYS) {
+        const v = fixed.scores[k];
+        if (typeof v !== "number") continue;
+        scores[k] = Math.max(1, Math.min(10, Math.round(v)));
+        reasons[k] = fixed.reasons[k];
+        origin[k] = "karte";
+        delete links[k];
+      }
+    }
+    return {
+      id: d.id,
+      slug: d.slug,
+      name: d.name,
+      city: d.cities.slug,
+      short_description: d.short_description,
+      lat: d.lat,
+      lng: d.lng,
+      scores,
+      reasons,
+      origin,
+      links,
+    };
+  });
 }
 
 /** Liest Gewichte (0–5) aus der URL, z. B. ?budget=5&nightlife=2 */

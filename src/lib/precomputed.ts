@@ -115,6 +115,12 @@ function load(slug: string): Promise<PreCity | null> {
   return cache.get(slug)!;
 }
 
+/** Vorberechnete Stadt nach Slug (z. B. „berlin“), sonst null */
+export async function precomputedBySlug(slug: string): Promise<PreCity | null> {
+  const row = (await getIndex()).find((c) => c.slug === slug);
+  return row ? load(row.slug) : null;
+}
+
 /** Genau diese Stadt (gleicher Mittelpunkt, gleiches Raster) vorberechnet? */
 export async function precomputedCity(lat: number, lon: number, radius: number): Promise<PreCity | null> {
   const row = (await getIndex()).find((c) => Math.abs(c.lat - lat) < 1e-4 && Math.abs(c.lon - lon) < 1e-4 && c.radius === radius);
