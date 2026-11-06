@@ -149,7 +149,10 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
   // Kopf: Foto, drei Zahlen (Lage, Gäste, Preis)
   const webInsight = await insightNear(vlat!, vlon!, name).catch(() => null);
   // Reiseführer-Text (Wikivoyage), höchstens kurz warten
-  const guide = await withDeadline(guideNear(vlat!, vlon!), 2500).then((g) => (g === "slow" ? null : g));
+  const guideWork = guideNear(vlat!, vlon!);
+  const guideRaced = await withDeadline(guideWork, 2500);
+  if (guideRaced === "slow") after(() => guideWork); // beim nächsten Mal sofort da
+  const guide = guideRaced === "slow" ? null : guideRaced;
   const photoWork = areaPhoto(name, ziel.ort, vlat, vlon);
   const photoRaced = await withDeadline(photoWork, 2500);
   if (photoRaced === "slow") after(() => photoWork);

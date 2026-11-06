@@ -140,7 +140,10 @@ export default async function KiezPage({
   const short = district.name.split(" (")[0];
   const webInsight = await insightNear(district.lat!, district.lng!, short).catch(() => null);
   // Reiseführer-Text (Wikivoyage), höchstens kurz warten
-  const guide = await withDeadline(guideNear(district.lat!, district.lng!), 2500).then((g) => (g === "slow" ? null : g));
+  const guideWork = guideNear(district.lat!, district.lng!);
+  const guideRaced = await withDeadline(guideWork, 2500);
+  if (guideRaced === "slow") after(() => guideWork); // beim nächsten Mal sofort da
+  const guide = guideRaced === "slow" ? null : guideRaced;
   const photoWork = areaPhoto(short, cityName, district.lat, district.lng, 600);
   const photoRaced = await withDeadline(photoWork, 2500);
   if (photoRaced === "slow") after(() => photoWork);
