@@ -85,12 +85,12 @@ def main():
         dsrc = f"s3://overturemaps-us-west-2/release/{release}/theme=divisions/type=division/*"
         hoods = con.execute(
             f"SELECT names.primary, bbox.xmin, bbox.ymin, subtype FROM read_parquet('{dsrc}', hive_partitioning=1) "
-            "WHERE bbox.xmin BETWEEN ? AND ? AND bbox.ymin BETWEEN ? AND ? AND subtype IN ('macrohood', 'neighborhood', 'microhood')",
+            "WHERE bbox.xmin BETWEEN ? AND ? AND bbox.ymin BETWEEN ? AND ? AND subtype IN ('neighborhood', 'microhood')",
             [minlon, maxlon, minlat, maxlat],
         ).fetchall()
     except duckdb.Error as e:
         print(f"Overture-Viertel: {str(e)[:200]}", file=sys.stderr)
-    PLACE = {"macrohood": "suburb", "neighborhood": "quarter", "microhood": "neighbourhood"}
+    PLACE = {"neighborhood": "quarter", "microhood": "neighbourhood"}  # ganze Bezirke kennt OSM schon
 
     n = {"bar": 0, "food": 0, "stay": 0, "place": 0}
     with open(out_path, "w", encoding="utf8") as f:
