@@ -41,5 +41,5 @@ export function Section({ title, children }: { title: string; children: ReactNod
 
 /** Zeigt einen Wert oder einen sichtbaren Platzhalter, nie etwas Erfundenes. */
 export function Field({ value, label }: { value: string; label: string }) {
-  return value ? <>{value}</> : <span className="rounded bg-raised px-1.5 text-sun-soft">[{label} fehlt]</span>;
+  return value ? <>{value}</> : <span className="rounded bg-peach px-1.5 text-sun-soft">[{label} fehlt]</span>;
 }

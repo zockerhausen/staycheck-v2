@@ -62,7 +62,7 @@ export default function ReviewSummary({ reviews }: { reviews: StayReviews }) {
       {reviews.snippets.length > 0 && (
         <ul className="mt-5 space-y-2.5">
           {reviews.snippets.map((s, i) => (
-            <li key={i} className="rounded-[16px] bg-raised px-4 py-3">
+            <li key={i} className="rounded-[16px] bg-peach px-4 py-3">
               <p className="text-[15px] leading-snug">„{s.text}“</p>
               <p className="mt-1.5 text-xs text-muted">
                 {fmtScore(s.score)}/10 · {PLATFORM[s.platform].label} · {s.when}

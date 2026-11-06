@@ -188,7 +188,7 @@ export default function QuizClient({ city, cityName, next: nextUrl }: { city: st
         </button>
         <div className="flex flex-1 gap-1" role="progressbar" aria-valuemin={0} aria-valuemax={total} aria-valuenow={step}>
           {Array.from({ length: total }, (_, i) => (
-            <span key={i} className={`h-[5px] flex-1 rounded-full transition-colors duration-300 ${i < step ? "bg-sun" : i === step ? "bg-sun/50" : "bg-raised"}`} />
+            <span key={i} className={`h-[5px] flex-1 rounded-full transition-colors duration-300 ${i < step ? "bg-sun" : i === step ? "bg-sun/50" : "bg-peach"}`} />
           ))}
         </div>
       </div>

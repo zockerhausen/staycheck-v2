@@ -146,7 +146,7 @@ export default async function HotelDuellPage({
           return (
             <article key={i} className="rounded-3xl bg-paper p-4">
               <div className="flex items-start gap-3">
-                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-raised text-sm font-bold">
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-peach text-sm font-bold">
                   {i + 1}
                 </span>
                 <h2 className="font-display text-lg font-extrabold leading-tight [overflow-wrap:anywhere]">{r.place.name}</h2>

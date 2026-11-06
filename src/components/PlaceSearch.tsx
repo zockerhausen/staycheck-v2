@@ -148,7 +148,7 @@ export default function PlaceSearch({
             type="button"
             onClick={paste}
             aria-label="Link einfügen"
-            className="press flex h-10 w-10 items-center justify-center rounded-full bg-raised"
+            className="press flex h-10 w-10 items-center justify-center rounded-full bg-peach"
           >
             <Icon name="link" size={18} />
           </button>
@@ -164,7 +164,7 @@ export default function PlaceSearch({
           {results.map((p, i) => (
             <li key={`${p.lat}-${p.lon}-${i}`} className="border-b border-line last:border-0">
               <button type="button" onClick={() => choose(p)} className="flex w-full items-center gap-3 px-4 py-3 text-left active:bg-tan">
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-raised">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-peach">
                   <Icon name={p.kind === "address" || p.kind === "other" ? "check" : "hotel"} size={22} />
                 </span>
                 <span className="min-w-0 flex-1">

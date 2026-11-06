@@ -148,7 +148,7 @@ export default function AskDistrict({ target, place, enabled }: { target: Target
                             href={s.url}
                             target="_blank"
                             rel="noopener noreferrer nofollow"
-                            className="max-w-full truncate rounded-full bg-raised px-2.5 py-1 text-[11px] font-semibold text-muted"
+                            className="max-w-full truncate rounded-full bg-peach px-2.5 py-1 text-[11px] font-semibold text-muted"
                           >
                             {new URL(s.url).hostname.replace(/^www\./, "")}
                           </a>

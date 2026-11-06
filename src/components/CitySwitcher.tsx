@@ -101,7 +101,7 @@ export default function CitySwitcher({
               shown ? "translate-y-0" : "translate-y-full"
             }`}
           >
-            <div className="mx-auto mb-4 h-1.5 w-10 rounded-full bg-raised" />
+            <div className="mx-auto mb-4 h-1.5 w-10 rounded-full bg-peach" />
             <div className="flex items-center justify-between">
               <h2 className="font-display text-[22px] font-extrabold">Wohin geht&apos;s?</h2>
               <button type="button" onClick={close} aria-label="Schließen" className="press flex h-10 w-10 items-center justify-center rounded-full glass border border-[var(--sc-glass-line)] shadow-soft">

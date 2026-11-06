@@ -17,13 +17,13 @@ export default function AuthForm({ next, defaultMode = "login" }: { next: string
 
   return (
     <div className="mt-8">
-      <div className="mb-6 grid grid-cols-2 rounded-full bg-paper p-1 font-semibold">
+      <div className="mb-6 grid grid-cols-2 rounded-full bg-peach p-1 font-extrabold">
         {(["signup", "login"] as const).map((m) => (
           <button
             key={m}
             type="button"
             onClick={() => setMode(m)}
-            className={`rounded-full py-2.5 ${mode === m ? "bg-raised text-ink" : "text-muted"}`}
+            className={`rounded-full py-2.5 ${mode === m ? "bg-sun text-white shadow-primary" : "text-sun-soft"}`}
           >
             {m === "login" ? "Anmelden" : "Registrieren"}
           </button>

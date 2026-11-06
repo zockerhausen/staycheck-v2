@@ -39,7 +39,7 @@ export default function ArrivalCard({
       <ul className="mt-3 divide-y divide-line">
         {estimates.map((e) => (
           <li key={e.hub.id} className="flex items-center gap-3 py-3">
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-raised text-ink">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-peach text-sun-soft">
               <Icon name={HUB_ICON[e.hub.kind]} size={22} />
             </span>
             <span className="min-w-0 flex-1">
@@ -52,7 +52,7 @@ export default function ArrivalCard({
               href={e.mapsUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex shrink-0 items-center gap-1 rounded-full bg-raised px-3 py-2 text-xs font-bold text-ink"
+              className="flex shrink-0 items-center gap-1 rounded-full bg-peach px-3 py-2 text-xs font-bold text-ink"
             >
               Route <Icon name="external" size={14} />
             </a>

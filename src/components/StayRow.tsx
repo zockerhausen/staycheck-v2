@@ -38,13 +38,13 @@ export default function StayRow({
           <span className="block truncate text-[14px] font-semibold text-muted">
             {[kind, price, overBudget ? "über Budget" : null, note || null].filter(Boolean).join(", ")}
           </span>
-          <span className="mt-1 flex items-center gap-2 text-[13px] font-bold">
-            <span className="rounded-full bg-peach px-[9px] py-0.5 font-extrabold text-sun-soft">Lage {match}</span>
+          <span className="mt-1.5 flex min-w-0 items-center gap-2 whitespace-nowrap text-[13px] font-bold">
+            <span className="shrink-0 rounded-full bg-peach px-[9px] py-0.5 font-extrabold text-sun-soft">Lage {match}</span>
             {reviews && (
-              <span className="flex items-center gap-1">
-                <Icon name="star" size={14} fill="currentColor" />
+              <span className="flex min-w-0 items-center gap-1">
+                <Icon name="star" size={14} fill="currentColor" className="shrink-0" />
                 {fmtScore(reviews.fair)}
-                <span className="font-semibold text-muted">({reviews.total.toLocaleString("de-DE")}{reviews.demo ? ", Beispiel" : ""})</span>
+                <span className="truncate font-semibold text-muted">({reviews.total.toLocaleString("de-DE")}{reviews.demo ? ", Beispiel" : ""})</span>
               </span>
             )}
           </span>

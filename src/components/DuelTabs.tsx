@@ -8,7 +8,7 @@ export default function DuelTabs({ active }: { active: "hotels" | "kieze" }) {
       href={href}
       aria-current={active === key ? "page" : undefined}
       className={`flex items-center justify-center gap-1.5 rounded-full py-2.5 text-sm font-bold ${
-        active === key ? "bg-raised text-ink" : "text-muted"
+        active === key ? "bg-sun text-white shadow-primary" : "text-sun-soft"
       }`}
     >
       <Icon name={icon} size={18} /> {label}

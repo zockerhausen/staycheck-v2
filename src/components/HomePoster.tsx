@@ -25,6 +25,8 @@ export default function HomePoster({
   personal: boolean;
 }) {
   const words = best ? best.name.split(" (")[0].split(" ") : [];
+  // Lange Namen (z. B. „Scheunenviertel“) bekommen die volle Breite, die Zahl rutscht darunter
+  const long = Math.max(0, ...words.map((w) => w.length)) > 9;
   return (
     <section className="relative -mx-4 -mt-[max(1.25rem,env(safe-area-inset-top))] overflow-hidden rounded-b-[34px] bg-[#5340f2] px-5 pb-6 pt-[calc(max(1.25rem,env(safe-area-inset-top))+0.5rem)] text-white">
       {/* feiner Ring als Schmuck */}
@@ -51,9 +53,12 @@ export default function HomePoster({
       {best ? (
         <div className="relative">
           <p className="mt-[22px] text-[15px] font-semibold opacity-85">{personal ? `Für dich in ${city}` : `Beste Lage in ${city}`}</p>
-          <div className="mt-1.5 flex items-end justify-between gap-3">
-            <div className="min-w-0">
-              <p className="text-[clamp(2.4rem,11.5vw,3rem)] font-extrabold leading-[0.98] tracking-[-0.045em] [overflow-wrap:anywhere]">
+          <div className={`mt-1.5 flex items-end justify-between gap-3 ${long ? "flex-wrap" : ""}`}>
+            <div className={long ? "w-full" : "min-w-0"}>
+              <p
+                lang="de"
+                className={`font-extrabold leading-[0.98] tracking-[-0.045em] [hyphens:auto] ${long ? "text-[clamp(2.1rem,10vw,2.6rem)]" : "text-[clamp(2.4rem,11.5vw,3rem)]"}`}
+              >
                 {words.map((w, i) => (
                   <span key={i}>
                     {w}
@@ -61,18 +66,19 @@ export default function HomePoster({
                   </span>
                 ))}
               </p>
-              {best.meta && <p className="mt-2 max-w-[95%] text-[15.5px] font-medium leading-snug opacity-90">{best.meta}</p>}
+              {best.meta && !long && <p className="mt-2 max-w-[95%] text-[15.5px] font-medium leading-snug opacity-90">{best.meta}</p>}
             </div>
+            {long && best.meta && <p className="min-w-0 flex-1 pb-2 text-[15.5px] font-medium leading-snug opacity-90">{best.meta}</p>}
             <div className="shrink-0 text-right">
               <b className="block text-[4.6rem] font-extrabold leading-[0.9] tracking-[-0.05em] tabular-nums">{best.score}</b>
               <span className="text-[13.5px] font-semibold opacity-85">{personal ? "Lage für dich" : "Lage"}</span>
             </div>
           </div>
           <div className="mt-[18px] grid grid-cols-[1.2fr_1fr] gap-2">
-            <Link href={best.href} className="press flex min-h-[3.5rem] items-center justify-center rounded-full bg-white px-3 text-center text-[16px] font-extrabold text-[#5340f2]">
+            <Link href={best.href} className="press flex min-h-[3.5rem] items-center justify-center whitespace-nowrap rounded-full bg-white px-2 text-center text-[15.5px] font-extrabold text-[#5340f2]">
               Unterkünfte ansehen
             </Link>
-            <a href="#ecken" className="press flex min-h-[3.5rem] items-center justify-center rounded-full px-3 text-[16px] font-extrabold text-white shadow-[inset_0_0_0_2px_#fff]">
+            <a href="#ecken" className="press flex min-h-[3.5rem] items-center justify-center whitespace-nowrap rounded-full px-2 text-[15.5px] font-extrabold text-white shadow-[inset_0_0_0_2px_#fff]">
               Alle Ecken
             </a>
           </div>

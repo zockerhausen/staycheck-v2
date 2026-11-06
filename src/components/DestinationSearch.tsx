@@ -118,7 +118,7 @@ export default function DestinationSearch({
           {results.map((r) => (
             <li key={`${r.ort}-${r.land}-${r.lat}`} className="border-b border-line last:border-0">
               <button type="button" onClick={() => go(r)} className="flex w-full items-center gap-3 px-4 py-3 text-left active:bg-tan">
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-raised">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-peach">
                   <Icon name="map" size={20} />
                 </span>
                 <span className="min-w-0 flex-1">
@@ -128,7 +128,7 @@ export default function DestinationSearch({
                 {r.known ? (
                   <span className="rounded-full bg-peach px-2 py-1 text-[11px] font-bold text-peach-ink">geprüft</span>
                 ) : (
-                  r.popular && <span className="rounded-full bg-raised px-2 py-1 text-[11px] font-bold text-muted">beliebt</span>
+                  r.popular && <span className="rounded-full bg-peach px-2 py-1 text-[11px] font-bold text-muted">beliebt</span>
                 )}
               </button>
             </li>
