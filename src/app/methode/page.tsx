@@ -41,14 +41,14 @@ const RULES: { icon: IconName; title: string; how: string; scale: string }[] = [
   {
     icon: "safety",
     title: "Sicherheit",
-    how: "OpenStreetMap kennt keine Sicherheit. Wir nutzen unsere Einschätzung für das ganze Viertel (aus öffentlichen Berichten und Reiseerfahrungen), nicht für die einzelne Straße. Wo wir keine Einschätzung haben, fließt Sicherheit nicht in den Score ein.",
-    scale: "Nur in Städten mit Viertel-Bewertung (Berlin, Bangkok)",
+    how: "Kartendaten kennen keine Sicherheit, deshalb gilt eine feste Regel mit Quellen: Grundwert für die Stadt laut Reiseführer (Berlin 8, Bangkok 7). Minus 1 für jeden offiziellen Kriminalitätsschwerpunkt der Polizei im Viertel und für jede Quelle, die dort vor Raub, Überfällen oder gezielter Abzocke warnt, höchstens minus 2. Jeder Wert zeigt seine Begründung und Quelle. Wo wir keine Quelle haben, fließt Sicherheit nicht in den Score ein.",
+    scale: "Nur in Städten mit geprüften Vierteln (Berlin, Bangkok), Stand November 2026",
   },
   {
     icon: "budget",
     title: "Günstig",
-    how: "Preisniveau des Viertels (unsere Einschätzung, zählt doppelt) plus die Zahl der Hostels und Pensionen im Umkreis von 800 m. Echte Preise siehst du beim Buchungsportal.",
-    scale: "Ohne Viertel-Bewertung nur nach Hostels und Pensionen",
+    how: "Die Zahl der Hostels und Pensionen im Umkreis von 800 m. Preise kennen wir nicht, deshalb schätzen wir kein Preisniveau. Echte Preise siehst du beim Buchungsportal.",
+    scale: "keins = 4 · bis 2 = 6 · bis 5 = 8 · mehr = 9",
   },
   {
     icon: "cart",
@@ -161,7 +161,7 @@ export default function MethodePage() {
         <ul className="mt-3 space-y-2 text-sm leading-relaxed">
           <li>• Lärm im Gebäude: dünne Fenster, Zimmer zur Straße oder zum Hof.</li>
           <li>• Baustellen, Straßenfeste und Öffnungszeiten von Bars.</li>
-          <li>• Sicherheit einzelner Straßen. Unsere Einschätzung gilt fürs ganze Viertel.</li>
+          <li>• Sicherheit einzelner Straßen. Der Sicherheitswert gilt fürs ganze Viertel.</li>
           <li>• Lücken in OpenStreetMap. Wo kaum etwas eingetragen ist, zeigen wir „Datenlage dünn“.</li>
           <li>• Preise und Zimmerqualität. Dafür sind Bewertungen auf Buchungsportalen da.</li>
         </ul>
