@@ -24,10 +24,10 @@ export default function ThemeSwitch() {
 
   const i = OPTIONS.findIndex((o) => o.key === mode);
   return (
-    <div className="relative grid grid-cols-3 rounded-2xl bg-tan p-1" role="radiogroup" aria-label="Darstellung">
+    <div className="relative grid grid-cols-3 rounded-full bg-peach p-1" role="radiogroup" aria-label="Darstellung">
       <span
         aria-hidden
-        className="absolute bottom-1 left-1 top-1 w-[calc((100%-0.5rem)/3)] rounded-xl bg-sand shadow-soft transition-transform duration-[450ms] [transition-timing-function:cubic-bezier(.3,1.35,.5,1)]"
+        className="shadow-primary absolute bottom-1 left-1 top-1 w-[calc((100%-0.5rem)/3)] rounded-full bg-sun transition-transform duration-[420ms] [transition-timing-function:cubic-bezier(.22,1,.36,1)]"
         style={{ transform: `translateX(${i * 100}%)` }}
       />
       {OPTIONS.map((o) => (
@@ -37,7 +37,7 @@ export default function ThemeSwitch() {
           role="radio"
           aria-checked={mode === o.key}
           onClick={() => choose(o.key)}
-          className={`relative z-10 py-2.5 text-sm font-extrabold transition-colors ${mode === o.key ? "text-ink" : "text-muted"}`}
+          className={`relative z-10 py-2.5 text-sm font-extrabold transition-colors ${mode === o.key ? "text-white" : "text-sun-soft"}`}
         >
           {o.label}
         </button>

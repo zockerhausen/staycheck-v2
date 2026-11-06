@@ -166,6 +166,12 @@ button {
   outline: 3px solid var(--color-pink);
   outline-offset: 2px;
 }
+/* Eingabefelder zeigen den Fokus über ihren eigenen Rahmen */
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: none;
+}
 /* Violettes Licht im Hintergrund: oben rechts groß, unten links schwächer */
 body::before,
 body::after {

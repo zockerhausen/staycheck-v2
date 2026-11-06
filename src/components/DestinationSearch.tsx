@@ -93,7 +93,7 @@ export default function DestinationSearch({
       <label htmlFor="ziel-search" className="sr-only">
         Reiseziel
       </label>
-      <div className="flex items-center gap-3 rounded-[20px] border border-line bg-paper py-1.5 pl-4 pr-3 transition-colors focus-within:border-sun">
+      <div className="flex items-center gap-3 rounded-full border border-line bg-paper py-1.5 pl-5 pr-3 shadow-soft transition-colors focus-within:border-sun focus-within:shadow-[0_0_0_3px_var(--color-peach)]">
         <Icon name="plane" size={22} className="text-muted" />
         <input
           id="ziel-search"

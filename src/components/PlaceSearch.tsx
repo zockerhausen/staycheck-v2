@@ -125,7 +125,7 @@ export default function PlaceSearch({
       <label htmlFor="place-search" className="sr-only">
         Hotel, Adresse oder Link
       </label>
-      <div className="flex items-center gap-3 rounded-[20px] border border-line bg-paper py-1.5 pl-4 pr-2 transition-colors focus-within:border-sun">
+      <div className="flex items-center gap-3 rounded-full border border-line bg-paper py-1.5 pl-5 pr-2 shadow-soft transition-colors focus-within:border-sun focus-within:shadow-[0_0_0_3px_var(--color-peach)]">
         <Icon name="search" size={22} className="text-muted" />
         <input
           id="place-search"
