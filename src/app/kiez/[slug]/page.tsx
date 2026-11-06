@@ -21,6 +21,8 @@ import { inBudget, PRICE_LABEL, priceClass } from "@/lib/price";
 import DistrictVibe from "@/components/DistrictVibe";
 import NearbyFacts from "@/components/NearbyFacts";
 import ArrivalCard from "@/components/ArrivalCard";
+import GuideCard from "@/components/GuideCard";
+import { guideNear } from "@/lib/wikivoyage";
 import { hubsNear } from "@/lib/arrival-hubs";
 import { assistantEnabled } from "@/lib/assistant";
 import ScoreBars from "@/components/ScoreBars";
@@ -137,6 +139,8 @@ export default async function KiezPage({
 
   const short = district.name.split(" (")[0];
   const webInsight = await insightNear(district.lat!, district.lng!, short).catch(() => null);
+  // Reiseführer-Text (Wikivoyage), höchstens kurz warten
+  const guide = await withDeadline(guideNear(district.lat!, district.lng!), 2500).then((g) => (g === "slow" ? null : g));
   const photoWork = areaPhoto(short, cityName, district.lat, district.lng, 600);
   const photoRaced = await withDeadline(photoWork, 2500);
   if (photoRaced === "slow") after(() => photoWork);
@@ -267,6 +271,7 @@ export default async function KiezPage({
               content: (
                 <div className="space-y-5">
                   <WebInsight insight={webInsight} />
+                  <GuideCard guide={guide} />
                   <DistrictVibe name={short} scores={district.scores} />
                   <TipsSection
                     tips={tips}
