@@ -633,7 +633,7 @@ export function autoCityFromData(
       scores[k] = vals.length ? Math.round((vals.reduce((a, b) => a + b, 0) / vals.length) * 10) / 10 : null;
     }
     const [bars, food, stations, trams, buses, parks, hostels] = avg.map((x) => Math.round(x * 10) / 10);
-    const n = (x: number) => String(x).replace(".", ",");
+    const n = (x: number) => (x >= 10 ? String(Math.round(x)) : String(x).replace(".", ","));
     const where = `im Schnitt an ${pts.length} Punkten im Viertel`;
     const share = (g: number) => Math.round((all.filter((c7) => c7[g] > 0).length / all.length) * 100);
     const reasons: Record<string, string> = {
