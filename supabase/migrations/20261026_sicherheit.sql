@@ -1,3 +1,4 @@
+-- Eingespielt am 6.11.2026 (Supabase-Migration sicherheit_20261026).
 -- Sicherheits-Paket (Sicherheitscheck 26.10.2026)
 
 -- 1) Konto löschen (DSGVO Art. 17): alle Nutzerdaten hängen per ON DELETE CASCADE an auth.users

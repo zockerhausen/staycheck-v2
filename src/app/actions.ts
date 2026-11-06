@@ -281,15 +281,7 @@ export async function addTip(input: TipInput, returnTo: string): Promise<string 
   if (!isCoord(input.lat, input.lon)) return "Ort fehlt.";
   if (input.districtId != null && (typeof input.districtId !== "string" || !UUID.test(input.districtId))) return "Ungültiges Viertel.";
 
-  // Schutz vor Spam: max. 5 Tipps pro Stunde
-  const since = new Date(Date.now() - 3_600_000).toISOString();
-  const { count } = await supabase
-    .from("place_tips")
-    .select("id", { count: "exact", head: true })
-    .eq("user_id", user.id)
-    .gte("created_at", since);
-  if ((count ?? 0) >= 5) return "Du hast gerade viele Tipps geschrieben. Versuch es später nochmal.";
-
+  // Schutz vor Spam (max. 5 Tipps pro Stunde) und „keine Links“ prüft die Datenbank selbst (Trigger prepare_tip)
   const { error } = await supabase.from("place_tips").insert({
     user_id: user.id,
     lat: input.lat,

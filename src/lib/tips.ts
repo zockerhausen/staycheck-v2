@@ -11,10 +11,8 @@ export async function getMyTipIds(userId: string | null): Promise<Set<string>> {
   if (!userId) return new Set();
   const supabase = await createClient();
   const { data, error } = await supabase.rpc("my_tip_ids");
-  if (!error && Array.isArray(data)) return new Set((data as { id: string }[]).map((r) => r.id ?? (r as unknown as string)));
-  // Rückfall, solange die Datenbank-Funktion noch nicht eingerichtet ist
-  const { data: own } = await supabase.from("place_tips").select("id").eq("user_id", userId).limit(500);
-  return new Set((own ?? []).map((r) => r.id as string));
+  if (error || !Array.isArray(data)) return new Set();
+  return new Set((data as { id: string }[]).map((r) => r.id ?? (r as unknown as string)));
 }
 
 /** Tipps im Umkreis (ca. Meter) eines Punktes */
