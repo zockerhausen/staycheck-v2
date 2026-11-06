@@ -1,6 +1,7 @@
 name: Städte vorberechnen
 # Lädt OpenStreetMap-Regionen (Geofabrik), schneidet die Städte aus und rechnet mit denselben Formeln wie die App:
 # Viertel, Raster/Ecken, alle Unterkünfte mit Lage-Score, Sehenswürdigkeiten, Flughafen. Ergebnis: data/cities/*.json
+# Dazu Orte aus Overture Maps (Bars, Essen, Hostels; Lizenz CDLA Permissive 2.0) als Ergänzung, ohne Doppelte.
 on:
   # Jeden Monat neu rechnen (am 2., 03:17 UTC), damit neue Hotels, Hostels und Bars auftauchen
   schedule:
@@ -63,9 +64,17 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
       - name: Werkzeuge
         run: |
           sudo apt-get update -qq && sudo apt-get install -y -qq osmium-tool > /dev/null
+          pip install --quiet duckdb==1.1.3
+          # Neueste Overture-Ausgabe (öffentlicher Speicher, ohne Anmeldung)
+          REL=$(aws s3 ls --no-sign-request s3://overturemaps-us-west-2/release/ | awk '{print $2}' | tr -d / | grep -E '^[0-9]{4}-[0-9]{2}-[0-9]{2}\.[0-9]+$' | sort | tail -1 || true)
+          echo "OVERTURE_RELEASE=$REL" >> "$GITHUB_ENV"
+          echo "Overture-Ausgabe: ${REL:-keine gefunden}"
           npx --yes esbuild@0.24.2 scripts/precompute/list-cities.ts --bundle --platform=node --format=esm --outfile=/tmp/list.mjs --log-level=error
           npx --yes esbuild@0.24.2 scripts/precompute/build.ts --bundle --platform=node --format=esm --outfile=/tmp/build.mjs \
             --alias:next/cache=./scripts/precompute/stubs/cache.js --alias:next/server=./scripts/precompute/stubs/server.js --alias:@=./src --log-level=error
@@ -90,7 +99,11 @@ jobs:
               nwr/historic=monument,castle,ruins,city_gate,archaeological_site nwr/shop nwr/office=coworking \
               -o /tmp/f.pbf --overwrite
             osmium export /tmp/f.pbf -f geojsonseq -o /tmp/f.seq --overwrite --geometry-types=point,linestring,polygon
-            node --max-old-space-size=6000 /tmp/build.mjs "$CITY" /tmp/f.seq /tmp/airports.csv "out/$slug.json.gz" || echo "::warning title=$slug::Berechnung fehlgeschlagen"
+            : > /tmp/ov.seq
+            if [ -n "$OVERTURE_RELEASE" ]; then
+              timeout 600 python3 scripts/precompute/overture.py "$OVERTURE_RELEASE" "$BBOX" /tmp/ov.seq || echo "::warning title=$slug::Overture übersprungen"
+            fi
+            node --max-old-space-size=6000 /tmp/build.mjs "$CITY" /tmp/f.seq /tmp/airports.csv "out/$slug.json.gz" /tmp/ov.seq || echo "::warning title=$slug::Berechnung fehlgeschlagen"
           done
       - uses: actions/upload-artifact@v4
         with:

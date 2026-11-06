@@ -1,6 +1,7 @@
 // Vorberechnung einer Stadt aus heruntergeladenen OpenStreetMap-Daten (osmium export → geojsonseq).
 // Nutzt exakt dieselben Rechenwege wie die App (autoCityFromData, scoreLocation), nur ohne Overpass-Server.
-// Aufruf: node build.mjs <stadt.json> <features.geojsonseq> <airports.csv (OurAirports)> <ausgabe.json>
+// Aufruf: node build.mjs <stadt.json> <features.geojsonseq> <airports.csv (OurAirports)> <ausgabe.json> [overture.geojsonseq]
+// Optional: Orte aus Overture Maps (Bars, Essen, Hostels) als Ergänzung. Was es in OpenStreetMap schon gibt, wird nicht doppelt gezählt.
 import { readFileSync, writeFileSync } from "node:fs";
 import { gzipSync } from "node:zlib";
 import { autoCityFromData, locationMatch, DEFAULT_WEIGHTS, scoreLocation, split, type OverpassElement } from "../../src/lib/geo";
@@ -10,7 +11,7 @@ type City = { slug: string; ort: string; land: string; lat: number; lon: number;
 type Geo = { type: string; coordinates: unknown };
 type Feature = { id?: string; geometry: Geo; properties: Record<string, string> };
 
-const [cityArg, featuresPath, airportsPath, outPath] = process.argv.slice(2);
+const [cityArg, featuresPath, airportsPath, outPath, overturePath] = process.argv.slice(2);
 const city: City = JSON.parse(cityArg);
 
 function readSeq(path: string): Feature[] {
@@ -69,7 +70,61 @@ function toElement(f: Feature): (OverpassElement & { c: { lat: number; lon: numb
 }
 
 const t0 = Date.now();
-const els = readSeq(featuresPath).map(toElement).filter((e): e is NonNullable<ReturnType<typeof toElement>> => e !== null);
+const osmEls = readSeq(featuresPath).map(toElement).filter((e): e is NonNullable<ReturnType<typeof toElement>> => e !== null);
+
+// ---------- Overture-Ergänzung ohne Doppelte ----------
+// Gleiche Art (Bar / Essen / Unterkunft) innerhalb von 35 m oder gleicher Name innerhalb von 150 m = schon bekannt.
+type El = (typeof osmEls)[number];
+const classOf = (tags: Record<string, string> = {}) =>
+  /^(bar|pub|nightclub|biergarten)$/.test(tags.amenity ?? "")
+    ? "bar"
+    : /^(restaurant|cafe|fast_food|food_court)$/.test(tags.amenity ?? "")
+      ? "food"
+      : /^(hotel|hostel|guest_house|apartment)$/.test(tags.tourism ?? "")
+        ? "stay"
+        : null;
+const norm = (n = "") =>
+  n
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/\b(hostel|hotel|bar|cafe|café|restaurant|the|guest ?house)\b/g, "")
+    .replace(/[^a-z0-9]/g, "");
+const DCELL = 0.002; // ca. 200 m
+const dkey = (lat: number, lon: number) => `${Math.floor(lat / DCELL)}:${Math.floor(lon / DCELL)}`;
+const known = new Map<string, { c: string | null; n: string; lat: number; lon: number }[]>();
+for (const e of osmEls) {
+  const c = classOf(e.tags);
+  const n = norm(e.tags?.name);
+  if (!c && !n) continue;
+  const k = dkey(e.c.lat, e.c.lon);
+  (known.get(k) ?? known.set(k, []).get(k)!).push({ c, n, lat: e.c.lat, lon: e.c.lon });
+}
+const isKnown = (e: El) => {
+  const c = classOf(e.tags);
+  const n = norm(e.tags?.name);
+  const bi = Math.floor(e.c.lat / DCELL);
+  const bj = Math.floor(e.c.lon / DCELL);
+  for (let i = bi - 1; i <= bi + 1; i++)
+    for (let j = bj - 1; j <= bj + 1; j++)
+      for (const o of known.get(`${i}:${j}`) ?? []) {
+        const d = distance(e.c.lat, e.c.lon, o.lat, o.lon);
+        if (c && o.c === c && d <= 35) return true;
+        if (n.length >= 3 && o.n.length >= 3 && (o.n.includes(n) || n.includes(o.n)) && d <= 150) return true;
+      }
+  return false;
+};
+const overtureAll = overturePath
+  ? readSeq(overturePath)
+      .map(toElement)
+      .filter((e): e is El => e !== null && classOf(e.tags) !== null)
+  : [];
+const overture = overtureAll.filter((e) => !isKnown(e));
+const added = { bar: 0, food: 0, stay: 0 } as Record<string, number>;
+for (const e of overture) added[classOf(e.tags)!]++;
+if (overturePath)
+  console.log(`${city.slug}: Overture ergänzt ${added.bar} Bars, ${added.food} Essen, ${added.stay} Unterkünfte (${overtureAll.length - overture.length} schon in OSM)`);
+const els = [...osmEls, ...overture];
 const within = (e: { c: { lat: number; lon: number } }, r: number) => distance(city.lat, city.lon, e.c.lat, e.c.lon) <= r;
 
 // ---------- Viertel, Raster und Namen (wie autoCity) ----------
@@ -124,7 +179,7 @@ const stays = data.pois.filter((p) => STAY.test(p.tags.tourism ?? "") && p.tags.
 const KIND = (t: Record<string, string>) => (STAY.test(t.tourism ?? "") ? t.tourism : "other");
 const hotels = stays.map((h) => {
   const a = scoreLocation(h.lat, h.lon, around(h.lat, h.lon), null);
-  const street = [h.tags["addr:street"], h.tags["addr:housenumber"]].filter(Boolean).join(" ");
+  const street = [h.tags["addr:street"], h.tags["addr:housenumber"]].filter(Boolean).join(" ") || (h.tags["addr:full"] ?? "").split(",")[0];
   return {
     name: h.tags.name,
     subtitle: street,
@@ -220,6 +275,8 @@ const out = {
   lon: city.lon,
   radius: city.radius,
   generated: new Date().toISOString().slice(0, 10),
+  // Woher die Orte kommen (für die Quellenangabe in der App)
+  sources: { osm: osmEls.length, overture: overture.length, overtureAdded: added },
   city: auto,
   scoreKeys,
   // Kompakt: [Name, Straße, lat, lon, Art, Werte (Reihenfolge scoreKeys), Highlights, Sterne, Details]

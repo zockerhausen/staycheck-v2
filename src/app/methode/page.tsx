@@ -79,7 +79,7 @@ export default function MethodePage() {
         <h2 className="font-display text-[19px] font-extrabold">Der Score in drei Schritten</h2>
         <ol className="mt-3 space-y-3 text-sm leading-relaxed">
           <li>
-            <b>1. Umgebung messen.</b> Wir laden alle Einträge aus OpenStreetMap rund um die Adresse: Bahnhöfe, Bars, Restaurants, Parks, große Straßen, Gleise.
+            <b>1. Umgebung messen.</b> Wir laden alle Einträge aus OpenStreetMap rund um die Adresse: Bahnhöfe, Bars, Restaurants, Parks, große Straßen, Gleise. In vorberechneten Städten ergänzen wir Bars, Restaurants und Hostels aus Overture Maps, wenn sie in OpenStreetMap fehlen. Was in beiden steht, zählen wir nur einmal, unsichere Einträge lassen wir weg.
           </li>
           <li>
             <b>2. Sieben Werte von 1 bis 10.</b> Nach festen Regeln (siehe unten). Entfernungen rechnen wir als Fußweg: Luftlinie plus 25 %, 80 m pro Minute.
@@ -169,7 +169,7 @@ export default function MethodePage() {
       </section>
 
       <p className="mt-6 text-xs leading-relaxed text-muted">
-        Kartendaten © OpenStreetMap-Mitwirkende (ODbL), vorberechnet aus Geofabrik-Auszügen. Flughäfen: OurAirports (gemeinfrei). Suche über Photon (Komoot), sonst Umgebung über die Overpass API.
+        Kartendaten © OpenStreetMap-Mitwirkende (ODbL), vorberechnet aus Geofabrik-Auszügen. Zusätzliche Orte: © Overture Maps Foundation (CDLA Permissive 2.0). Flughäfen: OurAirports (gemeinfrei). Suche über Photon (Komoot), sonst Umgebung über die Overpass API.
       </p>
       <LegalLinks className="mt-10" />
     </div>
