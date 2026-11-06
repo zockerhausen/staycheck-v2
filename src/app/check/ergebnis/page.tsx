@@ -27,7 +27,8 @@ import ScoreExplain from "@/components/ScoreExplain";
 import ReviewSummary from "@/components/ReviewSummary";
 import { fmtScore, reviewsFor } from "@/lib/reviews";
 import BookBar from "@/components/BookBar";
-import { HUBS, cityForPoint } from "@/lib/arrival";
+import { cityForPoint } from "@/lib/arrival";
+import { hubsNear } from "@/lib/arrival-hubs";
 import { getTipsNear } from "@/lib/tips";
 import { EXTRA_LABEL, MUST_CAP, NO_EXTRAS, fullWeights, personalMatch } from "@/lib/profile";
 
@@ -58,6 +59,7 @@ export default async function CheckErgebnisPage({
     getTipsNear(lat, lon),
   ]);
   const city = cityForPoint(lat, lon, cities);
+  const hubs = await hubsNear(lat, lon, city?.slug);
   const { weights: resolved, source } = await resolveWeights(params, criteria);
   const weights = resolved ?? DEFAULT_WEIGHTS;
 
@@ -231,7 +233,7 @@ export default async function CheckErgebnisPage({
         capped={pm?.mustMissing && pm.uncapped > MUST_CAP ? pm.uncapped : null}
       />
 
-      {city && <ArrivalCard hubs={HUBS[city.slug]} lat={lat} lon={lon} nearestRail={analysis.nearestRail} />}
+      <ArrivalCard hubs={hubs} lat={lat} lon={lon} nearestRail={analysis.nearestRail} />
 
       <TipsSection
         tips={tips}

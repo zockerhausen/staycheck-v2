@@ -20,6 +20,8 @@ import StayTip from "@/components/StayTip";
 import { inBudget, PRICE_LABEL, priceClass } from "@/lib/price";
 import DistrictVibe from "@/components/DistrictVibe";
 import NearbyFacts from "@/components/NearbyFacts";
+import ArrivalCard from "@/components/ArrivalCard";
+import { hubsNear } from "@/lib/arrival-hubs";
 import { assistantEnabled } from "@/lib/assistant";
 import ScoreBars from "@/components/ScoreBars";
 import AreaHero from "@/components/AreaHero";
@@ -145,6 +147,7 @@ export default async function KiezPage({
   const typicalPrice = classes.length ? PRICE_LABEL[classes[Math.floor(classes.length / 2)]] : null;
   const demo = revList.some((r) => r.demo);
   const self = `/kiez/${slug}?stadt=${district.city}${amp}`;
+  const hubs = await hubsNear(district.lat!, district.lng!, district.city);
 
   const staysTab = (
     <section id="unterkuenfte" className="scroll-mt-20">
@@ -284,6 +287,7 @@ export default async function KiezPage({
               content: (
                 <div className="space-y-5">
                   <NearbyFacts lat={district.lat!} lon={district.lng!} name={short} />
+                  <ArrivalCard hubs={hubs} lat={district.lat!} lon={district.lng!} title="So weit ist es" />
                   <div className="card p-5">
                     <ScoreBars criteria={criteria} scores={district.scores} />
                     <p className="mt-3 text-[13px] font-semibold leading-relaxed text-muted">

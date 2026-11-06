@@ -5,7 +5,7 @@
 import { distance } from "./geo";
 import type { City } from "./data";
 
-export type Hub = { id: string; name: string; kind: "airport" | "train" | "bus"; lat: number; lon: number };
+export type Hub = { id: string; name: string; kind: "airport" | "train" | "bus" | "center"; lat: number; lon: number };
 
 export const HUBS: Record<string, Hub[]> = {
   berlin: [
@@ -27,6 +27,8 @@ export type ArrivalEstimate = {
   minMinutes: number;
   maxMinutes: number;
   mapsUrl: string;
+  /** Kurze Strecken zu Fuß, sonst Bahn/Bus */
+  mode: "walk" | "transit";
 };
 
 const round5 = (n: number) => Math.max(5, Math.round(n / 5) * 5);
@@ -47,6 +49,18 @@ export function cityForPoint(lat: number, lon: number, cities: City[]): City | n
 
 export function estimateArrival(hub: Hub, lat: number, lon: number): ArrivalEstimate {
   const km = distance(hub.lat, hub.lon, lat, lon) / 1000;
+  // Bis ca. 1,6 km Luftlinie: zu Fuß (Umweg ×1,25, ~80 m pro Minute)
+  if (km <= 1.6) {
+    const walk = (km * 1.25 * 1000) / 80;
+    return {
+      hub,
+      km: Math.round(km * 10) / 10,
+      minMinutes: Math.max(1, Math.round(walk * 0.85)),
+      maxMinutes: Math.max(2, Math.round(walk * 1.2)),
+      mapsUrl: `https://www.google.com/maps/dir/?api=1&origin=${lat},${lon}&destination=${hub.lat},${hub.lon}&travelmode=walking`,
+      mode: "walk",
+    };
+  }
   // Faustregel: Umwege (×1,25); lange Strecken meist mit Express-/S-Bahn (~40 km/h), kurze ~22 km/h;
   // plus ~10 Min. für Warten, Umsteigen und Laufen.
   const speed = km > 8 ? 40 : 22;
@@ -57,6 +71,7 @@ export function estimateArrival(hub: Hub, lat: number, lon: number): ArrivalEsti
     minMinutes: round5(base * 0.85),
     maxMinutes: round5(base * 1.2),
     mapsUrl: `https://www.google.com/maps/dir/?api=1&origin=${hub.lat},${hub.lon}&destination=${lat},${lon}&travelmode=transit`,
+    mode: "transit",
   };
 }
 

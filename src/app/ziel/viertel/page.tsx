@@ -15,6 +15,8 @@ import StayTip from "@/components/StayTip";
 import { inBudget, PRICE_LABEL, priceClass } from "@/lib/price";
 import DistrictVibe from "@/components/DistrictVibe";
 import NearbyFacts from "@/components/NearbyFacts";
+import ArrivalCard from "@/components/ArrivalCard";
+import { hubsNear } from "@/lib/arrival-hubs";
 import { assistantEnabled } from "@/lib/assistant";
 import { personalMatch } from "@/lib/profile";
 import { parseZiel, zielQuery } from "@/lib/ziel";
@@ -236,6 +238,7 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
     </section>
   );
 
+  const hubs = await hubsNear(vlat, vlon);
   const valuesCard = district && (
     <section className="card mt-5 px-5 py-2">
       {criteria.map((c) => {
@@ -312,6 +315,9 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
               content: (
                 <div>
                   <NearbyFacts lat={vlat} lon={vlon} name={name} />
+                  <div className="mt-5">
+                    <ArrivalCard hubs={hubs} lat={vlat} lon={vlon} title="So weit ist es" />
+                  </div>
                   {valuesCard}
                 </div>
               ),
