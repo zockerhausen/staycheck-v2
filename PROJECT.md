@@ -121,3 +121,9 @@ Altes Design „Leicht & klar“: Zweig `design-leicht-klar` (Vorschau staycheck
 - **Fußwege-Netz** aus OSM (`scripts/precompute/walk.ts`): Orte 150–900 m entfernt zählen nur, wenn der Fußweg höchstens 1,6 × Luftlinie + 150 m ist. Nur großes zusammenhängendes Netz; fällt an einer Stelle > 35 % weg, wird dort nichts aussortiert (Datenlücke). Statt Valhalla, weil ohne Server.
 - **Wikivoyage** (CC BY-SA 4.0): Einleitung + Überblick des nächsten Stadtteil-Artikels auf Viertel-Seiten („Aus dem Reiseführer“), mit Quelle und Lizenz. Fließt nicht in den Score ein. `src/lib/wikivoyage.ts`.
 - **Fahrzeiten**: Schätzung aus der Entfernung („ca.“) zu Zentrum und Flughafen für alle vorberechneten Städte, Route-Link zu Google Maps. Transitous geht nicht: nur für nicht-kommerzielle Apps.
+
+## Viertel-Werte mit Herkunft (6.11.2026)
+- Berlin/Bangkok: Transit, Nachtleben, Essen, Natur, Ruhe, Günstig kommen aus der Vorberechnung (`city.fixed`, Durchschnitt über 21 Punkte im Umkreis von 800 m um den Mittelpunkt aus `data/fixed-districts.json`), nicht mehr aus Supabase. Supabase-Werte nur noch Rückfall (dann als „geschätzt“ markiert).
+- Sicherheit: in `district_scores` mit `note`, `source_url`, `checked_on`. Regel: Grundwert der Stadt (Berlin 8, Bangkok 7), −1 je offiziellem kbO der Polizei im Viertel bzw. je Quelle mit Warnung vor Raub/Überfällen/gezielter Abzocke, höchstens −2. Quellen: Polizei Berlin (kbO ab 1.7.2026), Wikivoyage. Jährlich neu prüfen.
+- „Günstig“ bei Unterkünften nur noch gemessen (Hostels/Pensionen in 800 m), kein geschätztes Preisniveau mehr.
+- Sicherheits-SQL (`20261026_sicherheit.sql`) am 6.11.2026 eingespielt.
