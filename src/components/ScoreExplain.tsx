@@ -145,7 +145,7 @@ export default function ScoreExplain({
           );
         })}
         <p className="py-3 text-[13px] font-semibold leading-relaxed text-muted">
-          Tippe auf einen Wert für die Fakten dahinter. Daten aus OpenStreetMap, Entfernungen als Fußweg geschätzt.{" "}
+          Tippe auf einen Wert für die Fakten dahinter. Daten aus OpenStreetMap, in beliebten Städten ergänzt um Overture Maps und geprüft am echten Fußwege-Netz.{" "}
           <Link href="/methode" className="font-semibold text-sun-soft underline underline-offset-4">
             So rechnen wir genau
           </Link>
