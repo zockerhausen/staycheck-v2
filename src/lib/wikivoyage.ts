@@ -58,7 +58,7 @@ async function findIn(lang: "de" | "en", lat: number, lon: number): Promise<Guid
   return {
     title: String(page.title ?? district.title),
     text,
-    url: `https://${lang}.wikivoyage.org/wiki/${encodeURIComponent(String(page.title ?? district.title).replace(/ /g, "_"))}`,
+    url: `https://${lang}.wikivoyage.org/wiki/${encodeURIComponent(String(page.title ?? district.title).replace(/ /g, "_")).replace(/%2F/g, "/")}`,
     lang,
     distKm: Math.round(district.dist / 100) / 10,
   };
