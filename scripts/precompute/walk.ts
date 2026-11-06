@@ -16,6 +16,8 @@ export type WalkGraph = {
   to: Int32Array;
   w: Float32Array;
   grid: Map<string, number[]>;
+  /** Nur Punkte im großen, zusammenhängenden Netz (keine abgeschnittenen Hof- oder Parkwege) */
+  big: Uint8Array;
 };
 
 const GCELL = 0.0006; // ca. 65 m
@@ -87,12 +89,38 @@ export async function loadWalkGraph(path: string): Promise<WalkGraph | null> {
     to[fill[eb[i]]] = ea[i];
     w[fill[eb[i]]++] = ew[i];
   }
+  // Zusammenhängende Teile des Netzes: kleine Inseln (Innenhöfe, Wege ohne Anschluss in den Daten) nicht nutzen
+  const comp = new Int32Array(n).fill(-1);
+  const sizes: number[] = [];
+  const stack: number[] = [];
+  for (let v = 0; v < n; v++) {
+    if (comp[v] !== -1) continue;
+    const c = sizes.length;
+    let size = 0;
+    comp[v] = c;
+    stack.push(v);
+    while (stack.length) {
+      const x = stack.pop()!;
+      size++;
+      for (let k = off[x]; k < off[x + 1]; k++) {
+        const u = to[k];
+        if (comp[u] === -1) {
+          comp[u] = c;
+          stack.push(u);
+        }
+      }
+    }
+    sizes.push(size);
+  }
+  const big = new Uint8Array(n);
+  for (let v = 0; v < n; v++) big[v] = sizes[comp[v]] >= 2000 ? 1 : 0;
   const grid = new Map<string, number[]>();
   for (let v = 0; v < n; v++) {
+    if (!big[v]) continue;
     const k = gkey(lat[v], lon[v]);
     (grid.get(k) ?? grid.set(k, []).get(k)!).push(v);
   }
-  return { lat: Float64Array.from(lat), lon: Float64Array.from(lon), off, to, w, grid };
+  return { lat: Float64Array.from(lat), lon: Float64Array.from(lon), off, to, w, grid, big };
 }
 
 /** Nächster Wegpunkt (bis maxM Meter), sonst null */
@@ -174,22 +202,26 @@ const CHECK_TO = 900; // weiter weg zählt der Score ohnehin kaum
  * Orte aussortieren, die zu Fuß nur mit großem Umweg erreichbar sind.
  * Flächen (Parks, Wasser) und Orte ohne nahen Weg bleiben drin. Ohne Netz: alles bleibt (wie bisher).
  */
-export function reachable(g: WalkGraph | null, la: number, lo: number, pois: Poi[]): { pois: Poi[]; dropped: number } {
-  if (!g) return { pois, dropped: 0 };
+export function reachable(g: WalkGraph | null, la: number, lo: number, pois: Poi[]): { pois: Poi[]; dropped: number; checked: number } {
+  if (!g) return { pois, dropped: 0, checked: 0 };
   const s = snap(g, la, lo, 120);
-  if (!s) return { pois, dropped: 0 };
+  if (!s) return { pois, dropped: 0, checked: 0 };
   const dist = walkFrom(g, s.v, CHECK_TO * DETOUR + 150);
   let dropped = 0;
+  let checked = 0;
   const out = pois.filter((p) => {
     if (p.bbox) return true;
     const straight = distance(la, lo, p.lat, p.lon);
     if (straight < CHECK_FROM || straight > CHECK_TO) return true;
     const t = snap(g, p.lat, p.lon, 80);
     if (!t) return true;
+    checked++;
     const walk = s.d + (dist.get(t.v) ?? Infinity) + t.d;
     const ok = walk <= straight * DETOUR + 150;
     if (!ok) dropped++;
     return ok;
   });
-  return { pois: out, dropped };
+  // Fällt sehr viel weg, stimmt eher das Netz an dieser Stelle nicht (Lücke in den Daten): dann lieber nichts aussortieren
+  if (checked >= 20 && dropped > checked * 0.35) return { pois, dropped: 0, checked };
+  return { pois: out, dropped, checked };
 }

@@ -190,10 +190,12 @@ const tw = Date.now();
 const walkGraph = walkPath ? await loadWalkGraph(walkPath).catch(() => null) : null;
 console.log(`${city.slug}: Fußwege-Netz ${walkGraph ? `${walkGraph.lat.length} Punkte` : "nicht genutzt"} · ${Math.round((Date.now() - tw) / 1000)} s`);
 let droppedTotal = 0;
+let checkedTotal = 0;
 const hotels = stays.map((h) => {
   const env = around(h.lat, h.lon);
   const r = reachable(walkGraph, h.lat, h.lon, env.pois);
   droppedTotal += r.dropped;
+  checkedTotal += r.checked;
   const a = scoreLocation(h.lat, h.lon, { pois: r.pois, lines: env.lines }, null);
   const street = [h.tags["addr:street"], h.tags["addr:housenumber"]].filter(Boolean).join(" ") || (h.tags["addr:full"] ?? "").split(",")[0];
   return {
@@ -213,7 +215,10 @@ const hotels = stays.map((h) => {
   };
 });
 const scoreKeys = [...new Set(hotels.flatMap((h) => Object.keys(h.scores)))];
-if (walkGraph) console.log(`${city.slug}: ${droppedTotal} Orte wegen großem Umweg nicht gezählt (über alle Unterkünfte)`);
+if (walkGraph)
+  console.log(
+    `${city.slug}: ${droppedTotal} von ${checkedTotal} geprüften Orten wegen großem Umweg nicht gezählt (${checkedTotal ? Math.round((droppedTotal / checkedTotal) * 1000) / 10 : 0} %, über alle Unterkünfte)`,
+  );
 
 // ---------- Ehrliche Zusatzdaten ----------
 // Sehenswürdigkeiten mit Namen (für „In 15 Minuten zu Fuß“)
