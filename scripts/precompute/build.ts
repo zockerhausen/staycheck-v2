@@ -82,7 +82,9 @@ const classOf = (tags: Record<string, string> = {}) =>
       ? "food"
       : /^(hotel|hostel|guest_house|apartment)$/.test(tags.tourism ?? "")
         ? "stay"
-        : null;
+        : /^(suburb|quarter|neighbourhood)$/.test(tags.place ?? "")
+          ? "place"
+          : null;
 const norm = (n = "") =>
   n
     .toLowerCase()
@@ -90,7 +92,7 @@ const norm = (n = "") =>
     .replace(/[\u0300-\u036f]/g, "")
     .replace(/\b(hostel|hotel|bar|cafe|café|restaurant|the|guest ?house)\b/g, "")
     .replace(/[^a-z0-9]/g, "");
-const DCELL = 0.002; // ca. 200 m
+const DCELL = 0.008; // ca. 800 m (Nachbarzellen decken den größten Abstand ab)
 const dkey = (lat: number, lon: number) => `${Math.floor(lat / DCELL)}:${Math.floor(lon / DCELL)}`;
 const known = new Map<string, { c: string | null; n: string; lat: number; lon: number }[]>();
 for (const e of osmEls) {
@@ -109,6 +111,11 @@ const isKnown = (e: El) => {
     for (let j = bj - 1; j <= bj + 1; j++)
       for (const o of known.get(`${i}:${j}`) ?? []) {
         const d = distance(e.c.lat, e.c.lon, o.lat, o.lon);
+        if (c === "place") {
+          // Viertel-Namen: gleicher Name bis 800 m = schon bekannt (Viertel-Mittelpunkte liegen oft etwas auseinander)
+          if (o.c === "place" && n.length >= 3 && (o.n === n || o.n.includes(n) || n.includes(o.n)) && d <= 800) return true;
+          continue;
+        }
         if (c && o.c === c && d <= 35) return true;
         if (n.length >= 3 && o.n.length >= 3 && (o.n.includes(n) || n.includes(o.n)) && d <= 150) return true;
       }
@@ -120,10 +127,10 @@ const overtureAll = overturePath
       .filter((e): e is El => e !== null && classOf(e.tags) !== null)
   : [];
 const overture = overtureAll.filter((e) => !isKnown(e));
-const added = { bar: 0, food: 0, stay: 0 } as Record<string, number>;
+const added = { bar: 0, food: 0, stay: 0, place: 0 } as Record<string, number>;
 for (const e of overture) added[classOf(e.tags)!]++;
 if (overturePath)
-  console.log(`${city.slug}: Overture ergänzt ${added.bar} Bars, ${added.food} Essen, ${added.stay} Unterkünfte (${overtureAll.length - overture.length} schon in OSM)`);
+  console.log(`${city.slug}: Overture ergänzt ${added.bar} Bars, ${added.food} Essen, ${added.stay} Unterkünfte, ${added.place} Viertel-Namen (${overtureAll.length - overture.length} schon in OSM)`);
 const els = [...osmEls, ...overture];
 const within = (e: { c: { lat: number; lon: number } }, r: number) => distance(city.lat, city.lon, e.c.lat, e.c.lon) <= r;
 

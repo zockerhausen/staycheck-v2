@@ -79,7 +79,20 @@ def main():
             print(f"Overture-Abfrage: {str(e)[:200]}", file=sys.stderr)
     rows = rows or []
 
-    n = {"bar": 0, "food": 0, "stay": 0}
+    # Viertel-Namen aus Overture Divisions (Stadtteile, Viertel, Kieze) als zusätzliche Namen für die Viertel
+    hoods = []
+    try:
+        dsrc = f"s3://overturemaps-us-west-2/release/{release}/theme=divisions/type=division/*"
+        hoods = con.execute(
+            f"SELECT names.primary, bbox.xmin, bbox.ymin, subtype FROM read_parquet('{dsrc}', hive_partitioning=1) "
+            "WHERE bbox.xmin BETWEEN ? AND ? AND bbox.ymin BETWEEN ? AND ? AND subtype IN ('macrohood', 'neighborhood', 'microhood')",
+            [minlon, maxlon, minlat, maxlat],
+        ).fetchall()
+    except duckdb.Error as e:
+        print(f"Overture-Viertel: {str(e)[:200]}", file=sys.stderr)
+    PLACE = {"macrohood": "suburb", "neighborhood": "quarter", "microhood": "neighbourhood"}
+
+    n = {"bar": 0, "food": 0, "stay": 0, "place": 0}
     with open(out_path, "w", encoding="utf8") as f:
         for name, lon, lat, basic, primary, hier, addr, status in rows:
             if not name or lon is None or lat is None:
@@ -96,7 +109,13 @@ def main():
             kind = "stay" if "tourism" in tags else ("bar" if tags.get("amenity") in ("bar", "nightclub") else "food")
             n[kind] += 1
             f.write(json.dumps({"type": "Feature", "geometry": {"type": "Point", "coordinates": [lon, lat]}, "properties": tags}, ensure_ascii=False) + "\n")
-    print(f"Overture {release}: {n['bar']} Bars, {n['food']} Essen, {n['stay']} Hostels/Gästehäuser (vor dem Abgleich mit OSM)")
+        for name, lon, lat, subtype in hoods:
+            if not name or lon is None or lat is None or subtype not in PLACE:
+                continue
+            n["place"] += 1
+            props = {"place": PLACE[subtype], "name": str(name)[:80], "src": "overture"}
+            f.write(json.dumps({"type": "Feature", "geometry": {"type": "Point", "coordinates": [lon, lat]}, "properties": props}, ensure_ascii=False) + "\n")
+    print(f"Overture {release}: {n['bar']} Bars, {n['food']} Essen, {n['stay']} Hostels/Gästehäuser, {n['place']} Viertel-Namen (vor dem Abgleich mit OSM)")
 
 
 if __name__ == "__main__":
