@@ -137,10 +137,18 @@ export async function precomputedCovering(lat: number, lon: number): Promise<Pre
  * Website-Wissen einrechnen (50/50): Raster, Viertel und Unterkünfte bekommen die gemischten Werte.
  * So nutzen Karte, Ecken, Listen und Lage-Check automatisch dieselben Zahlen.
  */
+function withoutSafety<T extends { values: Record<string, unknown> }>(grid: Map<string, T[]>): Map<string, T[]> {
+  const out = new Map<string, T[]>();
+  for (const [k, list] of grid) out.set(k, list.map((a) => ({ ...a, values: Object.fromEntries(Object.entries(a.values).filter(([key]) => key !== "safety")) })));
+  return out;
+}
+
 async function withInsights(city: PreCity | null): Promise<PreCity | null> {
   if (!city) return city;
-  const ins = await loadInsights(city.slug);
-  if (!ins?.areas.length) return city;
+  const loaded = await loadInsights(city.slug);
+  if (!loaded?.areas.length) return city;
+  // In Städten mit geprüften Vierteln (Berlin, Bangkok) gilt für Sicherheit unsere Regel mit Quellen, nicht die Text-Auswertung
+  const ins = city.city.fixed ? { ...loaded, grid: withoutSafety(loaded.grid) } : loaded;
 
   const zones = city.city.zones.map((z) => {
     const at = insightsAt(ins, z.lat, z.lon);
