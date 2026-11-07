@@ -225,15 +225,26 @@ def city_articles(lang, lat, lon, radius):
 
 
 def fetch_texts(lang, titles):
+    """Wikitext der Artikel. Kleine Pakete und „continue“ beachten: große Artikel passen sonst nicht in eine Antwort."""
     texts = {}
-    for i in range(0, len(titles), 40):
-        chunk = titles[i : i + 40]
-        r = api(lang, {"action": "query", "prop": "revisions", "rvprop": "content", "rvslots": "main", "titles": "|".join(chunk), "redirects": "1"})
-        for pg in r.get("query", {}).get("pages", []):
-            revs = pg.get("revisions") or []
-            if revs:
-                texts[pg["title"]] = revs[0]["slots"]["main"]["content"]
-        time.sleep(1)
+    for i in range(0, len(titles), 10):
+        chunk = titles[i : i + 10]
+        params = {"action": "query", "prop": "revisions", "rvprop": "content", "rvslots": "main", "titles": "|".join(chunk), "redirects": "1"}
+        cont = {}
+        for _ in range(20):
+            r = api(lang, {**params, **cont})
+            for pg in r.get("query", {}).get("pages", []):
+                revs = pg.get("revisions") or []
+                if revs and "content" in revs[0].get("slots", {}).get("main", {}):
+                    texts[pg["title"]] = revs[0]["slots"]["main"]["content"]
+            if "continue" not in r:
+                break
+            cont = r["continue"]
+            time.sleep(0.5)
+        time.sleep(0.5)
+    missing = [t for t in titles if t not in texts]
+    if missing and len(missing) > len(titles) * 0.2:
+        print(f"  Hinweis: {len(missing)} von {len(titles)} Artikeln ({lang}) ohne Text")
     return texts
 
 
