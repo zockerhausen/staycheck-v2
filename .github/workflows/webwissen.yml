@@ -1,11 +1,10 @@
-name: Website-Wissen recherchieren
-# Recherchiert mit Claude + Websuche, was seriöse Reiseseiten über die Viertel und Ecken sagen (data/insights/*.json).
-# Die App rechnet diese Werte 50/50 in den Lage-Score ein und zeigt die Quellen an.
-# Braucht das Repository-Secret ANTHROPIC_API_KEY (Settings → Secrets and variables → Actions).
+name: Reiseführer-Texte auswerten (Wikivoyage + KI)
+# Eine kleine KI (Claude Haiku) liest NUR die Wikivoyage-Texte zu jeder Stadt und macht daraus Werte je Gegend,
+# jeweils mit wörtlichem Zitat, das geprüft wird. Ergebnis: data/insights/<stadt>.json (siehe scripts/guide/texts.py).
+# Braucht das Repository-Secret ANTHROPIC_API_KEY (Settings → Secrets and variables → Actions). Ohne Schlüssel passiert nichts.
 on:
-  # Vorerst nur von Hand starten (verschoben, siehe PROJECT.md). Später wieder alle 3 Monate:
-  # schedule:
-  #   - cron: "23 4 5 1,4,7,10 *"
+  schedule:
+    - cron: "23 4 6 1,4,7,10 *" # alle 3 Monate
   workflow_dispatch:
     inputs:
       nur:
@@ -15,7 +14,11 @@ on:
       max_usd:
         description: "Kostenlimit für diesen Lauf in US-Dollar"
         required: false
-        default: "150"
+        default: "3"
+      dry_run:
+        description: "Nur Texte sammeln und Kosten schätzen (1 = ja)"
+        required: false
+        default: "0"
 
 permissions:
   contents: write
@@ -30,17 +33,16 @@ jobs:
     timeout-minutes: 300
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-python@v5
         with:
-          node-version: 22
-      - name: Skript bauen
-        run: npx --yes esbuild@0.24.2 scripts/insights/research.ts --bundle --platform=node --format=esm --outfile=/tmp/research.mjs --alias:@=./src --log-level=error
-      - name: Recherchieren
+          python-version: "3.12"
+      - name: Texte auswerten
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           NUR: ${{ inputs.nur }}
-          MAX_USD: ${{ inputs.max_usd || '150' }}
-        run: node /tmp/research.mjs
+          MAX_USD: ${{ inputs.max_usd || '3' }}
+          DRY_RUN: ${{ inputs.dry_run || '0' }}
+        run: python3 scripts/guide/texts.py
       - name: Speichern
         if: always()
         run: |
@@ -48,7 +50,7 @@ jobs:
           git config user.email "pauljonas.beth@me.com"
           git add data/insights 2>/dev/null || true
           git diff --cached --quiet && echo "Nichts Neues" && exit 0
-          MSG="Website-Wissen aktualisiert (Reiseseiten-Recherche)"
+          MSG="Reiseführer-Texte ausgewertet (Wikivoyage + KI)"
           git commit -q -m "$MSG" -m "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>" -m "Claude-Session: https://claude.ai/code/session_01NHFJiDqfkhiYUvj1E1dwBL"
           git pull --rebase -q origin "${GITHUB_REF_NAME}"
           git push -q origin "HEAD:${GITHUB_REF_NAME}"
