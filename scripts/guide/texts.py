@@ -113,7 +113,8 @@ Aufgabe: Für jede Gegend der Stadt, über die der Text etwas Konkretes sagt, sc
 - transit: Anbindung mit Bahn/Bus/Boot (10 = sehr gut)
 - nature: Parks, Wasser, Grün
 
-Für JEDEN Wert brauchst du ein wörtliches Zitat aus dem Text (genau so geschrieben, 5–30 Wörter, keine Auslassungen). Kein Zitat = kein Wert.
+Für JEDEN Wert brauchst du ein wörtliches Zitat aus dem Text (genau so geschrieben, 5–25 Wörter, keine Auslassungen). Kein Zitat = kein Wert.
+Höchstens 20 Gegenden, die wichtigsten für Reisende zuerst. Halte summary, why, goodFor und watchOut kurz.
 Bekannte Gegenden (nimm diese Namen, wenn sie passen): {known}
 Andere Gegenden nur, wenn der Text sie klar als Teil von {ort} beschreibt (z. B. ein Viertel, eine Straße, ein Ufer).
 
@@ -161,7 +162,7 @@ def build_request(city, docs):
     known = sorted({d["name"] for d in city["city"]["districts"]} | {p["n"] for p in (city["city"].get("places") or [])})[:80]
     text = "\n\n".join(f"=== [{i}] {d['title']} ({d['lang']}) ===\n{d['text']}" for i, d in enumerate(docs))
     prompt = PROMPT.format(ort=city["ort"], known=", ".join(known) or "(keine)", text=text)
-    return {"custom_id": city["slug"], "params": {"model": MODEL, "max_tokens": 8000, "messages": [{"role": "user", "content": prompt}]}}
+    return {"custom_id": city["slug"], "params": {"model": MODEL, "max_tokens": 16000, "messages": [{"role": "user", "content": prompt}]}}
 
 
 def http(method, url, body=None):
@@ -197,14 +198,36 @@ def run_batch(requests):
     return out
 
 
+def parse_answer(answer):
+    """JSON aus der Antwort lesen; ist sie abgeschnitten, die vollständigen Gegenden davor retten."""
+    start = answer.find("{")
+    if start < 0:
+        return None
+    body = answer[start:]
+    end = body.rfind("}")
+    try:
+        return json.loads(body[: end + 1])
+    except json.JSONDecodeError:
+        pass
+    cuts = [m.start() for m in re.finditer(r',\s*\{\s*"name"', body)]
+    for pos in reversed(cuts):
+        try:
+            return json.loads(body[:pos] + "]}")
+        except json.JSONDecodeError:
+            continue
+    return None
+
+
+def short(x, n):
+    x = str(x).strip()
+    return x if len(x) <= n else x[:n].rsplit(" ", 1)[0] + " …"
+
+
 def check(city, docs, district_pts, answer):
     """Antwort prüfen: Zitate müssen wörtlich im Text stehen, Gegenden müssen sich in der Stadt finden lassen."""
-    m = re.search(r"\{.*\}", answer, re.S)
-    if not m:
-        return []
-    try:
-        data = json.loads(m.group(0))
-    except json.JSONDecodeError:
+    data = parse_answer(answer)
+    if data is None:
+        print(f"::warning title={city['slug']}::KI-Antwort nicht lesbar")
         return []
     ntexts = [(d, norm(d["text"])) for d in docs]
     ours = {norm(d["name"]): (d["lat"], d["lon"]) for d in city["city"]["districts"]}
@@ -242,8 +265,8 @@ def check(city, docs, district_pts, answer):
             values[k] = {"v": val, "why": f"{why} – „{q[:220]}“", "src": [[s["url"] for s in sources].index(doc["url"])], "w": doc["w"]}
         if values:
             areas.append({"name": name, "kind": "viertel", "lat": pt[0], "lon": pt[1], "checked": dt.date.today().isoformat(), "found": True,
-                          "summary": str(a.get("summary", ""))[:240], "goodFor": [str(x)[:40] for x in (a.get("goodFor") or [])][:4],
-                          "watchOut": [str(x)[:40] for x in (a.get("watchOut") or [])][:4], "values": values, "sources": sources})
+                          "summary": str(a.get("summary", ""))[:240], "goodFor": [short(x, 50) for x in (a.get("goodFor") or [])][:4],
+                          "watchOut": [short(x, 60) for x in (a.get("watchOut") or [])][:4], "values": values, "sources": sources})
     print(f"{city['slug']}: {len(areas)} Gegenden mit belegten Werten, {dropped} Angaben verworfen (Zitat oder Ort nicht gefunden)")
     return areas
 
@@ -280,8 +303,12 @@ def main():
         used_in += usage.get("input_tokens", 0)
         used_out += usage.get("output_tokens", 0)
         areas = check(c, docs, pts, txt)
+        out = f"data/insights/{slug}.json"
+        if not areas and os.path.exists(out):
+            print(f"{slug}: keine neuen Werte – alte Auswertung bleibt")
+            continue
         res = {"v": 1, "slug": slug, "generated": dt.date.today().isoformat(), "model": f"{MODEL} (nur Wikivoyage-Text, Zitate geprüft)", "areas": areas}
-        json.dump(res, open(f"data/insights/{slug}.json", "w"), ensure_ascii=False, indent=1)
+        json.dump(res, open(out, "w"), ensure_ascii=False, indent=1)
     print(f"Verbrauch: {used_in} Tokens Eingabe, {used_out} Ausgabe ≈ {used_in * PRICE_IN + used_out * PRICE_OUT:.2f} $")
 
 
