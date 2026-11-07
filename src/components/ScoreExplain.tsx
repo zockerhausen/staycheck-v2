@@ -69,7 +69,7 @@ export default function ScoreExplain({
           {personal
             ? "Der Score ist der Durchschnitt aller Werte, gewichtet nach deinem Reise-Profil. Was dir wichtig ist, zählt mehr."
             : "Der Score ist der Durchschnitt aller Werte mit einer Standard-Gewichtung. Mit dem Quiz rechnen wir nach deinen Wünschen."}
-          {Object.values(details).some((d) => d.web) && " Wo seriöse Reiseseiten etwas dazu sagen, zählen sie zur Hälfte mit. Tippe auf einen Wert für die Quellen."}
+          {Object.values(details).some((d) => d.web) && " Wo der Reiseführer Wikivoyage etwas dazu sagt, zählt er höchstens zur Hälfte mit. Tippe auf einen Wert für die Quellen."}
         </p>
         {capped !== null && (
           <p className="pt-2 text-xs font-semibold text-warn">
@@ -149,7 +149,7 @@ export default function ScoreExplain({
                 )}
                 <span className="mt-2 inline-block rounded-full bg-tan px-2.5 py-1 text-[11px] font-bold text-muted">
                   Quelle: {SOURCE[d.source]}
-                  {d.web ? " + Reiseseiten (50 %)" : ""}
+                  {d.web ? " + Reiseführer" : ""}
                 </span>
               </div>
             </details>

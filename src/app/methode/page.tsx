@@ -140,17 +140,17 @@ export default function MethodePage() {
       </section>
 
       <section className="card mt-7 p-5">
-        <h2 className="font-display text-[19px] font-extrabold">Was Reiseseiten sagen (50 %)</h2>
+        <h2 className="font-display text-[19px] font-extrabold">Was der Reiseführer sagt (bis 50 %)</h2>
         <p className="mt-2 text-sm leading-relaxed">
-          Zählen allein reicht nicht: 30 Bars können Touristenfallen sein, ein Park kann nachts gemieden werden. Darum recherchiert eine KI mit Websuche
-          für jede wichtige Gegend, was seriöse Reisequellen sagen, etwa Wikivoyage, Lonely Planet, Time Out oder offizielle Tourismusseiten. Werbe- und
-          KI-Textseiten bleiben außen vor.
+          Zählen allein reicht nicht: 30 Bars können Touristenfallen sein. Darum fließt der freie Reiseführer Wikivoyage ein, geschrieben von Reisenden.
+          Andere Reiseportale erlauben nicht, ihre Bewertungen zu speichern und zu verrechnen, deshalb nutzen wir sie nicht.
         </p>
         <ul className="mt-3 space-y-2 text-sm leading-relaxed">
-          <li>• Ein Wert zählt nur, wenn mindestens zwei unabhängige Websites etwas dazu sagen.</li>
-          <li>• Jede Quelle muss wirklich in den Suchergebnissen vorkommen, erfundene Links werden verworfen.</li>
-          <li>• Im Score zählt dieser Wert zur Hälfte, die andere Hälfte ist unsere Messung. Gilt für alles im Umkreis von 900 m um die Gegend.</li>
-          <li>• Bei jedem Wert siehst du beide Zahlen und alle Quellen zum Anklicken. Alle drei Monate wird neu recherchiert.</li>
+          <li>• <b>Empfehlungen:</b> Wie viele Bars und Restaurants empfehlen Reisende in der Nähe, und sind die empfohlenen Unterkünfte günstiger oder teurer als in der ganzen Stadt?</li>
+          <li>• <b>Texte:</b> Was schreibt der Reiseführer über die Gegend, etwa „lautes Ausgehviertel“ oder „viel Abzocke“? Eine kleine KI liest nur diesen Text und muss für jeden Wert einen wörtlichen Satz daraus nennen. Wir prüfen, ob der Satz wirklich dort steht, sonst zählt der Wert nicht.</li>
+          <li>• <b>Wie stark es zählt:</b> höchstens zur Hälfte, weniger bei dünnen Artikeln, alten Einträgen (seit über 4 Jahren nicht geprüft) oder nur wenigen Empfehlungen. Gliederungs-Artikel zählen gar nicht.</li>
+          <li>• <b>Nichts empfohlen heißt nicht „nichts da“:</b> Der Reiseführer ist eine Auswahl. Wo er nichts sagt, zählt nur die Karte.</li>
+          <li>• Bei jedem Wert siehst du beide Zahlen und den Artikel zum Anklicken. Jeden Monat wird neu ausgewertet.</li>
         </ul>
       </section>
 
