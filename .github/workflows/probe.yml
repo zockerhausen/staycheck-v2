@@ -5,6 +5,7 @@ permissions:
 jobs:
   p:
     runs-on: ubuntu-latest
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
         with:
@@ -13,7 +14,13 @@ jobs:
         with:
           python-version: "3.12"
       - run: |
-          mkdir -p /tmp/out
-          for s in chiang-mai berlin bangkok lissabon; do python3 scripts/guide/wikivoyage.py data/cities/$s.json.gz /tmp/out/$s.guide.json; done
+          mkdir -p data/insights
+          for f in data/cities/*.json.gz; do
+            slug=$(basename "$f" .json.gz)
+            python3 scripts/guide/wikivoyage.py "$f" "data/insights/$slug.guide.json.gz" || echo "::warning title=$slug::Wikivoyage übersprungen"
+          done
           git config user.name "zockerhausen"; git config user.email "pauljonas.beth@me.com"
-          git checkout -q --orphan probe-guide-data && git rm -rq --cached . && rm -rf ./* && cp /tmp/out/*.json . && git add *.json && git commit -qm "probe data" && git push -q -f origin probe-guide-data
+          git add data/insights
+          git commit -qm "Reiseführer-Wissen aktualisiert (Wikivoyage)" -m "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>" -m "Claude-Session: https://claude.ai/code/session_01NHFJiDqfkhiYUvj1E1dwBL"
+          git pull --rebase -q origin design-dunkel
+          git push -q origin HEAD:design-dunkel
