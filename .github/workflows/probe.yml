@@ -15,7 +15,7 @@ jobs:
           python-version: "3.12"
       - run: |
           mkdir -p data/insights
-          for f in data/cities/*.json.gz; do
+          for f in data/cities/wien.json.gz data/cities/berlin.json.gz data/cities/bangkok.json.gz; do
             slug=$(basename "$f" .json.gz)
             python3 scripts/guide/wikivoyage.py "$f" "data/insights/$slug.guide.json.gz" || echo "::warning title=$slug::Wikivoyage übersprungen"
           done
