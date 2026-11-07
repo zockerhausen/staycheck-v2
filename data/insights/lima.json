@@ -1,0 +1,166 @@
+{
+ "v": 1,
+ "slug": "lima",
+ "generated": "2026-11-07",
+ "model": "claude-haiku-5-5 (nur Wikivoyage-Text, Zitate geprüft)",
+ "areas": [
+  {
+   "name": "Plaza Mayor de Lima",
+   "kind": "viertel",
+   "lat": -12.045939445495605,
+   "lon": -77.03057098388672,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Zentraler Platz der Altstadt mit Kirchen und Kolonialarchitektur, umgeben von netten Bars.",
+   "goodFor": [
+    "Historische Altstadt",
+    "Bars",
+    "Kolonialarchitektur"
+   ],
+   "watchOut": [
+    "Peperas in dichten Touristenbereichen wie der Plaza de …"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 6,
+     "why": "Einige nette Bars rund um den Platz. – „Around the Plaza Mayor, you can find some nice bars.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "safety": {
+     "v": 3,
+     "why": "Peperas treiben hier laut Text in dichten Touristenbereichen ihr Unwesen. – „Peperas in general are found in dense tourist areas, such as Parque Kennedy in Miraflores as well as the Plaza de Armas in central Lima.“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Lima/Central_Lima",
+     "title": "Wikivoyage (en): Lima/Central Lima"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Lima",
+     "title": "Wikivoyage (en): Lima"
+    }
+   ]
+  },
+  {
+   "name": "Plaza San Martín",
+   "kind": "viertel",
+   "lat": -12.05166,
+   "lon": -77.03461,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Zentraler Platz mit kleinen Rock-Pubs und günstigem Bier im Zentrum.",
+   "goodFor": [
+    "Günstiges Bier",
+    "Live-Musik in kleinen Pubs"
+   ],
+   "watchOut": [
+    "Im Zentrum ist Vorsicht geboten"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 6,
+     "why": "Kleine Rock-Pubs mit gelegentlichen Konzerten und günstigem Bier. – „which are small rock pubs occasionally hosting shows from local bands and low-priced beer“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Lima/Central_Lima",
+     "title": "Wikivoyage (en): Lima/Central Lima"
+    }
+   ]
+  },
+  {
+   "name": "Lince",
+   "kind": "viertel",
+   "lat": -12.0825223,
+   "lon": -77.0310016,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Viertel an der Avenida Arequipa mit günstigeren Hotels und guter Anbindung an Miraflores und die Altstadt.",
+   "goodFor": [
+    "Günstige Unterkünfte",
+    "Schnelle Verbindung nach Miraflores und in die …"
+   ],
+   "watchOut": [
+    "Hotels werden teils als Stundenhotels genutzt",
+    "Sicherheit nur einigermaßen gegeben"
+   ],
+   "values": {
+    "budget": {
+     "v": 7,
+     "why": "Günstigere Hotels rund um die Avenida Arequipa. – „Preisgünstigere Hotels befinden sich im Stadtteil Lince rund um die Avenida Arequipa und den Seitenstraßen.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "safety": {
+     "v": 5,
+     "why": "Sicherheit ist nur einigermaßen gegeben. – „Auch die Sicherheit ist in diesem Stadtteil einigermaßen gegeben.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "transit": {
+     "v": 8,
+     "why": "Corredor Azul verbindet schnell mit Miraflores und der Altstadt. – „Die Lage von Lince ist sehr gut, da man durch den Corredor Azul schnell in Miraflores bzw. in der Altstadt ist.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/Lima",
+     "title": "Wikivoyage (de): Lima"
+    }
+   ]
+  },
+  {
+   "name": "La Victoria",
+   "kind": "viertel",
+   "lat": -12.0641355,
+   "lon": -77.0295563,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Viertel, das im Text als deutlich gefährlicher beschrieben wird.",
+   "goodFor": [
+    "Nur in Begleitung eines Ortskundigen oder tagsüber"
+   ],
+   "watchOut": [
+    "Deutlich gefährlicher als andere Viertel",
+    "Am besten meiden"
+   ],
+   "values": {
+    "safety": {
+     "v": 2,
+     "why": "Im Text als deutlich gefährlicher beschrieben. – „Other districts, such as La Victoria, are much more dangerous.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Lima",
+     "title": "Wikivoyage (en): Lima"
+    }
+   ]
+  }
+ ]
+}

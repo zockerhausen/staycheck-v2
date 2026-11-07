@@ -1,0 +1,567 @@
+{
+ "v": 1,
+ "slug": "sydney",
+ "generated": "2026-11-07",
+ "model": "claude-haiku-5-5 (nur Wikivoyage-Text, Zitate geprüft)",
+ "areas": [
+  {
+   "name": "Darling Harbour",
+   "kind": "viertel",
+   "lat": -33.8708,
+   "lon": 151.2006,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Unterhaltungs- und Touristenviertel am Wasser mit Museen, Promenaden und Restaurants.",
+   "goodFor": [
+    "Familien",
+    "Spaziergänge am Wasser",
+    "Abendessen am Hafen"
+   ],
+   "watchOut": [
+    "Am Wochenende sehr voll",
+    "Freitag und Samstag Nachts oft betrunkenes Verhalten"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 7,
+     "why": "Freitag- und Samstagnacht viel Clubpublikum. – „On Friday and Saturday nights, the place is populated by club goers and can be quite crowded.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "quiet": {
+     "v": 5,
+     "why": "Unter der Woche nach 22 Uhr oft ruhig, außer bei Veranstaltungen. – „After 10PM or so on a weeknight the area can get quiet if there are no events on that night.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "food": {
+     "v": 7,
+     "why": "Beliebte Restaurants direkt am Wasser. – „On weeknights it has a particular vibe, with popular restaurants by the water, and people just out strolling around.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "safety": {
+     "v": 8,
+     "why": "Gut patrouilliert und belebt, tagsüber und abends angenehm. – „The area is quite well patrolled, and generally busy, and it is a comfortable area to walk in the daytime and into the evening.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "nature": {
+     "v": 7,
+     "why": "Wasserblick, Parks und Brunnen. – „The area has fantastic water views, ice-cream, playgrounds, parks, fountains and often free attractions on weekends.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Sydney/Darling_Harbour",
+     "title": "Wikivoyage (en): Sydney/Darling Harbour"
+    }
+   ]
+  },
+  {
+   "name": "The Rocks",
+   "kind": "viertel",
+   "lat": -33.859992,
+   "lon": 151.2083216,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Historisches Viertel mit Sandsteinhäusern, Gassen und vielen Pubs am Hafen.",
+   "goodFor": [
+    "Pubs und Abendleben",
+    "Geschichte",
+    "Spaziergänge"
+   ],
+   "watchOut": [
+    "Viele Gewaltdelikte, da viele Pubs",
+    "Steile Gassen abseits der Hauptstraßen"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 8,
+     "why": "Pubs sind an den meisten Abenden voll. – „The Rocks pubs get busy most nights. It is a popular night spot for tourists and locals alike.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "quiet": {
+     "v": 5,
+     "why": "Abseits der George Street ruhiger. – „Away from George St the mood is quieter.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "safety": {
+     "v": 4,
+     "why": "Hohe Zahl gemeldeter Übergriffe, oft alkoholbedingt. – „The Rocks does however have some of the highest level of reported assaults in the state“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Sydney/The_Rocks",
+     "title": "Wikivoyage (en): Sydney/The Rocks"
+    }
+   ]
+  },
+  {
+   "name": "City South",
+   "kind": "viertel",
+   "lat": -33.8828,
+   "lon": 151.2022,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Großes Viertel rund um Central Station mit günstigen Hotels, Restaurants und Chinatown.",
+   "goodFor": [
+    "Günstige Unterkünfte",
+    "Späte Mahlzeiten",
+    "Ankunft mit Fernbus oder Zug"
+   ],
+   "watchOut": [
+    "George Street nachts teils rau",
+    "Touts in Restaurants"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 5,
+     "why": "Länger geöffnet als der Rest der Stadt. – „The area also stays open relatively late compared to the rest of Sydney“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "food": {
+     "v": 7,
+     "why": "Viele preiswerte Restaurants. – „and is full of good value restaurants, internet cafes, pubs, markets, and discount shopping“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "budget": {
+     "v": 8,
+     "why": "Eines der günstigsten Hotelangebote der Stadt. – „The district has some of the cheapest hotels in the city, and is full of good value restaurants“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "safety": {
+     "v": 5,
+     "why": "Spät abends an der George Street etwas rau. – „The George St area between Town Hall and Central can be a little rough very late at night usually past dusk.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "transit": {
+     "v": 7,
+     "why": "Mit Central Station der größte Bahnhof Australiens. – „The City South district is home to Australia's largest Chinatown as well as its largest train station, Central station.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Sydney/City_South",
+     "title": "Wikivoyage (en): Sydney/City South"
+    }
+   ]
+  },
+  {
+   "name": "Chinatown",
+   "kind": "viertel",
+   "lat": -33.87837,
+   "lon": 151.20407,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Größte Chinatown Australiens mit Gassen und Restaurants nahe Haymarket.",
+   "goodFor": [
+    "Essen",
+    "Märkte",
+    "Bummeln"
+   ],
+   "watchOut": [
+    "Enge, volle Straßen",
+    "Auf Straßenbahn und Light Rail achten"
+   ],
+   "values": {
+    "safety": {
+     "v": 8,
+     "why": "Im Vergleich zum Rest der Gegend sehr sicher. – „However, the Chinatown here is very safe compared to the rest of Sydney South.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Sydney/City_South",
+     "title": "Wikivoyage (en): Sydney/City South"
+    }
+   ]
+  },
+  {
+   "name": "Haymarket",
+   "kind": "viertel",
+   "lat": -33.8814408,
+   "lon": 151.2044524,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Teil der Chinatown-Umgebung mit vielen Backpacker-Unterkünften nahe Central.",
+   "goodFor": [
+    "Günstige Unterkunft",
+    "Nähe zu Chinatown und Darling Harbour"
+   ],
+   "watchOut": [
+    "Nachts rund um Central nicht immer angenehm"
+   ],
+   "values": {
+    "budget": {
+     "v": 7,
+     "why": "Viele Backpacker-Unterkünfte. – „The area around Central Station and Haymarket has many choices of backpacker accommodation“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Sydney/City_South",
+     "title": "Wikivoyage (en): Sydney/City South"
+    }
+   ]
+  },
+  {
+   "name": "Surry Hills",
+   "kind": "viertel",
+   "lat": -33.88451,
+   "lon": 151.21003,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Wohnviertel mit Reihenhäusern, Parks, Pubs und Restaurants an der Crown Street.",
+   "goodFor": [
+    "Essen",
+    "Pubs",
+    "Ausgehen"
+   ],
+   "watchOut": [
+    "Nachts Betrunkene und Alkoholgewalt",
+    "Hauptstraßen bevorzugen"
+   ],
+   "values": {
+    "quiet": {
+     "v": 6,
+     "why": "Abends meist ruhig. – „At night there are quiet laneways, and overall the area is quiet.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "food": {
+     "v": 8,
+     "why": "Vielfältige Küche an der Crown Street. – „The Crown St area has some of Sydney's best eating — tapas, Asian, Middle Eastern and Indian food. Great for a night out.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "safety": {
+     "v": 5,
+     "why": "Nachts Betrunkene, Alkoholgewalt möglich. – „Surry Hills gets its share of drunks as well at night, so be aware of alcohol-fueled violence.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Sydney/City_East",
+     "title": "Wikivoyage (en): Sydney/City East"
+    }
+   ]
+  },
+  {
+   "name": "Paddington",
+   "kind": "viertel",
+   "lat": -33.8841572,
+   "lon": 151.2272766,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Boutique-Einkaufsviertel mit Cafés und Pubs.",
+   "goodFor": [
+    "Tagesbummel",
+    "Cafés"
+   ],
+   "watchOut": [
+    "Vor allem tagsüber attraktiv"
+   ],
+   "values": {
+    "food": {
+     "v": 6,
+     "why": "Gute Cafés und Pubs. – „Everyone will enjoy a daytime stroll through the area, with its great coffee shops and pubs.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Sydney/City_East",
+     "title": "Wikivoyage (en): Sydney/City East"
+    }
+   ]
+  },
+  {
+   "name": "Woolloomooloo",
+   "kind": "viertel",
+   "lat": -33.8718758,
+   "lon": 151.2192218,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Ehemaliges Hafenviertel am Wasser mit modernen Bars und Restaurants.",
+   "goodFor": [
+    "Bars am Wasser",
+    "Restaurants"
+   ],
+   "watchOut": [
+    "Früher rau, heute aufgewertet"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 6,
+     "why": "Moderne Bars in historischer Umgebung. – „Woolloomooloo is on the harbour, and a rough naval areas is now gentrified, with finger wharf apartments and modern Australian bars“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Sydney/City_East",
+     "title": "Wikivoyage (en): Sydney/City East"
+    }
+   ]
+  },
+  {
+   "name": "Moore Park",
+   "kind": "viertel",
+   "lat": -33.8958333,
+   "lon": 151.2219444,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Sport- und Unterhaltungsviertel mit Stadien, Märkten und Restaurants.",
+   "goodFor": [
+    "Sportevents",
+    "Konzerte",
+    "Märkte"
+   ],
+   "watchOut": [
+    "Bei Großveranstaltungen Parkgebühren"
+   ],
+   "values": {
+    "safety": {
+     "v": 8,
+     "why": "Probleme sind ungewöhnlich. – „Problems are unusual at Moore Park.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Sydney/City_East",
+     "title": "Wikivoyage (en): Sydney/City East"
+    }
+   ]
+  },
+  {
+   "name": "Barangaroo",
+   "kind": "viertel",
+   "lat": -33.86141,
+   "lon": 151.20169,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Neues Geschäftsviertel mit Wasserzugang und Buchten zum Schwimmen.",
+   "goodFor": [
+    "Schwimmen",
+    "Spaziergänge am Wasser"
+   ],
+   "watchOut": [
+    "Vor allem tagsüber belebt"
+   ],
+   "values": {
+    "nature": {
+     "v": 6,
+     "why": "Zwei Buchten zum Schwimmen. – „Barangaroo has two coves for swimming“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Sydney/Darling_Harbour",
+     "title": "Wikivoyage (en): Sydney/Darling Harbour"
+    }
+   ]
+  },
+  {
+   "name": "Pyrmont",
+   "kind": "viertel",
+   "lat": -33.8692145,
+   "lon": 151.1923633,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Ruhigeres Viertel mit historischen Pubs und Reihenhäusern nahe Darling Harbour.",
+   "goodFor": [
+    "Historische Pubs",
+    "Wohnnahe Gegend"
+   ],
+   "watchOut": [
+    "Abseits vom Wasser weniger Touristen"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 6,
+     "why": "Viele historische Pubs. – „the suburbs of Pyrmont and Ultimo, 200 metres or so from the water's edge, have many of the original pubs and terraces“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Sydney/Darling_Harbour",
+     "title": "Wikivoyage (en): Sydney/Darling Harbour"
+    }
+   ]
+  },
+  {
+   "name": "City Centre",
+   "kind": "viertel",
+   "lat": -33.8672,
+   "lon": 151.2075,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Geschäftszentrum mit Hochhäusern, Opernhaus-Blick und vielen Bahnlinien.",
+   "goodFor": [
+    "Sehenswürdigkeiten",
+    "Zugverbindungen"
+   ],
+   "watchOut": [
+    "Bei Dunkelheit George Street und Kinostrecke meiden",
+    "Vorsicht vor Verkehr"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 5,
+     "why": "Gruppen treffen sich zum Ausgehen, etwas weniger Trubel. – „the groups meeting up near Town Hall for a movie, a drink, or a night out.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "safety": {
+     "v": 4,
+     "why": "Nachts an der Kinostrecke Gefahr durch Gewalt. – „Late at night anti-social behaviour and even some alcohol-related violence is possible around the George St Cinema strip“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "transit": {
+     "v": 9,
+     "why": "Züge im Takt von fünf Minuten. – „Each of these stations has services every five minutes“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Sydney/City_Centre",
+     "title": "Wikivoyage (en): Sydney/City Centre"
+    }
+   ]
+  },
+  {
+   "name": "Harbour Islands",
+   "kind": "viertel",
+   "lat": -33.847,
+   "lon": 151.175,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Ruhige Inseln im Hafen mit Geschichte und Aussicht, aber kaum Nachtleben.",
+   "goodFor": [
+    "Picknick",
+    "Ruhe",
+    "Geschichte"
+   ],
+   "watchOut": [
+    "Kein Nachtleben",
+    "Kein Alkohol mitbringen",
+    "Abends eingeschränkter Zugang"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 1,
+     "why": "Kein Nachtleben, Zugang nachts begrenzt. – „Generally, however, there is no nightlife or bars on any of the islands, and nighttime access is limited.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "quiet": {
+     "v": 9,
+     "why": "Meist fast menschenleer. – „At most times of the year they can be nearly deserted.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "nature": {
+     "v": 6,
+     "why": "Wasser und Aussicht. – „These are all distinct and beautiful islands and have magnificent views of sailing boats on the harbour“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Sydney/Harbour_Islands",
+     "title": "Wikivoyage (en): Sydney/Harbour Islands"
+    }
+   ]
+  }
+ ]
+}

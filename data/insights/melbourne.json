@@ -1,0 +1,453 @@
+{
+ "v": 1,
+ "slug": "melbourne",
+ "generated": "2026-11-07",
+ "model": "claude-haiku-5-5 (nur Wikivoyage-Text, Zitate geprüft)",
+ "areas": [
+  {
+   "name": "Melbourne",
+   "kind": "viertel",
+   "lat": -37.8141705,
+   "lon": 144.9655616,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Das CBD ist das kulturelle, unterhaltsame und finanzielle Zentrum mit den meisten Sehenswürdigkeiten, Unterkünften und Nachtleben.",
+   "goodFor": [
+    "Sehenswürdigkeiten zu Fuß erreichen",
+    "Nachtleben in Gassen-Bars",
+    "Gratis-Tram im Zentrum"
+   ],
+   "watchOut": [
+    "Nächtliche Gewalt rund um King Street",
+    "Hook Turns beim Autofahren",
+    "Teure Parkplätze"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 8,
+     "why": "Viele versteckte Bars in Gassen des CBD – „dozens of weird and wonderful watering holes opening up within forgotten alleyways and anonymous lanes of the CBD“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "food": {
+     "v": 7,
+     "why": "Gute Kaffeehäuser, Ketten meiden – „The CBD holds some hidden gems as far as coffee is concerned.“",
+     "src": [
+      1
+     ],
+     "w": 1.0
+    },
+    "safety": {
+     "v": 4,
+     "why": "Nachts Alkoholgewalt, vor allem rund um King Street – „The CBD, particularly the area around the nightclub and strip club district of King Street, can be a hotspot for alcohol-fuelled violence late at night.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "transit": {
+     "v": 9,
+     "why": "Ganzes CBD in der kostenlosen Tram-Zone – „All of the CBD sits within the Free Tram Zone, where you can catch trams for free“",
+     "src": [
+      1
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Melbourne",
+     "title": "Wikivoyage (en): Melbourne"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Melbourne/CBD",
+     "title": "Wikivoyage (en): Melbourne/CBD"
+    }
+   ]
+  },
+  {
+   "name": "Southbank",
+   "kind": "viertel",
+   "lat": -37.8253618,
+   "lon": 144.9640203,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Unterhaltungsviertel am Yarra River, direkt am CBD gelegen.",
+   "goodFor": [
+    "Ausgehen am Fluss",
+    "Unterhaltung"
+   ],
+   "watchOut": [
+    "Attraktionen liegen teils außerhalb der Gratis-Tram-Zone"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 7,
+     "why": "Unterhaltungsviertel mit Ausgehangebot am Fluss – „the Southbank entertainment precinct on the Yarra River“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Melbourne",
+     "title": "Wikivoyage (en): Melbourne"
+    }
+   ]
+  },
+  {
+   "name": "Docklands",
+   "kind": "viertel",
+   "lat": -37.8175423,
+   "lon": 144.9394923,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Hafenviertel westlich des CBD mit Büros und Apartments.",
+   "goodFor": [
+    "Günstiges Parken",
+    "Anbindung ins Zentrum"
+   ],
+   "watchOut": [
+    "Eher wenig Ausgehangebot im Text erwähnt"
+   ],
+   "values": {
+    "transit": {
+     "v": 7,
+     "why": "Docklands liegt in der kostenlosen Tram-Zone – „The zone stretches to Docklands in the west, Spring St in the east“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Melbourne/CBD",
+     "title": "Wikivoyage (en): Melbourne/CBD"
+    }
+   ]
+  },
+  {
+   "name": "Carlton",
+   "kind": "viertel",
+   "lat": -37.8004228,
+   "lon": 144.9684343,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Italienisch geprägtes Viertel mit Lygon Street, Restaurants und Cafés nahe der Universität.",
+   "goodFor": [
+    "Italienisches Essen",
+    "Cafékultur",
+    "Studentisches Flair"
+   ],
+   "watchOut": [
+    "Lygon Street kann lebhaft sein"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 5,
+     "why": "Subkulturelle Bars, aber eher Cafés im Fokus – „particularly in the suburbs of Carlton, Fitzroy, Collingwood and Abbotsford, where subcultural bars, cafes and art galleries are common.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "food": {
+     "v": 9,
+     "why": "Viele italienische Restaurants und Cafés an der Lygon Street – „Besides dozens of Italian restaurants and pizzerias to choose from, the street is also home to countless cafes“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Melbourne",
+     "title": "Wikivoyage (en): Melbourne"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Melbourne/Inner_north",
+     "title": "Wikivoyage (en): Melbourne/Inner north"
+    }
+   ]
+  },
+  {
+   "name": "Fitzroy",
+   "kind": "viertel",
+   "lat": -37.8010382,
+   "lon": 144.9792611,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Bohemien-Viertel mit Boutiquen, Restaurants, Bars und Live-Musik.",
+   "goodFor": [
+    "Bohemien-Atmosphäre",
+    "Cafés und Bars",
+    "Live-Musik"
+   ],
+   "watchOut": [
+    "Teilweise lebhaftes Nachtleben"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 8,
+     "why": "Brunswick und Gertrude Street für Bars und Live-Musik – „Head for Brunswick and Gertrude Streets in Fitzroy and Smith Street, Collingwood for cafes, bars and live music“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "food": {
+     "v": 7,
+     "why": "Ausgefallene Cafés – „Fitzroy is known for funky, bohemian-style cafes.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "budget": {
+     "v": 6,
+     "why": "Beliebte Budget-Unterkünfte – „there are also several popular budget options in bohemian Fitzroy, South Melbourne, and Windsor.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Melbourne",
+     "title": "Wikivoyage (en): Melbourne"
+    }
+   ]
+  },
+  {
+   "name": "Collingwood",
+   "kind": "viertel",
+   "lat": -37.8021,
+   "lon": 144.98814,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Lebhaftes Viertel mit Pubs, Cafés und Live-Musik zwischen Fitzroy und Abbotsford.",
+   "goodFor": [
+    "Live-Musik",
+    "Pubs mit Charakter"
+   ],
+   "watchOut": [
+    "Im Text weniger angesehen als Nachbarviertel"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 7,
+     "why": "Smith Street für Cafés, Bars und Live-Musik – „Head for Brunswick and Gertrude Streets in Fitzroy and Smith Street, Collingwood for cafes, bars and live music“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Melbourne",
+     "title": "Wikivoyage (en): Melbourne"
+    }
+   ]
+  },
+  {
+   "name": "Abbotsford",
+   "kind": "viertel",
+   "lat": -37.8045508,
+   "lon": 144.9988542,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Ruhigeres Viertel am Fluss mit Parkland zwischen alten Fabriken.",
+   "goodFor": [
+    "Parks am Fluss"
+   ],
+   "watchOut": [
+    "Im Text kaum Ausgehangebot erwähnt"
+   ],
+   "values": {
+    "nature": {
+     "v": 7,
+     "why": "Parkland am Fluss – „Abbotsford sits on the eastern fringe by the river, with some nice parkland among disused factories and breweries.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Melbourne/Inner_east",
+     "title": "Wikivoyage (en): Melbourne/Inner east"
+    }
+   ]
+  },
+  {
+   "name": "Parkville",
+   "kind": "viertel",
+   "lat": -37.7871148,
+   "lon": 144.9515533,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Universitätsviertel mit großem Royal Park und ruhigen Grünflächen.",
+   "goodFor": [
+    "Picknick im Park",
+    "Universitätsatmosphäre"
+   ],
+   "watchOut": [
+    "Stadt ist hier trotzdem nah und belebt"
+   ],
+   "values": {
+    "quiet": {
+     "v": 7,
+     "why": "Ruhige Ecke im Royal Park – „Parkville's north is covered by the massive expanse that is Royal Park, which offers a peaceful spot for a picnic in an otherwise busy city.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "nature": {
+     "v": 9,
+     "why": "Riesiger Royal Park – „Parkville's north is covered by the massive expanse that is Royal Park, which offers a peaceful spot for a picnic in an otherwise busy city.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Melbourne/Inner_north",
+     "title": "Wikivoyage (en): Melbourne/Inner north"
+    }
+   ]
+  },
+  {
+   "name": "North Melbourne",
+   "kind": "viertel",
+   "lat": -37.7985747,
+   "lon": 144.9451741,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Kosmopolitisches, überwiegend wohnliches Viertel mit Cafés, versteckten Bars und Backpacker-Unterkünften.",
+   "goodFor": [
+    "Cafés",
+    "Versteckte Bars",
+    "Günstige Unterkünfte"
+   ],
+   "watchOut": [
+    "Noch im Aufbau als Kulturzentrum"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 5,
+     "why": "Einige versteckte Bars – „an upmarket strip of cafés and hidden bars and a variety of budget and backpacker accommodation“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "quiet": {
+     "v": 6,
+     "why": "Überwiegend Wohngebiet – „Mostly a residential area of wide, grassy avenues“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "budget": {
+     "v": 7,
+     "why": "Viele Budget- und Backpacker-Unterkünfte – „an upmarket strip of cafés and hidden bars and a variety of budget and backpacker accommodation“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Melbourne/Inner_north",
+     "title": "Wikivoyage (en): Melbourne/Inner north"
+    }
+   ]
+  },
+  {
+   "name": "South Melbourne",
+   "kind": "viertel",
+   "lat": -37.83344,
+   "lon": 144.9570533,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Griechisch und italienisch geprägtes Viertel mit Cafés und günstigeren Unterkünften.",
+   "goodFor": [
+    "Espresso-Kultur",
+    "Budget-Unterkünfte"
+   ],
+   "watchOut": [
+    "Im Text wenig zu Nachtleben"
+   ],
+   "values": {
+    "food": {
+     "v": 7,
+     "why": "Bekannte Kaffeerösterei St Ali – „Serious espresso connoisseurs would enjoy visiting St Ali cafe/roastery in South Melbourne“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "budget": {
+     "v": 6,
+     "why": "Beliebte Budget-Unterkünfte – „there are also several popular budget options in bohemian Fitzroy, South Melbourne, and Windsor.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Melbourne",
+     "title": "Wikivoyage (en): Melbourne"
+    }
+   ]
+  },
+  {
+   "name": "Albert Park",
+   "kind": "viertel",
+   "lat": -37.8452062,
+   "lon": 144.957105,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Wohnviertel um einen großen See mit Grand-Prix-Strecke und viktorianischer Architektur.",
+   "goodFor": [
+    "Spaziergänge am See",
+    "Grand Prix"
+   ],
+   "watchOut": [
+    "Im Text wenig zu Ausgehen"
+   ],
+   "values": {
+    "nature": {
+     "v": 8,
+     "why": "Großer See im Zentrum – „Albert Park is centred around a large lake in Albert Park“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Melbourne/Inner_south",
+     "title": "Wikivoyage (en): Melbourne/Inner south"
+    }
+   ]
+  }
+ ]
+}

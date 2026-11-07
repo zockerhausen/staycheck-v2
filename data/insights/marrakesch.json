@@ -1,0 +1,71 @@
+{
+ "v": 1,
+ "slug": "marrakesch",
+ "generated": "2026-11-07",
+ "model": "claude-haiku-5-5 (nur Wikivoyage-Text, Zitate geprüft)",
+ "areas": [
+  {
+   "name": "Medina",
+   "kind": "viertel",
+   "lat": 31.6329766,
+   "lon": -7.9884912,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Die historische Altstadt mit engen Gassen, Suq, Riads und den günstigsten Unterkünften der Stadt.",
+   "goodFor": [
+    "Günstige Unterkunft",
+    "Riads und Altstadtatmosphäre",
+    "Einkaufen auf dem Suq"
+   ],
+   "watchOut": [
+    "Wenige Orte mit Alkoholverkauf",
+    "Viel zu Fuß, Wegfindung schwierig",
+    "Aufdringliche Verkäufer"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 3,
+     "why": "Nur wenige Orte verkaufen Alkohol in der Medina. – „There is a very limited selection of places selling alcohol in the Medina.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "budget": {
+     "v": 8,
+     "why": "Dort gibt es die meisten sehr günstigen Hotels und Riads. – „The Medina has the highest concentration of very cheap hotels and riads (small palaces)“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "transit": {
+     "v": 3,
+     "why": "Innerhalb der Medina wird meist zu Fuß gegangen. – „Once in the medina, everything can be seen on foot, though you'll be doing a lot of walking.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "nature": {
+     "v": 6,
+     "why": "Die Altstadt hat weitläufige Gärten und Palmenanlagen. – „bietet viele sehenswerte und historische Häuser sowie weitläufige Gärten und große Palmenanlagen“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Marrakech",
+     "title": "Wikivoyage (en): Marrakech"
+    },
+    {
+     "url": "https://de.wikivoyage.org/wiki/Marrakesch",
+     "title": "Wikivoyage (de): Marrakesch"
+    }
+   ]
+  }
+ ]
+}

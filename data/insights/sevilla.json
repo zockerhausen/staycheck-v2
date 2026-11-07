@@ -1,0 +1,200 @@
+{
+ "v": 1,
+ "slug": "sevilla",
+ "generated": "2026-11-07",
+ "model": "claude-haiku-5-5 (nur Wikivoyage-Text, Zitate geprüft)",
+ "areas": [
+  {
+   "name": "Alameda de Hércules",
+   "kind": "viertel",
+   "lat": 37.39888,
+   "lon": -5.99374,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Großer Platz im Stadtviertel Macarena, gesäumt von vielen Bars und Diskotheken.",
+   "goodFor": [
+    "Ausgehen",
+    "Bars"
+   ],
+   "watchOut": [
+    "Im Ausgehviertel kann es abends laut werden."
+   ],
+   "values": {
+    "nightlife": {
+     "v": 9,
+     "why": "Viele Bars und Diskotheken säumen den Platz. – „Ein weiterer Schwerpunkt ist die Alameda de Hércules, ein großer Platz im Stadtviertel Macarena, der von vielen Bars und Diskotheken gesäumt wird.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/Sevilla",
+     "title": "Wikivoyage (de): Sevilla"
+    }
+   ]
+  },
+  {
+   "name": "Alfalfa",
+   "kind": "viertel",
+   "lat": 37.3908,
+   "lon": -5.99285,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Eines der besten Ausgehviertel, zusammen mit dem Bereich zwischen Alfalfa und Salvador.",
+   "goodFor": [
+    "Ausgehen",
+    "Nachtleben"
+   ],
+   "watchOut": [
+    "Nachts wird es laut und spät."
+   ],
+   "values": {
+    "nightlife": {
+     "v": 9,
+     "why": "Die Gegend zwischen Alfalfa und Salvador gilt als eine der besten Ecken zum Feiern. – „Die besten Ecken sind zwischen Alfalfa und Salvador und im Viertel Arenal.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/Sevilla",
+     "title": "Wikivoyage (de): Sevilla"
+    }
+   ]
+  },
+  {
+   "name": "El Arenal",
+   "kind": "viertel",
+   "lat": 37.38662,
+   "lon": -5.99693,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Viertel mit einigen der besten Ausgehecken der Stadt, außerdem Flamencolokale am Flussufer.",
+   "goodFor": [
+    "Ausgehen",
+    "Flamenco"
+   ],
+   "watchOut": [
+    "Nachts ist viel Betrieb und Lärm zu erwarten."
+   ],
+   "values": {
+    "nightlife": {
+     "v": 9,
+     "why": "Das Viertel Arenal gehört zu den besten Ausgehecken. – „Die besten Ecken sind zwischen Alfalfa und Salvador und im Viertel Arenal.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/Sevilla",
+     "title": "Wikivoyage (de): Sevilla"
+    }
+   ]
+  },
+  {
+   "name": "Triana",
+   "kind": "viertel",
+   "lat": 37.3834516,
+   "lon": -6.0040669,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Viertel auf der rechten Flussseite mit Nachtleben rund um die Calle Betis.",
+   "goodFor": [
+    "Ausgehen",
+    "Flamenco-Tavernen"
+   ],
+   "watchOut": [
+    "Abends kann es an der Calle Betis voll werden."
+   ],
+   "values": {
+    "nightlife": {
+     "v": 8,
+     "why": "Die Calle Betis in Triana wird als Nachtleben-Ort genannt. – „Other nightlife spots include Calle Betis in Triana“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Seville",
+     "title": "Wikivoyage (en): Seville"
+    }
+   ]
+  },
+  {
+   "name": "Casco Antiguo",
+   "kind": "viertel",
+   "lat": 37.3927284,
+   "lon": -5.994248,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Kompakte Altstadt, die man am besten zu Fuß erkundet; viele Sehenswürdigkeiten liegen hier.",
+   "goodFor": [
+    "Sightseeing zu Fuß",
+    "Kirchen und Plätze"
+   ],
+   "watchOut": [
+    "Busse fahren hier nur auf wenigen Routen, da die Gassen eng …"
+   ],
+   "values": {
+    "transit": {
+     "v": 3,
+     "why": "Busse fahren in der Altstadt nur auf wenigen Routen. – „In der Altstadt verkehren die Busse dagegen nur auf wenigen Routen“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/Sevilla",
+     "title": "Wikivoyage (de): Sevilla"
+    }
+   ]
+  },
+  {
+   "name": "Avenida de la Constitución",
+   "kind": "viertel",
+   "lat": 37.3856,
+   "lon": -5.99401,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Hauptboulevard mit Straßenbahn, die an der Kathedrale vorbeiführt.",
+   "goodFor": [
+    "Straßenbahn",
+    "Weg zur Kathedrale"
+   ],
+   "watchOut": [
+    "Die Strecke ist nur etwa 2 km lang und geht man oft besser …"
+   ],
+   "values": {
+    "transit": {
+     "v": 7,
+     "why": "Die Straßenbahn fährt die Avenida de la Constitución entlang bis zur Kathedrale. – „Trams run from Prado de San Sebastián at the south end of the centre, up Av de la Constitución past the cathedral“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Seville",
+     "title": "Wikivoyage (en): Seville"
+    }
+   ]
+  }
+ ]
+}

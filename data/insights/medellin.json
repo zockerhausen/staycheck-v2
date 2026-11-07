@@ -1,0 +1,168 @@
+{
+ "v": 1,
+ "slug": "medellin",
+ "generated": "2026-11-07",
+ "model": "claude-haiku-5-5 (nur Wikivoyage-Text, Zitate geprüft)",
+ "areas": [
+  {
+   "name": "Estadio",
+   "kind": "viertel",
+   "lat": 6.26088,
+   "lon": -75.59566,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Mittelklasse-Viertel westlich des Flusses mit vielen Bars, Restaurants und Geschäften an der Carrera 70.",
+   "goodFor": [
+    "Ruhige Übernachtung",
+    "Bars und Restaurants entlang der Carrera 70"
+   ],
+   "watchOut": [
+    "Eher Mittelklasse, nicht so lebhaft wie El Poblado"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 6,
+     "why": "Bars entlang der Carrera 70 nahe Estadio. – „Other areas with bars are: Carrera 70 near Estadio, Carretera Las Palmas and Avenida 33 in Laureles.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "quiet": {
+     "v": 8,
+     "why": "Als ruhiges Viertel beschrieben. – „These are middle-class, safe and quiet neighborhoods just west of the river“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "safety": {
+     "v": 8,
+     "why": "Als sicheres Viertel beschrieben. – „These are middle-class, safe and quiet neighborhoods just west of the river“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Medell%C3%ADn",
+     "title": "Wikivoyage (en): Medellín"
+    }
+   ]
+  },
+  {
+   "name": "Laureles",
+   "kind": "viertel",
+   "lat": 6.2419995,
+   "lon": -75.5958328,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Ruhiges, sicheres Mittelklasse-Viertel westlich des Zentrums mit Bars und Läden.",
+   "goodFor": [
+    "Ruhige Übernachtung",
+    "Bars an der Avenida 33"
+   ],
+   "watchOut": [
+    "Eher traditionell, weniger Trubel als im Zentrum"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 6,
+     "why": "Bars an der Avenida 33 in Laureles. – „Other areas with bars are: Carrera 70 near Estadio, Carretera Las Palmas and Avenida 33 in Laureles.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "quiet": {
+     "v": 8,
+     "why": "Als ruhiges Viertel beschrieben. – „These are middle-class, safe and quiet neighborhoods just west of the river“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "safety": {
+     "v": 8,
+     "why": "Als sicheres Viertel beschrieben. – „These are middle-class, safe and quiet neighborhoods just west of the river“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Medell%C3%ADn",
+     "title": "Wikivoyage (en): Medellín"
+    }
+   ]
+  },
+  {
+   "name": "La Candelaria",
+   "kind": "viertel",
+   "lat": 6.2501048,
+   "lon": -75.5680187,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Innenstadtviertel, das nachts gemieden werden sollte.",
+   "goodFor": [
+    "Tagsüber erkunden"
+   ],
+   "watchOut": [
+    "Nachts meiden",
+    "Angebot geht eher ins Rotlichtmilieu"
+   ],
+   "values": {
+    "safety": {
+     "v": 2,
+     "why": "Nachts meiden, Rotlichtangebot. – „La Candelaria (El Centro) sollte man nachts meiden, hier geht das Angebot mehr ins rote Licht.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/Medell%C3%ADn",
+     "title": "Wikivoyage (de): Medellín"
+    }
+   ]
+  },
+  {
+   "name": "Carlos E. Restrepo",
+   "kind": "viertel",
+   "lat": 6.2577752,
+   "lon": -75.5809379,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Viertel nahe dem Museo de Arte Moderno, wo sich die Mittelschicht trifft.",
+   "goodFor": [
+    "Treffen der Mittelschicht",
+    "Museum de Arte Moderno"
+   ],
+   "watchOut": [
+    "Wenig Details im Text"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 6,
+     "why": "Mittelschicht trifft sich in der Nähe des Museums. – „The middle class also mingle outside Museo de Arte Moderno, near Carlos E Restrepo neighborhood“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Medell%C3%ADn",
+     "title": "Wikivoyage (en): Medellín"
+    }
+   ]
+  }
+ ]
+}

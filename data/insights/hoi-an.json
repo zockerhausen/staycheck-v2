@@ -1,0 +1,82 @@
+{
+ "v": 1,
+ "slug": "hoi-an",
+ "generated": "2026-11-07",
+ "model": "claude-haiku-5-5 (nur Wikivoyage-Text, Zitate geprüft)",
+ "areas": [
+  {
+   "name": "Hoi An Old Town",
+   "kind": "viertel",
+   "lat": 15.87713,
+   "lon": 108.32866,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Das historische Herz der Stadt mit engen Gassen und chinesisch geprägten Häusern, das vor allem für Spaziergänge geeignet ist.",
+   "goodFor": [
+    "Spaziergänge",
+    "Altstadtatmosphäre",
+    "Sehenswürdigkeiten zu Fuß"
+   ],
+   "watchOut": [
+    "Am Wochenende und an Feiertagen sehr voll",
+    "Motorroller in engen Gassen"
+   ],
+   "values": {
+    "quiet": {
+     "v": 3,
+     "why": "An Feiertagen und Wochenendabenden sehr voll, daher eher laut und gedrängt. – „the Old Town gets packed with standing-room-only crowds“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Hoi_An",
+     "title": "Wikivoyage (en): Hoi An"
+    }
+   ]
+  },
+  {
+   "name": "An Hội",
+   "kind": "viertel",
+   "lat": 15.8747,
+   "lon": 108.32636,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Die Insel an der Westseite des Thu-Bồn-Flusses mit Hotels und Restaurants, die über eine Brücke erreichbar ist.",
+   "goodFor": [
+    "Hotels",
+    "Restaurants"
+   ],
+   "watchOut": [
+    "Bei Überschwemmungen im November betroffen"
+   ],
+   "values": {
+    "food": {
+     "v": 6,
+     "why": "Ein eigener Bereich mit Hotels und Restaurants, Auswahl wird nicht näher bewertet. – „the hotel and restaurant area across the bridge on An Hoi peninsula“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "safety": {
+     "v": 5,
+     "why": "Der Bereich war bei der Flut 2013 betroffen, daher Abzug wegen Überschwemmungsrisiko. – „as well as the hotel and restaurant area across the bridge on An Hoi peninsula“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Hoi_An",
+     "title": "Wikivoyage (en): Hoi An"
+    }
+   ]
+  }
+ ]
+}

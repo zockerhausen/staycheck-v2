@@ -1,0 +1,300 @@
+{
+ "v": 1,
+ "slug": "budapest",
+ "generated": "2026-11-07",
+ "model": "claude-haiku-5-5 (nur Wikivoyage-Text, Zitate geprüft)",
+ "areas": [
+  {
+   "name": "Belváros",
+   "kind": "viertel",
+   "lat": 47.498,
+   "lon": 19.052,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Das Zentrum des V. Bezirks mit Korso, Váci utca und dem meisten Ausgehangebot, aber auch teuren Unterkünften.",
+   "goodFor": [
+    "Spaziergänge",
+    "Ausgehen",
+    "Sehenswürdigkeiten am Donauufer"
+   ],
+   "watchOut": [
+    "Teure Unterkünfte",
+    "Abzocke in Restaurants und Bars rund um die Váci utca"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 8,
+     "why": "Südlicher Teil ist ein Ausgehgebiet – „the southern part (Belváros proper) is mostly high-class accommodations, shops and nightlife area.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "food": {
+     "v": 7,
+     "why": "Viele Cafés und Restaurants an der Váci utca – „The pedestrianized Vaci utca makes for a very natural walk, with its many historic buildings, shops, cafes restaurants“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "budget": {
+     "v": 2,
+     "why": "Unterkünfte eher hochpreisig – „the southern part (Belváros proper) is mostly high-class accommodations, shops and nightlife area.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "transit": {
+     "v": 7,
+     "why": "Straßenbahnlinien entlang der Donau – „Tram line No. 2, 2B and 23 runs along the Danube river and offers a beautiful view of Buda.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Budapest/Belv%C3%A1ros",
+     "title": "Wikivoyage (en): Budapest/Belváros"
+    }
+   ]
+  },
+  {
+   "name": "Burgviertel",
+   "kind": "viertel",
+   "lat": 47.50148,
+   "lon": 19.0324797,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Das Gebiet auf dem Burgberg mit romantischen Gassen und Blick auf Pest, aber mit den höchsten Preisen der Stadt.",
+   "goodFor": [
+    "Spaziergänge",
+    "Aussicht auf Pest",
+    "Geschichte"
+   ],
+   "watchOut": [
+    "Hohe Preise"
+   ],
+   "values": {
+    "budget": {
+     "v": 2,
+     "why": "Die höchsten Preise der Stadt – „In this district you will find the most expensive prices in Budapest.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Budapest/Budav%C3%A1r",
+     "title": "Wikivoyage (en): Budapest/Budavár"
+    }
+   ]
+  },
+  {
+   "name": "Erzsébetváros",
+   "kind": "viertel",
+   "lat": 47.5029,
+   "lon": 19.0735,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Das Jüdische Viertel mit vielen Ruinenkneipen, Cafés und historischen Bauten.",
+   "goodFor": [
+    "Ausgehen in Ruinenkneipen",
+    "Jüdisches Kulturerbe",
+    "Historische Architektur"
+   ],
+   "watchOut": [
+    "Teils noch nicht renovierte Gebäude"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 9,
+     "why": "Viele beliebte Cafés, Bars und Musikorte – „Since 2002 some now very popular cafes, bars and summer music venues opened in buildings that were earlier considered for demolition“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Budapest/Erzs%C3%A9betv%C3%A1ros",
+     "title": "Wikivoyage (en): Budapest/Erzsébetváros"
+    }
+   ]
+  },
+  {
+   "name": "Józsefváros",
+   "kind": "viertel",
+   "lat": 47.4899,
+   "lon": 19.0769,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Beliebtes Studentenviertel mit Cafés und Pizzerien, nahe dem Keleti-Bahnhof, teils mit zwielichtigen Straßen.",
+   "goodFor": [
+    "Günstige Cafés und Pizza",
+    "Anbindung an den Keleti-Bahnhof"
+   ],
+   "watchOut": [
+    "Einige Straßenzüge östlich der Großen Ringstraße meiden",
+    "Drogendealer und Prostituierte in Teilen des Bezirks"
+   ],
+   "values": {
+    "food": {
+     "v": 7,
+     "why": "Mehrere Cafés und Pizzerien – „This area is popular, with scores of students and several cafés and pizzerias.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "safety": {
+     "v": 3,
+     "why": "Einige Gegenden sind nicht zu empfehlen – „ist ein Besuch einiger Gegenden des achten Bezirks, der Josefstadt (Józsefváros), nicht zu empfehlen“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    },
+    "transit": {
+     "v": 8,
+     "why": "Nähe zum Keleti-Bahnhof – „Keleti (Eastern) Railway Station is located at the junction of 7th, 8th and 14th districts.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Budapest/J%C3%B3zsefv%C3%A1ros",
+     "title": "Wikivoyage (en): Budapest/Józsefváros"
+    },
+    {
+     "url": "https://de.wikivoyage.org/wiki/Budapest",
+     "title": "Wikivoyage (de): Budapest"
+    }
+   ]
+  },
+  {
+   "name": "Hegyvidék",
+   "kind": "viertel",
+   "lat": 47.503,
+   "lon": 18.99055,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Grünes, hügeliges Wohngebiet mit Wäldern und dem höchsten Hügel der Stadt, ideal zum Wandern.",
+   "goodFor": [
+    "Wandern",
+    "Natur im Stadtgebiet"
+   ],
+   "watchOut": [
+    "Kein Anschluss an die Donau"
+   ],
+   "values": {
+    "nature": {
+     "v": 10,
+     "why": "Großteils bewaldet, beliebt bei Wanderern – „Because a significant part of the district is covered by forest, the area is very popular for local hikers.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Budapest/Hegyvid%C3%A9k",
+     "title": "Wikivoyage (en): Budapest/Hegyvidék"
+    }
+   ]
+  },
+  {
+   "name": "Angyalföld",
+   "kind": "viertel",
+   "lat": 47.534,
+   "lon": 19.067,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Ein Bezirk mit zeitgenössischen Galerien und der grünen Oase Margareteninsel.",
+   "goodFor": [
+    "Zeitgenössische Kunst",
+    "Grüne Erholung auf der Margareteninsel"
+   ],
+   "watchOut": [],
+   "values": {
+    "nature": {
+     "v": 8,
+     "why": "Margareteninsel als grüne Oase – „Famous for its contemporary art galleries, and Margaret Island, the green oasis in the middle of the city.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Budapest",
+     "title": "Wikivoyage (en): Budapest"
+    }
+   ]
+  },
+  {
+   "name": "Városliget",
+   "kind": "viertel",
+   "lat": 47.5149,
+   "lon": 19.0833,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Großer Stadtpark mit Heldenplatz und Schloss Vajdahunyad, gut erreichbar mit der U-Bahn und Trolleybus.",
+   "goodFor": [
+    "Parkspaziergänge",
+    "Museen und Sehenswürdigkeiten im Park",
+    "Ausflüge"
+   ],
+   "watchOut": [
+    "Nachts meiden"
+   ],
+   "values": {
+    "safety": {
+     "v": 4,
+     "why": "Nachts eher meiden – „Beautiful during the day, bigger public parks like Városliget, are better avoided at night.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "transit": {
+     "v": 7,
+     "why": "Trolleybus-Linie 70 direkt zum Park – „Line 70 from Kossuth square (Kossuth tér, next to the Parliament) to City Park (Városliget) also passes through the lively Nagymező utca“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "nature": {
+     "v": 9,
+     "why": "Großer Stadtpark – „Városliget (lit. City Park, German: Stadtwäldchen) is a large park in Budapest.“",
+     "src": [
+      1
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Budapest",
+     "title": "Wikivoyage (en): Budapest"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Budapest/V%C3%A1rosliget",
+     "title": "Wikivoyage (en): Budapest/Városliget"
+    }
+   ]
+  }
+ ]
+}

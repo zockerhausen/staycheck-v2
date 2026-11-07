@@ -1,0 +1,360 @@
+{
+ "v": 1,
+ "slug": "paris",
+ "generated": "2026-11-07",
+ "model": "claude-haiku-5-5 (nur Wikivoyage-Text, Zitate geprüft)",
+ "areas": [
+  {
+   "name": "4th Arrondissement",
+   "kind": "viertel",
+   "lat": 48.8562021,
+   "lon": 2.3556193,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Altes Paris mit Notre-Dame, dem Marais und dem Centre Pompidou, dazu eine sehr lebendige Barszene.",
+   "goodFor": [
+    "Nachtleben",
+    "Kultur",
+    "Spaziergänge"
+   ],
+   "watchOut": [
+    "Verkehr nur bedingt hilfreich für kurze Strecken"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 9,
+     "why": "Sehr aktive Barszene – „At night the 4th has several of the most active bar scenes most travellers will have ever seen“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Paris/4th_arrondissement",
+     "title": "Wikivoyage (en): Paris/4th arrondissement"
+    }
+   ]
+  },
+  {
+   "name": "Le Marais",
+   "kind": "viertel",
+   "lat": 48.86038,
+   "lon": 2.36074,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Trendviertel mit dichter Bar- und Geschäftsszene, bekannt als Schwulenviertel.",
+   "goodFor": [
+    "Ausgehen",
+    "Shopping",
+    "LGBTQ-Szene"
+   ],
+   "watchOut": [
+    "Hohe Dichte an Besuchern am Abend"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 7,
+     "why": "Hohe Dichte an Lokalitäten – „Das Trendviertel Le Marais gilt wegen seiner hohen Dichte an Lokalitäten und Geschäften für die LGBTQIA+-Community als das Schwulenviertel von Paris“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/LGBT_in_Paris",
+     "title": "Wikivoyage (de): LGBT in Paris"
+    }
+   ]
+  },
+  {
+   "name": "11th Arrondissement",
+   "kind": "viertel",
+   "lat": 48.85842,
+   "lon": 2.3797,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Zwei Zentren des Nachtlebens mit vielen Bars und Restaurants rund um Oberkampf und Bastille.",
+   "goodFor": [
+    "Ausgehen",
+    "Essen und Trinken"
+   ],
+   "watchOut": [
+    "Am Abend viel los, dadurch nicht immer ruhig"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 9,
+     "why": "Zwei blühende Nachtlebenzentren – „The 11th Arrondissement is home to two quite different but equally blossoming centres of Parisian nightlife“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "food": {
+     "v": 8,
+     "why": "Viele Restaurants und Bars – „With its history, the 11th is a place to eat and drink“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Paris/11th_arrondissement",
+     "title": "Wikivoyage (en): Paris/11th arrondissement"
+    }
+   ]
+  },
+  {
+   "name": "Bastille",
+   "kind": "viertel",
+   "lat": 48.8535713,
+   "lon": 2.3699734,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Bekannt für viele Bars und Clubs rund um den Platz.",
+   "goodFor": [
+    "Ausgehen",
+    "Clubs"
+   ],
+   "watchOut": [
+    "Verkehr rund um den Platz sehr dicht"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 8,
+     "why": "Viele Bars und Clubs – „The Bastille area is quite well known for its many bars and clubs.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Paris/12th_arrondissement",
+     "title": "Wikivoyage (en): Paris/12th arrondissement"
+    }
+   ]
+  },
+  {
+   "name": "18th Arrondissement",
+   "kind": "viertel",
+   "lat": 48.8923,
+   "lon": 2.349,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Montmartre und Pigalle mit Sacré-Cœur, aber auch Sehenswürdigkeiten mit Schattenseiten.",
+   "goodFor": [
+    "Montmartre",
+    "Kunstgeschichte",
+    "Ausblicke"
+   ],
+   "watchOut": [
+    "Nachts Vorsicht geboten",
+    "Trickbetrüger am Sacré-Cœur"
+   ],
+   "values": {
+    "safety": {
+     "v": 3,
+     "why": "Gilt als wenig sicher, nachts Vorsicht – „The 18th, 19th, and 20th arrondissements are widely seen as the least safe areas of Paris, but safety levels vary dramatically from street to street.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Paris",
+     "title": "Wikivoyage (en): Paris"
+    }
+   ]
+  },
+  {
+   "name": "Pigalle",
+   "kind": "viertel",
+   "lat": 48.88218,
+   "lon": 2.33709,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Viertel mit Nachtclubs wie Folies Pigalle, teils rotlichtgeprägt.",
+   "goodFor": [
+    "Nachtclubs",
+    "Ausgehen"
+   ],
+   "watchOut": [
+    "Clubs teils sehr touristisch und teuer"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 7,
+     "why": "Bekannte Nachtclubs – „Some nightclubs in Paris that are worth it: Folies Pigalle (pl. Pigalle, 18th, very trashy, €20), Rex Club“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Paris",
+     "title": "Wikivoyage (en): Paris"
+    }
+   ]
+  },
+  {
+   "name": "1st Arrondissement",
+   "kind": "viertel",
+   "lat": 48.8646144,
+   "lon": 2.334396,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Zentrum mit Louvre, Tuilerien und Palais-Royal, viele Attraktionen, Bars und Shops.",
+   "goodFor": [
+    "Sehenswürdigkeiten",
+    "Museen",
+    "Shopping"
+   ],
+   "watchOut": [
+    "Eher teuer",
+    "Châtelet-Les Halles kann chaotisch sein"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 5,
+     "why": "Einige gute Bars, aber kein klares Ausgehviertel – „the 1st arrondissement is full of attractions for travellers of all inclinations, including some of the finest parks, museums, shops, and bars in the city“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "budget": {
+     "v": 2,
+     "why": "Unterkünfte eher teuer – „Budget travellers, on the other hand, are probably better off in other, less central parts of town.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Paris/1st_arrondissement",
+     "title": "Wikivoyage (en): Paris/1st arrondissement"
+    }
+   ]
+  },
+  {
+   "name": "8th Arrondissement",
+   "kind": "viertel",
+   "lat": 48.8722,
+   "lon": 2.313,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Champs-Élysées und Luxusviertel mit vielen Luxushotels und Spitzenrestaurants.",
+   "goodFor": [
+    "Luxus",
+    "Champs-Élysées",
+    "Spitzenküche"
+   ],
+   "watchOut": [
+    "Kaum günstige Unterkünfte"
+   ],
+   "values": {
+    "food": {
+     "v": 8,
+     "why": "Luxusrestaurants – „This quartier is home to some of the most luxurious hotels and restaurants“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "budget": {
+     "v": 2,
+     "why": "Kaum günstige Unterkünfte – „you would be hard-pressed to find really inexpensive accommodation here - most are luxury hotels.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Paris/8th_arrondissement",
+     "title": "Wikivoyage (en): Paris/8th arrondissement"
+    }
+   ]
+  },
+  {
+   "name": "7th Arrondissement",
+   "kind": "viertel",
+   "lat": 48.85649,
+   "lon": 2.3128,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Eiffelturm, Invalides und Musée d'Orsay, eine vornehme Gegend.",
+   "goodFor": [
+    "Eiffelturm",
+    "Museen"
+   ],
+   "watchOut": [
+    "Taschendiebe am Eiffelturm"
+   ],
+   "values": {
+    "safety": {
+     "v": 4,
+     "why": "Häufig Taschendiebstahl am Eiffelturm – „The Eiffel Tower is a well-known hotspot for pickpockets, to the extent that warnings are regularly read over the tannoy system“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Paris/7th_arrondissement",
+     "title": "Wikivoyage (en): Paris/7th arrondissement"
+    }
+   ]
+  },
+  {
+   "name": "5th Arrondissement",
+   "kind": "viertel",
+   "lat": 48.84597,
+   "lon": 2.34435,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Lateinisches Viertel mit Sorbonne, Studentenleben und Cafés am Seineufer.",
+   "goodFor": [
+    "Studentenleben",
+    "Cafés",
+    "Kultur"
+   ],
+   "watchOut": [
+    "Teils gentrifiziert, Preise steigen"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 6,
+     "why": "Viele Clubs und Cafés – „Das 5. Arrondissement ist ein sehr gemischter Bezirk mit der staatstragenden Erhebung am Pantheon, der ehrwürdigen Universität Sorbonne, vielen Clubs und Cafés“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/Paris/5._Arrondissement",
+     "title": "Wikivoyage (de): Paris/5. Arrondissement"
+    }
+   ]
+  }
+ ]
+}

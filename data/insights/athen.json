@@ -1,0 +1,304 @@
+{
+ "v": 1,
+ "slug": "athen",
+ "generated": "2026-11-07",
+ "model": "claude-haiku-5-5 (nur Wikivoyage-Text, Zitate geprüft)",
+ "areas": [
+  {
+   "name": "Psiri",
+   "kind": "viertel",
+   "lat": 37.97842,
+   "lon": 23.72494,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Lebhaftes Ausgehviertel mit vielen Bars, kleinen Clubs und günstigeren Restaurants und Hotels.",
+   "goodFor": [
+    "Nachtleben",
+    "günstiges Essen",
+    "Fußgängerstraßen"
+   ],
+   "watchOut": [
+    "relativ laut"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 9,
+     "why": "Viele der angesagtesten Clubs und Bars Athens – „Many of Athens' hottest clubs and bars are in Psirri.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "quiet": {
+     "v": 3,
+     "why": "Als relativ laut beschrieben – „sehr viele Fußgängerstraßen, relativ laut, ca. 20 Fußminuten von der Akropolis“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    },
+    "food": {
+     "v": 7,
+     "why": "Viele relativ günstige Restaurants – „viele relativ günstige Restaurants, günstige Hotels“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    },
+    "budget": {
+     "v": 7,
+     "why": "Günstige Restaurants und Hotels – „viele relativ günstige Restaurants, günstige Hotels“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    },
+    "transit": {
+     "v": 8,
+     "why": "Gut per Metro über mehrere Stationen erreichbar – „Go to the Psyrrí area (Monastiraki or Thissio station, Lines 1 and 3 and Line 1 respectively)“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Athens",
+     "title": "Wikivoyage (en): Athens"
+    },
+    {
+     "url": "https://de.wikivoyage.org/wiki/Athen",
+     "title": "Wikivoyage (de): Athen"
+    }
+   ]
+  },
+  {
+   "name": "Monastiraki",
+   "kind": "viertel",
+   "lat": 37.97643,
+   "lon": 23.72591,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Bohemisches Viertel mit Läden, Flohmarkt-Charakter und Nähe zu den antiken Stätten.",
+   "goodFor": [
+    "Shopping",
+    "Nähe zur Akropolis",
+    "Hotels mit Dachterrassen"
+   ],
+   "watchOut": [
+    "viel Tourismus"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 6,
+     "why": "Wird als angesagtes Ausgehgebiet genannt, aber ohne Details – „Hip areas include Gazi, Psirri, Metaxourgio, Exarcheia, Monastiraki, Theseion and Kolonaki.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Athens",
+     "title": "Wikivoyage (en): Athens"
+    }
+   ]
+  },
+  {
+   "name": "Plaka",
+   "kind": "viertel",
+   "lat": 37.9728505,
+   "lon": 23.7300556,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Gemütliche historische Altstadt am Fuß der Akropolis mit Gassen, Cafés und Restaurants.",
+   "goodFor": [
+    "Traditionelle griechische Abende",
+    "Altstadt-Atmosphäre",
+    "Sehenswürdigkeiten zu Fuß"
+   ],
+   "watchOut": [
+    "höhere Preise",
+    "Taschendiebe",
+    "Betrugsmasche an der Bar"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 5,
+     "why": "Traditionelle Abende möglich, wenig große Clubs – „Traditional Greek evenings can be spent in Plaka.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "food": {
+     "v": 4,
+     "why": "Restaurants nicht die besten – „belebtes Touristenzentrum mit höheren Preisen und nicht den besten Restaurants“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    },
+    "budget": {
+     "v": 3,
+     "why": "Höhere Preise – „belebtes Touristenzentrum mit höheren Preisen und nicht den besten Restaurants“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    },
+    "safety": {
+     "v": 4,
+     "why": "Betrugsmasche auch in Plaka gemeldet – „The friendly stranger bar scam has been reported from areas of central Athens frequented by tourists, including Omonia, Syntagma, and Plaka.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Athens",
+     "title": "Wikivoyage (en): Athens"
+    },
+    {
+     "url": "https://de.wikivoyage.org/wiki/Athen",
+     "title": "Wikivoyage (de): Athen"
+    }
+   ]
+  },
+  {
+   "name": "Anafiotika",
+   "kind": "viertel",
+   "lat": 37.97241,
+   "lon": 23.72813,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Ruhiges, grünes Viertel in Plaka am Hang der Akropolis.",
+   "goodFor": [
+    "Ruhe",
+    "Grünflächen",
+    "Oase der Stille"
+   ],
+   "watchOut": [
+    "wenig Nachtleben"
+   ],
+   "values": {
+    "quiet": {
+     "v": 9,
+     "why": "Als Oase der Ruhe beschrieben – „It's an oasis of calm and quietness“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "nature": {
+     "v": 7,
+     "why": "Viele Grünflächen am Akropolis-Grün – „there are many green spaces which are part of the green space of Acropolis“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Athens",
+     "title": "Wikivoyage (en): Athens"
+    }
+   ]
+  },
+  {
+   "name": "Gkazi",
+   "kind": "viertel",
+   "lat": 37.9778249,
+   "lon": 23.7138826,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Trendiges Ausgehviertel mit Bars, Clubs und Galerien in umgebauten Fabriken, früher schwules Viertel.",
+   "goodFor": [
+    "Nachtleben",
+    "Clubs mit Livemusik",
+    "Metro-Anbindung"
+   ],
+   "watchOut": [
+    "spät öffnende Bars"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 9,
+     "why": "Eines der angesagtesten Ausgehviertel – „Gazi is one of the trendiest areas of Athens nightlife.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "transit": {
+     "v": 8,
+     "why": "Direkt per Metro Linie 3 erreichbar – „You can get there by metro line 3 at Kerameikos station.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Athens",
+     "title": "Wikivoyage (en): Athens"
+    }
+   ]
+  },
+  {
+   "name": "Kolonaki",
+   "kind": "viertel",
+   "lat": 37.9769749,
+   "lon": 23.7408135,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Edles Viertel mit Boutiquen, gehobenen Cafés, Bars und Restaurants am Lykavittos.",
+   "goodFor": [
+    "Shopping",
+    "Gehobene Cafés und Bars",
+    "People-Watching"
+   ],
+   "watchOut": [
+    "teuer"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 7,
+     "why": "Beliebtes Ziel zum Essen und Ausgehen, Bars bis nach Mitternacht – „Kolonaki is a staple dining and entertainment destination, catering to the city's urban working professionals“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "food": {
+     "v": 7,
+     "why": "Viele gehobene Cafés und Restaurants – „It also has the city's greatest concentration of trendy fashion boutiques, and many, mostly upscale, cafes, bars and restaurants.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "budget": {
+     "v": 2,
+     "why": "Cafés meist teuer – „Most of these cafes serve desserts, light meals and drinks, and most of them are expensive.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Athens",
+     "title": "Wikivoyage (en): Athens"
+    }
+   ]
+  }
+ ]
+}

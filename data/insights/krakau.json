@@ -1,0 +1,166 @@
+{
+ "v": 1,
+ "slug": "krakau",
+ "generated": "2026-11-07",
+ "model": "claude-haiku-5-5 (nur Wikivoyage-Text, Zitate geprüft)",
+ "areas": [
+  {
+   "name": "Stare Miasto",
+   "kind": "viertel",
+   "lat": 50.0614319,
+   "lon": 19.9361575,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Historisches Zentrum mit den meisten Sehenswürdigkeiten, Restaurants und Bars auf engem Raum.",
+   "goodFor": [
+    "Sehenswürdigkeiten",
+    "Ausgehen in Kellerlokalen",
+    "Essen und Cafés"
+   ],
+   "watchOut": [
+    "Unterkünfte in der Altstadt sind teurer",
+    "Umliegende Straßen können nachts Schauplatz von …"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 9,
+     "why": "Viele Tanzlokale in mittelalterlichen Kellern – „Dance venues are scattered around Old Town and are often down in the medieval cellars, especially along Szewska, św. Tomasza and Szpitalna.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "food": {
+     "v": 9,
+     "why": "Sehr große Auswahl an Lokalen – „It has been said that there are more than 300 eating and drinking establishments in the Old Town alone.“",
+     "src": [
+      1
+     ],
+     "w": 1.0
+    },
+    "budget": {
+     "v": 4,
+     "why": "Privatunterkünfte kosten meist 60–90 € pro Nacht – „You can usually get a one bedroom for €60-90 a night, located in the Old Town.“",
+     "src": [
+      1
+     ],
+     "w": 1.0
+    },
+    "nature": {
+     "v": 8,
+     "why": "Grüner Parkring um die Altstadt – „the ring of lightly-forested parkland, known as the Planty, that used to mark the Old City walls and moat“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Krak%C3%B3w/Old_Town",
+     "title": "Wikivoyage (en): Kraków/Old Town"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Krak%C3%B3w",
+     "title": "Wikivoyage (en): Kraków"
+    }
+   ]
+  },
+  {
+   "name": "Kasimir",
+   "kind": "viertel",
+   "lat": 50.05186,
+   "lon": 19.94495,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Ehemals jüdisch geprägtes Viertel, heute junges, angesagtes Ausgehviertel mit historischen Synagogen.",
+   "goodFor": [
+    "Ausgehen bis spät in die Nacht",
+    "Jüdische Geschichte und Synagogen"
+   ],
+   "watchOut": [
+    "Im Text werden keine Details zu Lärm oder Sicherheit genannt"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 9,
+     "why": "Ausdrücklich als Ort für lange Nächte beschrieben – „Hier ist man genau richtig, wenn man abends und nachts lange ausgehen will.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/Krakau/Kazimierz",
+     "title": "Wikivoyage (de): Krakau/Kazimierz"
+    }
+   ]
+  },
+  {
+   "name": "Zwierzyniec",
+   "kind": "viertel",
+   "lat": 50.05516,
+   "lon": 19.90568,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Grünster und exklusivster Stadtteil Krakaus mit Parks und Wald.",
+   "goodFor": [
+    "Natur und Grün",
+    "Spaziergänge im Park"
+   ],
+   "watchOut": [
+    "Eher Wohngebiet mit Villen, wenig Ausgehangebot im Text …"
+   ],
+   "values": {
+    "nature": {
+     "v": 9,
+     "why": "Grünster Stadtteil mit Wald und Parks – „Zwierzyniec (the greenest area in Kraków with Błonia, Las Wolski forest and the Kościuszko Mound)“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Krak%C3%B3w",
+     "title": "Wikivoyage (en): Kraków"
+    }
+   ]
+  },
+  {
+   "name": "Dębniki",
+   "kind": "viertel",
+   "lat": 50.0518611,
+   "lon": 19.9270367,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Grünes Gebiet südwestlich der Altstadt mit dem Kloster Tyniec.",
+   "goodFor": [
+    "Natur",
+    "Ausflug zum Kloster Tyniec"
+   ],
+   "watchOut": [
+    "Im Text werden keine Angaben zu Nachtleben oder Verkehr …"
+   ],
+   "values": {
+    "nature": {
+     "v": 8,
+     "why": "Grünes Gebiet mit Kloster Tyniec – „Dębniki, a green area to the South West of the Old Town, which includes the Tyniec Monastery.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Krak%C3%B3w",
+     "title": "Wikivoyage (en): Kraków"
+    }
+   ]
+  }
+ ]
+}

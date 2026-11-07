@@ -1,0 +1,226 @@
+{
+ "v": 1,
+ "slug": "kapstadt",
+ "generated": "2026-11-07",
+ "model": "claude-haiku-5-5 (nur Wikivoyage-Text, Zitate geprüft)",
+ "areas": [
+  {
+   "name": "Stadtzentrum",
+   "kind": "viertel",
+   "lat": -33.924389,
+   "lon": 18.420056,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Das Stadtzentrum ist kompakt, gut zu Fuß erkundbar und mit dem Hauptbahnhof gut angebunden.",
+   "goodFor": [
+    "Sehenswürdigkeiten zu Fuß",
+    "Günstige Unterkünfte",
+    "Anbindung an Bahn"
+   ],
+   "watchOut": [
+    "Nach Büroschluss und abends nicht zu Fuß",
+    "Wertsachen nicht offen mitführen"
+   ],
+   "values": {
+    "budget": {
+     "v": 6,
+     "why": "Unterkünfte oft günstiger, Attraktionen in der Nähe. – „Staying in the city centre often works out cheaper as all the attractions are nearby“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "safety": {
+     "v": 5,
+     "why": "Tagsüber allgemein sicher, abends und nachts deutlich riskanter. – „Central Cape Town is generally safe to walk around by day“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "transit": {
+     "v": 8,
+     "why": "Hauptbahnhof liegt direkt im Zentrum. – „Cape Town's main station is located in the city centre on the corner of Strand and Adderley Street.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Cape_Town",
+     "title": "Wikivoyage (en): Cape Town"
+    }
+   ]
+  },
+  {
+   "name": "Waterfront",
+   "kind": "viertel",
+   "lat": -33.9030556,
+   "lon": 18.4216667,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Das V&A Waterfront ist ein Hafen- und Vergnügungsviertel mit Restaurants, Shopping und Bus-Anbindung.",
+   "goodFor": [
+    "Abendessen und Ausgehen",
+    "Hafenspaziergänge",
+    "Bus-Anbindung"
+   ],
+   "watchOut": [
+    "Abends nur mit Taxi oder Ride-Hailing empfohlen, außer in …"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 7,
+     "why": "Als Vergnügungsgebiet genannt. – „Ausnahmen hierzu sind aber zum Beispiel die Vergnügungsgebiete in der Longstreet, in Seapoint, an der Waterfront oder in Observatory.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "safety": {
+     "v": 7,
+     "why": "Gilt als Ausnahme, in der man auch kurze Strecken zu Fuß gehen kann. – „Ausnahmen hierzu sind aber zum Beispiel die Vergnügungsgebiete in der Longstreet, in Seapoint, an der Waterfront oder in Observatory.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "transit": {
+     "v": 7,
+     "why": "Bus-Linie mit Halt am Waterfront. – „T01: Wood - Table View - Civic Centre - Waterfront (Umstieg Bahnhalt Woodstock)“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/Kapstadt",
+     "title": "Wikivoyage (de): Kapstadt"
+    }
+   ]
+  },
+  {
+   "name": "Sea Point",
+   "kind": "viertel",
+   "lat": -33.9172222,
+   "lon": 18.3922222,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Sea Point ist ein Küstenviertel mit Ausgehmöglichkeiten, das abends als Ausnahme zum Taxi-Gebot gilt.",
+   "goodFor": [
+    "Ausgehen",
+    "Strandnähe",
+    "Minibus-Route"
+   ],
+   "watchOut": [
+    "Minibus-Taxis sind weniger sicher als Taxis"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 7,
+     "why": "Als Vergnügungsgebiet genannt. – „Ausnahmen hierzu sind aber zum Beispiel die Vergnügungsgebiete in der Longstreet, in Seapoint, an der Waterfront oder in Observatory.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "safety": {
+     "v": 6,
+     "why": "Gilt als Ausnahme, abends gehen ist hier weniger riskant. – „Ausnahmen hierzu sind aber zum Beispiel die Vergnügungsgebiete in der Longstreet, in Seapoint, an der Waterfront oder in Observatory.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "transit": {
+     "v": 6,
+     "why": "Minibus-Route, oft von Touristen genutzt, aber weniger sicher. – „except for the Green Point - Sea Point - Clifton - Camps Bay route that is frequently used by tourists“",
+     "src": [
+      1
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/Kapstadt",
+     "title": "Wikivoyage (de): Kapstadt"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Cape_Town",
+     "title": "Wikivoyage (en): Cape Town"
+    }
+   ]
+  },
+  {
+   "name": "Gardens",
+   "kind": "viertel",
+   "lat": -33.9327778,
+   "lon": 18.4097222,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Gardens ist ein Viertel nahe dem Zentrum mit junger Cafékultur rund um die Kloof Street.",
+   "goodFor": [
+    "Cafés",
+    "Shopping",
+    "Unterkunft nahe Zentrum"
+   ],
+   "watchOut": [
+    "Abends auf Taxi achten"
+   ],
+   "values": {
+    "food": {
+     "v": 6,
+     "why": "Junge Cafékultur in der Kloof Street. – „The area around vibey Kloof Street in Gardens/Tamboerskloof with its young cafe culture and hip shopping is a good choice.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Cape_Town",
+     "title": "Wikivoyage (en): Cape Town"
+    }
+   ]
+  },
+  {
+   "name": "Tamboerskloof",
+   "kind": "viertel",
+   "lat": -33.92833,
+   "lon": 18.40639,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Tamboerskloof ist ein Viertel nahe dem Zentrum mit junger Cafékultur rund um die Kloof Street.",
+   "goodFor": [
+    "Cafés",
+    "Shopping",
+    "Unterkunft nahe Zentrum"
+   ],
+   "watchOut": [
+    "Abends auf Taxi achten"
+   ],
+   "values": {
+    "food": {
+     "v": 6,
+     "why": "Junge Cafékultur in der Kloof Street. – „The area around vibey Kloof Street in Gardens/Tamboerskloof with its young cafe culture and hip shopping is a good choice.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Cape_Town",
+     "title": "Wikivoyage (en): Cape Town"
+    }
+   ]
+  }
+ ]
+}

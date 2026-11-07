@@ -1,0 +1,174 @@
+{
+ "v": 1,
+ "slug": "new-york",
+ "generated": "2026-11-07",
+ "model": "claude-haiku-5-5 (nur Wikivoyage-Text, Zitate geprüft)",
+ "areas": [
+  {
+   "name": "East Village",
+   "kind": "viertel",
+   "lat": 40.72927,
+   "lon": -73.98736,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Lebendiges, vielfältiges Viertel mit vielen Bars und Essensangeboten, besonders rund um St. Marks Place.",
+   "goodFor": [
+    "Ausgehen",
+    "Essen in vielen Varianten",
+    "Spaziergänge abseits der Hauptstraßen"
+   ],
+   "watchOut": [
+    "Wochenenden oft überlaufen und laut",
+    "Betrunkene Gruppen am Wochenende"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 8,
+     "why": "Viele Bars und eine Gruppe japanischer Bars – „The East Village also has lots of bars, as well as a sizeable cluster of Japanese bars.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "food": {
+     "v": 8,
+     "why": "Vielfältige Lokale, immer etwas los – „This colorful neighborhood is full of eateries as diverse as its population, and there's always something happening on St. Marks Place, 24/7.“",
+     "src": [
+      1
+     ],
+     "w": 1.0
+    },
+    "safety": {
+     "v": 6,
+     "why": "Kriminalität heute deutlich gesunken, Obdachlose sichtbar – „but the neighborhood, like the rest of New York, is way lower in crime“",
+     "src": [
+      1
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/New_York_City",
+     "title": "Wikivoyage (en): New York City"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Manhattan/East_Village",
+     "title": "Wikivoyage (en): Manhattan/East Village"
+    }
+   ]
+  },
+  {
+   "name": "Greenwich Village",
+   "kind": "viertel",
+   "lat": 40.7319802,
+   "lon": -73.9965658,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Ruhigeres Wohnviertel mit Charme, Bäumen und Restaurants rund um den Washington Square Park.",
+   "goodFor": [
+    "Abend in Bars und Restaurants",
+    "Spaziergänge durch Wohnstraßen",
+    "Kurzbesuch"
+   ],
+   "watchOut": [
+    "Hohe Mieten, vieles eher teuer",
+    "Bus nur entlang der Avenues"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 8,
+     "why": "Gute Mischung aus Bars und Ausgehangeboten – „Greenwich Village is probably the best neighborhood to go if you are in town for just a brief period“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "food": {
+     "v": 8,
+     "why": "Einige der besten Restaurants und Bars westlich der University Place – „West of University Place are many historic and attractive brownstones and some of the city's best restaurants and bars“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    },
+    "transit": {
+     "v": 5,
+     "why": "Busse nur entlang der Avenues, viele Seitenstraßen zu Fuß – „It is possible to take some of the aforementioned buses along the avenues in the Village“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    },
+    "nature": {
+     "v": 6,
+     "why": "Baumgesäumte Straßen und Washington Square Park – „the Village is still worth a visit for its lovely tree-lined streets and colorful history“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/New_York_City",
+     "title": "Wikivoyage (en): New York City"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Manhattan/Greenwich_Village",
+     "title": "Wikivoyage (en): Manhattan/Greenwich Village"
+    }
+   ]
+  },
+  {
+   "name": "Lower East Side",
+   "kind": "viertel",
+   "lat": 40.71594,
+   "lon": -73.98681,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Altes Einwandererviertel, heute Mix aus Bars, Musikclubs, Traditionsläden und Boutiquen.",
+   "goodFor": [
+    "Ausgehen",
+    "Traditionelle Deli-Küche",
+    "Historische Straßen wie Orchard Street"
+   ],
+   "watchOut": [
+    "An Wochenenden sehr voll",
+    "Schlangen vor Bars"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 9,
+     "why": "Sehr beliebt zum Trinken und Ausgehen – „The Lower East Side is a very popular neighborhood for drinking, especially on the part of young people“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "quiet": {
+     "v": 2,
+     "why": "Am Wochenende sehr voll und laut – „especially on weekend nights, it can be uncomfortably packed, with tremendous crowding on the streets as well as on lines to get into bars“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "food": {
+     "v": 8,
+     "why": "Traditionelle Lokale mit Pastrami und Bialys – „a venerable old no-nonsense place that just might serve up the best pastrami sandwich in the world“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Manhattan/Lower_East_Side",
+     "title": "Wikivoyage (en): Manhattan/Lower East Side"
+    }
+   ]
+  }
+ ]
+}

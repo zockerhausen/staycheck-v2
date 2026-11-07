@@ -1,0 +1,327 @@
+{
+ "v": 1,
+ "slug": "taipeh",
+ "generated": "2026-11-07",
+ "model": "claude-haiku-5-5 (nur Wikivoyage-Text, Zitate geprüft)",
+ "areas": [
+  {
+   "name": "Xinyi",
+   "kind": "viertel",
+   "lat": 25.0333448,
+   "lon": 121.5668963,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Moderner Finanz- und Geschäftsbezirk mit großen, auffälligen Clubs und Blick auf Taipei 101.",
+   "goodFor": [
+    "Clubs",
+    "Shopping",
+    "Geschäftsreisende"
+   ],
+   "watchOut": [
+    "Viele Luxushotels, daher eher teuer"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 9,
+     "why": "Xinyi hat laut Text die größten und auffälligsten Clubs. – „Xinyi is where the biggest and most flashy clubs are, especially the ATT4FUN Building which has an excellent view of Taipei 101“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "budget": {
+     "v": 2,
+     "why": "Xinyi wird mit vielen Luxushotels beschrieben, also eher teuer. – „Business travelers would probably prefer to stay in Xinyi, the financial district, where many luxury hotels are found“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Taipei",
+     "title": "Wikivoyage (en): Taipei"
+    }
+   ]
+  },
+  {
+   "name": "Da'an",
+   "kind": "viertel",
+   "lat": 25.0265152,
+   "lon": 121.534395,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Modernes Geschäftsviertel im Osten mit Kaufhäusern, Boutiquen, Lounge-Bars und Restaurants.",
+   "goodFor": [
+    "Shopping",
+    "Lounge-Bars",
+    "Restaurants"
+   ],
+   "watchOut": [
+    "Teures Pflaster"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 6,
+     "why": "Lounge-Bars werden genannt, die Stimmung wird als angenehm beschrieben. – „Offering department stores, plenty of fashion boutiques, lounge bars, and atmospheric restaurants, and some of the most expensive real estate in the city“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "food": {
+     "v": 7,
+     "why": "Atmosphärische Restaurants werden genannt, die Auswahl wird aber nicht genauer bewertet. – „Offering department stores, plenty of fashion boutiques, lounge bars, and atmospheric restaurants, and some of the most expensive real estate in the city“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Taipei",
+     "title": "Wikivoyage (en): Taipei"
+    }
+   ]
+  },
+  {
+   "name": "Zhongshan",
+   "kind": "viertel",
+   "lat": 25.0689,
+   "lon": 121.53306,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Kulturviertel mit Flussparks, Museen und einer großen Pub- und Bar-Szene.",
+   "goodFor": [
+    "Bars",
+    "Parks am Fluss",
+    "Kultur"
+   ],
+   "watchOut": [
+    "Bars können laut sein"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 8,
+     "why": "Eine große Pub- und Bar-Szene wird ausdrücklich genannt. – „Zhongshan has riverside parks, the Martyrs' Shrine, the Fine Arts Museum, and a large pub and bar scene“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "food": {
+     "v": 7,
+     "why": "Der Stationsbereich wird für besondere Restaurants und Cafés genannt. – „bohemian Zhongshan MRT Station area, which is known for its cool cafes, quirky boutiques, and distinctive restaurants“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    },
+    "nature": {
+     "v": 7,
+     "why": "Flussparks werden genannt. – „Zhongshan has riverside parks, the Martyrs' Shrine, the Fine Arts Museum, and a large pub and bar scene“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Taipei",
+     "title": "Wikivoyage (en): Taipei"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Taipei/Zhongshan",
+     "title": "Wikivoyage (en): Taipei/Zhongshan"
+    }
+   ]
+  },
+  {
+   "name": "Zhongzheng",
+   "kind": "viertel",
+   "lat": 25.0323,
+   "lon": 121.5181,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Politisches Zentrum mit vielen günstigen Unterkünften nahe dem Hauptbahnhof.",
+   "goodFor": [
+    "Günstige Unterkunft",
+    "Bahnhofsnähe",
+    "Sehenswürdigkeiten wie die Chiang Kai-shek …"
+   ],
+   "watchOut": [
+    "Obdachlose rund um den Hauptbahnhof"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 5,
+     "why": "Nur eine Bar mit günstigem Bier wird genannt. – „Visit the Taiwan Beer Bar, also known as Taipei Brewery, in Zhongzheng“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "budget": {
+     "v": 8,
+     "why": "Viele günstige Unterkünfte in Zhongzheng werden genannt. – „Tourists sleeping one night in Taipei might want to stay in Zhongzheng, near the Main Train Station, where many budget accommodations can be found“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Taipei",
+     "title": "Wikivoyage (en): Taipei"
+    }
+   ]
+  },
+  {
+   "name": "Beitou",
+   "kind": "viertel",
+   "lat": 25.03333,
+   "lon": 121.53333,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Bekannt für heiße Quellen und den Zugang zum Yangmingshan-Nationalpark.",
+   "goodFor": [
+    "Heiße Quellen",
+    "Naturerlebnis",
+    "Spas"
+   ],
+   "watchOut": [
+    "Unterkünfte meist im oberen Preissegment"
+   ],
+   "values": {
+    "budget": {
+     "v": 2,
+     "why": "Unterkünfte sind fast alle im oberen Preissegment. – „Es gibt eine Vielzahl an Hotels und Spas, fast alle in der oberen Preisregion“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "transit": {
+     "v": 8,
+     "why": "Der Busbahnhof liegt direkt an der MRT-Station Beitou. – „Der Busbahnhof ist beim Ausgang 1 der MRT Beitou“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "nature": {
+     "v": 8,
+     "why": "Heiße Quellen und ein Nationalpark werden genannt. – „This district is famous for hot springs and the Yangmingshan National Park“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/Taipeh/Beitou",
+     "title": "Wikivoyage (de): Taipeh/Beitou"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Taipei",
+     "title": "Wikivoyage (en): Taipei"
+    }
+   ]
+  },
+  {
+   "name": "Wenshan",
+   "kind": "viertel",
+   "lat": 24.9897,
+   "lon": 121.5722,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Ruhiger südlicher Bezirk mit Teeplantagen, Teehäusern und dem Zoo.",
+   "goodFor": [
+    "Teehäuser",
+    "Natur",
+    "Zoo"
+   ],
+   "watchOut": [
+    "Verbindungen innerhalb des Bezirks meist per Bus"
+   ],
+   "values": {
+    "transit": {
+     "v": 4,
+     "why": "Die Metro hält an den Enden, innerhalb des Bezirks fährt man meist mit dem Bus. – „As the two metro lines serving Wenshan stop at opposite ends of the district, transportation within the area is mainly by bus“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "nature": {
+     "v": 8,
+     "why": "Teeplantagen und Grün prägen den Bezirk. – „This leafy district in the south of the city is known for its tea plantations and tea houses“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Taipei/Wenshan",
+     "title": "Wikivoyage (en): Taipei/Wenshan"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Taipei",
+     "title": "Wikivoyage (en): Taipei"
+    }
+   ]
+  },
+  {
+   "name": "Neihu",
+   "kind": "viertel",
+   "lat": 25.06666667,
+   "lon": 121.5833333,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "IT-Zentrum im Osten mit großen Einkaufszentren, Parks und Wanderwegen in den Bergen.",
+   "goodFor": [
+    "Wandern",
+    "Shopping",
+    "Tempel"
+   ],
+   "watchOut": [
+    "Laut Text eher ein Geheimtipp, wenig touristische …"
+   ],
+   "values": {
+    "food": {
+     "v": 6,
+     "why": "Restaurants werden neben Einkaufszentren genannt, ohne Auswahl genauer zu bewerten. – „A juxtaposition of local Taiwanese culture and modern shopping malls and restaurants“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "nature": {
+     "v": 8,
+     "why": "Parks, Berge und Wanderwege werden genannt (gilt für Neihu und Nangang zusammen). – „The area also features parks as well as mountains dotted with temples and crisscrossed with hiking trails“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Taipei",
+     "title": "Wikivoyage (en): Taipei"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Taipei/Neihu",
+     "title": "Wikivoyage (en): Taipei/Neihu"
+    }
+   ]
+  }
+ ]
+}

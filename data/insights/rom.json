@@ -1,0 +1,336 @@
+{
+ "v": 1,
+ "slug": "rom",
+ "generated": "2026-11-07",
+ "model": "claude-haiku-5-5 (nur Wikivoyage-Text, Zitate geprüft)",
+ "areas": [
+  {
+   "name": "Campo de' Fiori",
+   "kind": "viertel",
+   "lat": 41.89558,
+   "lon": 12.47216,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Lebhafter Platz in der Altstadt, an lauen Sommerabenden Treffpunkt der jungen Römer.",
+   "goodFor": [
+    "Ausgehen",
+    "Abends draußen sitzen"
+   ],
+   "watchOut": [
+    "Gedränge in Kneipen",
+    "Schlägereien laut Text"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 8,
+     "why": "Junge Römer treffen sich dort, Kneipen und Treffpunkte am Platz. – „younger generations sprawl around the square and streets of Campo de' Fiori“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "safety": {
+     "v": 4,
+     "why": "Berichtet von schweren Schlägereien in den Kneipen. – „Nearby in Campo dei fiori there are several crowded pubs. Beware, there have been huge and serious fights there.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Rome",
+     "title": "Wikivoyage (en): Rome"
+    }
+   ]
+  },
+  {
+   "name": "Piazza Navona",
+   "kind": "viertel",
+   "lat": 41.89892,
+   "lon": 12.47312,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Altstadtgegend mit vielen Kneipen und Bars in den engen Gassen hinter dem Platz.",
+   "goodFor": [
+    "Ausgehen in Kneipen und Bars"
+   ],
+   "watchOut": [
+    "Bar-Preise sind hoch"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 8,
+     "why": "Viele Kneipen und Bars hinter dem Platz. – „Hinter der Piazza Navona findet man massig nette Kneipen und Bars“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/Rom",
+     "title": "Wikivoyage (de): Rom"
+    }
+   ]
+  },
+  {
+   "name": "Trastevere",
+   "kind": "viertel",
+   "lat": 41.88594,
+   "lon": 12.47653,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Belebtes Viertel jenseits des Tibers mit vielen Lokalen, Pubs und Restaurants.",
+   "goodFor": [
+    "Ausgehen",
+    "Essen gehen",
+    "Abendlicher Bummel"
+   ],
+   "watchOut": [
+    "Nachts sehr belebt, daher oft laut"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 9,
+     "why": "Gilt als eines der Nachtleben-Zentren Roms. – „Today Trastevere is one of the centers of Roman night life; rich in pubs, restaurants, clubs.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "food": {
+     "v": 8,
+     "why": "Viele Plätze zum Essen und Trinken. – „On the other side of the River Tiber (Tevere) is Trastevere district where there are many places to eat and drink.“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Rome/Trastevere",
+     "title": "Wikivoyage (en): Rome/Trastevere"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Rome",
+     "title": "Wikivoyage (en): Rome"
+    }
+   ]
+  },
+  {
+   "name": "Testaccio",
+   "kind": "viertel",
+   "lat": 41.8795062,
+   "lon": 12.474483,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Viertel südwestlich von Aventin am Tiber, bekannt für traditionelle Küche und Partys am Wochenende.",
+   "goodFor": [
+    "Traditionelles römisches Essen",
+    "Ausgehen am Wochenende"
+   ],
+   "watchOut": [
+    "Am Wochenende viel Trubel"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 8,
+     "why": "Nachts viele Discos, besonders am Wochenende. – „In Testaccio you can find great traditional Roman restaurants, and at night the zone is filled with discos.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "food": {
+     "v": 8,
+     "why": "Gute traditionelle römische Restaurants. – „In Testaccio you can find great traditional Roman restaurants, and at night the zone is filled with discos.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Rome/Aventino-Testaccio",
+     "title": "Wikivoyage (en): Rome/Aventino-Testaccio"
+    }
+   ]
+  },
+  {
+   "name": "San Lorenzo",
+   "kind": "viertel",
+   "lat": 41.8975,
+   "lon": 12.51554,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Studentenviertel östlich vom Bahnhof Termini mit vielen Pubs und Clubs.",
+   "goodFor": [
+    "Ausgehen",
+    "Günstige Kneipen",
+    "Kleiner Straßenmarkt"
+   ],
+   "watchOut": [
+    "Am Wochenende sehr voll"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 9,
+     "why": "Eines der wichtigsten Nachtleben-Zentren Roms. – „It has a small street market (food, clothing), unpretentious caffès and is a major centre of Rome's night life.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "food": {
+     "v": 6,
+     "why": "Kleiner Straßenmarkt und einfache Cafés. – „It has a small street market (food, clothing), unpretentious caffès and is a major centre of Rome's night life.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Rome/Nomentano",
+     "title": "Wikivoyage (en): Rome/Nomentano"
+    }
+   ]
+  },
+  {
+   "name": "Esquilino",
+   "kind": "viertel",
+   "lat": 41.89466,
+   "lon": 12.50688,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Viertel südlich vom Bahnhof Termini mit Markt, Chinatown-Charakter und vielen Pickpockets.",
+   "goodFor": [
+    "Gute Bahnanbindung",
+    "Lebensmittel und Spezialitäten"
+   ],
+   "watchOut": [
+    "Taschendiebstahl",
+    "Schlepper am Bahnhof"
+   ],
+   "values": {
+    "food": {
+     "v": 6,
+     "why": "Viele Spezialläden mit Lebensmitteln. – „It is now partly a Chinese immigrant neighbourhood, and specialty groceries and shoe stores abound.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "safety": {
+     "v": 3,
+     "why": "Bekannt für Taschendiebe. – „Termini (the main railway station), Esquilino, bus line 64 (Termini to San Pietro), and the Trevi fountain are well known for pickpockets“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    },
+    "transit": {
+     "v": 9,
+     "why": "Hauptbahnhof liegt im Viertel. – „in diesem Bezirk liegt der Hauptbahnhof Stazione Termini“",
+     "src": [
+      2
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Rome/Esquilino-San_Giovanni",
+     "title": "Wikivoyage (en): Rome/Esquilino-San Giovanni"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Rome",
+     "title": "Wikivoyage (en): Rome"
+    },
+    {
+     "url": "https://de.wikivoyage.org/wiki/Rom/Esquilino",
+     "title": "Wikivoyage (de): Rom/Esquilino"
+    }
+   ]
+  },
+  {
+   "name": "Modern Centre",
+   "kind": "viertel",
+   "lat": 41.9033,
+   "lon": 12.4903,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Geschäftiges Zentrum mit Via Veneto, vielen Hotels und Nachtleben.",
+   "goodFor": [
+    "Einkaufen",
+    "Ausgehen",
+    "Hotels"
+   ],
+   "watchOut": [
+    "Die historischen Sehenswürdigkeiten liegen anderswo"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 8,
+     "why": "Zentrum für Nachtleben und Shopping. – „is the city's hub of activity, especially shopping and nightlife“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Rome/Modern_Centre",
+     "title": "Wikivoyage (en): Rome/Modern Centre"
+    }
+   ]
+  },
+  {
+   "name": "Colosseo",
+   "kind": "viertel",
+   "lat": 41.890169,
+   "lon": 12.492269,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Herz des antiken Roms mit Kolosseum und Forum, gut an die Metro angebunden.",
+   "goodFor": [
+    "Antike Stätten",
+    "Metro-Anbindung"
+   ],
+   "watchOut": [
+    "Ticket-Schlepper vor den Attraktionen"
+   ],
+   "values": {
+    "safety": {
+     "v": 4,
+     "why": "Ticket-Schlepper vor dem Kolosseum. – „Be wary of ticket touts outside popular tourist attractions such as the Colosseum.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "transit": {
+     "v": 9,
+     "why": "Metro-Station Colosseo ist neu angebunden. – „this central extension, including the Colosseo and Porta Metronia stations, opened in December 2025“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Rome",
+     "title": "Wikivoyage (en): Rome"
+    }
+   ]
+  }
+ ]
+}

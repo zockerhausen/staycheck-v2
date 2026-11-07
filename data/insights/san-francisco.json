@@ -1,0 +1,312 @@
+{
+ "v": 1,
+ "slug": "san-francisco",
+ "generated": "2026-11-07",
+ "model": "claude-haiku-5-5 (nur Wikivoyage-Text, Zitate geprüft)",
+ "areas": [
+  {
+   "name": "Tenderloin",
+   "kind": "viertel",
+   "lat": 37.7842493,
+   "lon": -122.4139933,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Günstige ethnische Restaurants und Bars, aber eine der problematischsten Gegenden der Stadt.",
+   "goodFor": [
+    "Günstiges Essen",
+    "Ausgehen in Dive Bars und Lounges",
+    "Kulturelle Entdeckungen"
+   ],
+   "watchOut": [
+    "Viel Kleinkriminalität und Gewalt auf der Straße",
+    "Nachts nicht zu Fuß unterwegs sein"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 6,
+     "why": "Trendige Lounges und Clubs sowie Dive Bars – „It now has a decent selection of trendy lounges and hip clubs“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "food": {
+     "v": 7,
+     "why": "Viele gute, günstige ethnische Restaurants – „it's also full of good, cheap ethnic restaurants and colorful dive bars“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "budget": {
+     "v": 5,
+     "why": "Hostels für Budget-Reisende, aber Vorsicht bei Lockangeboten – „There are also several backpacker's hostels in this area, particularly on Taylor St., that attract both backpackers and those traveling on a budget“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "safety": {
+     "v": 2,
+     "why": "Viel Gewaltkriminalität und Diebstahl – „In particular there is a lot of violent street crime like assault and theft“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/San_Francisco/Civic_Center-Tenderloin",
+     "title": "Wikivoyage (en): San Francisco/Civic Center-Tenderloin"
+    }
+   ]
+  },
+  {
+   "name": "Civic Center",
+   "kind": "viertel",
+   "lat": 37.77959,
+   "lon": -122.41679,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Kulturzentrum mit Oper, Symphonie, Museen und prächtigen Gebäuden, aber mit offenen Plätzen voller Probleme.",
+   "goodFor": [
+    "Oper, Symphonie und Ballett",
+    "Museen und Architektur"
+   ],
+   "watchOut": [
+    "Obdachlosigkeit und Drogenszene auf den Plätzen"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 8,
+     "why": "Abendliche Aufführungen von Oper, Symphonie und Ballett – „Culture vultures flock here at night to see performances of the San Francsico opera, symphony, and ballet“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "safety": {
+     "v": 3,
+     "why": "Ruf als Treffpunkt für Drogenabhängige und Obdachlose – „Over the years however, it has developed a reputation for attracting many of the city's drug-addicted and homeless to its open plazas“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/San_Francisco/Civic_Center-Tenderloin",
+     "title": "Wikivoyage (en): San Francisco/Civic Center-Tenderloin"
+    }
+   ]
+  },
+  {
+   "name": "Chinatown",
+   "kind": "viertel",
+   "lat": 37.7943011,
+   "lon": -122.4063757,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Älteste große chinesische Gemeinde außerhalb Asiens, lebendig und tagsüber voll, abends ruhig.",
+   "goodFor": [
+    "Authentische Kultur und Märkte",
+    "Erkunden zu Fuß"
+   ],
+   "watchOut": [
+    "Portsmouth Square kann nach Einbruch der Dunkelheit rau sein",
+    "Wenig Nachtleben"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 2,
+     "why": "Wenige Bars und Lokale zum Trinken – „Chinatown has less drinking establishments“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "quiet": {
+     "v": 7,
+     "why": "Abends deutlich ruhiger – „Chinatown, despite its crowds during the day, becomes eerily quiet after around 6-7PM“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "safety": {
+     "v": 7,
+     "why": "Nach Einbruch der Dunkelheit eher sicher – „Chinatown is actually one of the safer neighborhoods in San Francisco after dark“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/San_Francisco/Chinatown-North_Beach",
+     "title": "Wikivoyage (en): San Francisco/Chinatown-North Beach"
+    }
+   ]
+  },
+  {
+   "name": "North Beach",
+   "kind": "viertel",
+   "lat": 37.80117,
+   "lon": -122.409,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Italienisch geprägtes Viertel mit Cafés, Restaurants und einem lebendigen Nachtleben.",
+   "goodFor": [
+    "Ausgehen und Bars",
+    "Kaffeehauskultur",
+    "Italienisches Essen"
+   ],
+   "watchOut": [
+    "Nachts viel Lärm durch Feiernde",
+    "Rotlichtbereich am Broadway"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 9,
+     "why": "Bekannt für lebendiges Nachtleben mit vielen Bars und Clubs – „Today, the neighborhood is also very well known for its happening nightlife scene“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "quiet": {
+     "v": 2,
+     "why": "Bis in die frühen Morgenstunden laut – „North Beach remains busy with revelers and party-goers well into the early hours of the morning“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "food": {
+     "v": 8,
+     "why": "Viele italienische Cafés, Restaurants und Bäckereien – „Authentic old-world Italian cafes, restaurants, delicatessens and bakeries line the steep streets“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "nature": {
+     "v": 5,
+     "why": "Einige Parks und Sitzgelegenheiten – „There are many more parks, public seating, and cafes with curbside tables in North Beach“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/San_Francisco/Chinatown-North_Beach",
+     "title": "Wikivoyage (en): San Francisco/Chinatown-North Beach"
+    }
+   ]
+  },
+  {
+   "name": "Fisherman's Wharf",
+   "kind": "viertel",
+   "lat": 37.80813,
+   "lon": -122.41659,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Touristisches Zentrum am Wasser mit Seafood-Restaurants, Pier 39 und Fähren nach Alcatraz.",
+   "goodFor": [
+    "Seafood-Restaurants",
+    "Blick auf die Bucht",
+    "Fährverbindungen"
+   ],
+   "watchOut": [
+    "Taschendiebstahl und Abzocke",
+    "Viele Touristenfallen und Menschenmassen"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 2,
+     "why": "Nachtleben eher schwach – „The Wharf is not particularly well known for its nightlife scene“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "food": {
+     "v": 8,
+     "why": "Sehr gute Seafood-Restaurants – „for having some of the best seafood restaurants in the city“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "budget": {
+     "v": 2,
+     "why": "Kaum günstige Unterkünfte – „There are very few budget options here“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "safety": {
+     "v": 3,
+     "why": "Taschendiebstahl ist häufig – „Beware of pickpocketing: it is a common occurrence at Fisherman's Wharf“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "transit": {
+     "v": 6,
+     "why": "Pedicabs, Kutschen und F-Line-Straßenbahn – „all of which will take you up and down the Wharf“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/San_Francisco/Fisherman%27s_Wharf",
+     "title": "Wikivoyage (en): San Francisco/Fisherman's Wharf"
+    }
+   ]
+  },
+  {
+   "name": "Haight",
+   "kind": "viertel",
+   "lat": 37.77027,
+   "lon": -122.44503,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Ehemaliges Hippie-Viertel mit eklektischen Läden und Cafés, bunt und eigenwillig.",
+   "goodFor": [
+    "Eklektische Läden und Cafés",
+    "Hippie-Geschichte"
+   ],
+   "watchOut": [
+    "Aggressives Betteln",
+    "Nachts nach der Barschließung unsicher"
+   ],
+   "values": {
+    "safety": {
+     "v": 4,
+     "why": "Nachts nach Barschluss unangenehm oder gefährlich – „Both areas of the Haight can be dangerous and uncomfortable late at night after the bars close“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/San_Francisco/Haight",
+     "title": "Wikivoyage (en): San Francisco/Haight"
+    }
+   ]
+  }
+ ]
+}

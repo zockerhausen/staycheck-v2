@@ -1,0 +1,280 @@
+{
+ "v": 1,
+ "slug": "edinburgh",
+ "generated": "2026-11-07",
+ "model": "claude-haiku-5-5 (nur Wikivoyage-Text, Zitate geprüft)",
+ "areas": [
+  {
+   "name": "New Town",
+   "kind": "viertel",
+   "lat": 55.95546,
+   "lon": -3.199,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Geordnetes Raster aus georgianischen Stadthäusern mit Princes Street, Shoppingmeile und Parks, das laut Text vor allem Wohngebiet ist.",
+   "goodFor": [
+    "Shopping",
+    "Spaziergänge in Parks",
+    "Ausgehen entlang George Street"
+   ],
+   "watchOut": [
+    "Princes Street-Einzelhandel wird im Text als mittelmäßig …"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 8,
+     "why": "George Street ist die Hauptmeile für Kneipen. – „George Street is the main drinking strip, along with the St Andrews Square area, the cross streets“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "transit": {
+     "v": 8,
+     "why": "Die Straßenbahn fährt durch die New Town. – „It passes through New Town along Princes Street and Shandwick Place to Haymarket“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    },
+    "nature": {
+     "v": 6,
+     "why": "Öffentliche Parks, aber viele Gärten sind privat. – „These gardens and St Andrew Square are now public parks, but many remain private, such as Queen Street Gardens“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Edinburgh/New_Town",
+     "title": "Wikivoyage (en): Edinburgh/New Town"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Edinburgh",
+     "title": "Wikivoyage (en): Edinburgh"
+    }
+   ]
+  },
+  {
+   "name": "Old Town",
+   "kind": "viertel",
+   "lat": 55.9495699,
+   "lon": -3.1914536,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Mittelalterliches Herz mit der Royal Mile, Kneipen und Bussen, aber vielen Touristenfallen.",
+   "goodFor": [
+    "Geschichte",
+    "Sehenswürdigkeiten auf der Royal Mile"
+   ],
+   "watchOut": [
+    "Pubs an der Royal Mile sind oft Touristenfallen oder voll …",
+    "Essen ist im oberen Teil der Royal Mile teuer"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 6,
+     "why": "Viele Pubs, aber oft touristisch und überlaufen. – „Royal Mile and Grassmarket pubs are often tourist traps or mobbed with stag and hen parties getting ratted“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "budget": {
+     "v": 3,
+     "why": "Essen und Trinken sind dort überteuert. – „As with eating, the Grassmarket and upper Royal Mile are overpriced“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    },
+    "transit": {
+     "v": 8,
+     "why": "Häufige Busse über die High Street. – „Frequent buses cross it north-south: at the top from Forrest Rd and George IV Bridge to descend the Mound into New Town“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Edinburgh/Old_Town",
+     "title": "Wikivoyage (en): Edinburgh/Old Town"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Edinburgh",
+     "title": "Wikivoyage (en): Edinburgh"
+    }
+   ]
+  },
+  {
+   "name": "Canongate",
+   "kind": "viertel",
+   "lat": 55.95158,
+   "lon": -3.17899,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Untere Royal Mile bis Holyrood, gut mit Bus 35 erreichbar.",
+   "goodFor": [
+    "Weg zum Holyrood Palace"
+   ],
+   "watchOut": [],
+   "values": {
+    "transit": {
+     "v": 7,
+     "why": "Bus 35 fährt alle 30 Minuten. – „Bus 35 runs along Canongate the lower part every 30 min“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Edinburgh/Old_Town",
+     "title": "Wikivoyage (en): Edinburgh/Old Town"
+    }
+   ]
+  },
+  {
+   "name": "Broughton",
+   "kind": "viertel",
+   "lat": 55.9605152,
+   "lon": -3.1887833,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Straße im Nordosten der New Town mit einer breiten Auswahl an Bars.",
+   "goodFor": [
+    "Bars",
+    "verschiedene Szenen"
+   ],
+   "watchOut": [],
+   "values": {
+    "nightlife": {
+     "v": 8,
+     "why": "Große Auswahl an Bars. – „Broughton Street northeast side of New Town has a wide range of bars“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Edinburgh/New_Town",
+     "title": "Wikivoyage (en): Edinburgh/New Town"
+    }
+   ]
+  },
+  {
+   "name": "Haymarket",
+   "kind": "viertel",
+   "lat": 55.94598,
+   "lon": -3.21713,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Verkehrsknoten im Westen, an dem mehrere Buslinien und die Straßenbahn halten.",
+   "goodFor": [
+    "Umsteigen"
+   ],
+   "watchOut": [],
+   "values": {
+    "transit": {
+     "v": 7,
+     "why": "Bus 2 fährt dorthin im 20-30-Minuten-Takt. – „Bus 2 runs from Hermiston west edge of the city every 20-30 min to Haymarket, Lothian Rd, Grassmarket and Potterrow“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Edinburgh/Old_Town",
+     "title": "Wikivoyage (en): Edinburgh/Old Town"
+    }
+   ]
+  },
+  {
+   "name": "Leith",
+   "kind": "viertel",
+   "lat": 55.9725499,
+   "lon": -3.1709492,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Ehemaliger Hafen im Norden mit Bistros, Läden und Blick auf den Firth of Forth.",
+   "goodFor": [
+    "Bistros",
+    "Spaziergänge am Wasser",
+    "Royal Yacht Britannia"
+   ],
+   "watchOut": [
+    "Im Text ist Leith als Hafen mit früher rauem Ruf beschrieben"
+   ],
+   "values": {
+    "food": {
+     "v": 5,
+     "why": "Bistros und Läden ersetzen die Industrie. – „It's now only a minor port and has lost much of its industry, to be replaced by retail, bistros and cobbled wharves“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "transit": {
+     "v": 7,
+     "why": "Bus 16 und weitere Verbindungen. – „Bus 16 is the way to go west along the coast: from Leith Walk it goes to Newhaven“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "nature": {
+     "v": 5,
+     "why": "Lage am Wasser des Firth of Forth. – „Leith is the historic port of Edinburgh the capital of Scotland, north of city centre on the shore of the Firth of Forth“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Edinburgh/Leith",
+     "title": "Wikivoyage (en): Edinburgh/Leith"
+    }
+   ]
+  },
+  {
+   "name": "Newhaven",
+   "kind": "viertel",
+   "lat": 55.98033,
+   "lon": -3.19482,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Küstennaher Ortsteil nördlich von Leith mit Busverbindung.",
+   "goodFor": [
+    "Spaziergänge am Wasser"
+   ],
+   "watchOut": [],
+   "values": {
+    "transit": {
+     "v": 7,
+     "why": "Bus 16 fährt nach Newhaven. – „Bus 16 is the way to go west along the coast: from Leith Walk it goes to Newhaven“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Edinburgh/Leith",
+     "title": "Wikivoyage (en): Edinburgh/Leith"
+    }
+   ]
+  }
+ ]
+}

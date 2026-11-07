@@ -1,0 +1,87 @@
+{
+ "v": 1,
+ "slug": "dublin",
+ "generated": "2026-11-07",
+ "model": "claude-haiku-5-5 (nur Wikivoyage-Text, Zitate geprüft)",
+ "areas": [
+  {
+   "name": "Temple Bar",
+   "kind": "viertel",
+   "lat": 53.3454957,
+   "lon": -6.2631139,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Touristisches Kneipen- und Ausgehviertel südlich des Liffey mit Pubs, Restaurants und Straßenmusik.",
+   "goodFor": [
+    "Ausgehen",
+    "Pubs und Livemusik",
+    "Zentrale Lage"
+   ],
+   "watchOut": [
+    "Sehr touristisch und voll",
+    "Teuer bei Getränken"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 9,
+     "why": "Viele Kneipen und Bars im Viertel – „It's nowadays a tourist strip of cobbled alleys, drinking places, restaurants, more drinking places, shops, even more drinking places“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "safety": {
+     "v": 6,
+     "why": "Vorsicht geboten, aber viele Menschen auf den Straßen – „Take care, but the sheer number of people on the streets gives you a measure of safety.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "transit": {
+     "v": 7,
+     "why": "DART-Station Tara Street für Temple Bar – „Tara Street just south of the river for Temple Bar and Trinity College“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Dublin",
+     "title": "Wikivoyage (en): Dublin"
+    }
+   ]
+  },
+  {
+   "name": "Drumcondra",
+   "kind": "viertel",
+   "lat": 53.3680988,
+   "lon": -6.2554727,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Stadtteil mit Bahnanbindung über Connolly und die Zweiglinie.",
+   "goodFor": [
+    "Bahnanbindung"
+   ],
+   "watchOut": [],
+   "values": {
+    "transit": {
+     "v": 6,
+     "why": "Zugverbindung über eine Zweiglinie – „Another branch line connects Grand Canal Dock with Connolly and Drumcondra.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Dublin",
+     "title": "Wikivoyage (en): Dublin"
+    }
+   ]
+  }
+ ]
+}

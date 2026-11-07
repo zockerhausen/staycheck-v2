@@ -1,0 +1,124 @@
+{
+ "v": 1,
+ "slug": "kyoto",
+ "generated": "2026-11-07",
+ "model": "claude-haiku-5-5 (nur Wikivoyage-Text, Zitate geprüft)",
+ "areas": [
+  {
+   "name": "Higashiyama",
+   "kind": "viertel",
+   "lat": 35.01847,
+   "lon": 135.7826,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Östlich des Kamo-Flusses gelegen, mit Tempeln, Bergen und dem Geisha-Viertel Gion.",
+   "goodFor": [
+    "Sehenswürdigkeiten",
+    "Natur und Berge",
+    "Historische Atmosphäre"
+   ],
+   "watchOut": [
+    "Wenig Platz für Hotels, daher wenige Unterkünfte",
+    "Gehobene Restaurants in Gion sehr teuer"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 3,
+     "why": "Die besten Geisha-Häuser in Gion sind für Reisende kaum zugänglich. – „Die wirklich guten Häuser sind für durchreisende Touristen nicht zugänglich“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "budget": {
+     "v": 2,
+     "why": "Essen in Gion ist sehr teuer. – „In Gion gibt es wenn man wirklich viel Geld hat, man erwarte eine 6stellige Rechnung pro Person“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "transit": {
+     "v": 7,
+     "why": "Die U-Bahn bringt Reisende nahe an viele Sehenswürdigkeiten. – „it also gets you within a short walk of many of the sights in eastern Kyoto“",
+     "src": [
+      1
+     ],
+     "w": 1.0
+    },
+    "nature": {
+     "v": 7,
+     "why": "Lage zwischen Fluss und Bergen. – „Nestled between the Kamo River and the temple-studded mountains of Higashiyama, this area's many attractions include“",
+     "src": [
+      1
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/Ky%C5%8Dto/Higashiyama",
+     "title": "Wikivoyage (de): Kyōto/Higashiyama"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Kyoto",
+     "title": "Wikivoyage (en): Kyoto"
+    }
+   ]
+  },
+  {
+   "name": "Arashiyama",
+   "kind": "viertel",
+   "lat": 35.008,
+   "lon": 135.71,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Westliches Kyoto mit bewaldeten Hügeln, historischen Stätten und viel Natur.",
+   "goodFor": [
+    "Natur und Wälder",
+    "Tagesausflug",
+    "Historische Stätten"
+   ],
+   "watchOut": [
+    "Sehr wenige Bars",
+    "Wenige Unterkünfte, viele Besucher bleiben nur tagsüber"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 2,
+     "why": "Nur wenige Bars vorhanden. – „The Arashiyama has very few bars.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "transit": {
+     "v": 6,
+     "why": "Die Hankyu-Linie erreicht Arashiyama. – „It's useful for reaching Arashiyama and the Katsura Rikyu; it runs all the way to Osaka and Kobe.“",
+     "src": [
+      1
+     ],
+     "w": 1.0
+    },
+    "nature": {
+     "v": 9,
+     "why": "Bewaldete Hügel und natürliche Schönheit. – „Set against the beautiful tree-covered hills of Arashiyama, this district is rich in both historic and natural wonders.“",
+     "src": [
+      1
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Kyoto/Arashiyama",
+     "title": "Wikivoyage (en): Kyoto/Arashiyama"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Kyoto",
+     "title": "Wikivoyage (en): Kyoto"
+    }
+   ]
+  }
+ ]
+}

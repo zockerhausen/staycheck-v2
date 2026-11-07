@@ -1,0 +1,257 @@
+{
+ "v": 1,
+ "slug": "prag",
+ "generated": "2026-11-07",
+ "model": "claude-haiku-5-5 (nur Wikivoyage-Text, Zitate geprüft)",
+ "areas": [
+  {
+   "name": "Altstadt",
+   "kind": "viertel",
+   "lat": 50.08428,
+   "lon": 14.41784,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Historisches Zentrum am rechten Moldauufer mit vielen Sehenswürdigkeiten, Bars und Hotels.",
+   "goodFor": [
+    "Sehenswürdigkeiten",
+    "Nachtleben",
+    "Unterkunft"
+   ],
+   "watchOut": [
+    "Touristenfallen am Altstädter Ring",
+    "Taschendiebe"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 9,
+     "why": "Viele Bars und Diskotheken, besonders in der Altstadt genannt – „Es existiert eine Vielzahl von Bars, Kneipen und Diskotheken, insbesondere in der Altstadt zwischen dem Wenzelsplatz und der Karlsbrücke.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "budget": {
+     "v": 6,
+     "why": "Preiswerte Pensionen und Hotels leicht zu finden – „Pensionen und preiswerte Hotels sind im Bezirk Praha 1 und hier besonders in der Altstadt, in der Neustadt und im Jüdischen Viertel leicht zu finden.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "safety": {
+     "v": 4,
+     "why": "Touristenfalle mit überhöhten Preisen am Altstädter Ring – „Be aware of the tourist trap called Old Prague Ham which is an outdoor fast food restaurant located in the Old Town Square.“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/Prag",
+     "title": "Wikivoyage (de): Prag"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Prague/Old_Town_and_Josefov",
+     "title": "Wikivoyage (en): Prague/Old Town and Josefov"
+    }
+   ]
+  },
+  {
+   "name": "Josefstadt",
+   "kind": "viertel",
+   "lat": 50.0900187,
+   "lon": 14.4180229,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Das ehemalige Jüdische Viertel nördlich der Altstadt mit Synagogen und dem Alten Jüdischen Friedhof.",
+   "goodFor": [
+    "Geschichte",
+    "Kultur",
+    "Günstige Unterkünfte"
+   ],
+   "watchOut": [
+    "Preise bei Hotels teils höher, Hauptsaison beachten"
+   ],
+   "values": {
+    "budget": {
+     "v": 6,
+     "why": "Preiswerte Pensionen und Hotels im Jüdischen Viertel leicht zu finden – „Pensionen und preiswerte Hotels sind im Bezirk Praha 1 und hier besonders in der Altstadt, in der Neustadt und im Jüdischen Viertel leicht zu finden.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/Prag",
+     "title": "Wikivoyage (de): Prag"
+    }
+   ]
+  },
+  {
+   "name": "Neustadt",
+   "kind": "viertel",
+   "lat": 50.0789658,
+   "lon": 14.4233288,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Im 14. Jahrhundert gegründeter Stadtteil mit Boutiquen, Kleinbetrieben und Einkaufszentren.",
+   "goodFor": [
+    "Shopping",
+    "Unterkunft"
+   ],
+   "watchOut": [
+    "Hotels im Stadtzentrum oft teurer"
+   ],
+   "values": {
+    "budget": {
+     "v": 6,
+     "why": "Preiswerte Pensionen und Hotels leicht zu finden – „Pensionen und preiswerte Hotels sind im Bezirk Praha 1 und hier besonders in der Altstadt, in der Neustadt und im Jüdischen Viertel leicht zu finden.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/Prag",
+     "title": "Wikivoyage (de): Prag"
+    }
+   ]
+  },
+  {
+   "name": "Václavské náměstí",
+   "kind": "viertel",
+   "lat": 50.08158,
+   "lon": 14.42717,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Der große Boulevard der Neustadt mit Nationalmuseum und vielen Bars, aber auch Taschendieben.",
+   "goodFor": [
+    "Nachtleben",
+    "Sehenswürdigkeiten"
+   ],
+   "watchOut": [
+    "Taschendiebe",
+    "Wechselstuben meiden"
+   ],
+   "values": {
+    "safety": {
+     "v": 4,
+     "why": "Taschendiebe-Teams sind hier aktiv – „Be aware of teams of pickpockets that lurk outside metro stations, overcrowded trams, Charles Bridge, Wenceslas Square and the Old Town Square.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Prague",
+     "title": "Wikivoyage (en): Prague"
+    }
+   ]
+  },
+  {
+   "name": "Hradschin",
+   "kind": "viertel",
+   "lat": 50.09106,
+   "lon": 14.39589,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Burgviertel auf dem Burgberg mit der Prager Burg und dem Veitsdom, sehr touristisch.",
+   "goodFor": [
+    "Prager Burg",
+    "Ausblicke",
+    "Gehobene Hotels"
+   ],
+   "watchOut": [
+    "Starker Besucherandrang, Wartezeiten",
+    "Hotels eher teuer"
+   ],
+   "values": {
+    "budget": {
+     "v": 2,
+     "why": "Hotels überwiegend im gehobenen Preissegment – „So kann es nicht verwundern, dass die hier ansässigen Hotels überwiegend zur gehobenen Kategorie gehören.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/Prag/Hradschin",
+     "title": "Wikivoyage (de): Prag/Hradschin"
+    }
+   ]
+  },
+  {
+   "name": "Kleinseite",
+   "kind": "viertel",
+   "lat": 50.0871582,
+   "lon": 14.4048224,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Barocker Stadtteil westlich der Moldau, über die Karlsbrücke mit der Altstadt verbunden.",
+   "goodFor": [
+    "Gehobene Hotels",
+    "Barocke Architektur"
+   ],
+   "watchOut": [
+    "Hotels eher teuer"
+   ],
+   "values": {
+    "budget": {
+     "v": 2,
+     "why": "Vor allem gehobene, also teurere Hotels – „Gehobene Hotels findet man vor allem auf der Prager Kleinseite.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/Prag",
+     "title": "Wikivoyage (de): Prag"
+    }
+   ]
+  },
+  {
+   "name": "Anděl",
+   "kind": "viertel",
+   "lat": 50.07139,
+   "lon": 14.40429,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Stadtteil mit Obdachlosen-Konzentration, der für Reisende eher Aufmerksamkeit verlangt.",
+   "goodFor": [
+    "Anbindung ans Zentrum"
+   ],
+   "watchOut": [
+    "Hohe Konzentration von Obdachlosen"
+   ],
+   "values": {
+    "safety": {
+     "v": 4,
+     "why": "Hohe Konzentration von Obdachlosen – „The only area with a high concentration of homeless people is in front of the central station, and Anděl.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Prague",
+     "title": "Wikivoyage (en): Prague"
+    }
+   ]
+  }
+ ]
+}

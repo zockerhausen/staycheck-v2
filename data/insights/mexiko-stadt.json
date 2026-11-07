@@ -1,0 +1,66 @@
+{
+ "v": 1,
+ "slug": "mexiko-stadt",
+ "generated": "2026-11-07",
+ "model": "claude-haiku-5-5 (nur Wikivoyage-Text, Zitate geprüft)",
+ "areas": [
+  {
+   "name": "Zona Rosa",
+   "kind": "viertel",
+   "lat": 19.42649,
+   "lon": -99.16408,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Geschäfts- und Unterhaltungsviertel mit vielen Hotels, Clubs, Restaurants und einer großen schwulen Szene.",
+   "goodFor": [
+    "Nachtleben",
+    "Einkaufen",
+    "Schwul-freundliche Bars"
+   ],
+   "watchOut": [
+    "Viele Straßenverkäufer und Bettler",
+    "Aufdringliche Ansprachen"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 9,
+     "why": "Rund um die Uhr Betrieb, viele Bars und Clubs – „Zona Rosa is probably the only area in Mexico City that really never sleeps.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "quiet": {
+     "v": 2,
+     "why": "Durchgehend belebt, wenig Ruhe – „Zona Rosa is probably the only area in Mexico City that really never sleeps.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "food": {
+     "v": 7,
+     "why": "Viele Restaurants an der Calle Genova – „The area has a few pedestrian-only streets, being Genova the main street where many restaurants and shops are located.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "safety": {
+     "v": 5,
+     "why": "Viel Aufdringlichkeit durch Verkäufer, aber kein Gewaltthema – „There is still heavy tourist traffic, and you will easily find yourself accosted by people in the streets selling goods and services“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Mexico_City/Zona_Rosa",
+     "title": "Wikivoyage (en): Mexico City/Zona Rosa"
+    }
+   ]
+  }
+ ]
+}

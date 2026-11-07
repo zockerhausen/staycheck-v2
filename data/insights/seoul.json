@@ -1,0 +1,185 @@
+{
+ "v": 1,
+ "slug": "seoul",
+ "generated": "2026-11-07",
+ "model": "claude-haiku-5-5 (nur Wikivoyage-Text, Zitate geprüft)",
+ "areas": [
+  {
+   "name": "Itaewon-dong",
+   "kind": "viertel",
+   "lat": 37.53842,
+   "lon": 126.992,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Seouls internationales Viertel mit westlichen Bars, Restaurants und Shops, das vor allem bei Ausländern beliebt ist.",
+   "goodFor": [
+    "Ausgehen in internationaler Atmosphäre",
+    "Internationales Essen",
+    "Einkaufen von Souvenirs"
+   ],
+   "watchOut": [
+    "Nachtleben wird von Ausländern dominiert, für Koreaner eher …"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 8,
+     "why": "Viele bekannte Bars und Clubs auf der Hauptstraße und in den Gassen – „A number of notable bars and clubs spot the area, both on the main street and in the nearby alleys.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "food": {
+     "v": 9,
+     "why": "Authentische mexikanische, türkische, nahöstliche und indische Küche – „one of the only places where you can find authentic Mexican, Turkish, Middle Eastern, and Indian food on the entire peninsula“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Seoul/Yongsan",
+     "title": "Wikivoyage (en): Seoul/Yongsan"
+    }
+   ]
+  },
+  {
+   "name": "Jongno",
+   "kind": "viertel",
+   "lat": 37.5807,
+   "lon": 126.98283,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Historischer Kern mit Palästen, Tempeln und traditionellen Vierteln im Norden der Altstadt.",
+   "goodFor": [
+    "Sightseeing",
+    "Traditionelle Kultur"
+   ],
+   "watchOut": [
+    "Viele Sehenswürdigkeiten, dafür nicht alles nah beieinander"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 6,
+     "why": "Hat auch moderne Ausgehviertel – „Jongno-gu is also home to modern commercial and nightlife districts, making it a unique neighborhood“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "food": {
+     "v": 7,
+     "why": "Traditionelles Essen in Insadong und Bukchon – „you can enjoy traditional arts, crafts, and food in places like Insadong and Bukchon Hanok Village.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Seoul/Jongno",
+     "title": "Wikivoyage (en): Seoul/Jongno"
+    }
+   ]
+  },
+  {
+   "name": "Anguk-dong",
+   "kind": "viertel",
+   "lat": 37.57721,
+   "lon": 126.98363,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Beliebtes Backpacker-Viertel in Jongno, gut für Sightseeing.",
+   "goodFor": [
+    "Günstige Unterkünfte",
+    "Sightseeing zu Fuß"
+   ],
+   "watchOut": [
+    "Nach Angaben des Textes nur inoffizieller Backpacker-Bezirk"
+   ],
+   "values": {
+    "budget": {
+     "v": 7,
+     "why": "Backpacker-Viertel, also eher günstige Unterkünfte – „Seoul has two unofficial backpacker districts, Jongno (Anguk/Sinseol-dong) to the northeast of the city“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Seoul",
+     "title": "Wikivoyage (en): Seoul"
+    }
+   ]
+  },
+  {
+   "name": "Insa-dong",
+   "kind": "viertel",
+   "lat": 37.57165,
+   "lon": 126.98642,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Traditionelles Viertel mit Antiquitätenmarkt und Kunsthandwerk.",
+   "goodFor": [
+    "Kunsthandwerk",
+    "Traditionelles Essen"
+   ],
+   "watchOut": [
+    "Belebt bei Touristen"
+   ],
+   "values": {
+    "food": {
+     "v": 7,
+     "why": "Traditionelles Essen und Kunsthandwerk – „you can enjoy traditional arts, crafts, and food in places like Insadong and Bukchon Hanok Village.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Seoul/Jongno",
+     "title": "Wikivoyage (en): Seoul/Jongno"
+    }
+   ]
+  },
+  {
+   "name": "Yongsan",
+   "kind": "viertel",
+   "lat": 37.538,
+   "lon": 126.965,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Zentral gelegener Bezirk zwischen Gangnam und Jongno mit Itaewon und dem Elektronikmarkt.",
+   "goodFor": [
+    "Itaewon erkunden",
+    "Elektronik-Schnäppchen"
+   ],
+   "watchOut": [
+    "Hat US-Militärstützpunkt, der verlagert werden soll"
+   ],
+   "values": {
+    "quiet": {
+     "v": 7,
+     "why": "Relativ ruhig im Vergleich zu Nord- und Süd-Nachbarn – „For the time being, Yongsan is relatively quiet compared to its northern and southern neighbors“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Seoul/Yongsan",
+     "title": "Wikivoyage (en): Seoul/Yongsan"
+    }
+   ]
+  }
+ ]
+}

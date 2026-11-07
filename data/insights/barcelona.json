@@ -1,0 +1,284 @@
+{
+ "v": 1,
+ "slug": "barcelona",
+ "generated": "2026-11-07",
+ "model": "claude-haiku-5-5 (nur Wikivoyage-Text, Zitate geprüft)",
+ "areas": [
+  {
+   "name": "Ciutat Vella",
+   "kind": "viertel",
+   "lat": 41.3819793,
+   "lon": 2.1804154,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Die Altstadt mit Barri Gòtic, Las Ramblas und Raval ist das Zentrum von Nachtleben und Touristenverkehr.",
+   "goodFor": [
+    "Nachtleben",
+    "Sehenswürdigkeiten",
+    "Altstadtflair"
+   ],
+   "watchOut": [
+    "Taschendiebe auf La Rambla"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 9,
+     "why": "Nachtleben und Touristenverkehr konzentrieren sich hier. – „Ciutat Vella is where the nightlife, as well as the tourist traffic in Barcelona is centred.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "safety": {
+     "v": 3,
+     "why": "La Rambla ist ein Hotspot für Taschendiebe. – „La Rambla as well is a smorgasbord for pickpockets.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Barcelona/Ciutat_Vella",
+     "title": "Wikivoyage (en): Barcelona/Ciutat Vella"
+    }
+   ]
+  },
+  {
+   "name": "Gotisches Viertel",
+   "kind": "viertel",
+   "lat": 41.38384,
+   "lon": 2.17451,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Das mittelalterliche Barri Gòtic in der Altstadt, abends ein beliebtes Ausgehviertel.",
+   "goodFor": [
+    "Ausgehen",
+    "Altstadt erleben"
+   ],
+   "watchOut": [
+    "Abends recht laut"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 8,
+     "why": "Abends beliebtes Ausgehviertel. – „Barcelona ist eine lebhafte Stadt und besonders die Innenstadtviertel wie das Born, Gotico, Raval sind abends beliebte Ausgehviertel.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/Barcelona",
+     "title": "Wikivoyage (de): Barcelona"
+    }
+   ]
+  },
+  {
+   "name": "Plaça Reial",
+   "kind": "viertel",
+   "lat": 41.38009,
+   "lon": 2.17526,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Ein Platz in der Altstadt, der laut Text als unsicher gilt.",
+   "goodFor": [],
+   "watchOut": [
+    "Nachts meiden"
+   ],
+   "values": {
+    "safety": {
+     "v": 2,
+     "why": "Wird als unsichere Gegend beschrieben, nachts meiden. – „Der Plaça Real und Barri Xino (das Dreieck von der Columbussäule bis Carrer Nou de la Rambla) sind unsichere Gegenden.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/Barcelona",
+     "title": "Wikivoyage (de): Barcelona"
+    }
+   ]
+  },
+  {
+   "name": "Eixample",
+   "kind": "viertel",
+   "lat": 41.390833,
+   "lon": 2.163056,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Der planmäßig angelegte Stadtteil mit Modernisme-Bauten, gut angebunden und Ausgehgebiet.",
+   "goodFor": [
+    "Modernisme-Architektur",
+    "Ausgehen",
+    "Gute Verkehrsanbindung"
+   ],
+   "watchOut": [
+    "Parken mit dem Auto praktisch unmöglich"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 8,
+     "why": "Gilt als Ausgehgebiet der Stadt. – „Eixample is the nightlife area of Barcelona.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "budget": {
+     "v": 3,
+     "why": "Hier liegen vor allem Mittelklasse- und Luxushotels. – „L'Eixample is the place where most of the city's mid-range and top-end hotels are located.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "transit": {
+     "v": 9,
+     "why": "Sehr gut mit der übrigen Stadt verbunden. – „This quarter is very well connected with the rest of the city“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Barcelona/Eixample",
+     "title": "Wikivoyage (en): Barcelona/Eixample"
+    }
+   ]
+  },
+  {
+   "name": "Gràcia",
+   "kind": "viertel",
+   "lat": 41.4065767,
+   "lon": 2.1582812,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Ehemaliges Dorf mit engen Gassen, vielen Plätzen und jungem, studentischem Flair.",
+   "goodFor": [
+    "Essen und Bars",
+    "Plätze und Atmosphäre"
+   ],
+   "watchOut": [
+    "Relativ wenige Unterkünfte"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 7,
+     "why": "Plätze wie die Plaça de Sol sind voller Nachtleben. – „The plazas in the area, as Plaça de Sol for instance, are filled with nightlife.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "food": {
+     "v": 8,
+     "why": "Viele schöne Restaurants und Bars. – „Gracia is popular among students, and offers a lot of nice restaurants and bars for the student budget.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Barcelona/Gr%C3%A0cia",
+     "title": "Wikivoyage (en): Barcelona/Gràcia"
+    }
+   ]
+  },
+  {
+   "name": "Sant Martí",
+   "kind": "viertel",
+   "lat": 41.41786389,
+   "lon": 2.198680556,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Der Stadtteil im Osten mit Stränden, einigen Parks und moderner Architektur am Diagonal.",
+   "goodFor": [
+    "Strände",
+    "Moderne Hotels"
+   ],
+   "watchOut": [
+    "Weniger touristische Attraktionen"
+   ],
+   "values": {
+    "budget": {
+     "v": 6,
+     "why": "Günstigere Unterkünfte zwischen Poblenou und Sant Martí. – „cheaper accommodations are to be found between the blocks of Poblenou and Sant Martí, south and north of the Diagonal.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "nature": {
+     "v": 6,
+     "why": "Strände und einige Parks. – „Sant Martí also features beaches along the coast and a handful of parks and other tourist attractions.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Barcelona/Sant_Mart%C3%AD",
+     "title": "Wikivoyage (en): Barcelona/Sant Martí"
+    }
+   ]
+  },
+  {
+   "name": "Montjuïc",
+   "kind": "viertel",
+   "lat": 41.36476,
+   "lon": 2.15423,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Hügel mit Museen, Burg, Olympiaanlagen und Aussichten über die Stadt.",
+   "goodFor": [
+    "Museen",
+    "Aussicht",
+    "Grün"
+   ],
+   "watchOut": [
+    "In isolierten Teilen für Frauen allein nicht ratsam"
+   ],
+   "values": {
+    "safety": {
+     "v": 4,
+     "why": "Isolierte Teile sind für Alleinreisende heikel. – „Women travelling alone should take care in the more isolated parts of Montjuïc.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "nature": {
+     "v": 7,
+     "why": "Park mit Aussichten über die Stadt. – „Many of its attractions focus on the Parc de Montjuïc, which has museums, a castle, Olympic facilities and some great views overlooking the city.“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Barcelona",
+     "title": "Wikivoyage (en): Barcelona"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Barcelona/Sants-Montju%C3%AFc",
+     "title": "Wikivoyage (en): Barcelona/Sants-Montjuïc"
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,331 @@
+{
+ "v": 1,
+ "slug": "buenos-aires",
+ "generated": "2026-11-07",
+ "model": "claude-haiku-5-5 (nur Wikivoyage-Text, Zitate geprüft)",
+ "areas": [
+  {
+   "name": "San Telmo",
+   "kind": "viertel",
+   "lat": -34.6214013,
+   "lon": -58.37375,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Historisches Viertel mit Kolonialhäusern, Tango-Kultur und lebhaftem, alternativem Nachtleben.",
+   "goodFor": [
+    "Tango",
+    "Nachtleben",
+    "Günstige Unterkünfte"
+   ],
+   "watchOut": [
+    "Taschendiebstahl in belebten Touristenbereichen"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 8,
+     "why": "Bohemisches, lebhaftes Nachtleben – „San Telmo has a very bohemian, and very fun, nightlife scene.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "food": {
+     "v": 7,
+     "why": "Eines der Gastronomiezentren der Stadt – „San Telmo ist heute eines der Zentren der Gastronomie und auch des Nachtlebens von Buenos Aires.“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    },
+    "budget": {
+     "v": 8,
+     "why": "Viele Hostels und Budgethotels – „San Telmo is chock full of hostels and budget hotels making it an affordable option with easy access to downtown.“",
+     "src": [
+      2
+     ],
+     "w": 0.75
+    },
+    "safety": {
+     "v": 5,
+     "why": "Erhöhtes Diebstahlrisiko in Touristenbereichen – „Be particularly attentive in popular tourist areas, such as San Telmo.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Buenos_Aires",
+     "title": "Wikivoyage (en): Buenos Aires"
+    },
+    {
+     "url": "https://de.wikivoyage.org/wiki/Buenos_Aires/San_Telmo",
+     "title": "Wikivoyage (de): Buenos Aires/San Telmo"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Buenos_Aires/Centro",
+     "title": "Wikivoyage (en): Buenos Aires/Centro"
+    }
+   ]
+  },
+  {
+   "name": "Puerto Madero",
+   "kind": "viertel",
+   "lat": -34.6103764,
+   "lon": -58.3622067,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Restaurierter Hafen mit moderner Architektur, gehobener Gastronomie und Zugang zum Naturschutzgebiet Costanera Sur.",
+   "goodFor": [
+    "Gehobene Gastronomie",
+    "Ausgehen",
+    "Natur in der Nähe"
+   ],
+   "watchOut": [
+    "Teuer",
+    "Viele Restaurants sind Ketten"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 7,
+     "why": "Eines der Hauptausgehgebiete – „The main areas to go out are: Puerto Madero, close to the Casa Rosada.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "food": {
+     "v": 8,
+     "why": "Große Auswahl von gehoben bis Kette – „It has a mixture of restaurants, ranging from high end to U.S. chains such as Hooters and TGIF.“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    },
+    "budget": {
+     "v": 3,
+     "why": "Eher teure Hotels – „It also has apartment buildings and a few expensive hotels.“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    },
+    "safety": {
+     "v": 8,
+     "why": "Gilt als sicher bei Tag und Nacht – „Safe during the day and night, due the obvious reason (Casa Rosada).“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "nature": {
+     "v": 7,
+     "why": "Naturreservat in der Nähe – „The Reserva Ecológica Costanera Sur, an excellent option for nature lovers, lies nearby.“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Buenos_Aires",
+     "title": "Wikivoyage (en): Buenos Aires"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Buenos_Aires/Centro",
+     "title": "Wikivoyage (en): Buenos Aires/Centro"
+    }
+   ]
+  },
+  {
+   "name": "Recoleta",
+   "kind": "viertel",
+   "lat": -34.587358,
+   "lon": -58.39157,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Eleganter Stadtteil mit französischem Baustil, großen Grünflächen und hochwertigen Restaurants.",
+   "goodFor": [
+    "Restaurants",
+    "Grünflächen",
+    "Friedhof besichtigen"
+   ],
+   "watchOut": [
+    "Eher teuer",
+    "Nachtleben vor allem touristisch"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 5,
+     "why": "Bars vorhanden, eher touristisch – „At Recoleta area (close to the famous cemetery) there are also plenty of restaurants, bars and a cinema complex.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "food": {
+     "v": 9,
+     "why": "Erstklassige Restaurants – „It boasts many French style buildings, large green spaces, and first class restaurants.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "budget": {
+     "v": 2,
+     "why": "Eine der teuersten Gegenden – „Recoleta is one of the finest and most expensive areas of the city.“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    },
+    "nature": {
+     "v": 7,
+     "why": "Große Grünflächen – „It boasts many French style buildings, large green spaces, and first class restaurants.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Buenos_Aires",
+     "title": "Wikivoyage (en): Buenos Aires"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Buenos_Aires/Palermo_and_Recoleta",
+     "title": "Wikivoyage (en): Buenos Aires/Palermo and Recoleta"
+    }
+   ]
+  },
+  {
+   "name": "Retiro",
+   "kind": "viertel",
+   "lat": -34.5916426,
+   "lon": -58.373307,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Großer Bahnknotenpunkt mit Nähe zum Zentrum, gehobenen Restaurants und Shopping.",
+   "goodFor": [
+    "Zugverbindungen",
+    "Restaurants und Shopping",
+    "Tigre-Ausflug"
+   ],
+   "watchOut": [
+    "Diebstahl",
+    "Ab 22 Uhr meiden"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 6,
+     "why": "Auch Feiern, aber nicht im Vordergrund – „but also home to some of the most luxurious restaurants, shopping, and partying, in the expat-friendly border of Microcentro.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "safety": {
+     "v": 4,
+     "why": "Bahnhof als Gefahrenpunkt genannt – „Common dangerous spots are the three biggest train terminals at the city: Constitución, Once and Retiro.“",
+     "src": [
+      1
+     ],
+     "w": 1.0
+    },
+    "transit": {
+     "v": 9,
+     "why": "Wichtigster Bahnhof der Stadt – „The Retiro neighborhood hosts the main train station in the city, a busy area filled with commuters“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Buenos_Aires/Centro",
+     "title": "Wikivoyage (en): Buenos Aires/Centro"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Buenos_Aires",
+     "title": "Wikivoyage (en): Buenos Aires"
+    }
+   ]
+  },
+  {
+   "name": "Constitución",
+   "kind": "viertel",
+   "lat": -34.624246,
+   "lon": -58.3836324,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Großer Bahnhof, der als Gegend mit hohem Risiko gilt und nur mit Ortskundigen besucht werden sollte.",
+   "goodFor": [
+    "Bahnverbindungen"
+   ],
+   "watchOut": [
+    "Hohes Sicherheitsrisiko",
+    "Nicht ohne Ortskundige besuchen"
+   ],
+   "values": {
+    "transit": {
+     "v": 8,
+     "why": "Wichtiger Bahnknotenpunkt – „The main railway terminals are Retiro, Constitución, Once and Federico Lacroze.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Buenos_Aires",
+     "title": "Wikivoyage (en): Buenos Aires"
+    }
+   ]
+  },
+  {
+   "name": "Once",
+   "kind": "viertel",
+   "lat": -34.60836,
+   "lon": -58.40574,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Großer Bahnhof im Zentrumsbereich, der als Gefahrenpunkt gilt.",
+   "goodFor": [
+    "Bahnverbindungen"
+   ],
+   "watchOut": [
+    "Diebstahl",
+    "Ab 22 Uhr meiden"
+   ],
+   "values": {
+    "safety": {
+     "v": 4,
+     "why": "Bahnhof als Gefahrenpunkt genannt – „Common dangerous spots are the three biggest train terminals at the city: Constitución, Once and Retiro.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "transit": {
+     "v": 8,
+     "why": "Wichtiger Bahnknotenpunkt – „The main railway terminals are Retiro, Constitución, Once and Federico Lacroze.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Buenos_Aires",
+     "title": "Wikivoyage (en): Buenos Aires"
+    }
+   ]
+  }
+ ]
+}

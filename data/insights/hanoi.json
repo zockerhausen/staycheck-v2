@@ -1,0 +1,99 @@
+{
+ "v": 1,
+ "slug": "hanoi",
+ "generated": "2026-11-07",
+ "model": "claude-haiku-5-5 (nur Wikivoyage-Text, Zitate geprüft)",
+ "areas": [
+  {
+   "name": "Old Quarter",
+   "kind": "viertel",
+   "lat": 21.03532,
+   "lon": 105.85004,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Historisches Herz Hanois mit kolonialer und vorkolonialer Architektur, dichtem Netz enger Gassen und vielen Essensständen.",
+   "goodFor": [
+    "Erkunden zu Fuß",
+    "Streetfood und Bia Hoi",
+    "Atmosphäre"
+   ],
+   "watchOut": [
+    "Laut und sehr belebt",
+    "Taschendiebe",
+    "Motorräder auf engen Straßen"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 7,
+     "why": "Bia Hoi an vielen Ecken, Bars in den Abendstunden – „Bia hơi is abundant in the streets of the Old Quarter.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "quiet": {
+     "v": 2,
+     "why": "Als potenziell laut und belebt beschrieben – „The heart of the Old Quarter - potentially noisy and busy - but closest to the bars on Ma May and Ta Hien.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "food": {
+     "v": 9,
+     "why": "Fast an jeder Ecke Stände mit Pho und Cafe – „In the Old Quarter, you will find that almost every corner is filled with stalls selling pho (Vietnamese noodle) and cafe“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "safety": {
+     "v": 3,
+     "why": "Im Text als Hochburg für Taschendiebstahl genannt – „it's rarely as true as for Hanoi's busy and narrow Old Quarter or the Dong Xuan Night Market.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Hanoi",
+     "title": "Wikivoyage (en): Hanoi"
+    }
+   ]
+  },
+  {
+   "name": "Hoàn Kiếm",
+   "kind": "viertel",
+   "lat": 21.0323032,
+   "lon": 105.8506925,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Der See im Zentrum mit Uferpromenade, die am Wochenende für den Autoverkehr gesperrt ist.",
+   "goodFor": [
+    "Spaziergänge am Seeufer",
+    "Wochenende ohne Verkehr"
+   ],
+   "watchOut": [
+    "Gassen rund um den See sind in Wochenenden teils gesperrt, …"
+   ],
+   "values": {
+    "quiet": {
+     "v": 6,
+     "why": "Am Wochenende autofrei, dadurch ruhiger – „Hoan Kiem lakeside (which is traffic-free at weekends)“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Hanoi",
+     "title": "Wikivoyage (en): Hanoi"
+    }
+   ]
+  }
+ ]
+}
