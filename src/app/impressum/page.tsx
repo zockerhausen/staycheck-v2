@@ -81,7 +81,7 @@ export default function ImpressumPage() {
 
       <Section title="Kartendaten">
         <p>
-          Kartendaten © OpenStreetMap-Mitwirkende, verfügbar unter der Open Database License (ODbL). Zusätzliche Orte © Overture Maps Foundation, Lizenz CDLA Permissive 2.0. Kartenstil: OpenFreeMap, OpenMapTiles.
+          Kartendaten © OpenStreetMap-Mitwirkende, verfügbar unter der Open Database License (ODbL). Zusätzliche Orte © Overture Maps Foundation, Lizenz CDLA Permissive 2.0. Reiseführer-Einträge und -Texte von Wikivoyage (Wikimedia), Lizenz CC BY-SA 4.0. Kartenstil: OpenFreeMap, OpenMapTiles.
         </p>
       </Section>
 

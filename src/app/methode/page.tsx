@@ -85,6 +85,12 @@ export default function MethodePage() {
             <b>2. Sieben Werte von 1 bis 10.</b> Nach festen Regeln (siehe unten). Entfernungen rechnen wir als Fußweg: Luftlinie plus 25 %, 80 m pro Minute. In vorberechneten Städten prüfen wir zusätzlich das echte Wegenetz: Was nur mit großem Umweg erreichbar ist (zum Beispiel auf der anderen Flussseite ohne Brücke oder hinter Gleisen), zählen wir nicht mit.
           </li>
           <li>
+            <b>Plus Reiseführer.</b> In vorberechneten Städten fließt auch der freie Reiseführer Wikivoyage ein: Wie viele Bars und Restaurants
+            empfehlen Reisende dort, und sind die empfohlenen Unterkünfte günstiger oder teurer als in der ganzen Stadt? Das zählt höchstens zur Hälfte,
+            weniger, wenn der Artikel dünn ist, die Einträge alt sind oder es nur wenige gibt. Empfiehlt der Reiseführer an einer Stelle nichts, zählt nur
+            die Karte (er ist nur eine Auswahl). Bei jedem Wert siehst du beide Zahlen und den Artikel als Quelle (Lizenz CC BY-SA 4.0).
+          </li>
+          <li>
             <b>Zwei Zahlen.</b> „Lage allgemein“ ist für alle gleich (Standard-Gewichtung, ohne Extras). „Dein Match“ rechnet mit deinem Reise-Profil.
             So siehst du, ob ein Ort generell gut liegt oder nur für dich passt – oder umgekehrt.
           </li>
@@ -169,7 +175,7 @@ export default function MethodePage() {
       </section>
 
       <p className="mt-6 text-xs leading-relaxed text-muted">
-        Kartendaten © OpenStreetMap-Mitwirkende (ODbL), vorberechnet aus Geofabrik-Auszügen. Zusätzliche Orte: © Overture Maps Foundation (CDLA Permissive 2.0). Flughäfen: OurAirports (gemeinfrei). Suche über Photon (Komoot), sonst Umgebung über die Overpass API.
+        Kartendaten © OpenStreetMap-Mitwirkende (ODbL), vorberechnet aus Geofabrik-Auszügen. Zusätzliche Orte: © Overture Maps Foundation (CDLA Permissive 2.0). Reiseführer-Einträge und -Texte: Wikivoyage-Autorinnen und -Autoren (CC BY-SA 4.0). Flughäfen: OurAirports (gemeinfrei). Suche über Photon (Komoot), sonst Umgebung über die Overpass API.
       </p>
       <LegalLinks className="mt-10" />
     </div>
