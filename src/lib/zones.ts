@@ -4,16 +4,14 @@ import { weightedMatch, type Weights } from "@/lib/profile";
 
 export const ZONE_KEYS = ["transit", "nightlife", "food", "nature", "quiet", "budget"] as const;
 
-export type ZonePoint = { lat: number; lon: number; w: number }; // w: 1 = beste 10 % der Stadt, 0.5 = die nächsten 10 %
+export type ZonePoint = { lat: number; lon: number; w: number }; // w: 0–1, wie stark der Spot leuchtet
 
-/** Anteil der Stadt, der auf der Karte kräftig (beste 10 %) bzw. hell (nächste 10 %) leuchtet */
-export const ZONE_TOP = 0.1;
-export const ZONE_GOOD = 0.2;
+/** Anteil der Stadt, der ohne Viertel-Spots auf der Karte leuchtet: nur die besten der besten */
+export const ZONE_TOP = 0.06;
 
 /**
- * Nur die Stellen, die im Vergleich zur ganzen Stadt am besten passen, in zwei klaren Stufen:
- * kräftig = die besten 10 %, hell = die nächsten 10 %. Alles andere bleibt ohne Farbe.
- * Zusätzlich gilt eine Untergrenze (55 % Match): passt in einer Stadt kaum etwas, leuchtet auch wenig.
+ * Nur die allerbesten Stellen der Stadt (beste ~6 %, mindestens 55 % Match), Ausreißer geglättet.
+ * Wird genutzt, wo es keine Viertel gibt; sonst zeigt die Karte die besten Spots je Viertel (bestSpotsIn).
  */
 export function pickZones(zones: { lat: number; lon: number; s: number[] }[], weights: Weights): ZonePoint[] {
   if (!zones.length) return [];
@@ -22,17 +20,12 @@ export function pickZones(zones: { lat: number; lon: number; s: number[] }[], we
     return { lat: z.lat, lon: z.lon, m: weightedMatch(scores, weights) };
   });
   const sorted = scored.map((z) => z.m).sort((a, b) => b - a);
-  const at = (share: number) => sorted[Math.min(sorted.length - 1, Math.max(0, Math.ceil(sorted.length * share) - 1))];
-  const top = Math.max(55, at(ZONE_TOP));
-  const good = Math.max(55, at(ZONE_GOOD));
-  const picked = scored.filter((z) => z.m >= good).map((z) => ({ lat: z.lat, lon: z.lon, w: z.m >= top ? 1 : 0.5 }));
-  return smoothTiers(picked);
+  const cut = Math.max(55, sorted[Math.min(sorted.length - 1, Math.max(0, Math.ceil(sorted.length * ZONE_TOP) - 1))]);
+  return smoothTiers(scored.filter((z) => z.m >= cut).map((z) => ({ lat: z.lat, lon: z.lon, w: 1 })));
 }
 
 /**
- * Einzelne Ausreißer-Kästchen glätten, damit zusammenhängende Gegenden statt Flecken entstehen:
- * ein Kästchen bleibt nur, wenn mindestens 2 seiner 8 Nachbarn auch gefärbt sind; „kräftig“ bleibt es nur,
- * wenn mindestens 2 Nachbarn auch kräftig sind (sonst wird es hell).
+ * Einzelne Ausreißer-Kästchen weglassen: ein Kästchen bleibt nur, wenn mindestens einer seiner 8 Nachbarn auch dabei ist.
  */
 function smoothTiers(cells: ZonePoint[]): ZonePoint[] {
   if (cells.length < 8) return cells;
@@ -59,8 +52,9 @@ function smoothTiers(cells: ZonePoint[]): ZonePoint[] {
         if (w) any++;
         if (w === 1) strong++;
       }
-    if (any < 2) continue;
-    out.push({ ...c, w: c.w === 1 && strong < 2 ? 0.5 : c.w });
+    if (any < 1) continue; // ganz allein stehende Kästchen sind eher Zufall
+    void strong;
+    out.push(c);
   }
   return out;
 }
@@ -76,7 +70,13 @@ export type Spot = {
   match: number;
   scores: Record<string, number>;
   cells: number; // Größe in Rasterpunkten (je ca. 350 × 350 m)
+  core?: { lat: number; lon: number }[]; // die allerbesten Punkte (leuchten auf der Karte)
 };
+
+/** Die leuchtenden Stellen für die Karte: nur der Kern der gezeigten Spots */
+export function spotGlow(spots: Pick<Spot, "core">[]): ZonePoint[] {
+  return spots.flatMap((s) => (s.core ?? []).map((c) => ({ lat: c.lat, lon: c.lon, w: 1 })));
+}
 
 type NamedPlace = { n: string; lat: number; lon: number; l: number };
 
@@ -183,7 +183,79 @@ export function findSpots(
       match: Math.round(piece.reduce((s, c) => s + c.m, 0) / piece.length),
       scores,
       cells: piece.length,
+      core: coreOf(piece),
     });
   }
   return spots.sort((a, b) => b.match - a.match || b.cells - a.cells).slice(0, max);
+}
+
+/** Kern eines Spots: der beste Punkt und Nachbarn, die fast genauso gut sind (höchstens 4 Punkte weniger) */
+function coreOf(piece: { lat: number; lon: number; m: number }[]) {
+  const best = piece.reduce((a, b) => (b.m > a.m ? b : a));
+  return piece
+    .filter((c) => c.m >= best.m - 4 && dist(c, best) <= 600)
+    .sort((a, b) => b.m - a.m)
+    .slice(0, 6)
+    .map((c) => ({ lat: c.lat, lon: c.lon }));
+}
+
+// ---------- Bester Spot je Viertel ----------
+
+export type DistrictSpot = { slug: string; name: string; lat: number; lon: number; match: number; core: { lat: number; lon: number }[] };
+
+/**
+ * Für jedes Viertel die beste kleine Ecke darin: Rasterpunkte gehören zum nächsten Viertel-Mittelpunkt
+ * (höchstens 1,5 km entfernt), der beste Punkt und seine fast gleich guten Nachbarn bilden den Spot.
+ * Benannt nach dem nächsten Kiez-Namen aus der Karte; sonst „Beste Ecke“.
+ */
+export function bestSpotsIn(
+  zones: { lat: number; lon: number; s: number[] }[],
+  weights: Weights,
+  districts: { slug: string; lat: number; lon: number }[],
+  places: NamedPlace[] = [],
+  step = 350,
+): Map<string, DistrictSpot> {
+  const out = new Map<string, DistrictSpot>();
+  if (!zones.length || !districts.length) return out;
+  const groups = new Map<string, { lat: number; lon: number; m: number }[]>();
+  for (const z of zones) {
+    let best: string | null = null;
+    let bd = 1500;
+    for (const d of districts) {
+      const dd = dist(z, d);
+      if (dd < bd) {
+        bd = dd;
+        best = d.slug;
+      }
+    }
+    if (!best) continue;
+    const m = weightedMatch(Object.fromEntries(ZONE_KEYS.map((k, i) => [k, z.s[i]])), weights);
+    (groups.get(best) ?? groups.set(best, []).get(best)!).push({ lat: z.lat, lon: z.lon, m });
+  }
+  const finer = places.filter((p) => p.l >= 1);
+  for (const [slug, cells] of groups) {
+    if (cells.length < 3) continue;
+    const top = cells.reduce((a, b) => (b.m > a.m ? b : a));
+    const core = cells.filter((c) => c.m >= top.m - 4 && dist(c, top) <= step * 1.6);
+    const lat = core.reduce((s, c) => s + c.lat, 0) / core.length;
+    const lon = core.reduce((s, c) => s + c.lon, 0) / core.length;
+    let name = "Beste Ecke";
+    let bd = 600;
+    for (const p of finer) {
+      const d = dist({ lat, lon }, p);
+      if (d < bd) {
+        bd = d;
+        name = p.n;
+      }
+    }
+    out.set(slug, {
+      slug,
+      name,
+      lat: Math.round(lat * 1e5) / 1e5,
+      lon: Math.round(lon * 1e5) / 1e5,
+      match: Math.round(core.reduce((s, c) => s + c.m, 0) / core.length),
+      core: core.map((c) => ({ lat: c.lat, lon: c.lon })),
+    });
+  }
+  return out;
 }

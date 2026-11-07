@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { getCities, getCriteria, getExtras, getProfile, getUser } from "@/lib/data";
 import { after } from "next/server";
 import { autoCityCached, DEFAULT_WEIGHTS, distance, locationMatch, withDeadline, type AutoCity } from "@/lib/geo";
-import { findSpots, pickZones } from "@/lib/zones";
+import { findSpots, pickZones, spotGlow } from "@/lib/zones";
 import StillLoading from "@/components/StillLoading";
 import { parseZiel, zielQuery } from "@/lib/ziel";
 import { areaPhotos } from "@/lib/photos";
@@ -61,9 +61,10 @@ export default async function ZielPage({ searchParams }: { searchParams: Promise
   if (raced === "slow") after(() => work);
   const slow = raced === "slow";
   const districts = slow ? [] : (raced?.districts ?? null);
-  const zones = slow || !raced ? [] : pickZones(raced.zones, weights ?? DEFAULT_WEIGHTS);
   // Kleine Ecken statt ganzer Stadtteile
   const spots = slow || !raced ? [] : findSpots(raced.zones, weights ?? DEFAULT_WEIGHTS, raced.places, raced.step);
+  // Auf der Karte leuchtet nur der Kern der gezeigten Ecken
+  const zones = slow || !raced ? [] : spots.length ? spotGlow(spots) : pickZones(raced.zones, weights ?? DEFAULT_WEIGHTS);
   const zq = zielQuery(ziel);
   const viertelHref = (d: AutoCity["districts"][number]) =>
     `/ziel/viertel?${zq}&${new URLSearchParams({ name: d.name.slice(0, 80), vlat: d.lat.toFixed(5), vlon: d.lon.toFixed(5) })}`;
@@ -155,7 +156,7 @@ export default async function ZielPage({ searchParams }: { searchParams: Promise
             zones={zones}
             fit
             flush
-            legend={zones.length ? (weights ? "Beste 10 % für dich" : "Beste 10 % der Stadt") : undefined}
+            legend={zones.length ? (weights ? "Leuchtet = deine besten Spots" : "Leuchtet = beste Spots") : undefined}
           />
           </MapStage>
 

@@ -21,7 +21,8 @@ import ShareButton from "@/components/ShareButton";
 import SaveButton from "@/components/SaveButton";
 import DistrictExplorer from "@/components/DistrictExplorer";
 import ZoneLegend from "@/components/ZoneLegend";
-import { cityZones, DEFAULT_WEIGHTS } from "@/lib/geo";
+import { cityDataQuick, DEFAULT_WEIGHTS } from "@/lib/geo";
+import { bestSpotsIn, spotGlow } from "@/lib/zones";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 120; // Zonen einer Stadt dürfen beim ersten Mal im Hintergrund fertig rechnen
@@ -43,9 +44,16 @@ export default async function ErgebnisPage({
   ]);
 
   const { weights, source } = await resolveWeights(params, criteria);
-  const zones = await cityZones(city.lat, city.lng, VERIFIED_RADIUS, weights ?? DEFAULT_WEIGHTS);
+  // Bester Spot in jedem Viertel: nur diese kleinen Stellen leuchten auf der Karte
+  const cd = await cityDataQuick(city.lat, city.lng, VERIFIED_RADIUS);
+  const located = districts.filter((d) => d.lat !== null && d.lng !== null).map((d) => ({ slug: d.slug, lat: d.lat as number, lon: d.lng as number }));
+  const bestSpots = cd ? bestSpotsIn(cd.zones, weights ?? DEFAULT_WEIGHTS, located, cd.places, cd.step) : new Map();
+  const zones = spotGlow([...bestSpots.values()]);
   const explorer = (list: typeof districts, withMatch?: Record<string, number>) =>
-    list.map((d) => ({ slug: d.slug, city: d.city, name: d.name, short: d.short_description, scores: d.scores, match: withMatch?.[d.slug] }));
+    list.map((d) => {
+      const sp = bestSpots.get(d.slug);
+      return { slug: d.slug, city: d.city, name: d.name, short: d.short_description, scores: d.scores, match: withMatch?.[d.slug], spot: sp ? { name: sp.name } : undefined };
+    });
 
   // Ohne Reise-Profil: Viertel frei entdecken (nach Eigenschaften), Quiz als Angebot
   if (!weights) {
@@ -79,7 +87,7 @@ export default async function ErgebnisPage({
         </Link>
         <div>
           <KiezMap points={pts} center={[city.lng, city.lat]} zoom={city.zoom} height="h-64" zones={zones} />
-          <ZoneLegend personal={false} shown={zones.length > 0} />
+          <ZoneLegend personal={false} shown={zones.length > 0} perDistrict />
         </div>
         <DistrictExplorer variant="list" districts={explorer(districts)} />
       </div>
@@ -95,9 +103,13 @@ export default async function ErgebnisPage({
   const query = source === "url" ? weightsToQuery(weights) : "";
   const q = (sep: "?" | "&") => (query ? `${sep}${query}` : "");
   const reasons = topReasons(top, weights, 3);
+  // Die Zahl des Viertels sitzt an seinem besten Spot (dort lohnt es sich zu suchen); ohne Spot: in der Mitte
   const points = ranked
     .filter((d) => d.lat !== null && d.lng !== null)
-    .map((d) => ({ slug: d.slug, name: d.name, lat: d.lat as number, lng: d.lng as number, match: d.match }));
+    .map((d) => {
+      const sp = bestSpots.get(d.slug);
+      return { slug: d.slug, name: d.name, lat: sp?.lat ?? (d.lat as number), lng: sp?.lon ?? (d.lng as number), match: d.match };
+    });
 
   return (
     <div className="fade-up space-y-7">
@@ -156,7 +168,7 @@ export default async function ErgebnisPage({
       <section>
         <h2 className="mb-3 font-display text-[19px] font-extrabold">Alle Viertel in {city.name}</h2>
         <KiezMap points={points} highlight={top.slug} center={[city.lng, city.lat]} zoom={city.zoom} height="h-72" zones={zones} />
-        <ZoneLegend personal shown={zones.length > 0} />
+        <ZoneLegend personal shown={zones.length > 0} perDistrict />
         <div className="mt-4">
           <DistrictExplorer variant="list" districts={explorer(ranked, Object.fromEntries(ranked.map((d) => [d.slug, d.match])))} query={query} />
         </div>

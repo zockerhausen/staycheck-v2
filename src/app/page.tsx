@@ -16,7 +16,7 @@ import HomePoster from "@/components/HomePoster";
 import { traitsOf } from "@/lib/character";
 import MapStage from "@/components/MapStage";
 import { cityDataQuick, DEFAULT_WEIGHTS } from "@/lib/geo";
-import { findSpots, pickZones } from "@/lib/zones";
+import { findSpots, pickZones, spotGlow } from "@/lib/zones";
 import { redirect } from "next/navigation";
 import { zielQuery } from "@/lib/ziel";
 import { areaPhotos } from "@/lib/photos";
@@ -90,9 +90,10 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
   const [{ weights }, extras] = await Promise.all([getProfile(criteria), getExtras()]);
   const [districts, cd] = await Promise.all([getDistricts(city.slug), cityDataQuick(city.lat, city.lng, VERIFIED_RADIUS)]);
   const w = weights ?? DEFAULT_WEIGHTS;
-  const zones = cd ? pickZones(cd.zones, w) : [];
   // Kleine Ecken statt ganzer Bezirke (sobald das Raster der Stadt berechnet ist)
   const spots = cd ? findSpots(cd.zones, w, cd.places, cd.step) : [];
+  // Auf der Karte leuchtet nur der Kern der gezeigten Ecken, nicht die halbe Stadt
+  const zones = spots.length ? spotGlow(spots) : cd ? pickZones(cd.zones, w) : [];
   const spotHref = (sp: (typeof spots)[number]) =>
     `/ziel/viertel?${zielQuery({ ort: city.name, land: city.country, lat: Number(city.lat.toFixed(4)), lon: Number(city.lng.toFixed(4)) })}&${new URLSearchParams({ name: sp.name, vlat: sp.lat.toFixed(5), vlon: sp.lon.toFixed(5), rad: String(VERIFIED_RADIUS) })}`;
   const topSpot = weights && spots[0] ? spots[0] : null;
@@ -149,7 +150,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
 
       <h1 className="mt-6 text-[22px] font-extrabold leading-tight tracking-[-0.03em] [overflow-wrap:anywhere]">Wo schläfst du in {city.name}?</h1>
       <MapStage id="karte">
-        <KiezMap points={mapPoints} highlight={topSpot?.slug ?? top?.slug} center={[city.lng, city.lat]} zoom={city.zoom} height="h-[420px]" zones={zones} fit flush legend={zones.length ? (weights ? "Beste 10 % für dich" : "Beste 10 % der Stadt") : undefined} />
+        <KiezMap points={mapPoints} highlight={topSpot?.slug ?? top?.slug} center={[city.lng, city.lat]} zoom={city.zoom} height="h-[420px]" zones={zones} fit flush legend={zones.length ? (weights ? "Leuchtet = deine besten Spots" : "Leuchtet = beste Spots") : undefined} />
       </MapStage>
 
       {/* Liste als Blatt, das über die Karte geschoben ist: Karte und Ecken gehören sichtbar zusammen */}

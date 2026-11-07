@@ -106,8 +106,8 @@ export default function MethodePage() {
           </li>
           <li>
             <b>4. Vergleichen.</b> In großen Städten liegen viele zentrale Viertel nah beieinander, die Zahlen sind dann ähnlich. Deshalb zeigen wir
-            zusätzlich den Platz in der Stadt, und die Karte färbt nur die besten 10 % der Stadt kräftig und die nächsten 10 % hell. Alles andere
-            bleibt ohne Farbe.
+            zusätzlich den Platz in der Stadt, und die Karte lässt nur die besten kleinen Spots leuchten: in jedem Viertel die beste Ecke (der beste
+            Punkt unseres Rasters und Nachbarn, die fast genauso gut sind), auf der Startseite die besten Ecken der ganzen Stadt.
           </li>
         </ol>
       </section>

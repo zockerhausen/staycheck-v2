@@ -167,7 +167,7 @@ export default function KiezMap(props: KiezMapProps) {
       <MapCanvas {...props} />
       {props.legend && (
         <span className="glass pointer-events-none absolute left-3 top-3 z-10 flex max-w-[70%] items-center gap-1.5 rounded-full border border-[var(--sc-glass-line)] px-3 py-[7px] text-[12.5px] font-extrabold shadow-soft">
-          <span className="h-3 w-3 shrink-0 rounded-[3px] bg-[#5340f2]/70" />
+          <span className="h-3 w-3 shrink-0 rounded-full bg-[#5340f2]/60 blur-[1px]" />
           {props.legend}
         </span>
       )}
@@ -203,54 +203,46 @@ export default function KiezMap(props: KiezMapProps) {
 }
 
 /**
- * Klare Flächen statt Leuchtwolke: jeder Rasterpunkt ist ein Quadrat (Rasterabstand), Nachbarn ergeben zusammen
- * eine Gegend mit klarer Kante. Zwei Stufen: kräftig = beste 10 % der Stadt, hell = die nächsten 10 %.
+ * Kleine leuchtende Spots: nur die allerbesten Rasterpunkte (siehe bestSpotsIn / spotGlow), weich gezeichnet.
+ * Der Radius ist knapp über dem Rasterabstand: Nachbarn eines Spots verschmelzen, verschiedene Spots bleiben getrennt.
  */
 function addZones(m: import("maplibre-gl").Map, zones: ZonePoint[], step: number, lat: number) {
-  const half = step / 2; // genau ein Rasterabstand: Nachbarn stoßen ohne Fuge und ohne Überlappung aneinander
-  const dLat = half / 110540;
-  const dLon = half / (111320 * Math.cos((lat * Math.PI) / 180));
+  const metersPerPx0 = 156543.03 * Math.cos((lat * Math.PI) / 180); // bei Zoom 0
+  const px = (zoom: number) => (step * 2.2) / (metersPerPx0 / 2 ** zoom); // Punkte eines Spots verschmelzen zu einer Fläche
   const before = m.getStyle().layers?.find((l) => l.type === "symbol")?.id;
-  const dark = isDarkNow();
   try {
     m.addSource("sc-zones", {
       type: "geojson",
       data: {
         type: "FeatureCollection",
-        features: zones.map((z) => ({
-          type: "Feature",
-          properties: { w: z.w },
-          geometry: {
-            type: "Polygon",
-            coordinates: [
-              [
-                [z.lon - dLon, z.lat - dLat],
-                [z.lon + dLon, z.lat - dLat],
-                [z.lon + dLon, z.lat + dLat],
-                [z.lon - dLon, z.lat + dLat],
-                [z.lon - dLon, z.lat - dLat],
-              ],
-            ],
-          },
-        })),
+        features: zones.map((z) => ({ type: "Feature", properties: { w: z.w }, geometry: { type: "Point", coordinates: [z.lon, z.lat] } })),
       },
     });
-    const color = ["case", [">=", ["get", "w"], 1], "#5340f2", dark ? "#8c7ff6" : "#9d92f8"];
     m.addLayer(
       {
         id: "sc-zones",
-        type: "fill",
+        type: "heatmap",
         source: "sc-zones",
         paint: {
-          "fill-color": color as never,
-          "fill-opacity": ["case", [">=", ["get", "w"], 1], dark ? 0.55 : 0.46, dark ? 0.26 : 0.2] as never,
-          "fill-antialias": false,
+          "heatmap-weight": ["get", "w"],
+          "heatmap-radius": ["interpolate", ["exponential", 2], ["zoom"], 8, px(8), 18, px(18)],
+          "heatmap-intensity": 1.6,
+          "heatmap-color": [
+            "interpolate",
+            ["linear"],
+            ["heatmap-density"],
+            0, "rgba(83,64,242,0)",
+            0.1, "rgba(83,64,242,0.16)",
+            0.35, "rgba(83,64,242,0.36)",
+            0.7, "rgba(83,64,242,0.52)",
+            1, "rgba(83,64,242,0.62)",
+          ],
         },
       },
       before,
     );
   } catch {
-    // ohne Zonen weiter
+    // ohne Spots weiter
   }
 }
 

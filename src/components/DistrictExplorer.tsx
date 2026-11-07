@@ -16,6 +16,7 @@ export type ExplorerDistrict = {
   match?: number;
   href?: string; // eigener Link (z. B. automatische Viertel)
   photo?: AreaPhoto;
+  spot?: { name: string }; // beste kleine Ecke im Viertel
 };
 
 /**
@@ -182,6 +183,12 @@ export default function DistrictExplorer({
                       .map((t) => t.label)
                       .join(", ") || "Von allem etwas"}
                   </span>
+                  {d.spot && (
+                    <span className="mt-0.5 flex items-center gap-1 truncate text-[13px] font-bold text-sun-soft">
+                      <span className="dot-pink shrink-0" aria-hidden />
+                      <span className="truncate">Bester Spot: {d.spot.name}</span>
+                    </span>
+                  )}
                 </span>
                 {d.match !== undefined ? (
                   <span className="shrink-0 text-right">

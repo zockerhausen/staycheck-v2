@@ -1,17 +1,16 @@
-/** Kurze Erklärung unter der Karte, was die violetten Flächen bedeuten (zwei Stufen, siehe pickZones). */
-export default function ZoneLegend({ personal, shown }: { personal: boolean; shown: boolean }) {
+/** Kurze Erklärung unter der Karte, was die violetten Stellen bedeuten. */
+export default function ZoneLegend({ personal, shown, perDistrict = false }: { personal: boolean; shown: boolean; perDistrict?: boolean }) {
   if (!shown) return null;
   return (
-    <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 px-1 text-[13px] font-semibold text-muted">
-      <span className="flex items-center gap-1.5">
-        <span className="h-3 w-3 shrink-0 rounded-[3px] bg-[#5340f2]/70" />
-        {personal ? "Beste 10 % für dich" : "Beste 10 % der Stadt"}
-      </span>
-      <span className="flex items-center gap-1.5">
-        <span className="h-3 w-3 shrink-0 rounded-[3px] bg-[#9d92f8]/40" />
-        Die nächsten 10 %
-      </span>
-      <span>Rest: ohne Farbe</span>
-    </div>
+    <p className="mt-2 flex items-center gap-2 px-1 text-[13px] font-semibold text-muted">
+      <span className="h-3 w-4 shrink-0 rounded-full bg-[#5340f2]/60 blur-[1px]" />
+      {perDistrict
+        ? personal
+          ? "Leuchtet: der beste Spot in jedem Viertel für dich. Die Zahl dort ist der Match des Viertels."
+          : "Leuchtet: der beste Spot in jedem Viertel."
+        : personal
+          ? "Leuchtet: die allerbesten Spots der Stadt für dich."
+          : "Leuchtet: die allerbesten Spots der Stadt."}
+    </p>
   );
 }
