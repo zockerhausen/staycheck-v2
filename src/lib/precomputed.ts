@@ -143,12 +143,42 @@ function withoutSafety<T extends { values: Record<string, unknown> }>(grid: Map<
   return out;
 }
 
+type Full = NonNullable<PreHotel["full"]>;
+
+/** Reiseführer-Werte in eine fertige Lage-Bewertung einmischen (Werte, Gründe, Herkunft) */
+function blendFull<T extends Full>(full: T, at: ReturnType<typeof insightsAt>): T {
+  const { scores, web } = blendScores(full.scores, at);
+  const details = { ...full.details };
+  for (const [k, w] of Object.entries(web)) {
+    if (!w) continue;
+    const d = details[k];
+    details[k] = d
+      ? { ...d, score: scores[k] ?? null, source: d.source === "keine" ? "gemischt" : d.source, reasons: d.score === null ? [] : d.reasons, web: w }
+      : { score: scores[k] ?? null, source: "gemischt", reasons: [], web: w };
+  }
+  return { ...full, scores, details };
+}
+
+async function guideFor(city: PreCity) {
+  const loaded = await loadInsights(city.slug);
+  if (!loaded?.areas.length) return null;
+  // In Städten mit geprüften Vierteln (Berlin, Bangkok) gilt für Sicherheit unsere Regel mit Quellen, nicht die Text-Auswertung
+  return city.city.fixed ? { ...loaded, grid: withoutSafety(loaded.grid) } : loaded;
+}
+
+/** Für frei eingegebene Adressen: Reiseführer-Werte der Stadt auch in die Live-Bewertung einmischen */
+export async function withGuideAt<T extends Full>(full: T, lat: number, lon: number, city: PreCity | null): Promise<T> {
+  if (!city) return full;
+  const ins = await guideFor(city);
+  if (!ins) return full;
+  const at = insightsAt(ins, lat, lon);
+  return Object.keys(at).length ? blendFull(full, at) : full;
+}
+
 async function withInsights(city: PreCity | null): Promise<PreCity | null> {
   if (!city) return city;
-  const loaded = await loadInsights(city.slug);
-  if (!loaded?.areas.length) return city;
-  // In Städten mit geprüften Vierteln (Berlin, Bangkok) gilt für Sicherheit unsere Regel mit Quellen, nicht die Text-Auswertung
-  const ins = city.city.fixed ? { ...loaded, grid: withoutSafety(loaded.grid) } : loaded;
+  const ins = await guideFor(city);
+  if (!ins) return city;
 
   const zones = city.city.zones.map((z) => {
     const at = insightsAt(ins, z.lat, z.lon);
@@ -167,19 +197,7 @@ async function withInsights(city: PreCity | null): Promise<PreCity | null> {
     const at = insightsAt(ins, h.lat, h.lon);
     if (!Object.keys(at).length) return h;
     const { scores, web } = blendScores(h.scores, at);
-    let full = h.full;
-    if (full) {
-      const details = { ...full.details };
-      for (const [k, w] of Object.entries(web)) {
-        if (!w) continue;
-        const d = details[k];
-        details[k] = d
-          ? { ...d, score: scores[k] ?? null, source: d.source === "keine" ? "gemischt" : d.source, reasons: d.score === null ? [] : d.reasons, web: w }
-          : { score: scores[k] ?? null, source: "gemischt", reasons: [], web: w };
-      }
-      full = { ...full, scores, details };
-    }
-    return { ...h, scores, full };
+    return { ...h, scores, full: h.full ? blendFull(h.full, at) : h.full };
   });
 
   return { ...city, city: { ...city.city, zones, districts }, hotels };

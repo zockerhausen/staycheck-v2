@@ -7,7 +7,7 @@ import type { District, Weights } from "./data";
 import { unstable_cache } from "next/cache";
 import { after } from "next/server";
 import { pickZones, ZONE_KEYS, type ZonePoint } from "./zones";
-import { precomputedCity, precomputedCovering } from "./precomputed";
+import { precomputedCity, precomputedCovering, withGuideAt } from "./precomputed";
 import { distance, districtSafety, scoreFromData, type Highlight, type Line, type Poi, type ScoreResult } from "./score";
 
 const UA = "StayCheck/0.1 (https://github.com/zockerhausen/staycheck-v2)";
@@ -315,7 +315,8 @@ export async function analyzeLocation(lat: number, lon: number, districts: Distr
   const hit = pre?.hotels.find((h) => h.full && distance(la, lo, h.lat, h.lon) <= 40);
   if (hit?.full) return withDistrictSafety(hit.full, district);
   const r = await once(`score:${la},${lo}`, () => scoreCached(la, lo, district ? { name: district.name, scores: district.scores } : null));
-  return { ...r, district };
+  // Liegt die Adresse in einer vorberechneten Stadt, zählen die Reiseführer-Werte auch hier mit
+  return { ...(await withGuideAt(r, la, lo, pre)), district };
 }
 
 /** Match in Prozent für einen Ort. Kriterien ohne Daten (null) werden ignoriert. */
