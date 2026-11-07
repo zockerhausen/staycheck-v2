@@ -137,11 +137,11 @@ def clean(s):
     return re.sub(r"\s+", " ", s).strip()
 
 
-CUR = [("฿", "THB"), ("baht", "THB"), ("thb", "THB"), ("€", "EUR"), ("eur", "EUR"), ("£", "GBP"), ("us$", "USD"), ("usd", "USD"), ("$", "USD"),
+CUR = [("฿", "THB"), ("baht", "THB"), ("thb", "THB"), ("€", "EUR"), ("eur", "EUR"), ("£", "GBP"), ("us$", "USD"), ("usd", "USD"),
        ("¥", "JPY"), ("yen", "JPY"), ("₫", "VND"), ("dong", "VND"), ("rp", "IDR"), ("rm", "MYR"), ("kč", "CZK"), ("czk", "CZK"), ("zł", "PLN"),
        ("pln", "PLN"), ("ft", "HUF"), ("huf", "HUF"), ("kr", "KR"), ("r$", "BRL"), ("₩", "KRW"), ("won", "KRW"), ("riel", "KHR"), ("dh", "MAD"),
        ("mad", "MAD"), ("lari", "GEL"), ("₾", "GEL"), ("s/", "PEN"), ("nt$", "TWD"), ("hk$", "HKD"), ("s$", "SGD"), ("a$", "AUD"), ("nz$", "NZD"),
-       ("₺", "TRY"), ("tl", "TRY"), ("zar", "ZAR"), ("cop", "COP"), ("mxn", "MXN"), ("ars", "ARS")]
+       ("₺", "TRY"), ("tl", "TRY"), ("zar", "ZAR"), ("cop", "COP"), ("mxn", "MXN"), ("ars", "ARS"), ("$", "$")]  # „$“ zuletzt: Landes-Dollar je nach Stadt
 
 
 def price(raw):
@@ -163,7 +163,13 @@ def price(raw):
         return None
     if v <= 0:
         return None
-    cur = next((c for sym, c in CUR if sym in s), None)
+    cur = None
+    for sym, c in CUR:
+        # Buchstaben-Kürzel nur als ganzes Wort (sonst wäre „rm“ in „dorm“ der malaysische Ringgit)
+        hit = re.search(rf"(?<![a-z]){re.escape(sym)}(?![a-z])", s) if sym[-1].isalpha() else (sym in s)
+        if hit:
+            cur = c
+            break
     return v, cur
 
 
