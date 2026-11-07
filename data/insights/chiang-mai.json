@@ -1,0 +1,160 @@
+{
+ "v": 1,
+ "slug": "chiang-mai",
+ "generated": "2026-11-07",
+ "model": "claude-haiku-5-5 (nur Wikivoyage-Text, Zitate geprüft)",
+ "areas": [
+  {
+   "name": "Night Bazaar und Loi Kroh Rd",
+   "kind": "viertel",
+   "lat": 18.7845906,
+   "lon": 99.0018412,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Das Gebiet östlich der Altstadt rund um den Night Bazaar und die Loi Kroh Road ist das Hauptausgehviertel für Touristen.",
+   "goodFor": [
+    "Bars und Pubs",
+    "Boxkampf-Abende",
+    "Nachtmarkt"
+   ],
+   "watchOut": [
+    "Touristisch geprägt, Lautstärke am Abend",
+    "Auf Abzocke achten"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 9,
+     "why": "Viele touristische Bars und Pubs an der Loi Kroh Rd – „Many, but by no means all, of Chiang Mai's tourist-oriented bars and pubs are located along Loi Kroh Rd“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Chiang_Mai",
+     "title": "Wikivoyage (en): Chiang Mai"
+    }
+   ]
+  },
+  {
+   "name": "Tha Phae Gate",
+   "kind": "viertel",
+   "lat": 18.7866271,
+   "lon": 98.9913378,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Das Gebiet am Tha-Phae-Tor gehört zu den belebtesten Ausgehzonen der Stadt.",
+   "goodFor": [
+    "Ausgehen",
+    "Abendleben"
+   ],
+   "watchOut": [
+    "Laut und voll am Abend"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 9,
+     "why": "Eine der belebtesten Ausgehzonen – „The busiest night life zones are near Tha Phae Gate, Loi Kroh Rd and along Charoen Rat Rd on the east bank of the Ping River.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Chiang_Mai",
+     "title": "Wikivoyage (en): Chiang Mai"
+    }
+   ]
+  },
+  {
+   "name": "Nimmanhaemin Road (Nimman)",
+   "kind": "viertel",
+   "lat": 18.7952532,
+   "lon": 98.9677643,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Das Viertel nordwestlich der Innenstadt nahe der Universität ist das angesagte Ausgehviertel der Studenten mit Cafés, Kneipen und Clubs.",
+   "goodFor": [
+    "Cafés und Studentenkneipen",
+    "Clubs",
+    "Junge Einheimische treffen"
+   ],
+   "watchOut": [
+    "Laute Musik in Pubs",
+    "Wenig Englisch gesprochen"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 9,
+     "why": "Angesagtes Ausgehviertel mit vielen Clubs und Kneipen – „Daran grenzt das angesagte Ausgehviertel rund um die Nimman Road mit der höchsten Dichte an Cafés, Studentenkneipen und Nachtclubs.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "quiet": {
+     "v": 2,
+     "why": "Pubs mit lauter Musik – „and feature loud music interspersed with live bands“",
+     "src": [
+      1
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/Chiang_Mai",
+     "title": "Wikivoyage (de): Chiang Mai"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Chiang_Mai",
+     "title": "Wikivoyage (en): Chiang Mai"
+    }
+   ]
+  },
+  {
+   "name": "Moon Muang Road",
+   "kind": "viertel",
+   "lat": 18.7869858,
+   "lon": 98.993104,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Die Moon Muang Road und ihre Seitenstraßen sind ein Treffpunkt für Expats mit kleinen Bars und Sportbars.",
+   "goodFor": [
+    "Expat-Treffpunkte",
+    "Sportbars und Billard"
+   ],
+   "watchOut": [
+    "Druck, Getränke für Frauen zu kaufen, fü"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 6,
+     "why": "Kleine Expat-Treffs und Sportbars – „Here you can find small expat hangouts and sports bars.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "safety": {
+     "v": 4,
+     "why": "Gefahr überraschend hoher Rechnungen – „the pressure to purchase lady drinks can result in a very surprising tab at the end of the night“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Chiang_Mai",
+     "title": "Wikivoyage (en): Chiang Mai"
+    }
+   ]
+  }
+ ]
+}
