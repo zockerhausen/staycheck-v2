@@ -13,6 +13,8 @@ function buzz(ms: number | number[] = 10) {
   if (typeof navigator !== "undefined" && "vibrate" in navigator) navigator.vibrate(ms);
 }
 
+const PRIO_KEYS = ["transit", "nightlife", "quiet", "safety", "food", "budget", "nature"];
+
 const LABEL: Record<string, string> = {
   budget: "Günstig",
   nightlife: "Nachtleben",
@@ -39,12 +41,14 @@ export default function QuizClient({ city, cityName, next: nextUrl }: { city: st
   const [preis, setPreis] = useState<1 | 2 | 3 | null>(null);
   const [picked, setPicked] = useState<number[]>([]);
   const [hint, setHint] = useState("");
+  const [prio, setPrio] = useState<string[]>([]);
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   useEffect(() => () => clearTimeout(timer.current), []);
 
-  const total = QUIZ.length + 1; // + Extras
-  const isExtras = step === QUIZ.length;
-  const isReveal = step > QUIZ.length;
+  const total = QUIZ.length + 2; // + Prioritäten + Extras
+  const isPrio = step === QUIZ.length;
+  const isExtras = step === QUIZ.length + 1;
+  const isReveal = step > QUIZ.length + 1;
   const q = QUIZ[step];
 
   function back() {
@@ -52,9 +56,9 @@ export default function QuizClient({ city, cityName, next: nextUrl }: { city: st
     setHint("");
     setPicked([]);
     if (step === 0) return router.back();
-    if (step <= QUIZ.length) setWeights(history[step - 1] ?? BASE_WEIGHTS);
+    if (step <= QUIZ.length + 1) setWeights(history[step - 1] ?? BASE_WEIGHTS);
     setHistory((h) => h.slice(0, Math.max(0, step - 1)));
-    setStep(Math.min(step - 1, QUIZ.length));
+    setStep(Math.min(step - 1, QUIZ.length + 1));
   }
 
   function advance(ms: number) {
@@ -113,6 +117,21 @@ export default function QuizClient({ city, cityName, next: nextUrl }: { city: st
     advance(1100);
   }
 
+  // Prioritäten: höchstens 2 Dinge sind „das Wichtigste“. Die zählen voll (5), alles andere höchstens normal (3).
+  // So wird das Profil klar, statt dass alles ein bisschen wichtig ist.
+  function togglePrio(k: string) {
+    buzz(6);
+    setPrio((p) => (p.includes(k) ? p.filter((x) => x !== k) : p.length >= 2 ? [p[1], k] : [...p, k]));
+  }
+  function confirmPrio() {
+    buzz();
+    setHistory((h) => [...h.slice(0, step), weights]);
+    if (prio.length) {
+      setWeights((w) => Object.fromEntries(PRIO_KEYS.map((k) => [k, prio.includes(k) ? 5 : Math.min(w[k] ?? 0, 3)])));
+    }
+    setStep(step + 1);
+  }
+
   // Extras: antippen = wichtig, nochmal antippen = Muss (nur eins), drittes Mal = weg
   function toggleExtra(k: ExtraKey) {
     buzz(6);
@@ -128,7 +147,7 @@ export default function QuizClient({ city, cityName, next: nextUrl }: { city: st
 
   function finish() {
     buzz([12, 40, 18]);
-    setStep(QUIZ.length + 1);
+    setStep(QUIZ.length + 2);
     startSaving(async () => {
       await storeProfile(weights, city || undefined, { wer, items, must, preis });
     });
@@ -194,10 +213,48 @@ export default function QuizClient({ city, cityName, next: nextUrl }: { city: st
       </div>
 
       <p className="mt-7 text-[13px] font-extrabold text-muted">
-        {step === 0 ? `Dein Reise-Profil · ${cityName} · 40 Sek.` : isExtras ? "Fast geschafft" : `Frage ${step + 1} von ${total}`}
+        {step === 0 ? `Dein Reise-Profil · ${cityName} · 1 Min.` : isExtras ? "Fast geschafft" : isPrio ? "Das Wichtigste" : `Frage ${step + 1} von ${total}`}
       </p>
 
-      {isExtras ? (
+      {isPrio ? (
+        <>
+          <h1 className="pop-in mega mt-2 text-[1.9rem] leading-tight">Was ist dir am wichtigsten?</h1>
+          <p className="mt-2 text-sm text-muted">Wähl höchstens 2. Die zählen dann am meisten, alles andere nur normal.</p>
+          <div className="mt-6 grid grid-cols-2 gap-2.5">
+            {PRIO_KEYS.map((k) => {
+              const on = prio.includes(k);
+              return (
+                <button
+                  key={k}
+                  type="button"
+                  onClick={() => togglePrio(k)}
+                  aria-pressed={on}
+                  className={`press flex items-center gap-2 rounded-[18px] border-[1.5px] px-3.5 py-3.5 text-left text-[15px] font-bold transition-colors ${on ? "border-sun bg-sun text-white" : "border-tan bg-tan"}`}
+                >
+                  <Icon name={CRITERION_ICON[k]} size={20} />
+                  {LABEL[k]}
+                  {on && <span className="ml-auto text-[12px] font-extrabold">{prio.indexOf(k) + 1}</span>}
+                </button>
+              );
+            })}
+          </div>
+          <div className="card mt-6 p-4 text-sm leading-relaxed text-muted">
+            {prio.length ? (
+              <>
+                <b className="text-ink">{prio.map((k) => LABEL[k]).join(" und ")}</b> {prio.length > 1 ? "zählen" : "zählt"} bei dir jetzt am meisten. So
+                unterscheiden sich die Viertel für dich deutlicher.
+              </>
+            ) : (
+              "Alles gleich wichtig? Dann einfach weiter. Mit 1 oder 2 Favoriten werden deine Ergebnisse aber klarer."
+            )}
+          </div>
+          <div className="mt-auto pt-8">
+            <button type="button" onClick={confirmPrio} className="btn-chunky w-full">
+              {prio.length ? "Weiter" : "Überspringen"}
+            </button>
+          </div>
+        </>
+      ) : isExtras ? (
         <>
           <h1 className="pop-in mega mt-2 text-[1.9rem] leading-tight">Was muss in Laufweite sein?</h1>
           <p className="mt-2 text-sm text-muted">Tippe an, was dir wichtig ist. Tippe ein zweites Mal für ein echtes Muss.</p>

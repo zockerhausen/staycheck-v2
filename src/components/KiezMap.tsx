@@ -109,15 +109,16 @@ function MapCanvas({
       const labeled = points.filter((p) => p.label && p.slug !== highlight);
       m.on("style.load", () => addLabels(m, labeled, select));
 
+      // Rang in der Stadt: die besten 3 kräftig, der Rest dezent (statt vieler fast gleicher Zahlen)
+      const rankOf = new Map([...points].filter((p) => !p.label || p.slug === highlight).sort((a, b) => b.match - a.match).map((p, i) => [p.slug, i]));
       for (const p of points) {
         if (p.label && p.slug !== highlight) continue;
-        const t = max === min ? 1 : (p.match - min) / (max - min);
         const isTop = p.slug === highlight;
+        const rank = rankOf.get(p.slug) ?? 99;
         const el = document.createElement("button");
         el.type = "button";
-        el.setAttribute("aria-label", p.label ? p.name : `${p.name}, ${p.match}% Match`);
-        el.className = isTop ? "sc-pin sc-pin-top" : "sc-pin";
-        el.style.setProperty("--t", String(0.55 + t * 0.45));
+        el.setAttribute("aria-label", p.label ? p.name : `${p.name}, Platz ${rank + 1}, ${p.match}% Match`);
+        el.className = isTop ? "sc-pin sc-pin-top" : rank < 3 && max > min ? "sc-pin sc-pin-good" : max > min ? "sc-pin sc-pin-dim" : "sc-pin";
         el.textContent = p.label ?? `${p.match}`;
         el.addEventListener("click", () => select(p.slug));
         new maplibregl.Marker({ element: el }).setLngLat([p.lng, p.lat]).addTo(m);
@@ -166,7 +167,7 @@ export default function KiezMap(props: KiezMapProps) {
       <MapCanvas {...props} />
       {props.legend && (
         <span className="glass pointer-events-none absolute left-3 top-3 z-10 flex max-w-[70%] items-center gap-1.5 rounded-full border border-[var(--sc-glass-line)] px-3 py-[7px] text-[12.5px] font-extrabold shadow-soft">
-          <span className="h-2.5 w-4 shrink-0 rounded-full bg-[#8c7ff6] blur-[1px]" />
+          <span className="h-3 w-3 shrink-0 rounded-[3px] bg-[#5340f2]/70" />
           {props.legend}
         </span>
       )}
@@ -202,41 +203,48 @@ export default function KiezMap(props: KiezMapProps) {
 }
 
 /**
- * Weiche Leuchtflächen (Heatmap): Nachbarpunkte verschmelzen zu Zonen. Radius in Metern, auf jeder Zoomstufe gleich groß.
+ * Klare Flächen statt Leuchtwolke: jeder Rasterpunkt ist ein Quadrat (Rasterabstand), Nachbarn ergeben zusammen
+ * eine Gegend mit klarer Kante. Zwei Stufen: kräftig = beste 10 % der Stadt, hell = die nächsten 10 %.
  */
 function addZones(m: import("maplibre-gl").Map, zones: ZonePoint[], step: number, lat: number) {
-  const metersPerPx0 = 156543.03 * Math.cos((lat * Math.PI) / 180); // bei Zoom 0
-  const px = (zoom: number) => (step * 2.8) / (metersPerPx0 / 2 ** zoom); // Radius > Rasterabstand: Nachbarn verschmelzen
+  const half = step / 2; // genau ein Rasterabstand: Nachbarn stoßen ohne Fuge und ohne Überlappung aneinander
+  const dLat = half / 110540;
+  const dLon = half / (111320 * Math.cos((lat * Math.PI) / 180));
   const before = m.getStyle().layers?.find((l) => l.type === "symbol")?.id;
+  const dark = isDarkNow();
   try {
     m.addSource("sc-zones", {
       type: "geojson",
       data: {
         type: "FeatureCollection",
-        features: zones.map((z) => ({ type: "Feature", properties: { w: z.w }, geometry: { type: "Point", coordinates: [z.lon, z.lat] } })),
+        features: zones.map((z) => ({
+          type: "Feature",
+          properties: { w: z.w },
+          geometry: {
+            type: "Polygon",
+            coordinates: [
+              [
+                [z.lon - dLon, z.lat - dLat],
+                [z.lon + dLon, z.lat - dLat],
+                [z.lon + dLon, z.lat + dLat],
+                [z.lon - dLon, z.lat + dLat],
+                [z.lon - dLon, z.lat - dLat],
+              ],
+            ],
+          },
+        })),
       },
     });
+    const color = ["case", [">=", ["get", "w"], 1], "#5340f2", dark ? "#8c7ff6" : "#9d92f8"];
     m.addLayer(
       {
         id: "sc-zones",
-        type: "heatmap",
+        type: "fill",
         source: "sc-zones",
         paint: {
-          "heatmap-weight": ["get", "w"],
-          "heatmap-radius": ["interpolate", ["exponential", 2], ["zoom"], 8, px(8), 18, px(18)],
-          "heatmap-intensity": ["interpolate", ["linear"], ["zoom"], 10, 1.4, 15, 1],
-          // Nur Violett, von durchsichtig bis kräftig – darunter bleibt die Karte lesbar
-          "heatmap-color": [
-            "interpolate",
-            ["linear"],
-            ["heatmap-density"],
-            0, "rgba(140,127,246,0)",
-            0.06, "rgba(140,127,246,0.14)",
-            0.25, "rgba(140,127,246,0.32)",
-            0.55, "rgba(115,98,245,0.46)",
-            1, "rgba(98,80,245,0.6)",
-          ],
-          "heatmap-opacity": 1,
+          "fill-color": color as never,
+          "fill-opacity": ["case", [">=", ["get", "w"], 1], dark ? 0.55 : 0.46, dark ? 0.26 : 0.2] as never,
+          "fill-antialias": false,
         },
       },
       before,

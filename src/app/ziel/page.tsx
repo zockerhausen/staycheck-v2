@@ -155,7 +155,7 @@ export default async function ZielPage({ searchParams }: { searchParams: Promise
             zones={zones}
             fit
             flush
-            legend={zones.length ? (weights ? "Violett = passt zu dir" : "Violett = beste Lage") : undefined}
+            legend={zones.length ? (weights ? "Beste 10 % für dich" : "Beste 10 % der Stadt") : undefined}
           />
           </MapStage>
 

@@ -4,24 +4,65 @@ import { weightedMatch, type Weights } from "@/lib/profile";
 
 export const ZONE_KEYS = ["transit", "nightlife", "food", "nature", "quiet", "budget"] as const;
 
-export type ZonePoint = { lat: number; lon: number; w: number }; // w: 0–1, wie gut es passt
+export type ZonePoint = { lat: number; lon: number; w: number }; // w: 1 = beste 10 % der Stadt, 0.5 = die nächsten 10 %
+
+/** Anteil der Stadt, der auf der Karte kräftig (beste 10 %) bzw. hell (nächste 10 %) leuchtet */
+export const ZONE_TOP = 0.1;
+export const ZONE_GOOD = 0.2;
 
 /**
- * Nur die Stellen, die wirklich gut passen: die besten ~25 % der Stadt und mindestens 55 % Match.
- * So leuchtet nie die ganze Stadt, sondern nur die passenden Ecken.
+ * Nur die Stellen, die im Vergleich zur ganzen Stadt am besten passen, in zwei klaren Stufen:
+ * kräftig = die besten 10 %, hell = die nächsten 10 %. Alles andere bleibt ohne Farbe.
+ * Zusätzlich gilt eine Untergrenze (55 % Match): passt in einer Stadt kaum etwas, leuchtet auch wenig.
  */
-export function pickZones(zones: { lat: number; lon: number; s: number[] }[], weights: Weights, share = 0.25): ZonePoint[] {
+export function pickZones(zones: { lat: number; lon: number; s: number[] }[], weights: Weights): ZonePoint[] {
   if (!zones.length) return [];
   const scored = zones.map((z) => {
     const scores = Object.fromEntries(ZONE_KEYS.map((k, i) => [k, z.s[i]]));
     return { lat: z.lat, lon: z.lon, m: weightedMatch(scores, weights) };
   });
-  const sorted = [...scored].map((z) => z.m).sort((a, b) => b - a);
-  const cut = Math.max(55, sorted[Math.min(sorted.length - 1, Math.floor(sorted.length * share))]);
-  const top = sorted[0];
-  return scored
-    .filter((z) => z.m >= cut)
-    .map((z) => ({ lat: z.lat, lon: z.lon, w: top > cut ? Math.round(((z.m - cut) / (top - cut)) * 0.6 * 100 + 40) / 100 : 1 }));
+  const sorted = scored.map((z) => z.m).sort((a, b) => b - a);
+  const at = (share: number) => sorted[Math.min(sorted.length - 1, Math.max(0, Math.ceil(sorted.length * share) - 1))];
+  const top = Math.max(55, at(ZONE_TOP));
+  const good = Math.max(55, at(ZONE_GOOD));
+  const picked = scored.filter((z) => z.m >= good).map((z) => ({ lat: z.lat, lon: z.lon, w: z.m >= top ? 1 : 0.5 }));
+  return smoothTiers(picked);
+}
+
+/**
+ * Einzelne Ausreißer-Kästchen glätten, damit zusammenhängende Gegenden statt Flecken entstehen:
+ * ein Kästchen bleibt nur, wenn mindestens 2 seiner 8 Nachbarn auch gefärbt sind; „kräftig“ bleibt es nur,
+ * wenn mindestens 2 Nachbarn auch kräftig sind (sonst wird es hell).
+ */
+function smoothTiers(cells: ZonePoint[]): ZonePoint[] {
+  if (cells.length < 8) return cells;
+  // Rasterabstand aus den Daten (kleinster Abstand in Breitengrad-Richtung)
+  const lats = [...new Set(cells.map((c) => c.lat))].sort((a, b) => a - b);
+  let dLat = Infinity;
+  for (let i = 1; i < lats.length; i++) if (lats[i] - lats[i - 1] > 1e-6) dLat = Math.min(dLat, lats[i] - lats[i - 1]);
+  const lons = [...new Set(cells.map((c) => c.lon))].sort((a, b) => a - b);
+  let dLon = Infinity;
+  for (let i = 1; i < lons.length; i++) if (lons[i] - lons[i - 1] > 1e-6) dLon = Math.min(dLon, lons[i] - lons[i - 1]);
+  if (!Number.isFinite(dLat) || !Number.isFinite(dLon)) return cells;
+  const key = (i: number, j: number) => `${i}:${j}`;
+  const ij = (c: ZonePoint) => [Math.round(c.lat / dLat), Math.round(c.lon / dLon)] as const;
+  const grid = new Map(cells.map((c) => [key(...ij(c)), c.w]));
+  const out: ZonePoint[] = [];
+  for (const c of cells) {
+    const [i, j] = ij(c);
+    let any = 0;
+    let strong = 0;
+    for (let a = -1; a <= 1; a++)
+      for (let b = -1; b <= 1; b++) {
+        if (!a && !b) continue;
+        const w = grid.get(key(i + a, j + b));
+        if (w) any++;
+        if (w === 1) strong++;
+      }
+    if (any < 2) continue;
+    out.push({ ...c, w: c.w === 1 && strong < 2 ? 0.5 : c.w });
+  }
+  return out;
 }
 
 // ---------- Ecken: kleine Gegenden, die wirklich passen ----------

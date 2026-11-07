@@ -99,8 +99,15 @@ export default function MethodePage() {
             Match höchstens 60 – egal wie gut der Rest ist. Wir sagen dir dann genau, was fehlt.
           </li>
           <li>
-            <b>3. Gewichten.</b> Dein Score ist der Durchschnitt der Werte, gewichtet nach deinem Reise-Profil. Ohne Profil zählt Anbindung etwas mehr und Grün
-            etwas weniger, alles andere gleich.
+            <b>3. Gewichten.</b> Dein Match ist der Durchschnitt der Werte, gewichtet nach deinem Reise-Profil. Was dir „sehr wichtig“ ist (5), zählt
+            25-mal so viel wie „wenig wichtig“ (1): Die Wichtigkeit zählt im Quadrat. So entscheidet, was dir wirklich wichtig ist. Außerdem ziehen
+            schwache Werte etwas stärker nach unten, als starke nach oben ziehen: Viel Mittelmaß gleicht eine echte Schwäche nicht aus. Sind alle
+            Werte gleich, kommt genau dieser Wert heraus. Ohne Profil zählt Anbindung etwas mehr und Grün etwas weniger, alles andere gleich.
+          </li>
+          <li>
+            <b>4. Vergleichen.</b> In großen Städten liegen viele zentrale Viertel nah beieinander, die Zahlen sind dann ähnlich. Deshalb zeigen wir
+            zusätzlich den Platz in der Stadt, und die Karte färbt nur die besten 10 % der Stadt kräftig und die nächsten 10 % hell. Alles andere
+            bleibt ohne Farbe.
           </li>
         </ol>
       </section>

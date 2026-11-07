@@ -63,17 +63,25 @@ export function fullWeights(weights: Weights, extras: Extras): Weights {
   return w;
 }
 
-/** Durchschnitt der Werte, gewichtet. Werte ohne Daten (null) zählen nicht. */
+/**
+ * Match in Prozent (0–100) aus den Werten (0–10) und den Gewichten (0 = egal … 5 = sehr wichtig).
+ * - Gewichte zählen im Quadrat: „sehr wichtig“ (5) zählt 25-fach, „wenig wichtig“ (1) einfach.
+ *   So entscheidet, was dir wirklich wichtig ist, und nicht der Durchschnitt aus allem.
+ * - Schwächen zählen etwas stärker als Stärken (Mittel über Wurzeln): ein schwacher Wert bei etwas Wichtigem
+ *   lässt sich nicht durch viele mittlere Werte ausgleichen. Sind alle Werte gleich, kommt genau dieser Wert heraus.
+ * Werte ohne Daten (null) zählen nicht.
+ */
 export function weightedMatch(scores: Record<string, number | null | undefined>, weights: Weights) {
   let sum = 0;
-  let max = 0;
+  let total = 0;
   for (const [k, w] of Object.entries(weights)) {
     const s = scores[k];
-    if (w <= 0 || s === null || s === undefined) continue;
-    sum += w * s;
-    max += w * 10;
+    if (!(w > 0) || s === null || s === undefined || !Number.isFinite(s)) continue;
+    const weight = w * w;
+    sum += weight * Math.sqrt(Math.min(10, Math.max(0, s)) / 10);
+    total += weight;
   }
-  return max ? Math.round((sum / max) * 100) : 0;
+  return total ? Math.round((sum / total) ** 2 * 100) : 0;
 }
 
 export type PersonalMatch = { match: number; uncapped: number; mustMissing: ExtraKey | null };

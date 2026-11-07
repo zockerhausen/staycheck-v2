@@ -73,7 +73,7 @@ export default async function ErgebnisPage({
           </span>
           <span className="min-w-0 flex-1">
             <span className="block text-[15px] font-bold">Welches passt zu mir?</span>
-            <span className="block text-[13px] text-muted">7 kurze Fragen, dann zeigen wir dir dein Viertel</span>
+            <span className="block text-[13px] text-muted">Kurzes Quiz (1 Minute), dann zeigen wir dir dein Viertel</span>
           </span>
           <Icon name="chevron" size={16} className="text-faint" />
         </Link>

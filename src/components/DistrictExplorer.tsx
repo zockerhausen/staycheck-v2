@@ -48,6 +48,10 @@ export default function DistrictExplorer({
           return (b.scores[c] ?? 0) - (a.scores[c] ?? 0);
         })
     : districts;
+  // Platz in der Stadt (nach Match): sagt mehr als viele fast gleiche Zahlen
+  const withMatch = districts.filter((d) => d.match !== undefined);
+  const rankOf = new Map([...withMatch].sort((a, b) => (b.match ?? 0) - (a.match ?? 0)).map((d, i) => [d.slug, i + 1]));
+  const rankText = (d: ExplorerDistrict) => (withMatch.length > 2 && rankOf.has(d.slug) ? `Platz ${rankOf.get(d.slug)} von ${withMatch.length}` : "");
   const href = (d: ExplorerDistrict) => d.href ?? `/kiez/${d.slug}?stadt=${d.city}${query ? `&${query}` : ""}`;
   const pick = (k: TraitKey | null) => {
     try {
@@ -123,7 +127,7 @@ export default function DistrictExplorer({
                   {d.match !== undefined && (
                     <span className="shrink-0 text-right">
                       <b className="block text-[24px] font-extrabold leading-none tracking-[-0.04em] tabular-nums text-sun-soft">{d.match}</b>
-                      <span className="text-[12px] font-bold text-muted">Lage</span>
+                      <span className="text-[12px] font-bold text-muted">{rankText(d) ? `Platz ${rankOf.get(d.slug)}` : "Lage"}</span>
                     </span>
                   )}
                 </span>
@@ -180,7 +184,10 @@ export default function DistrictExplorer({
                   </span>
                 </span>
                 {d.match !== undefined ? (
-                  <span className="w-12 text-right text-[19px] font-extrabold tabular-nums text-sun-soft">{d.match}</span>
+                  <span className="shrink-0 text-right">
+                    <span className="block text-[19px] font-extrabold leading-tight tabular-nums text-sun-soft">{d.match}</span>
+                    {rankText(d) && <span className="block whitespace-nowrap text-[11.5px] font-bold text-muted">{rankText(d)}</span>}
+                  </span>
                 ) : (
                   <Icon name="chevron" size={16} className="text-faint" />
                 )}

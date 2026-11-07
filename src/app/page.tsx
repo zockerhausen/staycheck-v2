@@ -149,7 +149,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
 
       <h1 className="mt-6 text-[22px] font-extrabold leading-tight tracking-[-0.03em] [overflow-wrap:anywhere]">Wo schläfst du in {city.name}?</h1>
       <MapStage id="karte">
-        <KiezMap points={mapPoints} highlight={topSpot?.slug ?? top?.slug} center={[city.lng, city.lat]} zoom={city.zoom} height="h-[420px]" zones={zones} fit flush legend={zones.length ? (weights ? "Violett = passt zu dir" : "Violett = beste Lage") : undefined} />
+        <KiezMap points={mapPoints} highlight={topSpot?.slug ?? top?.slug} center={[city.lng, city.lat]} zoom={city.zoom} height="h-[420px]" zones={zones} fit flush legend={zones.length ? (weights ? "Beste 10 % für dich" : "Beste 10 % der Stadt") : undefined} />
       </MapStage>
 
       {/* Liste als Blatt, das über die Karte geschoben ist: Karte und Ecken gehören sichtbar zusammen */}

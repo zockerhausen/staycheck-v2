@@ -16,7 +16,7 @@ export default function ProfileBar({ weights, extras, quizHref }: { weights: Wei
         </span>
         <span className="min-w-0 flex-1">
           <b className="block text-[16px] font-extrabold">Welche Ecke passt zu dir?</b>
-          <span className="block text-[14px] font-semibold text-muted">7 kurze Fragen, dann sortieren wir für dich</span>
+          <span className="block text-[14px] font-semibold text-muted">Kurzes Quiz, dann sortieren wir für dich</span>
         </span>
         <Icon name="chevron" size={16} className="text-sun-soft" />
       </Link>

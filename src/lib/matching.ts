@@ -1,23 +1,11 @@
 import type { District, Weights } from "./data";
+import { weightedMatch } from "./profile";
 
 export type RankedDistrict = District & { match: number };
 
-/**
- * Match in Prozent: gewichteter Durchschnitt der Bezirks-Scores (1–10).
- * Gewicht 0 = egal, 5 = sehr wichtig.
- */
+/** Match in Prozent, gleiche Rechnung wie überall in der App (siehe weightedMatch). */
 export function matchScore(district: District, weights: Weights): number {
-  let sum = 0;
-  let max = 0;
-  for (const [key, weight] of Object.entries(weights)) {
-    if (weight <= 0) continue;
-    const score = district.scores[key];
-    if (score === undefined) continue;
-    sum += weight * score;
-    max += weight * 10;
-  }
-  if (max === 0) return 0;
-  return Math.round((sum / max) * 100);
+  return weightedMatch(district.scores, weights);
 }
 
 export function rankDistricts(districts: District[], weights: Weights): RankedDistrict[] {
