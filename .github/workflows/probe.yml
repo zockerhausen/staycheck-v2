@@ -15,10 +15,11 @@ jobs:
           python-version: "3.12"
       - run: |
           mkdir -p data/insights
-          for f in data/cities/wien.json.gz data/cities/berlin.json.gz data/cities/bangkok.json.gz; do
+          for f in data/cities/*.json.gz; do
             slug=$(basename "$f" .json.gz)
             python3 scripts/guide/wikivoyage.py "$f" "data/insights/$slug.guide.json.gz" || echo "::warning title=$slug::Wikivoyage übersprungen"
           done
+          DRY_RUN=1 NUR=chiang-mai,bangkok,berlin,lissabon python3 scripts/guide/texts.py || true
           git config user.name "zockerhausen"; git config user.email "pauljonas.beth@me.com"
           git add data/insights
           git commit -qm "Reiseführer-Wissen aktualisiert (Wikivoyage)" -m "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>" -m "Claude-Session: https://claude.ai/code/session_01NHFJiDqfkhiYUvj1E1dwBL"
