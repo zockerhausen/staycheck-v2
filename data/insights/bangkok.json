@@ -1,0 +1,699 @@
+{
+ "v": 1,
+ "slug": "bangkok",
+ "generated": "2026-11-07",
+ "model": "claude-haiku-5-5 (nur Wikivoyage-Text, Zitate geprüft)",
+ "areas": [
+  {
+   "name": "Bang Lamphu",
+   "kind": "viertel",
+   "lat": 13.76285,
+   "lon": 100.49688,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Backpacker-Zentrum mit Khao San Road, günstigen Unterkünften und lebhaftem Barleben, abends aber oft laut.",
+   "goodFor": [
+    "Budget-Reisende",
+    "Bars und Straßenleben",
+    "günstige Unterkünfte"
+   ],
+   "watchOut": [
+    "Lärm bis spät in die Nacht",
+    "Scams und Tuk-Tuk-Schlepper",
+    "nachts Raubgefahr in Nebenstraßen"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 8,
+     "why": "Viele günstige Bars auf der Straße – „Khao San Road has some of the cheapest bars in town, and these days even Thais head down to knock back a few.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "quiet": {
+     "v": 2,
+     "why": "Direkt an der Straße sehr laut nachts – „Accommodation directly on Khao San Road can be noisy late into the night due to bars and street activity.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "budget": {
+     "v": 9,
+     "why": "Günstigste Unterkünfte der Stadt – „Most backpackers head straight for Khao San Road as it has the cheapest accommodation in all of Bangkok.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "safety": {
+     "v": 3,
+     "why": "Viele Scams und Belästigungen – „Khao San Road is the worst district in Bangkok when it comes to scams and annoyances.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "transit": {
+     "v": 5,
+     "why": "Anbindung nur über Umstieg auf Boot – „Khao San Road can be reached by taking the Silom Line to Saphan Taksin (S6) and transferring to a Chao Phraya Express Boat“",
+     "src": [
+      1
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Bangkok/Khao_San_Road",
+     "title": "Wikivoyage (en): Bangkok/Khao San Road"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Bangkok",
+     "title": "Wikivoyage (en): Bangkok"
+    }
+   ]
+  },
+  {
+   "name": "Sukhumvit",
+   "kind": "viertel",
+   "lat": 13.73384,
+   "lon": 100.56507,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Gehobenes Ausgehviertel mit vielen Bars, Clubs, Restaurants und Hotels entlang des Skytrains.",
+   "goodFor": [
+    "Ausgehen",
+    "Essen in allen Preisklassen",
+    "Skytrain-Anbindung"
+   ],
+   "watchOut": [
+    "Teure Unterkünfte",
+    "Go-go-Bars und Tout-Problematik"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 9,
+     "why": "Viele Clubs und Bars – „It is filled with quality hotels, restaurants and nightclubs and has the famous BTS Skytrain running along it.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "food": {
+     "v": 9,
+     "why": "Riesige Auswahl von Luxus bis Straßenstand – „Sukhumvit offers the best dining in Bangkok, from five-star dining to street stands, the variety of choices and tastes are almost overwhelming.“",
+     "src": [
+      1
+     ],
+     "w": 1.0
+    },
+    "budget": {
+     "v": 2,
+     "why": "Unterkünfte teuer – „Guest houses à la Khao San Road are hard to find, and will set you back at least twice as much.“",
+     "src": [
+      1
+     ],
+     "w": 1.0
+    },
+    "transit": {
+     "v": 9,
+     "why": "Skytrain deckt den Großteil der Straße ab – „The construction of the BTS Skytrain in 1999, covering most of Sukhumvit Road, has increased the popularity of this district even more.“",
+     "src": [
+      1
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Bangkok",
+     "title": "Wikivoyage (en): Bangkok"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Bangkok/Sukhumvit",
+     "title": "Wikivoyage (en): Bangkok/Sukhumvit"
+    }
+   ]
+  },
+  {
+   "name": "Silom",
+   "kind": "viertel",
+   "lat": 13.72621,
+   "lon": 100.53267,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Tagsüber Finanzviertel, nachts eines der wichtigsten Ausgehviertel mit Patpong und Gay-Bars.",
+   "goodFor": [
+    "Nachtleben",
+    "Dachbars",
+    "Gay-Ausgehen"
+   ],
+   "watchOut": [
+    "Patpong-Touts und hohe Rechnungen",
+    "Teure Hotels",
+    "Verkehrsstaus"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 9,
+     "why": "Breites Angebot an Bars und Clubs – „One of Bangkok's main party districts is Silom, home to a wide range of bars and nightclubs catering to all tastes“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "budget": {
+     "v": 2,
+     "why": "Überwiegend teure Hotels – „Most of the hotels in Silom are four- or five-star hotels catering to business travellers.“",
+     "src": [
+      1
+     ],
+     "w": 1.0
+    },
+    "safety": {
+     "v": 4,
+     "why": "Touts in Patpong, teils gefährliche Streitigkeiten bei Rechnungen – „Prepare to be harassed by touts armed with laminated 'menus' of acts you can order up.“",
+     "src": [
+      1
+     ],
+     "w": 1.0
+    },
+    "transit": {
+     "v": 8,
+     "why": "Skytrain und Flussanbindung – „The Silom Line passes Patpong Night Market and the Chao Phraya river.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Bangkok",
+     "title": "Wikivoyage (en): Bangkok"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Bangkok/Silom",
+     "title": "Wikivoyage (en): Bangkok/Silom"
+    }
+   ]
+  },
+  {
+   "name": "Siam Square",
+   "kind": "viertel",
+   "lat": 13.744431,
+   "lon": 100.533139,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Zentrales Einkaufs- und Shoppingviertel mit Malls und Skytrain-Knotenpunkt, nachts eher ruhig.",
+   "goodFor": [
+    "Shopping",
+    "Anbindung an Skytrain",
+    "Unterkünfte aller Preisklassen"
+   ],
+   "watchOut": [
+    "Nachts wenig Ausgehmöglichkeiten",
+    "Geschäfte schließen früh"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 3,
+     "why": "Nach 22 Uhr meist still – „Siam Square is not that well known for its nightlife, as shops tend to close about 22:00 and the area gets pretty silent afterwards.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "quiet": {
+     "v": 8,
+     "why": "Nachts meist ruhig – „Siam Square is not that well known for its nightlife, as shops tend to close about 22:00 and the area gets pretty silent afterwards.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "budget": {
+     "v": 5,
+     "why": "Unterkünfte in allen Preisklassen – „Accommodation in almost all price ranges can be found within this area.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "transit": {
+     "v": 10,
+     "why": "Wichtigster Skytrain-Knotenpunkt – „The Skytrain intersection at Siam Square is the closest thing Bangkok has to a centre.“",
+     "src": [
+      1
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Bangkok/Siam_Square",
+     "title": "Wikivoyage (en): Bangkok/Siam Square"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Bangkok",
+     "title": "Wikivoyage (en): Bangkok"
+    }
+   ]
+  },
+  {
+   "name": "Ratchadaphisek",
+   "kind": "viertel",
+   "lat": 13.78581,
+   "lon": 100.57356,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Unterhaltungsgebiet für Einheimische mit vielen Clubs, besonders rund um RCA.",
+   "goodFor": [
+    "Clubbing mit Einheimischen",
+    "Karaoke und Unterhaltung",
+    "Essen am Nachtmarkt"
+   ],
+   "watchOut": [
+    "Sehr laute Musik",
+    "Massagesalons teils mit Prostitution",
+    "Taxi-Provisionen"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 10,
+     "why": "Dutzende Clubs und Bars – „Since the completion of the metro line, Ratchadaphisek has developed into an entertainment resort for locals, with dozens of clubs“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "quiet": {
+     "v": 1,
+     "why": "Sehr laute Musik in den Sois – „The music is often way too loud, but that seems to be the main attraction.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "food": {
+     "v": 7,
+     "why": "Nachtmarkt mit vielen Garküchen – „This venue along Ratchadaphisek Road in Din Daeng is full of open air food vendors and engaging bars“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Bangkok/Ratchadaphisek",
+     "title": "Wikivoyage (en): Bangkok/Ratchadaphisek"
+    }
+   ]
+  },
+  {
+   "name": "Rattanakosin",
+   "kind": "viertel",
+   "lat": 13.7523,
+   "lon": 100.4999,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Historische Altstadt mit Großem Palast, Wat Pho und vielen Tempeln, am Fluss gut zu erreichen.",
+   "goodFor": [
+    "Sehenswürdigkeiten",
+    "Tempel und Museen",
+    "Bootsfahrten"
+   ],
+   "watchOut": [
+    "Tagsüber viele Touristengruppen",
+    "Wenig Auswahl an Unterkünften außerhalb Banglamphu"
+   ],
+   "values": {
+    "quiet": {
+     "v": 6,
+     "why": "Nachts ruhiger am Fluss und in Seitenstraßen – „from lively around Khao San Road to noticeably quieter and more residential along the river and smaller inner streets.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "transit": {
+     "v": 7,
+     "why": "Gute Anbindung per Expressboot – „most foreign visitors use the express boat to hop from place to place“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Bangkok/Rattanakosin",
+     "title": "Wikivoyage (en): Bangkok/Rattanakosin"
+    }
+   ]
+  },
+  {
+   "name": "Yaowarat and Phahurat",
+   "kind": "viertel",
+   "lat": 13.73972,
+   "lon": 100.50791,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Chinesisches und indisches Viertel mit Straßenmärkten, Tempeln und günstigem Essen.",
+   "goodFor": [
+    "Authentisches Essen",
+    "Märkte und Stöbern",
+    "Architektur und Tempel"
+   ],
+   "watchOut": [
+    "Unübersichtliche Gassen",
+    "Die meisten Läden schließen um 17 Uhr",
+    "Viel Verkehr beim Überqueren"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 5,
+     "why": "Abends lebhaft, aber kein echtes Nachtleben – „But at night, the neon signs blazing with Chinese characters are turned on and crowds from the restaurants spill out onto the streets“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "food": {
+     "v": 9,
+     "why": "Günstige, besondere Speisen – „A visit to the area is not complete without having some of its amazing delicacies that sell for an absolute bargain“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "budget": {
+     "v": 5,
+     "why": "Mittlere Preise – „Yaowarat is an interesting medium-cost alternative for Khao San Road as the atmosphere is much more authentic.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "safety": {
+     "v": 8,
+     "why": "Weniger Scams als im Zentrum – „As Yaowarat and Phahurat are remarkably off the traditional tourist track, there is less to worry about than elsewhere in the city.“",
+     "src": [
+      1
+     ],
+     "w": 1.0
+    },
+    "transit": {
+     "v": 5,
+     "why": "MRT-Station in der Nähe von Hua Lamphong – „it is served by an MRT station“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Bangkok/Yaowarat_and_Phahurat",
+     "title": "Wikivoyage (en): Bangkok/Yaowarat and Phahurat"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Yaowarat_and_Phahurat_Tour",
+     "title": "Wikivoyage (en): Yaowarat and Phahurat Tour"
+    }
+   ]
+  },
+  {
+   "name": "Thonburi",
+   "kind": "viertel",
+   "lat": 13.725,
+   "lon": 100.485833,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Ruhiger Westufer-Bezirk mit Kanälen, Obstgärten und schwimmenden Märkten.",
+   "goodFor": [
+    "Kanaltouren",
+    "Ruhe und Natur",
+    "traditioneller Alltag"
+   ],
+   "watchOut": [
+    "Schlechte Fußwege und wenige Brücken",
+    "Wenig Nachtleben"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 1,
+     "why": "Kaum Nachtleben – „Do not expect much of a nightlife scene in Thonburi“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "quiet": {
+     "v": 9,
+     "why": "Kühl und friedlich – „most visitors still come here for the cool and peaceful atmosphere“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "transit": {
+     "v": 3,
+     "why": "Stark verstopfte Hauptstraßen – „most of the main roads are heavily congested with commuters“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "nature": {
+     "v": 7,
+     "why": "Kanäle, Obstgärten und Märkte – „The traditional Thai way of life on the canals still exists here, as do the floating vendors and orchard farms.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Bangkok/Thonburi",
+     "title": "Wikivoyage (en): Bangkok/Thonburi"
+    }
+   ]
+  },
+  {
+   "name": "Dusit",
+   "kind": "viertel",
+   "lat": 13.77054,
+   "lon": 100.51261,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Grüner, europäisch geprägter Regierungsbezirk mit Palästen und breiten Alleen.",
+   "goodFor": [
+    "Palastbesichtigung",
+    "Spaziergänge im Grünen",
+    "Zeremonien"
+   ],
+   "watchOut": [
+    "Kein Nachtleben",
+    "Wenig attraktiv zum Übernachten"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 1,
+     "why": "Kein Nachtleben – „Don't expect any nightlife in Dusit.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "nature": {
+     "v": 7,
+     "why": "Gärten und breite Alleen – „Its breezy palaces, lush gardens and broad avenues give this district its distinct character.“",
+     "src": [
+      1
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Bangkok/Dusit",
+     "title": "Wikivoyage (en): Bangkok/Dusit"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Bangkok",
+     "title": "Wikivoyage (en): Bangkok"
+    }
+   ]
+  },
+  {
+   "name": "Pratunam",
+   "kind": "viertel",
+   "lat": 13.760603,
+   "lon": 100.536869,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Großer Textilmarkt mit Großhandelspreisen, Baiyoke Tower II und Victory Monument.",
+   "goodFor": [
+    "Mode-Einkauf",
+    "Großhandelspreise",
+    "Aussicht vom Baiyoke Tower"
+   ],
+   "watchOut": [
+    "Nach Einbruch der Dunkelheit fast verlassen",
+    "Unterkünfte eher teuer"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 2,
+     "why": "Abends kaum Betrieb – „Pratunam quickly becomes deserted after dark“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "budget": {
+     "v": 4,
+     "why": "Shopping günstig, Hotels teuer – „While the shopping is one of the cheapest in Bangkok, accommodation tends to be in the splurge category.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Bangkok/Pratunam",
+     "title": "Wikivoyage (en): Bangkok/Pratunam"
+    }
+   ]
+  },
+  {
+   "name": "Phahonyothin",
+   "kind": "viertel",
+   "lat": 13.8143,
+   "lon": 100.5602,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Nördliche Ausfallstraße mit dem riesigen Chatuchak-Wochenendmarkt.",
+   "goodFor": [
+    "Chatuchak-Markt am Wochenende",
+    "Schnäppchen"
+   ],
+   "watchOut": [
+    "Eher Vorstadt",
+    "Lange Wege zwischen Zielen"
+   ],
+   "values": {
+    "transit": {
+     "v": 8,
+     "why": "Skytrain-Anbindung entlang der Straße – „Der nördliche Zweig des 1999 eingeweihten Skytrains folgt dem Verlauf der Thanon Phahonyothin“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/Bangkok/Phahonyothin",
+     "title": "Wikivoyage (de): Bangkok/Phahonyothin"
+    }
+   ]
+  },
+  {
+   "name": "Ari",
+   "kind": "viertel",
+   "lat": 13.78046,
+   "lon": 100.54098,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Angesagtes Ausgehviertel rund um die Skytrain-Station mit Restaurants und Cafés.",
+   "goodFor": [
+    "Ausgehen im Trendviertel",
+    "Cafés und Restaurants"
+   ],
+   "watchOut": [
+    "Eher lokal, wenig touristische Infrastruktur"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 7,
+     "why": "Angesagtes Ausgehviertel – „Die Gegend um die Skytrain-Station Ari hat sich seit ca. 2010 zu einem angesagten Ausgehviertel entwickelt“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "food": {
+     "v": 7,
+     "why": "Viele Restaurants und Cafés – „Die Gegend um die Skytrain-Station Ari hat sich seit ca. 2010 zu einem angesagten Ausgehviertel entwickelt, mit zahlreichen Restaurants und Cafés“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/Bangkok/Phahonyothin",
+     "title": "Wikivoyage (de): Bangkok/Phahonyothin"
+    }
+   ]
+  },
+  {
+   "name": "Ramkhamhaeng",
+   "kind": "viertel",
+   "lat": 13.756497,
+   "lon": 100.614656,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Weitläufige Wohngegend im Osten mit Universitäten, Einkaufszentren und Bus- und Bootsanbindung.",
+   "goodFor": [
+    "Einblick ins lokale Leben",
+    "günstigere Unterkünfte nahe Hua Mak"
+   ],
+   "watchOut": [
+    "Weite Strecken",
+    "Wenig für Touristen",
+    "Lange Taxifahrten"
+   ],
+   "values": {
+    "food": {
+     "v": 5,
+     "why": "Restaurants vor allem für Pendler und Studenten – „These are lively areas with shopping malls and restaurants that cater to commuters and university students.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "budget": {
+     "v": 6,
+     "why": "Günstiger als Sukhumvit und Siam – „The west end of Ramkhamhaeng Road has lately become more popular among expatriates, as accommodation is cheaper than in Sukhumvit and Siam Square“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "transit": {
+     "v": 2,
+     "why": "Schwierige Fortbewegung – „Getting around this vast district is sure to give you a headache.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Bangkok/Ramkhamhaeng",
+     "title": "Wikivoyage (en): Bangkok/Ramkhamhaeng"
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,742 @@
+{
+ "v": 1,
+ "slug": "berlin",
+ "generated": "2026-11-07",
+ "model": "claude-haiku-5-5 (nur Wikivoyage-Text, Zitate geprüft)",
+ "areas": [
+  {
+   "name": "Mitte",
+   "kind": "viertel",
+   "lat": 52.5178855,
+   "lon": 13.4040601,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Historisches Herz Berlins mit den meisten bekannten Sehenswürdigkeiten, Cafés und Clubs.",
+   "goodFor": [
+    "Sehenswürdigkeiten",
+    "Cafés",
+    "Museen",
+    "Clubs"
+   ],
+   "watchOut": [
+    "Taschendiebstahl an touristischen Orten"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 7,
+     "why": "Viele Clubs und Cafés im Zentrum – „abundant cafés, restaurants, museums, galleries, and clubs“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "food": {
+     "v": 8,
+     "why": "Reichlich Cafés und Restaurants – „abundant cafés, restaurants, museums, galleries, and clubs“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Berlin",
+     "title": "Wikivoyage (en): Berlin"
+    }
+   ]
+  },
+  {
+   "name": "Kreuzberg",
+   "kind": "viertel",
+   "lat": 52.4976443,
+   "lon": 13.411914,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Alternatives, gemischtes Viertel mit Kneipen, Clubs und türkisch geprägter Küche rund um Oranienstraße und Kotti.",
+   "goodFor": [
+    "Ausgehen",
+    "Essen",
+    "Multikulturelles Flair"
+   ],
+   "watchOut": [
+    "Kriminalität im Görlitzer Park und am Kottbusser Tor",
+    "Krawalle am 1. Mai"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 8,
+     "why": "Bars und Clubs an der Oranienstraße – „Die Haupteinkaufsstraße mit Geschäften, Cafés, Bars, und Clubs in Kreuzberg 36 ist die Oranienstraße.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "food": {
+     "v": 6,
+     "why": "Viele Döner- und Imbissläden – „there are still plenty of kebab joints, funky nightclubs“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    },
+    "safety": {
+     "v": 4,
+     "why": "Laut Polizei Kriminalitätsschwerpunkt – „im Görlitzer Park und am Kottbusser Tor (Kreuzberg)“",
+     "src": [
+      2
+     ],
+     "w": 0.75
+    },
+    "transit": {
+     "v": 7,
+     "why": "Gute Busanbindung, U-Bahn-Linien vorhanden – „Daneben bedienen zahlreiche normale Buslinien den dicht bebauten Bezirk.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/Berlin/Kreuzberg",
+     "title": "Wikivoyage (de): Berlin/Kreuzberg"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Berlin/East_Central",
+     "title": "Wikivoyage (en): Berlin/East Central"
+    },
+    {
+     "url": "https://de.wikivoyage.org/wiki/Berlin",
+     "title": "Wikivoyage (de): Berlin"
+    }
+   ]
+  },
+  {
+   "name": "Friedrichshain",
+   "kind": "viertel",
+   "lat": 52.5122154,
+   "lon": 13.4502904,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Ausgehviertel mit vielen Discos und Clubs sowie Kneipen rund um Simon-Dach-Straße und Boxhagener Platz.",
+   "goodFor": [
+    "Clubs",
+    "Kneipen",
+    "Nachtleben"
+   ],
+   "watchOut": [
+    "Krawalle am 1. Mai",
+    "Rigaer Straße für Szenefremde teils unfreundlich"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 9,
+     "why": "Viele Discos und Clubs – „verallgemeinert muss man Friedrichshain mehr Discos und Clubs anrechnen“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "safety": {
+     "v": 5,
+     "why": "Regelmäßige Krawalle am 1. Mai rund um Boxhagener Platz – „gibt es in der Nacht zum und am 1. Mai regelmäßig Krawalle“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/Berlin/Friedrichshain",
+     "title": "Wikivoyage (de): Berlin/Friedrichshain"
+    },
+    {
+     "url": "https://de.wikivoyage.org/wiki/Berlin",
+     "title": "Wikivoyage (de): Berlin"
+    }
+   ]
+  },
+  {
+   "name": "Prenzlauer Berg",
+   "kind": "viertel",
+   "lat": 52.53985,
+   "lon": 13.42857,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Gründerzeitviertel mit dichter Dichte an Kneipen, Cafés und Restaurants, aber hohen Mieten.",
+   "goodFor": [
+    "Cafés",
+    "Kneipen",
+    "Restaurants"
+   ],
+   "watchOut": [
+    "Hohe Mieten und Preise",
+    "Krawalle am 1. Mai im Mauerpark-Bereich"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 8,
+     "why": "Hohe Kneipendichte – „Heute bietet der Prenzlauer Berg umfangreiche Ausgehmöglichkeiten mit einer hohen Kneipendichte.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "food": {
+     "v": 8,
+     "why": "Sehr viele Restaurants und Cafés – „die sehr hohe Zahl von Geschäften, Restaurants, Cafés und Kultureinrichtungen“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "budget": {
+     "v": 3,
+     "why": "Mieten stark gestiegen – „Zwangsläufig stiegen die Mieten kräftig, und sie steigen auch heute noch weiter“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "safety": {
+     "v": 5,
+     "why": "Krawalle am 1. Mai im Mauerpark-Bereich – „gibt es in der Nacht zum und am 1. Mai regelmäßig Krawalle“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/Berlin/Prenzlauer_Berg",
+     "title": "Wikivoyage (de): Berlin/Prenzlauer Berg"
+    },
+    {
+     "url": "https://de.wikivoyage.org/wiki/Berlin",
+     "title": "Wikivoyage (de): Berlin"
+    }
+   ]
+  },
+  {
+   "name": "City West",
+   "kind": "viertel",
+   "lat": 52.50424,
+   "lon": 13.33532,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Traditionelles Einkaufs- und Hotelviertel rund um Ku'damm und Zoo mit Restaurants und Sehenswürdigkeiten.",
+   "goodFor": [
+    "Shopping",
+    "Hotels",
+    "Restaurants",
+    "Olympiastadion"
+   ],
+   "watchOut": [
+    "Feiern hat sich weitgehend nach Osten verlagert"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 3,
+     "why": "Das Nachtleben ist nach Osten abgewandert – „While the party has since moved east“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "food": {
+     "v": 8,
+     "why": "Gute Restaurants und Hotels – „there are great restaurants and hotels as well as the Olympic stadium“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Berlin",
+     "title": "Wikivoyage (en): Berlin"
+    }
+   ]
+  },
+  {
+   "name": "Schöneberg",
+   "kind": "viertel",
+   "lat": 52.48216,
+   "lon": 13.35519,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Bürgerliches Viertel mit einer großen Kneipenszene um Nollendorfplatz und Winterfeldtplatz.",
+   "goodFor": [
+    "Kneipen",
+    "Ruhige Wohnlage",
+    "KaDeWe"
+   ],
+   "watchOut": [
+    "Westlicher Teil überwiegend homosexuelles Publikum (Hinweis …"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 8,
+     "why": "Eine der größten Kneipenszenen Berlins – „Um den Nollendorfplatz und Winterfeldtplatz befindet eine der größten Kneipenszenen Berlins mit multikultureller Restauration“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "quiet": {
+     "v": 7,
+     "why": "Abseits der Kneipen ruhige Wohngegenden – „Ansonsten sind Schöneberg und Friedenau ruhige Wohngegenden.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/Berlin/Sch%C3%B6neberg_und_Friedenau",
+     "title": "Wikivoyage (de): Berlin/Schöneberg und Friedenau"
+    }
+   ]
+  },
+  {
+   "name": "Alexanderplatz",
+   "kind": "viertel",
+   "lat": 52.52198,
+   "lon": 13.41363,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Großer Verkehrsknotenpunkt und Geschäftszentrum in Mitte, aber mit hoher Kriminalität.",
+   "goodFor": [
+    "Anbindung",
+    "Einkaufen"
+   ],
+   "watchOut": [
+    "Eine der höchsten Kriminalitätsraten, besonders nachts"
+   ],
+   "values": {
+    "safety": {
+     "v": 3,
+     "why": "Viele Delikte, besonders nachts – „Der Alexanderplatz ist wohl der gefährlichste Platz in Berlin.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "transit": {
+     "v": 9,
+     "why": "Bedeutender Verkehrsknotenpunkt – „ist ein bedeutender Verkehrsknotenpunkt und Geschäftszentrum“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/Berlin/Alexanderplatz",
+     "title": "Wikivoyage (de): Berlin/Alexanderplatz"
+    }
+   ]
+  },
+  {
+   "name": "Potsdamer Platz",
+   "kind": "viertel",
+   "lat": 52.50944,
+   "lon": 13.37583,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Neu entstandenes Quartier mit Verkehrsknoten, Hotels und Gastronomie an der Grenze von Mitte und Tiergarten.",
+   "goodFor": [
+    "Anbindung",
+    "Hotels",
+    "Kultur"
+   ],
+   "watchOut": [
+    "Wenige Clubs im Vergleich zu Friedrichshain"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 5,
+     "why": "Einige Mainstream-Clubs vorhanden – „A few mainstream clubs are also located in Charlottenburg and at Potsdamer Platz“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "transit": {
+     "v": 8,
+     "why": "Zentraler Verkehrsknoten – „ein zentraler Verkehrsknoten als auch ein nach der Wende neu entstandenes Quartier“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Berlin",
+     "title": "Wikivoyage (en): Berlin"
+    },
+    {
+     "url": "https://de.wikivoyage.org/wiki/Berlin/Potsdamer_Platz",
+     "title": "Wikivoyage (de): Berlin/Potsdamer Platz"
+    }
+   ]
+  },
+  {
+   "name": "Unter den Linden",
+   "kind": "viertel",
+   "lat": 52.51667,
+   "lon": 13.38917,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Zentrale Prachtstraße Berlins, gut zu Fuß erreichbar und mit Bus 100 angebunden.",
+   "goodFor": [
+    "Sehenswürdigkeiten",
+    "Spaziergänge"
+   ],
+   "watchOut": [],
+   "values": {
+    "transit": {
+     "v": 7,
+     "why": "Bus 100 fährt die Straße ab – „Der Bus 100 fährt fast die ganze Straße ab.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/Berlin/Unter_den_Linden",
+     "title": "Wikivoyage (de): Berlin/Unter den Linden"
+    }
+   ]
+  },
+  {
+   "name": "Berlin Hauptbahnhof",
+   "kind": "viertel",
+   "lat": 52.5249451,
+   "lon": 13.3696614,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Großer Fern- und Nahverkehrsbahnhof im Ortsteil Moabit mit vielen Geschäften und Restaurants.",
+   "goodFor": [
+    "Anreise",
+    "Verpflegung",
+    "Anbindung"
+   ],
+   "watchOut": [
+    "Taschen bei Gedränge im Blick behalten"
+   ],
+   "values": {
+    "transit": {
+     "v": 9,
+     "why": "Fern-, S-, U-Bahn und Straßenbahn halten hier – „Er wird neben zahlreichen ICE, InterCity, EuroCity und Regionalzügen auch von S- und U-Bahn sowie Straßenbahnen angefahren“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/Berlin_Hauptbahnhof",
+     "title": "Wikivoyage (de): Berlin Hauptbahnhof"
+    }
+   ]
+  },
+  {
+   "name": "Gesundbrunnen",
+   "kind": "viertel",
+   "lat": 52.55092,
+   "lon": 13.38485,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Gemischtes Gebiet im Norden, das im Text als Gegend mit erhöhtem Raub- und Überfallrisiko genannt wird.",
+   "goodFor": [
+    "Anbindung über Gesundbrunnen-Bahnhof"
+   ],
+   "watchOut": [
+    "Erhöhtes Risiko für Raub und Überfälle, besonders nachts"
+   ],
+   "values": {
+    "safety": {
+     "v": 3,
+     "why": "Erhöhtes Raub- und Überfallrisiko – „Wedding (Moabit and Gesundbrunnen) the risk of falling victim to robberies and assaults is higher“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Berlin",
+     "title": "Wikivoyage (en): Berlin"
+    }
+   ]
+  },
+  {
+   "name": "Neukölln",
+   "kind": "viertel",
+   "lat": 52.48115,
+   "lon": 13.43535,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Gentrifizierender Bezirk mit wachsender Barszene im Norden (Reuterkiez/Kreuzkölln).",
+   "goodFor": [
+    "Bars im Norden",
+    "Günstigere Wohngegend"
+   ],
+   "watchOut": [
+    "Antisemitische Übergriffe, sichtbar jüdische Personen …"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 6,
+     "why": "Barszene wächst im Norden – „the bar scene is becoming increasingly established“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "safety": {
+     "v": 4,
+     "why": "Antisemitismus ist ein Problem – „it is not advisable to be identifiable as visibly Jewish here“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Berlin/Tempelhof_and_Neuk%C3%B6lln",
+     "title": "Wikivoyage (en): Berlin/Tempelhof and Neukölln"
+    }
+   ]
+  },
+  {
+   "name": "Moabit",
+   "kind": "viertel",
+   "lat": 52.5301,
+   "lon": 13.34254,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Ruhiger Stadtteil ohne typisches Ausgehviertel, mit Einkaufsstraße Turmstraße und vielen Restaurants.",
+   "goodFor": [
+    "Restaurants",
+    "Hotels nahe Hauptbahnhof"
+   ],
+   "watchOut": [
+    "Kein typisches Ausgehviertel"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 3,
+     "why": "Nur wenige Orte zum Feiern – „Moabit ist kein typisches Ausgehviertel, ein paar Örtlichkeiten zum Feiern finden sich aber trotzdem.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "food": {
+     "v": 7,
+     "why": "Restaurants verschiedenster Küchen – „Restaurants der verschiedensten Richtungen“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/Berlin/Moabit",
+     "title": "Wikivoyage (de): Berlin/Moabit"
+    }
+   ]
+  },
+  {
+   "name": "Charlottenburg",
+   "kind": "viertel",
+   "lat": 52.517,
+   "lon": 13.2934,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Westlicher Ortsteil mit Schloss Charlottenburg, Parkanlagen und einigen Mainstream-Clubs.",
+   "goodFor": [
+    "Schloss Charlottenburg",
+    "Parks",
+    "Clubs"
+   ],
+   "watchOut": [],
+   "values": {
+    "nightlife": {
+     "v": 5,
+     "why": "Einige Mainstream-Clubs – „A few mainstream clubs are also located in Charlottenburg and at Potsdamer Platz“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "nature": {
+     "v": 8,
+     "why": "Großer Barock- und Landschaftsgarten am Schloss – „Umgeben ist der Prachtbau von einem einzigartigen Barock- und Landschaftsgarten“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Berlin",
+     "title": "Wikivoyage (en): Berlin"
+    },
+    {
+     "url": "https://de.wikivoyage.org/wiki/Berlin/Schloss_Charlottenburg",
+     "title": "Wikivoyage (de): Berlin/Schloss Charlottenburg"
+    }
+   ]
+  },
+  {
+   "name": "Wilmersdorf",
+   "kind": "viertel",
+   "lat": 52.4837,
+   "lon": 13.2924,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Gemütlicher, ruhiger Wohnstadtteil mit guten Restaurants und Cafés.",
+   "goodFor": [
+    "Ruhige Unterkunft",
+    "Cafés"
+   ],
+   "watchOut": [],
+   "values": {
+    "quiet": {
+     "v": 8,
+     "why": "Westliche Kurfürstendamm-Hälfte deutlich ruhiger – „ist es schön, aber deutlich ruhiger“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/Berlin/Wilmersdorf",
+     "title": "Wikivoyage (de): Berlin/Wilmersdorf"
+    }
+   ]
+  },
+  {
+   "name": "Tiergarten",
+   "kind": "viertel",
+   "lat": 52.5097776,
+   "lon": 13.3572597,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Stadtteil um den großen Tiergarten-Park, ideal für Grün und Erholung.",
+   "goodFor": [
+    "Parks",
+    "Natur"
+   ],
+   "watchOut": [],
+   "values": {
+    "nature": {
+     "v": 9,
+     "why": "Großer Park nimmt die meiste Fläche ein – „Die größte Fläche nimmt die Parkanlage Großer Tiergarten ein.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/Berlin/Tiergarten_und_Hansaviertel",
+     "title": "Wikivoyage (de): Berlin/Tiergarten und Hansaviertel"
+    }
+   ]
+  },
+  {
+   "name": "Steglitz und Lichterfelde",
+   "kind": "viertel",
+   "lat": 52.4449,
+   "lon": 13.326,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Ruhiger Südwesten mit Einkaufsstraße Schloßstraße, aber kaum Nachtleben.",
+   "goodFor": [
+    "Ruhe",
+    "Einkaufen"
+   ],
+   "watchOut": [
+    "Kaum Nachtleben"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 1,
+     "why": "Nachtleben praktisch nicht vorhanden – „Ein Nachtleben existiert so gut wie gar nicht“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/Berlin/Steglitz_und_Lichterfelde",
+     "title": "Wikivoyage (de): Berlin/Steglitz und Lichterfelde"
+    }
+   ]
+  },
+  {
+   "name": "Reinickendorf",
+   "kind": "viertel",
+   "lat": 52.56667,
+   "lon": 13.35,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Grüner Norden mit vielen Seen, Parks und Wäldern, aber wenig Ausgehmöglichkeiten.",
+   "goodFor": [
+    "Seen",
+    "Parks",
+    "Natur"
+   ],
+   "watchOut": [
+    "Kaum Kneipen und Clubs"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 2,
+     "why": "Kaum Kneipen – „Reinickendorf hat keine wirkliche Szene zu bieten“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "nature": {
+     "v": 9,
+     "why": "Viele Seen, Parks und Wald – „Der Stadtteil verfügt über eine Vielzahl an Seen und Parks und ein ausgedehntes Waldgebiet.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/Berlin/Reinickendorf",
+     "title": "Wikivoyage (de): Berlin/Reinickendorf"
+    }
+   ]
+  }
+ ]
+}
