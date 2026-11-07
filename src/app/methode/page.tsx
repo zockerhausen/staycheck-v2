@@ -150,7 +150,7 @@ export default function MethodePage() {
           <li>• <b>Texte:</b> Was schreibt der Reiseführer über die Gegend, etwa „lautes Ausgehviertel“ oder „viel Abzocke“? Eine kleine KI liest nur diesen Text und muss für jeden Wert einen wörtlichen Satz daraus nennen. Wir prüfen, ob der Satz wirklich dort steht, sonst zählt der Wert nicht.</li>
           <li>• <b>Wie stark es zählt:</b> höchstens zur Hälfte, weniger bei dünnen Artikeln, alten Einträgen (seit über 4 Jahren nicht geprüft) oder nur wenigen Empfehlungen. Gliederungs-Artikel zählen gar nicht.</li>
           <li>• <b>Nichts empfohlen heißt nicht „nichts da“:</b> Der Reiseführer ist eine Auswahl. Wo er nichts sagt, zählt nur die Karte.</li>
-          <li>• Bei jedem Wert siehst du beide Zahlen und den Artikel zum Anklicken. Jeden Monat wird neu ausgewertet.</li>
+          <li>• Bei jedem Wert siehst du beide Zahlen und den Artikel zum Anklicken. Empfehlungen werden jeden Monat neu ausgewertet, Texte alle drei Monate.</li>
         </ul>
       </section>
 
