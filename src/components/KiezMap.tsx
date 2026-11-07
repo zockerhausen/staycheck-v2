@@ -52,6 +52,8 @@ function MapCanvas({
 
     import("maplibre-gl").then((maplibregl) => {
       if (cancelled || !ref.current) return;
+      // Der Karten-Worker liegt als eigene Datei auf unserem Server (siehe scripts/build/maplibre-worker.mjs)
+      maplibregl.setWorkerUrl(`/maplibre/worker-${maplibregl.getVersion()}.mjs`);
       const m = new maplibregl.Map({
         container: ref.current,
         // Kostenlose Karte ohne API-Schlüssel (OpenFreeMap / OpenStreetMap)

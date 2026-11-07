@@ -55,7 +55,7 @@ const NAME = ["coalesce", ["get", "name:de"], ["get", "name:latin"], ["get", "na
 function paint(m: MlMap, id: string, prop: string, value: unknown) {
   if (!m.getLayer(id)) return;
   try {
-    m.setPaintProperty(id, prop, value);
+    (m.setPaintProperty as (i: string, p: string, v: unknown) => void).call(m, id, prop, value);
   } catch {
     // Ebene passt nicht (anderer Typ) – ignorieren
   }
@@ -63,7 +63,7 @@ function paint(m: MlMap, id: string, prop: string, value: unknown) {
 function layout(m: MlMap, id: string, prop: string, value: unknown) {
   if (!m.getLayer(id)) return;
   try {
-    m.setLayoutProperty(id, prop, value);
+    (m.setLayoutProperty as (i: string, p: string, v: unknown) => void).call(m, id, prop, value);
   } catch {
     // ignorieren
   }

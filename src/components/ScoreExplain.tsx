@@ -4,6 +4,7 @@ import { CRITERION_ICON } from "@/lib/icons";
 import type { Criterion } from "@/lib/data";
 import { matchBreakdown, type Coverage, type Detail, type Source } from "@/lib/score";
 import { EXTRA_LABEL, MUST_CAP } from "@/lib/profile";
+import { safeHref } from "@/lib/safe-url";
 
 const SOURCE: Record<Source, string> = {
   messung: "gemessen",
@@ -109,9 +110,9 @@ export default function ScoreExplain({
                     </li>
                   ))}
                 </ul>
-                {d.link && (
+                {safeHref(d.link) && (
                   <a
-                    href={d.link}
+                    href={safeHref(d.link)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="mt-2 inline-flex items-center gap-1 text-[14px] font-bold text-sun-soft underline underline-offset-4"
@@ -133,10 +134,10 @@ export default function ScoreExplain({
                     </p>
                     <p className="mt-0.5 font-semibold text-muted">{d.web.why}</p>
                     <p className="mt-2 flex flex-wrap gap-1.5">
-                      {d.web.sources.map((src) => (
+                      {d.web.sources.filter((src) => safeHref(src.url)).map((src) => (
                         <a
                           key={src.url}
-                          href={src.url}
+                          href={safeHref(src.url)}
                           target="_blank"
                           rel="noopener noreferrer nofollow"
                           className="max-w-full truncate rounded-full bg-paper px-2.5 py-1 text-[12px] font-bold text-sun-soft"

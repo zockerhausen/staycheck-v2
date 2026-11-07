@@ -1,5 +1,6 @@
 import Icon from "@/components/Icon";
 import type { AreaInsight } from "@/lib/insight-types";
+import { safeHref } from "@/lib/safe-url";
 
 const LABEL: Record<string, string> = {
   transit: "Anbindung",
@@ -57,9 +58,9 @@ export default function WebInsight({ insight }: { insight: AreaInsight | null })
       <div className="mt-4 border-t border-line pt-3">
         <p className="text-[13px] font-bold text-muted">Quellen ({insight.sources.length}), recherchiert im {date}:</p>
         <ul className="mt-2 space-y-1.5">
-          {insight.sources.map((s) => (
+          {insight.sources.filter((s) => safeHref(s.url)).map((s) => (
             <li key={s.url}>
-              <a href={s.url} target="_blank" rel="noopener noreferrer nofollow" className="flex items-center gap-1.5 text-[14px] font-bold">
+              <a href={safeHref(s.url)} target="_blank" rel="noopener noreferrer nofollow" className="flex items-center gap-1.5 text-[14px] font-bold">
                 <Icon name="external" size={14} className="shrink-0 text-muted" />
                 <span className="truncate">{s.title}</span>
                 <span className="shrink-0 text-[12px] font-semibold text-muted">{host(s.url)}</span>

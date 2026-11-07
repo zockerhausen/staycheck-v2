@@ -1,6 +1,7 @@
 import type { Criterion } from "@/lib/data";
 import { CRITERION_ICON } from "@/lib/icons";
 import Icon from "@/components/Icon";
+import { safeHref } from "@/lib/safe-url";
 
 const ORIGIN_LABEL = { karte: "Aus Kartendaten berechnet", quelle: "Aus Quellen belegt", schaetzung: "Geschätzt, noch nicht belegt", gemischt: "Kartendaten und Reiseführer (Wikivoyage)" } as const;
 
@@ -54,8 +55,8 @@ export default function ScoreBars({
             <div className="pb-2.5 pl-[26px] text-[13.5px] font-semibold leading-snug">
               {why && <p>{why}</p>}
               {from && <p className="mt-0.5 text-muted">{ORIGIN_LABEL[from]}</p>}
-              {links?.[c.key] && (
-                <a href={links[c.key]} target="_blank" rel="noopener noreferrer" className="mt-1 inline-flex items-center gap-1 font-bold text-sun-soft underline underline-offset-4">
+              {safeHref(links?.[c.key]) && (
+                <a href={safeHref(links?.[c.key])} target="_blank" rel="noopener noreferrer" className="mt-1 inline-flex items-center gap-1 font-bold text-sun-soft underline underline-offset-4">
                   Quelle lesen <Icon name="external" size={12} fill="transparent" />
                 </a>
               )}

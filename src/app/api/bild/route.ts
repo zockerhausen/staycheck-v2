@@ -27,9 +27,17 @@ export async function GET(request: Request) {
   const url = allowed(new URL(request.url).searchParams.get("u"));
   if (!url) return new Response("Nicht erlaubt", { status: 400 });
 
-  const res = await fetch(url, { headers: { "User-Agent": UA }, redirect: "follow", signal: AbortSignal.timeout(8000) }).catch(() => null);
-  // Auch nach einer Weiterleitung muss das Ziel bei Wikimedia liegen
-  if (!res?.ok || !allowed(res.url) || !(res.headers.get("content-type") ?? "").startsWith("image/jpeg")) {
+  // Weiterleitungen selbst verfolgen und jedes Ziel prüfen: der Server ruft nie etwas außerhalb von Wikimedia ab
+  let res: Response | null = null;
+  let current: URL | null = url;
+  for (let hop = 0; hop < 4 && current; hop++) {
+    res = await fetch(current, { headers: { "User-Agent": UA }, redirect: "manual", signal: AbortSignal.timeout(8000) }).catch(() => null);
+    const loc = res && res.status >= 300 && res.status < 400 ? res.headers.get("location") : null;
+    if (!loc) break;
+    current = allowed(new URL(loc, current).href);
+    res = null;
+  }
+  if (!res?.ok || !(res.headers.get("content-type") ?? "").startsWith("image/jpeg")) {
     return new Response("Bild nicht verfügbar", { status: 502, headers: { "Cache-Control": "public, s-maxage=3600" } });
   }
   const len = Number(res.headers.get("content-length") ?? 0);

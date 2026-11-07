@@ -1,5 +1,6 @@
 import Icon from "@/components/Icon";
 import { agreement, fairLabel, fmtScore, PLATFORM, type StayReviews } from "@/lib/reviews";
+import { safeHref } from "@/lib/safe-url";
 
 const fmtCount = (n: number) => n.toLocaleString("de-DE");
 
@@ -47,8 +48,8 @@ export default function ReviewSummary({ reviews }: { reviews: StayReviews }) {
           );
           return (
             <li key={p.platform}>
-              {p.url ? (
-                <a href={p.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3">
+              {safeHref(p.url) ? (
+                <a href={safeHref(p.url)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3">
                   {row}
                 </a>
               ) : (

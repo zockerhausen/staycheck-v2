@@ -1,5 +1,6 @@
 import Icon from "@/components/Icon";
 import type { GuideText } from "@/lib/wikivoyage";
+import { safeHref } from "@/lib/safe-url";
 
 /** „Aus dem Reiseführer“: Einleitung des Wikivoyage-Artikels, mit Quelle und Lizenz. */
 export default function GuideCard({ guide }: { guide: GuideText | null }) {
@@ -20,7 +21,7 @@ export default function GuideCard({ guide }: { guide: GuideText | null }) {
       </p>
       <p className="mt-3 text-[12px] font-semibold leading-relaxed text-muted">
         Quelle:{" "}
-        <a href={guide.url} target="_blank" rel="noopener noreferrer" className="font-bold text-sun-soft underline underline-offset-4">
+        <a href={safeHref(guide.url)} target="_blank" rel="noopener noreferrer" className="font-bold text-sun-soft underline underline-offset-4">
           Wikivoyage, „{guide.title}“
         </a>
         , Lizenz{" "}
