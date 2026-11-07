@@ -183,7 +183,7 @@ async function withInsights(city: PreCity | null): Promise<PreCity | null> {
   const zones = city.city.zones.map((z) => {
     const at = insightsAt(ins, z.lat, z.lon);
     if (!Object.keys(at).length) return z;
-    return { ...z, s: ZONE_KEYS.map((k, i) => blendValue(z.s[i], at[k]?.val) ?? z.s[i]) };
+    return { ...z, m: z.s, s: ZONE_KEYS.map((k, i) => blendValue(z.s[i], at[k]?.val) ?? z.s[i]) };
   });
 
   const districts = city.city.districts.map((d) => {

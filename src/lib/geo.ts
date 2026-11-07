@@ -287,23 +287,22 @@ export async function estimateLocation(lat: number, lon: number, districts: Dist
   const scores: Record<string, number | null> = {};
   const details: ScoreResult["details"] = {};
   ZONE_KEYS.forEach((k, i) => {
-    const v = Math.round((near.reduce((s, z) => s + z.s[i], 0) / near.length) * 10) / 10;
+    // Nur die Kartenwerte mitteln – den Reiseführer mischen wir unten sichtbar dazu (sonst zählte er doppelt)
+    const v = Math.round((near.reduce((s, z) => s + (z.m ?? z.s)[i], 0) / near.length) * 10) / 10;
     scores[k] = v;
     details[k] = { score: v, source: "messung", reasons: [`Durchschnitt von ${near.length} Messpunkten im Umkreis von 450 m (Raster, nicht genau diese Adresse)`] };
   });
   scores.safety = null;
   details.safety = { score: null, source: "keine", reasons: ["Für diese Stelle haben wir keine Einschätzung"] };
-  return withDistrictSafety(
-    {
-      scores,
-      details,
-      highlights: [],
-      coverage: { level: "duenn", text: "Grobe Schätzung aus unserem Raster, weil die genaue Messung gerade nicht verfügbar ist." },
-      counts: { bars: 0, clubs: 0, food: 0, hostels: 0 },
-      nearestRail: null,
-    },
-    nearestDistrict(lat, lon, districts),
-  );
+  const rough: ScoreResult = {
+    scores,
+    details,
+    highlights: [],
+    coverage: { level: "duenn", text: "Grobe Schätzung aus unserem Raster, weil die genaue Messung gerade nicht verfügbar ist." },
+    counts: { bars: 0, clubs: 0, food: 0, hostels: 0 },
+    nearestRail: null,
+  };
+  return withDistrictSafety(await withGuideAt(rough, lat, lon, pre), nearestDistrict(lat, lon, districts));
 }
 
 export async function analyzeLocation(lat: number, lon: number, districts: District[]): Promise<LocationAnalysis> {
@@ -406,7 +405,7 @@ export async function hotelsNear(
 // Für Städte ohne unsere Handbewertung: Stadtteile aus OpenStreetMap, je Stadtteil gezählt,
 // was im Umkreis liegt. Gröber als der Lage-Check einer Adresse – das zeigen wir auch so an.
 
-export type Zone = { lat: number; lon: number; s: number[] }; // s: Werte in der Reihenfolge ZONE_KEYS
+export type Zone = { lat: number; lon: number; s: number[]; m?: number[] }; // s: Werte in der Reihenfolge ZONE_KEYS (mit Reiseführer), m: nur Karte
 export type NamedPlace = { n: string; lat: number; lon: number; l: number }; // l: 0 Stadtteil, 1 Quartier, 2 Kiez
 export type AutoCity = {
   districts: AutoDistrict[];
