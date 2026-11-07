@@ -1,0 +1,61 @@
+name: Reiseführer-Wissen (Wikivoyage)
+# Liest die Empfehlungen der Reisenden aus Wikivoyage (Lizenz CC BY-SA 4.0) für alle vorberechneten Städte:
+# empfohlene Bars, Restaurants und Unterkünfte mit Preis und Prüfdatum. Ergebnis: data/insights/<stadt>.guide.json.
+# Die App rechnet diese Werte zur Hälfte in den Lage-Score ein (abgestuft nach Qualität und Alter) und nennt die Quelle.
+# Kostenlos, braucht keinen Schlüssel.
+on:
+  schedule:
+    - cron: "41 5 5 * *" # jeden Monat am 5., nach der Vorberechnung
+  workflow_dispatch:
+    inputs:
+      nur:
+        description: "Nur diese Städte (Komma-Liste von Slugs, leer = alle)"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+concurrency:
+  group: reisefuehrer
+  cancel-in-progress: false
+
+jobs:
+  wikivoyage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Wikivoyage auswerten
+        env:
+          NUR: ${{ inputs.nur }}
+        run: |
+          mkdir -p data/insights
+          for f in data/cities/*.json.gz; do
+            slug=$(basename "$f" .json.gz)
+            if [ -n "$NUR" ] && ! echo ",$NUR," | tr -d ' ' | grep -q ",$slug,"; then continue; fi
+            python3 scripts/guide/wikivoyage.py "$f" "data/insights/$slug.guide.json" || echo "::warning title=$slug::Wikivoyage übersprungen"
+          done
+      - name: Speichern
+        run: |
+          git config user.name "zockerhausen"
+          git config user.email "pauljonas.beth@me.com"
+          git add data/insights
+          git diff --cached --quiet && echo "Nichts Neues" && exit 0
+          MSG="Reiseführer-Wissen aktualisiert (Wikivoyage)"
+          git commit -q -m "$MSG" -m "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>" -m "Claude-Session: https://claude.ai/code/session_01NHFJiDqfkhiYUvj1E1dwBL"
+          git pull --rebase -q origin "${GITHUB_REF_NAME}"
+          git push -q origin "HEAD:${GITHUB_REF_NAME}"
+          # Dieselben Daten auch auf den jeweils anderen Zweig (nur der Ordner data/insights)
+          NEW=$(git rev-parse HEAD)
+          OTHER=$([ "${GITHUB_REF_NAME}" = "main" ] && echo design-dunkel || echo main)
+          if git fetch -q origin "$OTHER"; then
+            git checkout -q -B other FETCH_HEAD
+            git checkout -q "$NEW" -- data/insights
+            git add data/insights
+            git diff --cached --quiet || git commit -q -m "$MSG" -m "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>" -m "Claude-Session: https://claude.ai/code/session_01NHFJiDqfkhiYUvj1E1dwBL"
+            git push -q origin "other:$OTHER" || echo "::warning::$OTHER nicht aktualisiert"
+          fi
