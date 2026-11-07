@@ -3,5 +3,427 @@
  "slug": "lissabon",
  "generated": "2026-11-07",
  "model": "claude-haiku-5-5 (nur Wikivoyage-Text, Zitate geprüft)",
- "areas": []
+ "areas": [
+  {
+   "name": "Bairro Alto",
+   "kind": "viertel",
+   "lat": 38.7122,
+   "lon": -9.145,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Lebendiges Ausgehviertel mit vielen kleinen Bars, Fado-Lokalen und trendigen Restaurants, aber mit nächtlichen Sicherheitsrisiken.",
+   "goodFor": [
+    "Ausgehen",
+    "Fado",
+    "Restaurants",
+    "Bars"
+   ],
+   "watchOut": [
+    "Nachts Raubüberfälle und Drogendelikte",
+    "Dunkle Gassen meiden"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 10,
+     "why": "Beliebtestes Ausgehviertel mit Clubs – „some wild partying in Lisbon's most popular nightclub district“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "food": {
+     "v": 8,
+     "why": "Trendige, junge Gastronomie – „Bairro Alto is recognized for being Lisbon's centre of trendy, youthful dining and nightlife.“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    },
+    "safety": {
+     "v": 4,
+     "why": "Überfälle und Drogendelikte, besonders nachts – „There are some instances of violent crimes (e.g. robberies) and some drug related crimes in places such as Bairro Alto and Santos, especially at night.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "transit": {
+     "v": 8,
+     "why": "Gut per Metro und Aufzügen erreichbar – „Zu erreichen ist das Bairro Alto am besten mit der Metro“",
+     "src": [
+      2
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Lisbon",
+     "title": "Wikivoyage (en): Lisbon"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Lisbon/Bairro_Alto",
+     "title": "Wikivoyage (en): Lisbon/Bairro Alto"
+    },
+    {
+     "url": "https://de.wikivoyage.org/wiki/Lissabon",
+     "title": "Wikivoyage (de): Lissabon"
+    }
+   ]
+  },
+  {
+   "name": "Alfama",
+   "kind": "viertel",
+   "lat": 38.71177,
+   "lon": -9.12838,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Historisches, verwinkeltes Altstadtviertel mit maurischen Spuren und stimmungsvollen Gassen, das das Erdbeben von 1755 überstand.",
+   "goodFor": [
+    "Spazieren",
+    "Fado",
+    "Geschichte",
+    "Atmosphäre"
+   ],
+   "watchOut": [
+    "Nachts in dunklen Gassen vorsichtig sein",
+    "Viele Hügel und Kopfsteinpflaster"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 5,
+     "why": "Fado-Bars, aber kein klassisches Ausgehviertel – „They are especially common in the Bairro Alto and Alfama districts, and in Alfama you can also find a Fado museum.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "safety": {
+     "v": 5,
+     "why": "Nachts dunkle Gassen mit Risiko – „Vorsichtig sein sollte man nachts außerdem in dunklen Ecken und Gassen in Barro Alto, Alfama und Mouraria.“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    },
+    "transit": {
+     "v": 6,
+     "why": "Tram 28 führt durch das Viertel – „beginning in Graça then down to the Alfama and to the Baixa then up through Chiado to Bairro Alto“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Lisbon",
+     "title": "Wikivoyage (en): Lisbon"
+    },
+    {
+     "url": "https://de.wikivoyage.org/wiki/Lissabon",
+     "title": "Wikivoyage (de): Lissabon"
+    }
+   ]
+  },
+  {
+   "name": "Baixa",
+   "kind": "viertel",
+   "lat": 38.7114,
+   "lon": -9.1377,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Planmäßig nach dem Erdbeben von 1755 wiederaufgebautes Zentrum mit Plätzen und Denkmälern, das Sehenswürdigkeiten gut verbindet.",
+   "goodFor": [
+    "Sehenswürdigkeiten",
+    "Fotos",
+    "Stadtrundgang"
+   ],
+   "watchOut": [
+    "Abends und nachts Raubgefahr in Seitengassen",
+    "Abends wenig Betrieb"
+   ],
+   "values": {
+    "safety": {
+     "v": 4,
+     "why": "Nachts wenig Leben, Überfallgefahr in Nebenstraßen – „as soon as the shops and offices close at night, the area sometimes becomes fair ground for muggers“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Lisbon",
+     "title": "Wikivoyage (en): Lisbon"
+    }
+   ]
+  },
+  {
+   "name": "Chiado",
+   "kind": "viertel",
+   "lat": 38.71033,
+   "lon": -9.14052,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Eleganter Einkaufs- und Kulturbezirk, der an Bairro Alto grenzt und gut mit der Tram erreichbar ist.",
+   "goodFor": [
+    "Shopping",
+    "Sehenswürdigkeiten"
+   ],
+   "watchOut": [
+    "Am Chiado Plaza werden junge Touristen oft angesprochen",
+    "Abzocke durch Scherzverkäufer"
+   ],
+   "values": {
+    "safety": {
+     "v": 5,
+     "why": "Häufiges Ansprechen von Touristen, oft mit Abzockversuchen – „Young tourists will likely be approached by many people especially near the Chiado Plaza.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "transit": {
+     "v": 7,
+     "why": "Tram 28 führt hindurch – „then up through Chiado to Bairro Alto, and then down to Campo Ourique“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Lisbon",
+     "title": "Wikivoyage (en): Lisbon"
+    }
+   ]
+  },
+  {
+   "name": "Cais do Sodré",
+   "kind": "viertel",
+   "lat": 38.705681,
+   "lon": -9.1435482,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Verkehrsknotenpunkt am Tejo mit Bahnhof und Fähranleger, dessen Umgebung nachts als problematisch gilt.",
+   "goodFor": [
+    "Fähren nach Cacilhas",
+    "Anbindung an Belém"
+   ],
+   "watchOut": [
+    "Nachts Raubgefahr",
+    "Bahnhof nachts meiden"
+   ],
+   "values": {
+    "safety": {
+     "v": 3,
+     "why": "Nachts Überfallrisiko – „Some areas are best avoided late at night because of the risk of mugging: Bairro Alto, the alleys, Cais do Sodre.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "transit": {
+     "v": 8,
+     "why": "Fähranleger und Bahnhof – „Fähranleger sind Belém, Cais de Sodré und Terreiro do Paço.“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Lisbon",
+     "title": "Wikivoyage (en): Lisbon"
+    },
+    {
+     "url": "https://de.wikivoyage.org/wiki/Lissabon",
+     "title": "Wikivoyage (de): Lissabon"
+    }
+   ]
+  },
+  {
+   "name": "Mouraria",
+   "kind": "viertel",
+   "lat": 38.71499,
+   "lon": -9.13484,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Altes Viertel nahe der Alfama, das laut Text nachts als ungemütlich gilt.",
+   "goodFor": [
+    "Altstadtatmosphäre"
+   ],
+   "watchOut": [
+    "Nachts ungemütlich, Obdachlose und Dealer"
+   ],
+   "values": {
+    "safety": {
+     "v": 3,
+     "why": "Nachts Obdachlose und Dealer in dunklen Ecken – „Diese sind ungemütlich aufgrund der vielen Obdachlosen und Dealern“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/Lissabon",
+     "title": "Wikivoyage (de): Lissabon"
+    }
+   ]
+  },
+  {
+   "name": "Praça Martim Moniz",
+   "kind": "viertel",
+   "lat": 38.716,
+   "lon": -9.13635,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Platz im Übergang zwischen Baixa und Mouraria, der nachts als Problemzone gilt, tagsüber aber ruhig ist.",
+   "goodFor": [
+    "Tagsüber Spaziergang"
+   ],
+   "watchOut": [
+    "Nachts Ärger durch zwielichtige Gruppen",
+    "Metrostationen entlang der Ave. Alm. Reis abends meiden"
+   ],
+   "values": {
+    "safety": {
+     "v": 3,
+     "why": "Nachts oft Ärger durch zwielichtige Gruppen – „Martim Moniz is also notorious, at night the area occupied by shifty crowds that more often than not will cause some trouble.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Lisbon",
+     "title": "Wikivoyage (en): Lisbon"
+    }
+   ]
+  },
+  {
+   "name": "Avenida da Liberdade",
+   "kind": "viertel",
+   "lat": 38.72035,
+   "lon": -9.14572,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Breite, baumbestandene Prachtstraße mit edlen Hotels und Luxusgeschäften, gut per Bus erreichbar.",
+   "goodFor": [
+    "Shopping",
+    "Spaziergang unter Bäumen",
+    "Hotels"
+   ],
+   "watchOut": [
+    "Teuer, eher gehobenes Preisniveau"
+   ],
+   "values": {
+    "transit": {
+     "v": 8,
+     "why": "Direkte Buslinie entlang der Straße – „line 736 from Cais do Sodré via Avenida da Liberdade and Avenida da República“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "nature": {
+     "v": 6,
+     "why": "Breite, baumbestandene Allee – „Many high-end international shops can be found in Chiado and along Avenida da Liberdade, a wide, tree-lined boulevard.“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Lisbon",
+     "title": "Wikivoyage (en): Lisbon"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Lisbon/Bairro_Alto",
+     "title": "Wikivoyage (en): Lisbon/Bairro Alto"
+    }
+   ]
+  },
+  {
+   "name": "Santos",
+   "kind": "viertel",
+   "lat": 38.706166,
+   "lon": -9.1552822,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Stadtteil nahe dem Fluss mit Nachtleben, in dem es laut Text auch Drogen- und Gewaltdelikte gibt.",
+   "goodFor": [
+    "Nachtleben"
+   ],
+   "watchOut": [
+    "Nachts Gewalt- und Drogendelikte"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 7,
+     "why": "Nachtleben vorhanden – „Alcântara, Santos, Parque das Nações, and the castle area are all neighborhoods with a thriving nightlife.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "safety": {
+     "v": 4,
+     "why": "Gewalt- und Drogendelikte, besonders nachts – „There are some instances of violent crimes (e.g. robberies) and some drug related crimes in places such as Bairro Alto and Santos, especially at night.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Lisbon",
+     "title": "Wikivoyage (en): Lisbon"
+    }
+   ]
+  },
+  {
+   "name": "Alcântara",
+   "kind": "viertel",
+   "lat": 38.7038836,
+   "lon": -9.1823883,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Aufstrebender Stadtteil am Fluss mit Nachtleben in der Nähe der Brücke des 25. April.",
+   "goodFor": [
+    "Nachtleben",
+    "Flussufer"
+   ],
+   "watchOut": [
+    "Eher Geheimtipp, weniger Infrastruktur beschrieben"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 7,
+     "why": "Lebendiges Nachtleben – „Alcântara, Santos, Parque das Nações, and the castle area are all neighborhoods with a thriving nightlife.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Lisbon",
+     "title": "Wikivoyage (en): Lisbon"
+    }
+   ]
+  }
+ ]
 }
