@@ -119,7 +119,7 @@ export function blendScores(
       why: hit.val.why,
       area: hit.area.name,
       sources: hit.val.src.map((i) => hit.area.sources[i]).filter(Boolean),
-      share: measured === null ? 1 : round1(shareOf(hit.val) * 100) / 100,
+      share: measured === null ? 1 : Math.round(shareOf(hit.val) * 100) / 100,
     };
   }
   return { scores: out, web };
