@@ -1,0 +1,275 @@
+{
+ "v": 1,
+ "slug": "bogota",
+ "generated": "2026-11-07",
+ "model": "claude-haiku-5-5 (nur Wikivoyage-Text, Zitate geprüft)",
+ "areas": [
+  {
+   "name": "La Candelaria",
+   "kind": "viertel",
+   "lat": 4.5917222222222,
+   "lon": -74.074130555556,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Historisches Kolonialviertel mit Museen, Plätzen und Kirchen, das die meisten Budget-Reisenden zum Übernachten wählen.",
+   "goodFor": [
+    "Sightseeing zu Fuß",
+    "Museen",
+    "günstige Hostels"
+   ],
+   "watchOut": [
+    "Nachts unter der Woche unsicher",
+    "Wenig Tanzmöglichkeiten"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 3,
+     "why": "Ausgehen eher bescheiden, wenig Tanzflächen – „While La Candelaria, and Centro in general, is not the city's premier nightlife destination by a long stretch“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "budget": {
+     "v": 8,
+     "why": "Viele günstige Hostels – „There are many cheap, nice hostels where you can meet travelers from all around the world.“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    },
+    "safety": {
+     "v": 3,
+     "why": "Nachts unter der Woche Vorsicht nötig, Taschendiebe – „La Candelaria is just not a safe neighborhood, this is not to say that you will have problems“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "transit": {
+     "v": 6,
+     "why": "Alles zu Fuß erreichbar – „Inside La Candelaria, there really is no need to get around by any way other than on foot.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Bogot%C3%A1/La_Candelaria",
+     "title": "Wikivoyage (en): Bogotá/La Candelaria"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Bogot%C3%A1",
+     "title": "Wikivoyage (en): Bogotá"
+    }
+   ]
+  },
+  {
+   "name": "La Macarena",
+   "kind": "viertel",
+   "lat": 4.61359,
+   "lon": -74.06575,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Ruhiges, bohemisches Viertel mit Cafés, Galerien und guten Restaurants in Santa Fé.",
+   "goodFor": [
+    "Restaurants",
+    "Galerien und Cafés",
+    "Ruhige Spaziergänge"
+   ],
+   "watchOut": [
+    "Wenig klare Angaben zum Nachtleben"
+   ],
+   "values": {
+    "quiet": {
+     "v": 8,
+     "why": "Als ruhiges Viertel beschrieben – „It's a quiet, bohemian neighborhood filled with artsy cafes, art galleries, and great area filled with mid-range and upscale restaurants.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "food": {
+     "v": 8,
+     "why": "Große Restaurantgegend – „travelers should make a point to visit the great restaurant area La Macarena“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "safety": {
+     "v": 9,
+     "why": "Stark bewacht, meist sicher – „especially the Macarena, La Merced, and International Center neighberhoods, which are heavily policed“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Bogot%C3%A1/Santa_F%C3%A9-Los_M%C3%A1rtires",
+     "title": "Wikivoyage (en): Bogotá/Santa Fé-Los Mártires"
+    }
+   ]
+  },
+  {
+   "name": "La Merced",
+   "kind": "viertel",
+   "lat": 4.62149,
+   "lon": -74.06615,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Ruhige Straßen im Stil einer Londoner Enklave mit umgebauten Herrenhäusern, Museen und Läden.",
+   "goodFor": [
+    "Ruhige Spaziergänge",
+    "Architektur",
+    "Museen und Läden"
+   ],
+   "watchOut": [
+    "Wenig Nachtleben"
+   ],
+   "values": {
+    "quiet": {
+     "v": 8,
+     "why": "Ruhige Straßen – „Take a break from the cosmopolitan life of Bogotá, and walk through the calm streets of the La Merced neighborhood.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "safety": {
+     "v": 9,
+     "why": "Stark bewacht, meist sicher – „especially the Macarena, La Merced, and International Center neighberhoods, which are heavily policed“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Bogot%C3%A1/Santa_F%C3%A9-Los_M%C3%A1rtires",
+     "title": "Wikivoyage (en): Bogotá/Santa Fé-Los Mártires"
+    }
+   ]
+  },
+  {
+   "name": "Zona G",
+   "kind": "viertel",
+   "lat": 4.6239503,
+   "lon": -74.0845884,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Gourmetviertel mit den angesehensten Restaurants der Stadt, zwischen Calles 65 und 71.",
+   "goodFor": [
+    "Feines Essen",
+    "Restaurants"
+   ],
+   "watchOut": [
+    "Hohe Preise"
+   ],
+   "values": {
+    "food": {
+     "v": 9,
+     "why": "Die renommiertesten Restaurants der Stadt – „This area is home to the most prestigious restaurants of the city.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Bogot%C3%A1/Chapinero-Zona_G",
+     "title": "Wikivoyage (en): Bogotá/Chapinero-Zona G"
+    }
+   ]
+  },
+  {
+   "name": "Zona Rosa",
+   "kind": "viertel",
+   "lat": 4.5976145,
+   "lon": -74.1221872,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Luxuriöses Einkaufs-, Unterhaltungs- und Ausgehviertel mit Fünf-Sterne-Hotels und Boutiquen.",
+   "goodFor": [
+    "Ausgehen",
+    "Luxushotels",
+    "Shopping",
+    "Restaurants"
+   ],
+   "watchOut": [
+    "Sehr teuer"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 9,
+     "why": "Kosmopolitisches Nachtleben konzentriert sich hier – „The cosmopolitan side of Bogotá nightlife is overwhelmingly to be found in Zona Rosa and Bogotá/Parque 93.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "food": {
+     "v": 9,
+     "why": "Eines der größten Gastronomiegebiete – „the Zona Rosa is one of the largest shopping, entertainment, and dining districts in Latin America.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "budget": {
+     "v": 2,
+     "why": "Eines der teuersten Viertel Lateinamerikas – „Bogota's Zona Rosa is one of the most expensive neighborhoods in all of Latin America.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Bogot%C3%A1",
+     "title": "Wikivoyage (en): Bogotá"
+    }
+   ]
+  },
+  {
+   "name": "Teusaquillo",
+   "kind": "viertel",
+   "lat": 4.6286663,
+   "lon": -74.0752959,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Zentral gelegenes Viertel mit Universität, Business-Gegend und dem riesigen Simón-Bolívar-Park.",
+   "goodFor": [
+    "Parks",
+    "Sport",
+    "Universitätsatmosphäre"
+   ],
+   "watchOut": [
+    "Eher Geschäftsviertel als Ausgehviertel"
+   ],
+   "values": {
+    "nature": {
+     "v": 9,
+     "why": "Sehr großer Stadtpark – „The Teusaquillo borough is also home to the sprawling 1,000 acre Simon Bolivar Metropolitan park“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Bogot%C3%A1",
+     "title": "Wikivoyage (en): Bogotá"
+    }
+   ]
+  }
+ ]
+}

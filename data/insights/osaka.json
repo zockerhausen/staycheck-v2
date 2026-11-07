@@ -1,0 +1,166 @@
+{
+ "v": 1,
+ "slug": "osaka",
+ "generated": "2026-11-07",
+ "model": "claude-haiku-5-5 (nur Wikivoyage-Text, Zitate geprüft)",
+ "areas": [
+  {
+   "name": "Minami",
+   "kind": "viertel",
+   "lat": 34.672,
+   "lon": 135.514,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Größtes Einkaufs- und Unterhaltungsviertel Osakas, das von Semba bis zum Bereich um Namba reicht.",
+   "goodFor": [
+    "Shopping",
+    "Unterhaltung",
+    "Stadtatmosphäre erleben"
+   ],
+   "watchOut": [
+    "Laut und voll, besonders abends"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 7,
+     "why": "Viel Unterhaltung und Shops im gesamten Minami-Gebiet, Bars und Ausgehangebote sind genannt. – „All manner of shops and entertainment can be found in the Minami Area, which stretches from Semba (Honmachi) to the area surrounding Namba station.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Osaka/Minami",
+     "title": "Wikivoyage (en): Osaka/Minami"
+    }
+   ]
+  },
+  {
+   "name": "Tennōji",
+   "kind": "viertel",
+   "lat": 34.657778,
+   "lon": 135.519444,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Bahnknotenpunkt im Südosten mit Einkaufs- und Essensmöglichkeiten, Park und Zoo.",
+   "goodFor": [
+    "Bahnanbindung",
+    "Essen und Einkaufen",
+    "Park und Zoo"
+   ],
+   "watchOut": [
+    "Südteil ist ein Arbeiterviertel mit Obdachlosen"
+   ],
+   "values": {
+    "food": {
+     "v": 7,
+     "why": "Viele Essensmöglichkeiten werden genannt. – „with plenty of shopping and eating options“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "budget": {
+     "v": 8,
+     "why": "Supermarktpreise sind dort generell sehr niedrig. – „One benefit of the district being so poor is that prices at the supermarkets and such are generally very low.“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    },
+    "transit": {
+     "v": 8,
+     "why": "Wichtiger Bahnknoten. – „Today it's better known as a major train hub“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "nature": {
+     "v": 7,
+     "why": "Park und Zoo liegen im Gebiet. – „Tennōji Park and Zoo are in the area.“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Osaka/Tennoji",
+     "title": "Wikivoyage (en): Osaka/Tennoji"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Osaka",
+     "title": "Wikivoyage (en): Osaka"
+    }
+   ]
+  },
+  {
+   "name": "Kita",
+   "kind": "viertel",
+   "lat": 34.705556,
+   "lon": 135.51,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Neues Zentrum Osakas rund um Umeda mit Kaufhäusern, Boutiquen und großen Bahnterminals.",
+   "goodFor": [
+    "Shopping",
+    "Bahnanbindung über viele Linien"
+   ],
+   "watchOut": [
+    "Eher geschäftig und teuer"
+   ],
+   "values": {
+    "transit": {
+     "v": 10,
+     "why": "Große Terminals mehrerer U-Bahn- und Bahnlinien am Umeda-Bahnhof. – „The area around Umeda station, where major terminals for the Osaka subway, Japan Rail (JR), Hankyu and Hanshin railways can be found“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Osaka/Kita",
+     "title": "Wikivoyage (en): Osaka/Kita"
+    }
+   ]
+  },
+  {
+   "name": "Osaka Castle",
+   "kind": "viertel",
+   "lat": 34.687222222222,
+   "lon": 135.52583333333,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Eine der meistbesuchten Touristenattraktionen Japans, mit eigenem Bahnhalt der Loop Line.",
+   "goodFor": [
+    "Sehenswürdigkeit besuchen",
+    "Anbindung über Loop Line"
+   ],
+   "watchOut": [
+    "Touristisch stark besucht"
+   ],
+   "values": {
+    "transit": {
+     "v": 7,
+     "why": "Die Loop Line hält bei Osaka Castle. – „it stops in Umeda and Tennoji, and by Osaka Castle.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Osaka",
+     "title": "Wikivoyage (en): Osaka"
+    }
+   ]
+  }
+ ]
+}

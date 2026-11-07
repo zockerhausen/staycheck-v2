@@ -1,0 +1,160 @@
+{
+ "v": 1,
+ "slug": "ljubljana",
+ "generated": "2026-11-07",
+ "model": "claude-haiku-5-5 (nur Wikivoyage-Text, Zitate geprüft)",
+ "areas": [
+  {
+   "name": "Prešernov trg",
+   "kind": "viertel",
+   "lat": 46.05138,
+   "lon": 14.50599,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Zentraler Hauptplatz, von dem aus sich die meisten Bars in den Straßen parallel zum Fluss ausbreiten.",
+   "goodFor": [
+    "Ausgehen",
+    "Bars"
+   ],
+   "watchOut": [
+    "Die interessanteren Bars liegen eher in den Seitengassen."
+   ],
+   "values": {
+    "nightlife": {
+     "v": 9,
+     "why": "Die meisten Bars der Stadt gruppieren sich rund um den Platz. – „Most of Ljubljana’s bars tend to cluster on the streets running parallel to the river, radiating from Prešernov trg“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Ljubljana",
+     "title": "Wikivoyage (en): Ljubljana"
+    }
+   ]
+  },
+  {
+   "name": "Center",
+   "kind": "viertel",
+   "lat": 46.0514988,
+   "lon": 14.5061079,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Kompakte Innenstadt mit Sehenswürdigkeiten, die sich gut zu Fuß erkunden lassen.",
+   "goodFor": [
+    "Zu Fuß erkunden",
+    "Sehenswürdigkeiten"
+   ],
+   "watchOut": [
+    "2023 wurden Angriffe auf LGBT+-Personen im Zentrum gemeldet."
+   ],
+   "values": {
+    "safety": {
+     "v": 6,
+     "why": "Gemeldete Angriffe im Zentrum am Pride-Tag senken den Wert, tagsüber gilt die Stadt aber als sicher. – „there were reports in 2023 of new attacks on LGBT+ people in the center of Ljubljana on the Pride day“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Ljubljana",
+     "title": "Wikivoyage (en): Ljubljana"
+    }
+   ]
+  },
+  {
+   "name": "Rakova jelša",
+   "kind": "viertel",
+   "lat": 46.0293114,
+   "lon": 14.5030848,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Randlage, die der Text ausdrücklich als zu meidend nennt.",
+   "goodFor": [],
+   "watchOut": [
+    "Im Text als Gegend genannt, die man nachts meiden sollte."
+   ],
+   "values": {
+    "safety": {
+     "v": 2,
+     "why": "Ausdrücklich als Gegend genannt, die man meiden sollte. – „Areas to avoid include Fužine, Rakova Jelša, Štepanjsko naselje, southern Vič (near and south of the motorway), western parts of Šiška, and Moste“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Ljubljana",
+     "title": "Wikivoyage (en): Ljubljana"
+    }
+   ]
+  },
+  {
+   "name": "Štepanjsko naselje",
+   "kind": "viertel",
+   "lat": 46.05171,
+   "lon": 14.54535,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Randlage, die der Text ausdrücklich als zu meidend nennt.",
+   "goodFor": [],
+   "watchOut": [
+    "Im Text als Gegend genannt, die man nachts meiden sollte."
+   ],
+   "values": {
+    "safety": {
+     "v": 2,
+     "why": "Ausdrücklich als Gegend genannt, die man meiden sollte. – „Areas to avoid include Fužine, Rakova Jelša, Štepanjsko naselje, southern Vič (near and south of the motorway), western parts of Šiška, and Moste“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Ljubljana",
+     "title": "Wikivoyage (en): Ljubljana"
+    }
+   ]
+  },
+  {
+   "name": "Grajski grič",
+   "kind": "viertel",
+   "lat": 46.04915,
+   "lon": 14.50899,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Burghügel mit der mittelalterlichen Burg, erreichbar über einen gläsernen Schrägaufzug.",
+   "goodFor": [
+    "Burg",
+    "Aussicht"
+   ],
+   "watchOut": [],
+   "values": {
+    "transit": {
+     "v": 6,
+     "why": "Der Schrägaufzug bringt Besucher bequem auf die Burg, Dauer etwa 1 Minute. – „Der gläserne Schrägaufzug erschließt auf bequeme Art und Weise die mittelalterliche Burg, mitten in der Stadt.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/Ljubljana",
+     "title": "Wikivoyage (de): Ljubljana"
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,161 @@
+{
+ "v": 1,
+ "slug": "auckland",
+ "generated": "2026-11-07",
+ "model": "claude-haiku-5-5 (nur Wikivoyage-Text, Zitate geprüft)",
+ "areas": [
+  {
+   "name": "City Centre",
+   "kind": "viertel",
+   "lat": -36.848911,
+   "lon": 174.7652256,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Das Zentrum mit den meisten Sehenswürdigkeiten und dem größten Unterkunftsangebot, ideal als Basis für Reisende.",
+   "goodFor": [
+    "Unterkünfte",
+    "Sehenswürdigkeiten",
+    "Zu Fuß erkunden"
+   ],
+   "watchOut": [
+    "Zu Stoßzeiten Stau",
+    "Abends nicht überall ohne Vorsicht unterwegs"
+   ],
+   "values": {
+    "food": {
+     "v": 8,
+     "why": "Große Auswahl an Restaurants und Bars – „With its range of accommodation, attractions, restaurants, bars and transport links, it’s the part of Auckland“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "transit": {
+     "v": 7,
+     "why": "Gute Anbindung mit Bus und Bahn, allerdings langsam – „The central suburbs are reasonably well serviced and should be navigable easily if somewhat slowly by bus and train.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Auckland/Central",
+     "title": "Wikivoyage (en): Auckland/Central"
+    }
+   ]
+  },
+  {
+   "name": "Viaduct Harbour",
+   "kind": "viertel",
+   "lat": -36.8432,
+   "lon": 174.76068,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Am Wasser gelegen mit vielen Bars, ideal für den Abend, nachts aber auf Alkohol achten.",
+   "goodFor": [
+    "Ausgehen",
+    "Hafenlage"
+   ],
+   "watchOut": [
+    "Spät nachts steigender Alkoholpegel"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 8,
+     "why": "Konzentration von Bars am Wasser – „There's a concentration of bars in the Viaduct area near the waterfront.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "safety": {
+     "v": 5,
+     "why": "Nachts wegen Alkohol Vorsicht nötig – „Viaduct Harbour: Many bars are located here, and care should be taken late at night as intoxication levels rise.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Auckland/Central",
+     "title": "Wikivoyage (en): Auckland/Central"
+    }
+   ]
+  },
+  {
+   "name": "Ponsonby",
+   "kind": "viertel",
+   "lat": -36.85019,
+   "lon": 174.74215,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Bekannt als Ausgehviertel mit Bars und Clubs entlang der Ponsonby Road.",
+   "goodFor": [
+    "Ausgehen"
+   ],
+   "watchOut": [],
+   "values": {
+    "nightlife": {
+     "v": 8,
+     "why": "Genannt als Schwerpunkt für Bars und Clubs – „the highest concentration of bars and clubs is in Auckland Central — particularly around the Viaduct area, K Road, Ponsonby and Parnell.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Auckland",
+     "title": "Wikivoyage (en): Auckland"
+    }
+   ]
+  },
+  {
+   "name": "Parnell",
+   "kind": "viertel",
+   "lat": -36.8554763,
+   "lon": 174.7805576,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Ein Viertel mit Bars und Clubs, das gut per Bus erreichbar ist.",
+   "goodFor": [
+    "Ausgehen",
+    "Busanbindung"
+   ],
+   "watchOut": [],
+   "values": {
+    "nightlife": {
+     "v": 8,
+     "why": "Genannt als Schwerpunkt für Bars und Clubs – „the highest concentration of bars and clubs is in Auckland Central — particularly around the Viaduct area, K Road, Ponsonby and Parnell.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "transit": {
+     "v": 7,
+     "why": "Vom InnerLink-Bus angefahren – „von der Waitematā Station (Britomart) hinaus nach Parnell, Auckland Museum, durch Newmarket“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Auckland",
+     "title": "Wikivoyage (en): Auckland"
+    },
+    {
+     "url": "https://de.wikivoyage.org/wiki/Auckland",
+     "title": "Wikivoyage (de): Auckland"
+    }
+   ]
+  }
+ ]
+}

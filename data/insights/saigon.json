@@ -1,0 +1,41 @@
+{
+ "v": 1,
+ "slug": "saigon",
+ "generated": "2026-11-07",
+ "model": "claude-haiku-5-5 (nur Wikivoyage-Text, Zitate geprüft)",
+ "areas": [
+  {
+   "name": "Ben Thanh",
+   "kind": "viertel",
+   "lat": 10.7703806,
+   "lon": 106.6951066,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Zentrales Gebiet um den Ben-Thanh-Markt mit Metro-Station und Anschluss an den Busbahnhof Hàm Nghi.",
+   "goodFor": [
+    "Anreise mit der Metro",
+    "Umstieg zu Bussen",
+    "Zentrale Lage"
+   ],
+   "watchOut": [
+    "Viel Verkehr in der Innenstadt"
+   ],
+   "values": {
+    "transit": {
+     "v": 9,
+     "why": "Direkter Zugang zur Metro-Station und zum Bus-Umsteigepunkt Hàm Nghi. – „Use Exit 6 at Ben Thanh Station for direct access to Ham Nghi Bus Transfer Station.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Ho_Chi_Minh_City",
+     "title": "Wikivoyage (en): Ho Chi Minh City"
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,400 @@
+{
+ "v": 1,
+ "slug": "istanbul",
+ "generated": "2026-11-07",
+ "model": "claude-haiku-5-5 (nur Wikivoyage-Text, Zitate geprüft)",
+ "areas": [
+  {
+   "name": "Beyoğlu",
+   "kind": "viertel",
+   "lat": 41.03194,
+   "lon": 28.97611,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Lebhaftes Zentrum mit İstiklal Caddesi, Bars, Restaurants und einem der intensivsten Nachtleben.",
+   "goodFor": [
+    "Nachtleben",
+    "Restaurants und Cafés",
+    "Sightseeing an der İstiklal Caddesi"
+   ],
+   "watchOut": [
+    "Menschenmassen und Lärm bis in die Morgenstunden",
+    "Bar-Abzocke in Clubs"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 10,
+     "why": "Gilt als Zentrum des Nachtlebens. – „Beyoglu ist das Zentrum des Istanbuler Nachtlebens.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "quiet": {
+     "v": 2,
+     "why": "Starker Menschenandrang bis zum Morgen. – „Menschenmassen wälzen sich tagtäglich in beängstigenden Massen bis am Morgen durch die Istiklal Caddesi.“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    },
+    "food": {
+     "v": 9,
+     "why": "Große Auswahl an Restaurants und Bars. – „Hier gibt es unzählige Restaurants, Cafes, Bars, Jazz-Clubs, Diskotheken etc.“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    },
+    "budget": {
+     "v": 7,
+     "why": "Cafés in den Seitenstraßen mit fairen Preisen. – „Small streets south of Taksim Square offer a variety of cafes with more than reasonable prices.“",
+     "src": [
+      2
+     ],
+     "w": 0.75
+    },
+    "safety": {
+     "v": 7,
+     "why": "Ständige Polizeipräsenz, aber Bar-Abzocke ist verbreitet. – „In Taksim Square and Istiklal Street, there are always (7/24) police officers on patrol“",
+     "src": [
+      2
+     ],
+     "w": 0.75
+    },
+    "transit": {
+     "v": 8,
+     "why": "Straßenbahn und Tünel gut erreichbar. – „Für solche, die nicht zu Fuß gehen wollen, bietet sich die Straßenbahn und dann eine der ältesten U-Bahn-Strecken der Welt, der Tünel an.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/Istanbul/Beyo%C4%9Flu",
+     "title": "Wikivoyage (de): Istanbul/Beyoğlu"
+    },
+    {
+     "url": "https://de.wikivoyage.org/wiki/Istanbul",
+     "title": "Wikivoyage (de): Istanbul"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Istanbul/Galata",
+     "title": "Wikivoyage (en): Istanbul/Galata"
+    }
+   ]
+  },
+  {
+   "name": "Galata",
+   "kind": "viertel",
+   "lat": 41.02529,
+   "lon": 28.97279,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Historisches Viertel nördlich des Goldenen Horns mit Galata-Turm, Restaurants und Bars in Hafennähe.",
+   "goodFor": [
+    "Sightseeing",
+    "Restaurants und Bars"
+   ],
+   "watchOut": [
+    "Nach Einbruch der Dunkelheit Gegend um die Tarlabaşı …",
+    "Einige Teile haben Kriminalitätsprobleme"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 6,
+     "why": "Nachtlokale ziehen zunehmend auch nach Galata. – „more and more nightlife venues are moving out to areas such as Asmalımescit, Galata or elsewhere in the city“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "food": {
+     "v": 6,
+     "why": "Gastronomie als Teil des Angebots genannt. – „the district has its fair share of sights, dining, nightlife, and accommodation“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "safety": {
+     "v": 6,
+     "why": "Allgemein sicher, aber nicht in allen Teilen. – „Generally, it is safe to walk around in this district, even by night, although crossing Tarlabaşı Boulevard“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Istanbul/Galata",
+     "title": "Wikivoyage (en): Istanbul/Galata"
+    }
+   ]
+  },
+  {
+   "name": "Kadıköy",
+   "kind": "viertel",
+   "lat": 40.98958,
+   "lon": 29.0248,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Lebhafter, junger Stadtteil auf der asiatischen Seite mit Kneipen, Kultur und einigen ruhigen Ecken.",
+   "goodFor": [
+    "Nachtleben mit Kneipen",
+    "Kultur und Cafés",
+    "Ruhige Parks"
+   ],
+   "watchOut": [
+    "Wenig klassische Sehenswürdigkeiten"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 8,
+     "why": "Viele Kneipen, besonders in der Kadife Sokak. – „Da in Kadıköy viele junge Leute und Studenten leben hat der Stadtteil ein eigenes, ausgiebiges Nachtleben.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "quiet": {
+     "v": 6,
+     "why": "Lebhaft, aber mit ruhigen Ecken. – „Obwohl der Tourismus hier nicht sehr verbreitet ist, ist Kadıköy ein sehenswerter lebhafter Stadtteil, der aber auch ruhige Ecken und zahlreiche Parks hat.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "food": {
+     "v": 7,
+     "why": "Viele Restaurants, Cafés und Bars. – „Weltoffen präsentiert sich Kadıköy mit zahlreichen Kinos, Restaurants, Cafés und Bars sowie vielen Einkaufsmöglichkeiten“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "budget": {
+     "v": 7,
+     "why": "Günstige Hostelbetten. – „Ein Bett im Mehrbettzimmer kostet ca. 12 Euro inkl. Frühstück.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "nature": {
+     "v": 7,
+     "why": "Zahlreiche Parks. – „Obwohl der Tourismus hier nicht sehr verbreitet ist, ist Kadıköy ein sehenswerter lebhafter Stadtteil, der aber auch ruhige Ecken und zahlreiche Parks hat.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/Istanbul/Kad%C4%B1k%C3%B6y",
+     "title": "Wikivoyage (de): Istanbul/Kadıköy"
+    }
+   ]
+  },
+  {
+   "name": "Eminönü",
+   "kind": "viertel",
+   "lat": 41.01754,
+   "lon": 28.97101,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Hafen- und Verkehrsknoten am Goldenen Horn mit Fähren, Bahnhof und Galatabrücke.",
+   "goodFor": [
+    "Fähren",
+    "Verkehrsanbindung",
+    "Fischrestaurants an der Brücke"
+   ],
+   "watchOut": [
+    "Hohes Verkehrsaufkommen"
+   ],
+   "values": {
+    "food": {
+     "v": 7,
+     "why": "Fischrestaurants an der Galatabrücke. – „Galata Bridge carries vehicles, trams and pedestrians, and is bathed in the aroma of frying fish from the lower-deck restaurants.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "transit": {
+     "v": 9,
+     "why": "Fährstege, Brücke und Bahnhof vor Ort. – „Eminönü is the low ground north of Sultanahmet, with ferry piers, the 490 m bridge to Galata across the Golden Horn“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Istanbul/Historical_Peninsula",
+     "title": "Wikivoyage (en): Istanbul/Historical Peninsula"
+    }
+   ]
+  },
+  {
+   "name": "Kumkapı",
+   "kind": "viertel",
+   "lat": 41.00421,
+   "lon": 28.96469,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Fischviertel am Marmarameer mit Restaurants und abendlicher Musik.",
+   "goodFor": [
+    "Fischrestaurants",
+    "Abendliche Musik und Stimmung"
+   ],
+   "watchOut": [
+    "Mittlerweile touristisch geprägt"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 7,
+     "why": "Abends Live-Musik in den Restaurants. – „In Kumkapı einem Stadtviertel am Marmarameer gibt es zahlreiche Fischrestaurants, häufig mit Live-Musik“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "food": {
+     "v": 9,
+     "why": "Viele Fischrestaurants. – „In Kumkapı einem Stadtviertel am Marmarameer gibt es zahlreiche Fischrestaurants, häufig mit Live-Musik“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/Istanbul/Fatih",
+     "title": "Wikivoyage (de): Istanbul/Fatih"
+    }
+   ]
+  },
+  {
+   "name": "Karaköy",
+   "kind": "viertel",
+   "lat": 41.02344,
+   "lon": 28.97722,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Hafen- und Fährknoten am Ende der Galatabrücke, Ausgangspunkt der Tünel-Bahn.",
+   "goodFor": [
+    "Fähren zur asiatischen Seite",
+    "Tünel zur İstiklal Caddesi"
+   ],
+   "watchOut": [
+    "Viel Trubel an den Anlegestellen"
+   ],
+   "values": {
+    "transit": {
+     "v": 8,
+     "why": "Tünel und Fähren zur asiatischen Seite. – „Karaköy (for F2 old funicular, Tünel, to the lower end of İstiklal Avenue and ferries to the Asian Side)“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Istanbul",
+     "title": "Wikivoyage (en): Istanbul"
+    }
+   ]
+  },
+  {
+   "name": "Aksaray",
+   "kind": "viertel",
+   "lat": 41.00831,
+   "lon": 28.95028,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Verkehrsknoten mit Marmaray- und Metroanschluss, günstige Unterkünfte, aber mit Abzockrisiken.",
+   "goodFor": [
+    "Günstige Unterkünfte",
+    "Verkehrsanbindung"
+   ],
+   "watchOut": [
+    "Bar-Abzocke in Nachtclubs",
+    "Rotlicht- und Abzockmaschen in Laleli"
+   ],
+   "values": {
+    "budget": {
+     "v": 7,
+     "why": "Preiswertere Unterkünfte. – „Preiswertere Unterkünfte findet man im Stadtteil Aksaray, hier nächtigen bevorzugt Geschäftsleute aus den ehemaligen Ostblockländern.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "safety": {
+     "v": 3,
+     "why": "Häufige Abzocke in Nachtclubs. – „High-drink price scams encountered in so-called night-clubs mostly located in Aksaray, Beyazit and Taksim areas.“",
+     "src": [
+      1
+     ],
+     "w": 1.0
+    },
+    "transit": {
+     "v": 8,
+     "why": "Anschluss an Marmaray und Metro. – „Laleli-Üniversite (for M2 metro), Aksaray (for B1 Marmaray), Yusufpaşa (for M1 metro), Topkapı (for T4 light rail)“",
+     "src": [
+      1
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/Istanbul",
+     "title": "Wikivoyage (de): Istanbul"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Istanbul",
+     "title": "Wikivoyage (en): Istanbul"
+    }
+   ]
+  },
+  {
+   "name": "Balat",
+   "kind": "viertel",
+   "lat": 41.032,
+   "lon": 28.94829,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Historisches Viertel am Goldenen Horn, an der Straßenbahnlinie T5.",
+   "goodFor": [
+    "Historische Atmosphäre",
+    "Anbindung an die Straßenbahn"
+   ],
+   "watchOut": [],
+   "values": {
+    "transit": {
+     "v": 7,
+     "why": "Liegt an der Straßenbahnlinie T5. – „Other tram lines are T5 from Eminönü via Fener and Balat along the Golden Horn to Eyüp and Alibeyköy“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Istanbul",
+     "title": "Wikivoyage (en): Istanbul"
+    }
+   ]
+  }
+ ]
+}

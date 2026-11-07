@@ -1,0 +1,386 @@
+{
+ "v": 1,
+ "slug": "hongkong",
+ "generated": "2026-11-07",
+ "model": "claude-haiku-5-5 (nur Wikivoyage-Text, Zitate geprüft)",
+ "areas": [
+  {
+   "name": "Central",
+   "kind": "viertel",
+   "lat": 22.2818286,
+   "lon": 114.1582784,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Verwaltungs- und Finanzzentrum mit Fähranleger, Star Ferry und Zugang zum Mid-Levels-Escalator.",
+   "goodFor": [
+    "Fähren zu den Inseln",
+    "Verwaltung und Finanzviertel",
+    "Ausgangspunkt für Mid-Levels und Peak"
+   ],
+   "watchOut": [],
+   "values": {
+    "transit": {
+     "v": 9,
+     "why": "Wichtigster Fähranleger mit Anbindung an Star Ferry und Inseln – „the largest and most important terminal is at Central adjacent to the Star Ferry“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Hong_Kong",
+     "title": "Wikivoyage (en): Hong Kong"
+    }
+   ]
+  },
+  {
+   "name": "SoHo",
+   "kind": "viertel",
+   "lat": 22.2823,
+   "lon": 114.15291,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Viertel mit entspannteren Bars und Cocktails, besonders bei Langzeit-Expats beliebt.",
+   "goodFor": [
+    "Bars und Cocktails",
+    "Entspannte Atmosphäre"
+   ],
+   "watchOut": [],
+   "values": {
+    "nightlife": {
+     "v": 8,
+     "why": "Beliebter Treffpunkt mit Bars – „Peel Street and the surrounding SoHo area have emerged as the preferred hangout for long-term expats“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "transit": {
+     "v": 8,
+     "why": "Rolltreppe führt durch das Viertel – „The famous 800-metre escalator passes through the hip district of Soho“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Hong_Kong",
+     "title": "Wikivoyage (en): Hong Kong"
+    }
+   ]
+  },
+  {
+   "name": "Mid-Levels",
+   "kind": "viertel",
+   "lat": 22.27693,
+   "lon": 114.15594,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Wohnviertel am Hang, über die Rolltreppe von Central aus erreichbar.",
+   "goodFor": [
+    "Anreise per Rolltreppe",
+    "Wohnviertel am Hang"
+   ],
+   "watchOut": [],
+   "values": {
+    "transit": {
+     "v": 8,
+     "why": "Anbindung über die Rolltreppe, kostenlos nutzbar – „The world's longest outdoor escalator system travels from Central through Soho to the residential developments of the Mid-levels.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Hong_Kong",
+     "title": "Wikivoyage (en): Hong Kong"
+    }
+   ]
+  },
+  {
+   "name": "Victoria Peak",
+   "kind": "viertel",
+   "lat": 22.275311,
+   "lon": 114.1440302,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Höchster Punkt der Insel mit besten Hafenblicken, erreichbar mit der Peak Tram.",
+   "goodFor": [
+    "Aussicht",
+    "Peak Tram"
+   ],
+   "watchOut": [
+    "Lange Warteschlangen bei der Peak Tram"
+   ],
+   "values": {
+    "transit": {
+     "v": 7,
+     "why": "Peak Tram von Central hinauf – „The remarkably steep 1.7-km track from Central up to Victoria Peak is worth at least one trip“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Hong_Kong",
+     "title": "Wikivoyage (en): Hong Kong"
+    }
+   ]
+  },
+  {
+   "name": "Wan Chai",
+   "kind": "viertel",
+   "lat": 22.2790146,
+   "lon": 114.1724833,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Nachtleben-Viertel mit vielen Bars und Lokalen, aber zweifelhaftem Ruf.",
+   "goodFor": [
+    "Bars und Clubs",
+    "Essen in der Nähe der MTR"
+   ],
+   "watchOut": [
+    "Zweifelhafter Ruf",
+    "Gefahr von Getränkemanipulation"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 7,
+     "why": "Eines der großen Nachtleben-Zentren – „Wan Chai is home to one of the territory's major nightspots with a moderately seedy reputation.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "food": {
+     "v": 7,
+     "why": "Große Auswahl an Lokalen – „Leave Wan Chai MTR station at exit C, and you will find a wide choice of bars, clubs and places to eat.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "safety": {
+     "v": 4,
+     "why": "Gelegentlich Raub nach K.o.-Tropfen – „Many women hanging around these places are illegal sex workers, and these are occasional cases of visitors getting robbed after having their drinks spiked.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "transit": {
+     "v": 7,
+     "why": "Fähre nach Tsim Sha Tsui, nur Oberdeck – „The Star Ferry also operates between Tsim Sha Tsui and Wanchai but only offers upper-deck seating.“",
+     "src": [
+      1
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Hong_Kong/Eastern_District",
+     "title": "Wikivoyage (en): Hong Kong/Eastern District"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Hong_Kong",
+     "title": "Wikivoyage (en): Hong Kong"
+    }
+   ]
+  },
+  {
+   "name": "Happy Valley",
+   "kind": "viertel",
+   "lat": 22.267237,
+   "lon": 114.1869671,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Viertel mit Pferderennbahn, ruhigeres und gehobeneres Flair als Wan Chai.",
+   "goodFor": [
+    "Mittwochabends Pferderennen",
+    "Ruhiger Drink"
+   ],
+   "watchOut": [],
+   "values": {
+    "nightlife": {
+     "v": 5,
+     "why": "Mittwochs beliebt, aber nur eine Option – „Another popular nightlife option is Wednesday nights at Happy Valley Racecourse.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "transit": {
+     "v": 7,
+     "why": "Straßenbahnlinie endet hier – „Die Tram fährt von Kennedy Town im Westen bis nach Happy Valley (zur Pferderennbahn) oder Shau Kei Wan im Osten.“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Hong_Kong",
+     "title": "Wikivoyage (en): Hong Kong"
+    },
+    {
+     "url": "https://de.wikivoyage.org/wiki/Hongkong",
+     "title": "Wikivoyage (de): Hongkong"
+    }
+   ]
+  },
+  {
+   "name": "Causeway Bay",
+   "kind": "viertel",
+   "lat": 22.2809029,
+   "lon": 114.1870669,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Einkaufs- und Ausgehgegend mit Cafés, aber ohne klare Barzone.",
+   "goodFor": [
+    "Shopping",
+    "Cafés",
+    "Abends ausgehen"
+   ],
+   "watchOut": [
+    "Kaum gute Bars mit günstigem Bier"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 5,
+     "why": "Gut zum Ausgehen, aber keine Barzone – „Causeway Bay is a great place for a night out, but there is no obvious bar area.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Hong_Kong/Eastern_District",
+     "title": "Wikivoyage (en): Hong Kong/Eastern District"
+    }
+   ]
+  },
+  {
+   "name": "Tsim Sha Tsui",
+   "kind": "viertel",
+   "lat": 22.298872,
+   "lon": 114.1741181,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Touristisches Zentrum der Halbinsel Kowloon mit Budget- und Luxushotels und Star Ferry.",
+   "goodFor": [
+    "Budgetunterkünfte",
+    "Star Ferry",
+    "Ausgehen in Knutsford Terrace"
+   ],
+   "watchOut": [
+    "Strip-Bars mit überhöhten Rechnungen"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 6,
+     "why": "Knutsford Terrace als einer der drei Hauptbereiche – „Lan Kwai Fong (Central), Wan Chai, and Knutsford Terrace (Tsim Sha Tsui) are the three main drinking areas where locals, expats, and tourists come together.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "budget": {
+     "v": 8,
+     "why": "Viele günstige Gästehäuser und Hostels – „A large number of guesthouses and hostels are located in Tsim Sha Tsui, Mong Kok and Jordan offering cheap, small but generally comfortable“",
+     "src": [
+      1
+     ],
+     "w": 1.0
+    },
+    "transit": {
+     "v": 8,
+     "why": "Star Ferry nach Central, früh bis spät – „whose most popular line travels between Tsim Sha Tsui and Central from early morning until late at night“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Hong_Kong",
+     "title": "Wikivoyage (en): Hong Kong"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Hong_Kong/Kowloon",
+     "title": "Wikivoyage (en): Hong Kong/Kowloon"
+    }
+   ]
+  },
+  {
+   "name": "Kennedy Town",
+   "kind": "viertel",
+   "lat": 22.28243,
+   "lon": 114.12842,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Westlicher Endpunkt der Straßenbahn, guter Startpunkt für Tramfahrten.",
+   "goodFor": [
+    "Straßenbahn-Sightseeing"
+   ],
+   "watchOut": [],
+   "values": {
+    "transit": {
+     "v": 7,
+     "why": "Start der Straßenbahn, Oberdeck empfohlen – „board at the Kennedy Town Terminus and get a good seat on the upper deck“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Hong_Kong",
+     "title": "Wikivoyage (en): Hong Kong"
+    }
+   ]
+  },
+  {
+   "name": "Admiralty",
+   "kind": "viertel",
+   "lat": 22.27892,
+   "lon": 114.1645,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Station mit Umstiegsmöglichkeit auf den Linien Tsuen Wan und Island.",
+   "goodFor": [
+    "Umstieg zwischen MTR-Linien"
+   ],
+   "watchOut": [],
+   "values": {
+    "transit": {
+     "v": 8,
+     "why": "Zwei Linien halten hier – „Central and Admiralty on the Tsuen Wan and Island lines“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Hong_Kong",
+     "title": "Wikivoyage (en): Hong Kong"
+    }
+   ]
+  }
+ ]
+}

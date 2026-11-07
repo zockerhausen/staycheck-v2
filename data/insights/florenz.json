@@ -1,0 +1,66 @@
+{
+ "v": 1,
+ "slug": "florenz",
+ "generated": "2026-11-07",
+ "model": "claude-haiku-5-5 (nur Wikivoyage-Text, Zitate geprüft)",
+ "areas": [
+  {
+   "name": "Isolotto",
+   "kind": "viertel",
+   "lat": 43.7778699,
+   "lon": 11.2163739,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Der Stadtteil im Westen liegt an der Straßenbahnlinie, die ins Zentrum führt.",
+   "goodFor": [
+    "Anbindung ins Zentrum mit der Straßenbahn"
+   ],
+   "watchOut": [],
+   "values": {
+    "transit": {
+     "v": 7,
+     "why": "Die Straßenbahn fährt durch L'Isolotto in etwa 25 Minuten zum Bahnhof. – „It runs into town through the western suburbs of Scandicci and L'Isolotto to SMN main railway station (25 min)“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Florence",
+     "title": "Wikivoyage (en): Florence"
+    }
+   ]
+  },
+  {
+   "name": "Rifredi",
+   "kind": "viertel",
+   "lat": 43.79668,
+   "lon": 11.24023,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Der nördliche Stadtteil wird von der Straßenbahn erschlossen, weitere Details nennt der Text nicht.",
+   "goodFor": [
+    "Anbindung mit der Straßenbahn"
+   ],
+   "watchOut": [],
+   "values": {
+    "transit": {
+     "v": 6,
+     "why": "Die Straßenbahn fährt bis nach Rifredi. – „then turns north to Rifredi and the University/Hospital area“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Florence",
+     "title": "Wikivoyage (en): Florence"
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,70 @@
+{
+ "v": 1,
+ "slug": "phnom-penh",
+ "generated": "2026-11-07",
+ "model": "claude-haiku-5-5 (nur Wikivoyage-Text, Zitate geprüft)",
+ "areas": [
+  {
+   "name": "Riverfront",
+   "kind": "viertel",
+   "lat": 11.57119,
+   "lon": 104.92932,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Beliebtester Stadtteil mit vielen Nachtleben-Hotspots, einer großen Restaurantauswahl und einer grünen Uferpromenade.",
+   "goodFor": [
+    "Ausgehen",
+    "Essen",
+    "Spaziergänge am Fluss"
+   ],
+   "watchOut": [
+    "Betrüger in Touristenbereichen",
+    "Bettelnde Kinder am Sisowath Quay"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 9,
+     "why": "Viele Nachtleben-Hotspots – „Hier finden sich viele Hotspots des Nachtlebens, eine riesige Auswahl an Restaurants und vor dem Königspalast treffen sich die Kambodschaner zum abendlichen Picknick.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "food": {
+     "v": 9,
+     "why": "Riesige Restaurantauswahl – „eine riesige Auswahl an Restaurants“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "safety": {
+     "v": 5,
+     "why": "Betrüger arbeiten in Touristenbereichen wie dem Riverfront – „Scammers and con men sometimes work the tourist areas such as the riverfront, Hun Sen Park and the Sorya Mall.“",
+     "src": [
+      1
+     ],
+     "w": 1.0
+    },
+    "nature": {
+     "v": 7,
+     "why": "Parkähnliche Uferpromenade zum Flanieren – „The most pleasant strolling is to be done along the park-like riverfront, which hosts cafés and restaurants aplenty.“",
+     "src": [
+      1
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/Phnom_Penh/Riverfront",
+     "title": "Wikivoyage (de): Phnom Penh/Riverfront"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Phnom_Penh",
+     "title": "Wikivoyage (en): Phnom Penh"
+    }
+   ]
+  }
+ ]
+}

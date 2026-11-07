@@ -1,0 +1,348 @@
+{
+ "v": 1,
+ "slug": "siem-reap",
+ "generated": "2026-11-07",
+ "model": "claude-haiku-5-5 (nur Wikivoyage-Text, Zitate geprüft)",
+ "areas": [
+  {
+   "name": "Pub Street",
+   "kind": "viertel",
+   "lat": 13.3548263,
+   "lon": 103.8547837,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Die Hauptmeile für Ausgehen mit vielen Bars und Pubs, die abends zur Partymeile wird.",
+   "goodFor": [
+    "Nachtleben",
+    "Bier und Cocktails",
+    "Partystimmung"
+   ],
+   "watchOut": [
+    "Sehr laut, besonders abends",
+    "Viele Touristen"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 10,
+     "why": "Konzentration von Bars und Pubs auf dieser Straße – „Many of the bars and pubs of Siem Reap are concentrated on a strip called Pub Street“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "quiet": {
+     "v": 2,
+     "why": "Abends sehr laut, nur tagsüber ruhig – „Although peaceful during the day, the streets in the Pub Street area which is just a block away“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "budget": {
+     "v": 7,
+     "why": "Günstiges Bier laut Text – „is where serious drinkers head for cheap beer, loud music and the sweaty backpacking hubbub scene“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Siem_Reap",
+     "title": "Wikivoyage (en): Siem Reap"
+    }
+   ]
+  },
+  {
+   "name": "Old Market Area",
+   "kind": "viertel",
+   "lat": 13.3545,
+   "lon": 103.85462,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Das geschäftigste und am besten erschlossene Viertel nahe dem Old Market, mit viel Nachtleben und günstigen Hostels.",
+   "goodFor": [
+    "Nachtleben",
+    "Günstige Unterkünfte",
+    "Zentrale Lage"
+   ],
+   "watchOut": [
+    "Geschäftig und eher laut",
+    "Viel Trubel"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 9,
+     "why": "Großteil des Nachtlebens findet hier statt – „Hier spielt sich auch ein Großteil des Nachtlebens der Stadt ab“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "quiet": {
+     "v": 2,
+     "why": "Sehr geschäftig – „Der Bereich um den Old Market ist der geschäftigste und am besten erschlossene Stadtteil von Siem Reap“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "budget": {
+     "v": 8,
+     "why": "Viele günstige Hostels – „cheap backpacker hostels tend to surround the old market area“",
+     "src": [
+      1
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/Siem_Reap/Old_Market_Area",
+     "title": "Wikivoyage (de): Siem Reap/Old Market Area"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Siem_Reap",
+     "title": "Wikivoyage (en): Siem Reap"
+    }
+   ]
+  },
+  {
+   "name": "Taphul Village Area",
+   "kind": "viertel",
+   "lat": 13.36124,
+   "lon": 103.85267,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Ein Viertel im Westen mit vielen preiswerten Unterkünften, dem Nachtmarkt und zwei Diskotheken.",
+   "goodFor": [
+    "Preiswerte Unterkünfte",
+    "Nachtmarkt",
+    "Diskotheken"
+   ],
+   "watchOut": [
+    "Eher abseits der Mitte",
+    "Diskotheken können laut sein"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 6,
+     "why": "Zwei Diskotheken und ein Nachtmarkt – „Hier befinden sich eine Reihe preiswerter Unterkünfte sowie der Nachtmarkt und mit dem „Sok San“ und dem „Zone One“ zwei Diskotheken.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "budget": {
+     "v": 9,
+     "why": "Viele preiswerte Gästehäuser – „Das Taphul Village bietet jede Menge preiswerte Gästehäuser“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/Siem_Reap/Taphul_Village_Area",
+     "title": "Wikivoyage (de): Siem Reap/Taphul Village Area"
+    },
+    {
+     "url": "https://de.wikivoyage.org/wiki/Siem_Reap",
+     "title": "Wikivoyage (de): Siem Reap"
+    }
+   ]
+  },
+  {
+   "name": "Wat Damnak Area",
+   "kind": "viertel",
+   "lat": 13.3508533,
+   "lon": 103.8564228,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Ein Gebiet im Osten, das neben dem Taphul Village preiswerte Gästehäuser bietet.",
+   "goodFor": [
+    "Preiswerte Gästehäuser"
+   ],
+   "watchOut": [
+    "Im Text wenig weiter beschrieben"
+   ],
+   "values": {
+    "budget": {
+     "v": 8,
+     "why": "Preiswerte Gästehäuser laut Text – „Das Taphul Village bietet jede Menge preiswerte Gästehäuser, ebenso der Osten mit dem Wat Damnak Area.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/Siem_Reap",
+     "title": "Wikivoyage (de): Siem Reap"
+    }
+   ]
+  },
+  {
+   "name": "Wat Bo Road",
+   "kind": "viertel",
+   "lat": 13.3542899,
+   "lon": 103.859148,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Eine Straße mit stilvollen Boutique-Hotels zwischen Bäumen.",
+   "goodFor": [
+    "Boutique-Hotels",
+    "Grüne Umgebung"
+   ],
+   "watchOut": [
+    "Im Text nicht genauer beschrieben"
+   ],
+   "values": {
+    "nature": {
+     "v": 7,
+     "why": "Hotels zwischen Bäumen entlang der Straße – „stylish boutique hotels a nestled in the trees along Wat Bo Rd“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Siem_Reap",
+     "title": "Wikivoyage (en): Siem Reap"
+    }
+   ]
+  },
+  {
+   "name": "Flussufer",
+   "kind": "viertel",
+   "lat": 13.3617562,
+   "lon": 103.8590321,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Die Uferbereiche sind schattig und grün, ideal zum Radfahren.",
+   "goodFor": [
+    "Spaziergänge im Grünen",
+    "Radfahren"
+   ],
+   "watchOut": [
+    "Im Text nicht genauer beschrieben"
+   ],
+   "values": {
+    "nature": {
+     "v": 9,
+     "why": "Viele schattige Bäume entlang der Ufer – „lots of beautiful shady trees, especially along the riverbanks and roads around Angkor Wat“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Siem_Reap",
+     "title": "Wikivoyage (en): Siem Reap"
+    }
+   ]
+  },
+  {
+   "name": "Sivatha Boulevard",
+   "kind": "viertel",
+   "lat": 13.3590644,
+   "lon": 103.8545849,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Ein Boulevard mit einheimischen Restaurants, abseits des westlich geprägten Flairs.",
+   "goodFor": [
+    "Einheimisches Essen"
+   ],
+   "watchOut": [
+    "Im Text nicht genauer beschrieben"
+   ],
+   "values": {
+    "food": {
+     "v": 7,
+     "why": "Einheimische Restaurants – „kann sich in die einheimischen Restaurants am Sivatha Boulevard zurückziehen“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/Siem_Reap",
+     "title": "Wikivoyage (de): Siem Reap"
+    }
+   ]
+  },
+  {
+   "name": "Walking Alley",
+   "kind": "viertel",
+   "lat": 13.3549678,
+   "lon": 103.8546043,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Eine schmale Gasse zwischen den Bars der Pub Street mit einigen netten Bars und Restaurants.",
+   "goodFor": [
+    "Entspannte Bars",
+    "Restaurants"
+   ],
+   "watchOut": [
+    "Nahe an der lauten Pub Street"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 6,
+     "why": "Einige nette Bars und Restaurants – „Auch hier gibt es einige nette Bars und Restaurants“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/Siem_Reap",
+     "title": "Wikivoyage (de): Siem Reap"
+    }
+   ]
+  },
+  {
+   "name": "The Alley und The Lane",
+   "kind": "viertel",
+   "lat": 13.3549678,
+   "lon": 103.8546043,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Kleinere Gassen nahe Pub Street mit ruhigeren Bars für einen entspannten Drink.",
+   "goodFor": [
+    "Ruhigerer Drink",
+    "Kleine Bars"
+   ],
+   "watchOut": [
+    "Nahe an der lauten Pub Street"
+   ],
+   "values": {
+    "quiet": {
+     "v": 7,
+     "why": "Ruhigere, kleinere Lokale für einen Drink – „Travelers looking for more subdued place to appreciate a quiet drink can seek out some of the smaller places along“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Siem_Reap",
+     "title": "Wikivoyage (en): Siem Reap"
+    }
+   ]
+  }
+ ]
+}

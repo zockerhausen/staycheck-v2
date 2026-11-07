@@ -1,0 +1,298 @@
+{
+ "v": 1,
+ "slug": "muenchen",
+ "generated": "2026-11-07",
+ "model": "claude-haiku-5-5 (nur Wikivoyage-Text, Zitate geprüft)",
+ "areas": [
+  {
+   "name": "Altstadt",
+   "kind": "viertel",
+   "lat": 48.1378285,
+   "lon": 11.5745823,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Historisches Zentrum mit Fußgängerzone und den meisten bekannten Sehenswürdigkeiten rund um den Marienplatz.",
+   "goodFor": [
+    "Sehenswürdigkeiten",
+    "Ausgehen",
+    "Einkaufen"
+   ],
+   "watchOut": [
+    "Taschendiebstahl in zentralen Bereichen",
+    "Autos praktisch unmöglich, nur zu Fuß gut erkundbar"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 8,
+     "why": "Große Auswahl an Clubs, Bars und Kneipen – „Eine große Auswahl an abendlicher Unterhaltung aus Clubs, Bars und Kneipen hat man in der Altstadt“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "safety": {
+     "v": 5,
+     "why": "Taschendiebstahl in den zentralen Bezirken, Vorsicht geboten – „you should still take the usual precautions against pickpocketing (especially in the central districts of Altstadt-Lehel“",
+     "src": [
+      1
+     ],
+     "w": 1.0
+    },
+    "transit": {
+     "v": 7,
+     "why": "Tram 19 mit mehreren Haltestellen im Viertel – „Tram 19 traverses the district west-east, with stops at Hauptbahnhof, Karlsplatz (Stachus), Lenbachplatz“",
+     "src": [
+      2
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/M%C3%BCnchen",
+     "title": "Wikivoyage (de): München"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Munich",
+     "title": "Wikivoyage (en): Munich"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Munich/Altstadt",
+     "title": "Wikivoyage (en): Munich/Altstadt"
+    }
+   ]
+  },
+  {
+   "name": "Ludwigsvorstadt-Isarvorstadt",
+   "kind": "viertel",
+   "lat": 48.12767,
+   "lon": 11.56523,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Lebhaftes Viertel südlich der Altstadt mit Hauptbahnhof, vielen Bars, Clubs und günstigen Unterkünften.",
+   "goodFor": [
+    "Ausgehen",
+    "Günstige Unterkünfte",
+    "Ethnische Küche",
+    "Anbindung"
+   ],
+   "watchOut": [
+    "Taschendiebstahl rund um den Hauptbahnhof",
+    "Betrunkene Gruppen in Bahnhofsnähe"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 8,
+     "why": "Nachtleben mit vielen Bars und Clubs – „Night-life area immediately south of the centre, home to many cafés, restaurants, bars, clubs and theatres“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "food": {
+     "v": 8,
+     "why": "Große Auswahl an ethnischen Restaurants – „This is the ideal district to seek out ethnic cuisines“",
+     "src": [
+      1
+     ],
+     "w": 1.0
+    },
+    "budget": {
+     "v": 7,
+     "why": "Viele preiswerte Unterkünfte – „It's crowded with budget accommodation“",
+     "src": [
+      1
+     ],
+     "w": 1.0
+    },
+    "safety": {
+     "v": 5,
+     "why": "Taschendiebstahl-Risiko rund um den Bahnhof – „especially in the central districts of Altstadt-Lehel and the Ludwigsvorstadt area immediately south of the central station“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "transit": {
+     "v": 9,
+     "why": "Zentraler Verkehrsknoten mit Fern- und S-Bahn – „It's where most visitors arrive, as it's the transport hub, with trains from all parts of Germany“",
+     "src": [
+      1
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Munich",
+     "title": "Wikivoyage (en): Munich"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Munich/Ludwigsvorstadt-Isarvorstadt",
+     "title": "Wikivoyage (en): Munich/Ludwigsvorstadt-Isarvorstadt"
+    }
+   ]
+  },
+  {
+   "name": "Gärtnerplatz",
+   "kind": "viertel",
+   "lat": 48.13228,
+   "lon": 11.57646,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Beliebter Treffpunkt mit Kneipen und Bars rund um den Gärtnerplatz.",
+   "goodFor": [
+    "Ausgehen",
+    "Abende draußen verbringen"
+   ],
+   "watchOut": [
+    "Nachtleben kann laut sein"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 8,
+     "why": "Viele Bars, Pubs und Clubs rund um den Platz – „Isarvorstadt is a high-end residential area with lots of bars, pubs, and clubs, centred on Gärtnerplatz“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Munich/Ludwigsvorstadt-Isarvorstadt",
+     "title": "Wikivoyage (en): Munich/Ludwigsvorstadt-Isarvorstadt"
+    }
+   ]
+  },
+  {
+   "name": "Glockenbach",
+   "kind": "viertel",
+   "lat": 48.1278638,
+   "lon": 11.5706135,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Szeneviertel mit hoher Dichte an Lokalen und Geschäften, besonders bei der queeren Community beliebt.",
+   "goodFor": [
+    "Ausgehen",
+    "Queere Szene"
+   ],
+   "watchOut": [
+    "Teils hohe Preise durch Gentrifizierung"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 7,
+     "why": "Hohe Dichte an Lokalen, Szenenviertel – „Das Glockenbachviertel gilt wegen seiner hohen Dichte an Lokalitäten und Geschäften für die LGBTQIA+-Community als das Szenenviertel von München“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "transit": {
+     "v": 7,
+     "why": "U-Bahn und Tram in der Nähe – „Anfahrt MVV: Glockenbachviertel: U1+U2: Fraunhoferstraße, Tram 17, 18, 27 Müllerstraße“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/LGBT_in_M%C3%BCnchen",
+     "title": "Wikivoyage (de): LGBT in München"
+    },
+    {
+     "url": "https://de.wikivoyage.org/wiki/M%C3%BCnchen/Ludwigsvorstadt-Isarvorstadt",
+     "title": "Wikivoyage (de): München/Ludwigsvorstadt-Isarvorstadt"
+    }
+   ]
+  },
+  {
+   "name": "Haidhausen",
+   "kind": "viertel",
+   "lat": 48.1326627,
+   "lon": 11.6011221,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Wohn- und Ausgehviertel östlich der Isar mit Kneipen, Restaurants und Gründerzeitbauten.",
+   "goodFor": [
+    "Ausgehen",
+    "Restaurants",
+    "Spaziergänge"
+   ],
+   "watchOut": [
+    "Nur wenige Clubs direkt im Viertel"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 8,
+     "why": "Wohn- und Nachtlebenviertel mit vielen Bars – „Haidhausen is a residential and night life area of Munich, about 2 km east of city centre“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "food": {
+     "v": 7,
+     "why": "Weitläufige Restaurant- und Kneipenszene – „Im nahen Gründerzeitviertel Haidhausen gibt es mit einer weitläufigen Kneipen- und Restaurantszene eine gute Auswahl an Möglichkeiten zur Unterhaltung“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    },
+    "transit": {
+     "v": 7,
+     "why": "Tram für entferntere Orte, U-Bahn über Lehel – „Use the tram for outlying places, and consider using trams and U-Bahn lines through Lehel“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Munich/Haidhausen",
+     "title": "Wikivoyage (en): Munich/Haidhausen"
+    },
+    {
+     "url": "https://de.wikivoyage.org/wiki/M%C3%BCnchen",
+     "title": "Wikivoyage (de): München"
+    }
+   ]
+  },
+  {
+   "name": "Werksviertel",
+   "kind": "viertel",
+   "lat": 48.12429,
+   "lon": 11.6078,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Ehemaliges Fabrikgelände nahe Ostbahnhof mit Clubs, Discos und Bars.",
+   "goodFor": [
+    "Clubs",
+    "Partys"
+   ],
+   "watchOut": [
+    "Vor allem am Wochenende viel Trubel"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 9,
+     "why": "Großes Party- und Clubgebiet – „Werksviertel southeast of the railway is a party zone on an industrial scale, where former factories have been converted into clubs, discos and bars“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Munich/Haidhausen",
+     "title": "Wikivoyage (en): Munich/Haidhausen"
+    }
+   ]
+  }
+ ]
+}

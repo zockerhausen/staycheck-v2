@@ -1,0 +1,150 @@
+{
+ "v": 1,
+ "slug": "rio",
+ "generated": "2026-11-07",
+ "model": "claude-haiku-5-5 (nur Wikivoyage-Text, Zitate geprüft)",
+ "areas": [
+  {
+   "name": "Lapa",
+   "kind": "viertel",
+   "lat": -22.9130257,
+   "lon": -43.1822358,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Lebhaftes Ausgehviertel mit Bars, Musik und historischen Gebäuden, besonders nach Einbruch der Dunkelheit.",
+   "goodFor": [
+    "Ausgehen",
+    "Samba und Live-Musik",
+    "typische brasilianische Küche und Getränke"
+   ],
+   "watchOut": [],
+   "values": {
+    "nightlife": {
+     "v": 10,
+     "why": "Im Text als eines der spannendsten Ausgehviertel der Stadt beschrieben – „Lapa is one of the most thrilling places to be in Rio after dark, with streets and bars full of people, all in historical buildings“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "food": {
+     "v": 7,
+     "why": "Gilt als Ort für typisch brasilianisches Essen und Caipirinha – „It's the place to try typical Brazilian food and drinks like the world-famous caipirinha.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Rio_de_Janeiro/Centro",
+     "title": "Wikivoyage (en): Rio de Janeiro/Centro"
+    }
+   ]
+  },
+  {
+   "name": "Centro",
+   "kind": "viertel",
+   "lat": -22.9043934,
+   "lon": -43.1830653,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Innenstadt mit vielen Kirchen, Museen und bekannten Bars, gut an Bahn und Straßenbahn angebunden.",
+   "goodFor": [
+    "Museen und Kirchen",
+    "Bars",
+    "Anbindung zu Flughafen und Hafen"
+   ],
+   "watchOut": [],
+   "values": {
+    "nightlife": {
+     "v": 7,
+     "why": "Viele der bekanntesten Bars der Stadt liegen im Centro – „Centro has most of the city's notable churches and museums, including the Modern Art Museum, as well as many of its most famous bars.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "transit": {
+     "v": 8,
+     "why": "Die VLT-Straßenbahn verbindet viele Orte, darunter Flughafen und Hafen – „The VLT light rail system serves many places in the area, including Santos Dumont airport and Praca XV port.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Rio_de_Janeiro/Centro",
+     "title": "Wikivoyage (en): Rio de Janeiro/Centro"
+    }
+   ]
+  },
+  {
+   "name": "Santa Teresa",
+   "kind": "viertel",
+   "lat": -22.92155,
+   "lon": -43.18603,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Hügeliges, historisches Künstlerviertel mit schönen Herrenhäusern, das man tagsüber gut zu Fuß erkunden kann.",
+   "goodFor": [
+    "Spaziergänge am Tag",
+    "Kunst und Geschichte",
+    "Gästehäuser mit Frühstück"
+   ],
+   "watchOut": [
+    "Nach Einbruch der Dunkelheit zu Fuß meiden",
+    "Raubüberfälle auch für Einheimische möglich"
+   ],
+   "values": {
+    "safety": {
+     "v": 3,
+     "why": "Umgeben von drei Favelas, Überfälle nach Dunkelheit nicht selten – „the neighborhood is surrounded by three different favelas, and muggings after dark are not unheard of even for the locals.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Rio_de_Janeiro/Centro",
+     "title": "Wikivoyage (en): Rio de Janeiro/Centro"
+    }
+   ]
+  },
+  {
+   "name": "Botafogo",
+   "kind": "viertel",
+   "lat": -22.9515096,
+   "lon": -43.1862969,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Stadtteil mit einer Konzerthalle, die das ganze Jahr über Konzerte mit bekannten Musikern bietet.",
+   "goodFor": [
+    "Konzerte",
+    "Einkaufen im Shoppingcenter Rio Sul"
+   ],
+   "watchOut": [],
+   "values": {
+    "nightlife": {
+     "v": 7,
+     "why": "Konzerthalle mit vielen Gigs, ganzjährig geöffnet – „Gelegen beim Shoppingcenter Rio Sul und dem Leme-Tunnel im Stadtteil Botafogo.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/Rio_de_Janeiro",
+     "title": "Wikivoyage (de): Rio de Janeiro"
+    }
+   ]
+  }
+ ]
+}

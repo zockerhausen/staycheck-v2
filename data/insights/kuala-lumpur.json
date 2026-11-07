@@ -1,0 +1,408 @@
+{
+ "v": 1,
+ "slug": "kuala-lumpur",
+ "generated": "2026-11-07",
+ "model": "claude-haiku-5-5 (nur Wikivoyage-Text, Zitate geprüft)",
+ "areas": [
+  {
+   "name": "Golden Triangle",
+   "kind": "viertel",
+   "lat": 3.15123,
+   "lon": 101.71211,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Kuala Lumpurs Haupteinkaufs- und Ausgehviertel mit Clubs, Bars und vielen Hotels, nah am CBD.",
+   "goodFor": [
+    "Ausgehen",
+    "Shopping",
+    "Hotels aller Preisklassen"
+   ],
+   "watchOut": [
+    "Preise für Unterkünfte oft wettbewerbsfähig, aber nicht …"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 9,
+     "why": "Als Partyzentrum der Stadt beschrieben. – „The Golden Triangle is the party heart of KL.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "budget": {
+     "v": 5,
+     "why": "Preise wettbewerbsfähig, man sollte vergleichen; Budget-Optionen eingeschränkt. – „Prices are usually fairly competitive, so be sure to shop around for the best deal.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "transit": {
+     "v": 8,
+     "why": "Die Monorail durchquert das Viertel und ist besonders nützlich. – „The monorail traverses the Golden Triangle and is especially useful“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Kuala_Lumpur/Golden_Triangle",
+     "title": "Wikivoyage (en): Kuala Lumpur/Golden Triangle"
+    }
+   ]
+  },
+  {
+   "name": "Bukit Bintang",
+   "kind": "viertel",
+   "lat": 3.1471068,
+   "lon": 101.7086011,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Lebendiges Einkaufs- und Restaurantviertel, rund um die Uhr aktiv, mit preiswerten Unterkünften und Garküchen.",
+   "goodFor": [
+    "Shopping",
+    "Essen rund um die Uhr",
+    "Ausgehen"
+   ],
+   "watchOut": [
+    "Sehr lebhaft und laut"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 8,
+     "why": "Neonbeleuchtete Nachtclubs und viel Betrieb. – „Nearby Bukit Bintang also throbs with action“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "food": {
+     "v": 7,
+     "why": "Straßen mit Garküchen. – „Im Bereich der Jalan Bukit Bintang gibt es ebenso Hotspots mit preiswerten Unterkünften und Straßen mit Garküchen.“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    },
+    "budget": {
+     "v": 7,
+     "why": "Hotspots mit preiswerten Unterkünften. – „Im Bereich der Jalan Bukit Bintang gibt es ebenso Hotspots mit preiswerten Unterkünften und Straßen mit Garküchen.“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Kuala_Lumpur",
+     "title": "Wikivoyage (en): Kuala Lumpur"
+    },
+    {
+     "url": "https://de.wikivoyage.org/wiki/Kuala_Lumpur/Golden_Triangle",
+     "title": "Wikivoyage (de): Kuala Lumpur/Golden Triangle"
+    }
+   ]
+  },
+  {
+   "name": "Old City Centre",
+   "kind": "viertel",
+   "lat": 3.14367,
+   "lon": 101.69437,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Historischer Kern mit Merdeka Square, Kolonialbauten und dem alten Chinatown.",
+   "goodFor": [
+    "Geschichte",
+    "Spaziergänge",
+    "günstige Unterkünfte"
+   ],
+   "watchOut": [
+    "Kaum Nachtleben",
+    "Budget-Unterkünfte teils von geringer Qualität"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 2,
+     "why": "Wenig Nachtleben, die Bars sind woanders. – „There is little nightlife in this part of Kuala Lumpur, as most of the bars and clubs are in the Golden Triangle.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "food": {
+     "v": 6,
+     "why": "Viele Märkte und Imbisse in Chinatown. – „the narrow streets of Chinatown, with traditional Chinese shops, markets, eateries and budget accommodation galore“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "budget": {
+     "v": 8,
+     "why": "Sehr günstige Unterkünfte, Qualität eher niedrig. – „Some of the cheapest accommodation within Kuala Lumpur is found in Chinatown and the surrounding area“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "nature": {
+     "v": 7,
+     "why": "Parkanlage in der Nähe. – „To the west of the square lies the pretty Lake Gardens“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Kuala_Lumpur/Old_City_Centre",
+     "title": "Wikivoyage (en): Kuala Lumpur/Old City Centre"
+    }
+   ]
+  },
+  {
+   "name": "Brickfields",
+   "kind": "viertel",
+   "lat": 3.1288572,
+   "lon": 101.6845528,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Indisches Viertel (Little India) mit Bananenblatt-Restaurants, direkt am Hauptbahnhof KL Sentral.",
+   "goodFor": [
+    "indisches Essen",
+    "gute Bahnanbindung",
+    "günstige Unterkünfte"
+   ],
+   "watchOut": [
+    "Teils einfache Unterkünfte"
+   ],
+   "values": {
+    "food": {
+     "v": 6,
+     "why": "Bananenblatt-Reis-Restaurants. – „Brickfields is Kuala Lumpur’s Little India filled with saree shops and banana leaf rice restaurants.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "budget": {
+     "v": 7,
+     "why": "Günstige Unterkünfte in der Nähe der Monorail. – „Another area with low-cost accommodation is in Brickfields close to the KL Sentral monorail station.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "transit": {
+     "v": 9,
+     "why": "Großer Hauptbahnhof mit vielen Verbindungen. – „Brickfields is also home to the massive KL Sentral, with major transportation links around Kuala Lumpur and beyond.“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Kuala_Lumpur",
+     "title": "Wikivoyage (en): Kuala Lumpur"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Kuala_Lumpur/Brickfields_and_Bangsar",
+     "title": "Wikivoyage (en): Kuala Lumpur/Brickfields and Bangsar"
+    }
+   ]
+  },
+  {
+   "name": "Chow Kit",
+   "kind": "viertel",
+   "lat": 3.16519,
+   "lon": 101.6988,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Nördlicher Teil des Traditionsviertels mit Wet Market, Schnäppchen-Shopping und Nachtmarkt.",
+   "goodFor": [
+    "günstiges Essen",
+    "Märkte",
+    "Schnäppchen"
+   ],
+   "watchOut": [
+    "Gilt für KL-Verhältnisse als etwas rau",
+    "Nach Sonnenuntergang eher meiden"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 8,
+     "why": "Heritage Row wird als beliebter Ausgehort genannt. – „Heritage Row, in the Chow Kit district, is fast catching up as a popular nightspot.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "food": {
+     "v": 7,
+     "why": "Bekannt für günstiges Essen und Märkte. – „The northern part of the district is called Chow Kit, known for bargain shopping and food.“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    },
+    "budget": {
+     "v": 8,
+     "why": "Viele günstige Unterkünfte zu wettbewerbsfähigen Preisen. – „Tuanku Abdul Rahman/Chow Kit area is now The place to find budget accommodations offering very competitive prices“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    },
+    "safety": {
+     "v": 5,
+     "why": "Früher schlechter Ruf, heute besser, aber gilt als etwas rau. – „Chow Kit is no longer the dangerous place it used to be“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    },
+    "transit": {
+     "v": 6,
+     "why": "Bus-Linie führt durch das Gebiet. – „The Red Line connects the North of CBD with the South, linking KL Sentral to Jalan Tuanku Abdul Rahman through the Chow Kit area.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Kuala_Lumpur",
+     "title": "Wikivoyage (en): Kuala Lumpur"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Kuala_Lumpur/North_of_City_Centre",
+     "title": "Wikivoyage (en): Kuala Lumpur/North of City Centre"
+    }
+   ]
+  },
+  {
+   "name": "Kampung Baru",
+   "kind": "viertel",
+   "lat": 3.1643874,
+   "lon": 101.7054807,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Letztes malaiisches Dorf der Stadt mit Garküchen und traditionellem Ambiente.",
+   "goodFor": [
+    "Street Food",
+    "traditionelles Ambiente"
+   ],
+   "watchOut": [
+    "Eher kein Nachtleben"
+   ],
+   "values": {
+    "food": {
+     "v": 9,
+     "why": "Paradies für Straßenstände und Restaurants. – „Kampung Baru, the last Malay village of Kuala Lumpur, is a food paradise of street stalls and restaurants in traditional kampung setting.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Kuala_Lumpur",
+     "title": "Wikivoyage (en): Kuala Lumpur"
+    }
+   ]
+  },
+  {
+   "name": "Botanical Garden",
+   "kind": "viertel",
+   "lat": 3.14419,
+   "lon": 101.68677,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Großer Park mit Museen, Moschee und Vogelpark, ideal zur Erholung.",
+   "goodFor": [
+    "Erholung",
+    "Spaziergänge",
+    "Museen"
+   ],
+   "watchOut": [
+    "Kaum Nachtleben"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 2,
+     "why": "Kaum Nachtleben. – „In diesem Teil der Stadt gibt es kaum ein erwähnenswertes Nachtleben.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "quiet": {
+     "v": 8,
+     "why": "Ruhige Atmosphäre abseits der Stadt. – „the calmness away from the city hustle and bustle invite for a visit“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    },
+    "nature": {
+     "v": 9,
+     "why": "Großer Erholungspark im Zentrum. – „Perdana Botanical Garden is Kuala Lumpur's first large-scale recreational park.“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/Kuala_Lumpur/Lake_Gardens",
+     "title": "Wikivoyage (de): Kuala Lumpur/Lake Gardens"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Kuala_Lumpur/Botanical_Garden",
+     "title": "Wikivoyage (en): Kuala Lumpur/Botanical Garden"
+    }
+   ]
+  },
+  {
+   "name": "Pudu",
+   "kind": "viertel",
+   "lat": 3.1338613,
+   "lon": 101.7154779,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Preiswerte, neue Hotels an der Jalan Pudu, nahe Bukit Bintang.",
+   "goodFor": [
+    "günstige Unterkünfte",
+    "Lage im Zentrum"
+   ],
+   "watchOut": [
+    "Sehr kleine Zimmer, oft ohne Fenster"
+   ],
+   "values": {
+    "budget": {
+     "v": 8,
+     "why": "Viele preiswerte, neue Hotels. – „Eine ganze Reihe preiswerter und neuer Hotels befindet sich an der Jalan Pudu südöstlich der Jalan Bukit Bintang.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/Kuala_Lumpur/Golden_Triangle",
+     "title": "Wikivoyage (de): Kuala Lumpur/Golden Triangle"
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,254 @@
+{
+ "v": 1,
+ "slug": "neapel",
+ "generated": "2026-11-07",
+ "model": "claude-haiku-5-5 (nur Wikivoyage-Text, Zitate geprüft)",
+ "areas": [
+  {
+   "name": "Chiaia",
+   "kind": "viertel",
+   "lat": 40.8352689,
+   "lon": 14.2282679,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Wohlhabendes Viertel westlich von San Ferdinando mit Cafés, Shopping und einem Hauch von Dolce Vita.",
+   "goodFor": [
+    "Cafés und Shopping",
+    "Ausgehen am Abend in Cafés",
+    "Ruhige, gepflegte Atmosphäre"
+   ],
+   "watchOut": [
+    "Nachts ist die Rückfahrt oft nur mit Taxi gut möglich"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 6,
+     "why": "Beliebt zum Sehen und Gesehenwerden in Cafés, eher kein Club-Viertel – „Die Neapolitaner, die etwas auf sich halten, gehen gerne nach Chiaia, einem extrem reichen Viertel“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "safety": {
+     "v": 8,
+     "why": "Im Text als Gebiet mit geringer Gefahr genannt – „Geringe Gefahr besteht auch in Mergellina, Fuorigrotta, Chiaia oder Arenella.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "transit": {
+     "v": 6,
+     "why": "Standseilbahn vorhanden, sonst keine klaren Angaben – „Neapel verfügt darüber hinaus über mehrere Standseilbahnen in Mergellina, Montesanto, Chiaia und im Zentrum“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/Neapel",
+     "title": "Wikivoyage (de): Neapel"
+    }
+   ]
+  },
+  {
+   "name": "Mergellina",
+   "kind": "viertel",
+   "lat": 40.82748,
+   "lon": 14.22009,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Hafen- und Uferviertel mit Movida-Treffpunkten, Jugendherberge und Blick auf die Bucht.",
+   "goodFor": [
+    "Abendliche Movida",
+    "Spaziergang an der Promenade",
+    "Günstige Hostels"
+   ],
+   "watchOut": [
+    "Abends an dunklen Stellen aufmerksam bleiben"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 7,
+     "why": "Typischer Ort für die lokale Movida – „Also, Piazza San Pasquale and Mergellina are typical places for the local movida.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "safety": {
+     "v": 9,
+     "why": "Viele Menschen bis spät und sehr sicher – „Places like Mergellina and the boardwalk of Via Caracciolo are generally full of people till late at night and very safe.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "transit": {
+     "v": 6,
+     "why": "Standseilbahn vorhanden, sonst keine klaren Angaben – „Neapel verfügt darüber hinaus über mehrere Standseilbahnen in Mergellina, Montesanto, Chiaia und im Zentrum“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Naples",
+     "title": "Wikivoyage (en): Naples"
+    },
+    {
+     "url": "https://de.wikivoyage.org/wiki/Neapel",
+     "title": "Wikivoyage (de): Neapel"
+    }
+   ]
+  },
+  {
+   "name": "Piazza Garibaldi",
+   "kind": "viertel",
+   "lat": 40.85196,
+   "lon": 14.26881,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Bahnhofsvorplatz mit U-Bahn, Circumvesuviana und Flughafenbus, aber auch Betrügern und Hütchenspielern.",
+   "goodFor": [
+    "Günstige Hotels",
+    "Zentrale Verkehrsanbindung"
+   ],
+   "watchOut": [
+    "Hütchenspieler, Betrüger und Schmuggelware",
+    "Früh morgens und spät abends meiden"
+   ],
+   "values": {
+    "budget": {
+     "v": 8,
+     "why": "Sehr günstige Hotels in der Nähe – „Sehr günstige, allerdings auch bestenfalls mittelklassige Hotels liegen an der Piazza Garibaldi.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "safety": {
+     "v": 3,
+     "why": "Viele zwielichtige Gestalten und Betrugsversuche – „Der Bahnhofsvorplatz (Piazza Garibaldi) ist immer noch ein Anziehungspunkt für allerlei zwielichtige Gestalten“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "transit": {
+     "v": 9,
+     "why": "U-Bahn, Regionalzüge und Flughafenbus an einem Ort – „hier befinden sich allerdings auch der Eingang zur U-Bahn und den Circumvesuviana-Regionalzügen sowie die Haltestelle des Flughafenbusses.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/Neapel",
+     "title": "Wikivoyage (de): Neapel"
+    }
+   ]
+  },
+  {
+   "name": "Piazza Santa Maria la Nova",
+   "kind": "viertel",
+   "lat": 40.84407,
+   "lon": 14.25284,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Platz mit Bars und Cafés in der Altstadt, Teil der beliebtesten Ausgehszene.",
+   "goodFor": [
+    "Bars und Cafés",
+    "Ausgehen in der Altstadt"
+   ],
+   "watchOut": [
+    "Abends viel Betrieb"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 9,
+     "why": "Gehört zu den angesagtesten Ausgehorten – „The hippest scene is around the bars and cafes on Piazza Bellini, Piazza Santa Maria la Nova“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Naples",
+     "title": "Wikivoyage (en): Naples"
+    }
+   ]
+  },
+  {
+   "name": "Arenella",
+   "kind": "viertel",
+   "lat": 40.8537414,
+   "lon": 14.2253067,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Wohngebiet mit geringer Gefahr laut Text, abseits der typischen Touristenrouten.",
+   "goodFor": [
+    "Ruhigere Wohnlage"
+   ],
+   "watchOut": [
+    "Für Touristen kaum von Interesse"
+   ],
+   "values": {
+    "safety": {
+     "v": 8,
+     "why": "Im Text als Gebiet mit geringer Gefahr genannt – „Geringe Gefahr besteht auch in Mergellina, Fuorigrotta, Chiaia oder Arenella.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/Neapel",
+     "title": "Wikivoyage (de): Neapel"
+    }
+   ]
+  },
+  {
+   "name": "Quartieri Spagnoli",
+   "kind": "viertel",
+   "lat": 40.84148,
+   "lon": 14.24642,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Altstadtviertel mit sehenswerten Ecken, das nach Einbruch der Dunkelheit gemieden werden sollte.",
+   "goodFor": [
+    "Sehenswerte Altstadt bei Tag"
+   ],
+   "watchOut": [
+    "Abends meiden",
+    "Auf belebten Hauptstraßen bleiben"
+   ],
+   "values": {
+    "safety": {
+     "v": 3,
+     "why": "Gelten als eher unsicher, nach Dunkelheit meiden – „Forcella, Rione Sanità und Quartieri Spagnoli (Altstadt) gelten als eher unsicher“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/Neapel",
+     "title": "Wikivoyage (de): Neapel"
+    }
+   ]
+  }
+ ]
+}

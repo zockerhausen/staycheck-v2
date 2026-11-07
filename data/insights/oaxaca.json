@@ -1,0 +1,193 @@
+{
+ "v": 1,
+ "slug": "oaxaca",
+ "generated": "2026-11-07",
+ "model": "claude-haiku-5-5 (nur Wikivoyage-Text, Zitate geprüft)",
+ "areas": [
+  {
+   "name": "Zócalo",
+   "kind": "viertel",
+   "lat": 17.06059,
+   "lon": -96.72536,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Der zentrale Platz ist der Mittelpunkt des Stadtzentrums und der einzige Bereich, in dem es abends meist noch belebt ist.",
+   "goodFor": [
+    "Ausgehen am Abend",
+    "Zentrale Lage"
+   ],
+   "watchOut": [
+    "Abends außerhalb des Zócalo oft sehr leer"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 7,
+     "why": "Rund um den Zócalo ist abends am meisten los, sonst wirkt es leer. – „with the exception of the Zócalo and its surroundings, the streets can feel quite empty later at night“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "transit": {
+     "v": 6,
+     "why": "Taxistand in der Nähe des Zócalo, viele Taxis im Zentrum. – „There are plenty of taxis found in the Centro Histórico, including a taxi rank near the Zocalo.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Oaxaca_%28city%29",
+     "title": "Wikivoyage (en): Oaxaca (city)"
+    }
+   ]
+  },
+  {
+   "name": "Historic Centre of Oaxaca",
+   "kind": "viertel",
+   "lat": 17.0612309,
+   "lon": -96.7256138,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Das UNESCO-Zentrum mit Kolonialgebäuden, Märkten und Restaurants ist gut zu Fuß erkundbar.",
+   "goodFor": [
+    "Spaziergänge",
+    "Restaurants und Boutiquen",
+    "Sehenswürdigkeiten"
+   ],
+   "watchOut": [
+    "Nördlich und südlich der Independencia-Avenue sehr …"
+   ],
+   "values": {
+    "food": {
+     "v": 8,
+     "why": "Im Norden gibt es gehobene Restaurants und Kunsthandwerk, im Süden mehr Märkte. – „It is divided into north and south by Independencia Avenue; the north tends to have upscale dining and artisan boutiques“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "transit": {
+     "v": 7,
+     "why": "Viele Taxis im Centro Histórico. – „There are plenty of taxis found in the Centro Histórico, including a taxi rank near the Zocalo.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "nature": {
+     "v": 6,
+     "why": "Grüne Anmutung durch Bäume und Pflanzen in den Straßen. – „the city center today still has something of a green cast compared to many other Mexican cities“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Oaxaca_%28city%29",
+     "title": "Wikivoyage (en): Oaxaca (city)"
+    }
+   ]
+  },
+  {
+   "name": "Templo de Santo Domingo",
+   "kind": "viertel",
+   "lat": 17.0656246,
+   "lon": -96.7230004,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Die Umgebung der Kirche bietet Dachterrassen-Bars mit schönen Ausblicken, besonders bei Sonnenuntergang.",
+   "goodFor": [
+    "Ausblick bei Sonnenuntergang",
+    "Abends ausgehen"
+   ],
+   "watchOut": [
+    "Eher ein paar Blocks vom Zócalo entfernt"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 7,
+     "why": "Mehrere Dachterrassen-Bars mit schönem Ausblick. – „There are several rooftop bars around the Templo de Santo Domingo offering gorgeous views, particularly at sunset.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Oaxaca_%28city%29",
+     "title": "Wikivoyage (en): Oaxaca (city)"
+    }
+   ]
+  },
+  {
+   "name": "Mina Street",
+   "kind": "viertel",
+   "lat": 17.0573578,
+   "lon": -96.7260301,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Die Calle Mina im Zentrum ist bekannt für Schokoladengeschäfte mit Kostproben und Cafés.",
+   "goodFor": [
+    "Schokolade probieren",
+    "Cafés"
+   ],
+   "watchOut": [
+    "Vor allem tagsüber geöffnet"
+   ],
+   "values": {
+    "food": {
+     "v": 8,
+     "why": "Mehrere Schokoladengeschäfte mit Probiermöglichkeiten. – „The eastern end of Mina Street (2 blocks south of Zócalo) are several chocolate shops where you can taste samples.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Oaxaca_%28city%29",
+     "title": "Wikivoyage (en): Oaxaca (city)"
+    }
+   ]
+  },
+  {
+   "name": "Colonia Reforma",
+   "kind": "viertel",
+   "lat": 17.0765981,
+   "lon": -96.7143732,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Ein wohlhabendes Viertel mit angesagten Cafés und Restaurants, etwa 20 Gehminuten vom Zócalo entfernt.",
+   "goodFor": [
+    "Cafés",
+    "Restaurants"
+   ],
+   "watchOut": [
+    "Etwas abseits vom Zentrum"
+   ],
+   "values": {
+    "food": {
+     "v": 7,
+     "why": "Viele trendige Cafés und Restaurants. – „Reforma, a wealthy neighborhood speckled with trendy cafes and restaurants“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Oaxaca_%28city%29",
+     "title": "Wikivoyage (en): Oaxaca (city)"
+    }
+   ]
+  }
+ ]
+}

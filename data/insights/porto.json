@@ -1,0 +1,136 @@
+{
+ "v": 1,
+ "slug": "porto",
+ "generated": "2026-11-07",
+ "model": "claude-haiku-5-5 (nur Wikivoyage-Text, Zitate geprüft)",
+ "areas": [
+  {
+   "name": "Ribeira",
+   "kind": "viertel",
+   "lat": 41.14075,
+   "lon": -8.61293,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Touristisches Ufer am Douro mit Bars, Ausgehmöglichkeiten und Aussicht über den Fluss.",
+   "goodFor": [
+    "Bars und Ausgehen",
+    "Flussufer",
+    "Sehenswürdigkeiten"
+   ],
+   "watchOut": [
+    "Enge Gassen und Verkehr erschweren das Fahren",
+    "Steile Wege, zu Fuß anstrengend"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 8,
+     "why": "Der Text nennt Ribeira als Bar-Gegend im Süden. – „The main areas for bars are Praça de Ceuta to the north, through the station surrounds to Ribeira further south.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Porto",
+     "title": "Wikivoyage (en): Porto"
+    }
+   ]
+  },
+  {
+   "name": "Praça de Ceuta",
+   "kind": "viertel",
+   "lat": 41.1453783,
+   "lon": -8.610546,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Platz im Norden, einer der Hauptbereiche für Bars in Porto.",
+   "goodFor": [
+    "Bars und Ausgehen"
+   ],
+   "watchOut": [
+    "Nachtleben kann laut sein"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 8,
+     "why": "Praça de Ceuta wird ausdrücklich als Hauptbereich für Bars genannt. – „The main areas for bars are Praça de Ceuta to the north, through the station surrounds to Ribeira further south.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Porto",
+     "title": "Wikivoyage (en): Porto"
+    }
+   ]
+  },
+  {
+   "name": "Foz",
+   "kind": "viertel",
+   "lat": 41.1508459,
+   "lon": -8.6691083,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Gehobenes Viertel mit Clubs, das Ausgehen und Fluss- oder Meeresnähe verbindet.",
+   "goodFor": [
+    "Clubs und Ausgehen",
+    "Gehobenes Wohnviertel"
+   ],
+   "watchOut": [
+    "Clubs öffnen spät, meist erst gegen 01:00–02:00"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 7,
+     "why": "Viele Clubs befinden sich im gehobenen Viertel Foz. – „Most clubs are located in the Industrial region and in the upmarket Foz area.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Porto",
+     "title": "Wikivoyage (en): Porto"
+    }
+   ]
+  },
+  {
+   "name": "Industrial region",
+   "kind": "viertel",
+   "lat": 41.1786666,
+   "lon": -8.6487832,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Industriegebiet, in dem sich ebenfalls viele Clubs befinden.",
+   "goodFor": [
+    "Clubs und Tanzlokale"
+   ],
+   "watchOut": [
+    "Eher industriell geprägt"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 6,
+     "why": "Hier befinden sich viele Clubs, wenn auch neben Foz. – „Most clubs are located in the Industrial region and in the upmarket Foz area.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Porto",
+     "title": "Wikivoyage (en): Porto"
+    }
+   ]
+  }
+ ]
+}

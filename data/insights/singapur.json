@@ -1,0 +1,41 @@
+{
+ "v": 1,
+ "slug": "singapur",
+ "generated": "2026-11-07",
+ "model": "claude-haiku-5-5 (nur Wikivoyage-Text, Zitate geprüft)",
+ "areas": [
+  {
+   "name": "Riverside",
+   "kind": "viertel",
+   "lat": 1.28838,
+   "lon": 103.84921,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Kolonialer Kern mit Museen, Restaurants und dem Nachtleben entlang des Singapore River.",
+   "goodFor": [
+    "Nachtleben",
+    "Spaziergänge am Fluss",
+    "Geschichte"
+   ],
+   "watchOut": [
+    "Nachtleben lässt nach COVID und strengeren Ausschankzeiten …"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 9,
+     "why": "Die meisten Nachtlokale der Stadt liegen am Fluss. – „Between the two are the bulk of Singapore's nightspots, found along the riverside streets of Boat Quay, Clarke Quay and Robertson Quay.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Singapore/Riverside",
+     "title": "Wikivoyage (en): Singapore/Riverside"
+    }
+   ]
+  }
+ ]
+}

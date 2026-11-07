@@ -1,0 +1,629 @@
+{
+ "v": 1,
+ "slug": "tokio",
+ "generated": "2026-11-07",
+ "model": "claude-haiku-5-5 (nur Wikivoyage-Text, Zitate geprüft)",
+ "areas": [
+  {
+   "name": "Roppongi",
+   "kind": "viertel",
+   "lat": 35.66314,
+   "lon": 139.73242,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Teuerer Ausgehbezirk mit Clubs und Bars, der tagsüber auch Einkaufs- und Museumsangebote bietet.",
+   "goodFor": [
+    "Nachtleben",
+    "Ausländerfreundliche Bars und Clubs",
+    "Shopping und Museen tagsüber"
+   ],
+   "watchOut": [
+    "Schlepper auf der Straße",
+    "Überteuerte Gentleman-Bars",
+    "Kreditkarten zu Hause lassen"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 10,
+     "why": "Bekannt als Ausgehviertel, vor allem für Ausländer – „famous for its nightlife, much of which is geared towards foreigners“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "quiet": {
+     "v": 2,
+     "why": "Bars und Clubs bis in die Morgenstunden geöffnet – „many bars, clubs, and discos are open until 04:00-05:00 when the first trains run in the morning“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "food": {
+     "v": 7,
+     "why": "Zwei große Shopping- und Essenskomplexe – „with two massive shopping and dining complexes, and various museums“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "budget": {
+     "v": 2,
+     "why": "Der Text nennt die Gegend teuer – „is an expensive section of Tokyo's Minato ward famous for its nightlife“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "safety": {
+     "v": 7,
+     "why": "Sehr sicher, Hauptgefahr ist die Geldbörse – „Roppongi is very safe, as long as you are not there during an earthquake“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "nature": {
+     "v": 6,
+     "why": "Ruhige Grünflächen trotz des Trubels – „Despite the frenzy, Roppongi has many peaceful green areas, and still is home to many local residents“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Tokyo/Roppongi",
+     "title": "Wikivoyage (en): Tokyo/Roppongi"
+    }
+   ]
+  },
+  {
+   "name": "Azabu",
+   "kind": "viertel",
+   "lat": 35.6600266,
+   "lon": 139.7238075,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Ruhigeres Wohnviertel südlich und westlich von Roppongi mit etwas Nachtleben.",
+   "goodFor": [
+    "Ruhigeres Übernachten nahe Roppongi",
+    "Diplomatenviertel"
+   ],
+   "watchOut": [
+    "Etwas Geschäftstrubel und Nachtleben aus Roppongi"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 5,
+     "why": "Etwas Nachtleben, aber geringer als in Roppongi – „Azabu is generally quieter than Roppongi but has also absorbed some of its vibrant commercial activity and nightlife“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "quiet": {
+     "v": 7,
+     "why": "Überwiegend Wohngegend, ruhiger als Roppongi – „Largely residential and home to many diplomats and wealthy locals, Azabu is generally quieter than Roppongi“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Tokyo/Roppongi",
+     "title": "Wikivoyage (en): Tokyo/Roppongi"
+    }
+   ]
+  },
+  {
+   "name": "Asakusa",
+   "kind": "viertel",
+   "lat": 35.71472,
+   "lon": 139.79673,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Tempelviertel mit Sensō-ji, Touristenzentrum und vielen günstigen Unterkünften.",
+   "goodFor": [
+    "Sensō-ji-Tempel",
+    "Günstige Unterkünfte",
+    "Gute Flughafenanbindung"
+   ],
+   "watchOut": [
+    "Enorme Menschenmengen rund um den Tempel",
+    "Geht früh schlafen"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 3,
+     "why": "Heute kaum Nachtleben, geht früh schlafen – „Given that it was once Tokyo's premier nightlife destination, Asakusa goes to bed pretty early these days“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "quiet": {
+     "v": 4,
+     "why": "Rund um den Tempel sehr voll, ruhige Wohnviertel nah dran – „crowds around Sensoji in particular can be immense, but quiet residential neighborhoods with little restaurants and local temples are only a block or two away“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "budget": {
+     "v": 7,
+     "why": "Viele günstige Ryokan für Ausländer – „Asakusa is a popular accommodation choice for budget travelers and there are many cheap ryokan catering to foreigners in the area“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "transit": {
+     "v": 8,
+     "why": "Direkte Verbindung zu beiden Flughäfen – „easy direct access to both Haneda and Narita airports“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Tokyo/Asakusa",
+     "title": "Wikivoyage (en): Tokyo/Asakusa"
+    }
+   ]
+  },
+  {
+   "name": "Ueno",
+   "kind": "viertel",
+   "lat": 35.71546944,
+   "lon": 139.77401944,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Traditioneller, preiswerter Stadtteil mit guter Bahnanbindung und vielen Museen im Nordwesten.",
+   "goodFor": [
+    "Günstiges Essen und Trinken",
+    "Bahnanbindung in den Norden Japans",
+    "Museen"
+   ],
+   "watchOut": [
+    "Rotlichtviertel im Südwesten",
+    "Schlepper bei Bars",
+    "Falsche Mönche"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 4,
+     "why": "Wenige Clubs, dafür traditionelle Bars – „Ueno is low on clubs, but heavy on traditional bars and seedier businesses“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "budget": {
+     "v": 8,
+     "why": "Essen und Trinken sind günstig – „eating, shopping and drinking are all affordably priced“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "safety": {
+     "v": 6,
+     "why": "Im Vergleich sehr sicher, aber Schlepper und Betrüger – „Compared to similar areas in most countries, however, it is very safe and you are unlikely to run into trouble“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "transit": {
+     "v": 9,
+     "why": "Exzellente Anbindung in Tokio und nach Nordjapan – „Ueno has excellent connectivity not just around Tokyo, but to all of northern Japan as well“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Tokyo/Ueno",
+     "title": "Wikivoyage (en): Tokyo/Ueno"
+    }
+   ]
+  },
+  {
+   "name": "Harajuku",
+   "kind": "viertel",
+   "lat": 35.6683,
+   "lon": 139.7089,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Modisches Viertel mit Takeshita-dori, Omote-sandō und Nähe zum Yoyogi-Park.",
+   "goodFor": [
+    "Mode und Straßenkultur",
+    "Nähe zum Yoyogi-Park"
+   ],
+   "watchOut": [
+    "Schlepper rund um Takeshita-dori",
+    "Tiercafés mit Tierschutzproblemen"
+   ],
+   "values": {
+    "safety": {
+     "v": 5,
+     "why": "Viele Schlepper, Anwerbung ist meist illegal – „There are lots of touts around Takeshita-dori“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "nature": {
+     "v": 6,
+     "why": "Nahe Yoyogi-Park mit Radweg – „The park has a bike path, and bicycle rentals are available“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Tokyo/Harajuku",
+     "title": "Wikivoyage (en): Tokyo/Harajuku"
+    }
+   ]
+  },
+  {
+   "name": "Odaiba",
+   "kind": "viertel",
+   "lat": 35.63,
+   "lon": 139.775,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Künstliche Insel mit Einkaufs- und Unterhaltungsangeboten, über die Yurikamome-Linie erreichbar.",
+   "goodFor": [
+    "Shopping und Unterhaltung",
+    "Skyline-Blick von der Yurikamome"
+   ],
+   "watchOut": [
+    "Zepp ist geschlossen",
+    "Derzeit ruhiger als üblich"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 2,
+     "why": "Wichtigster Club geschlossen – „Odaiba's top nightlife spot, Zepp, closed in 2022“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "quiet": {
+     "v": 7,
+     "why": "Derzeit ruhiger als gewöhnlich – „in the meantime Odaiba will be quieter than usual“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "budget": {
+     "v": 2,
+     "why": "Vor allem Luxushotels – „There is a cluster of luxury hotels near Yurikakome Daiba station“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "transit": {
+     "v": 7,
+     "why": "Mehrere Stationen auf der Insel – „The Yurikamome and Rinkai line also has several stations looping through Odaiba“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Tokyo/Odaiba",
+     "title": "Wikivoyage (en): Tokyo/Odaiba"
+    }
+   ]
+  },
+  {
+   "name": "Ginza",
+   "kind": "viertel",
+   "lat": 35.67201,
+   "lon": 139.76472,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Edles Modeviertel mit Luxusläden und Restaurants, aber sehr teuer.",
+   "goodFor": [
+    "Shopping und Mode",
+    "Gehobene Restaurants"
+   ],
+   "watchOut": [
+    "Sehr teure Bars",
+    "Teure Unterkünfte"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 6,
+     "why": "Viele Lokale, aber meist sehr teuer – „The Ginza has a large array of drinking establishments, most of which are also extremely expensive“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "food": {
+     "v": 6,
+     "why": "Viele gehobene Restaurants – „It is considered the high fashion center of the city and contains many upscale shops and restaurants“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    },
+    "budget": {
+     "v": 2,
+     "why": "Unterkünfte knapp und teuer – „Accommodation in Ginza itself is limited and expensive“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Tokyo/Chuo",
+     "title": "Wikivoyage (en): Tokyo/Chuo"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Tokyo/Ginza",
+     "title": "Wikivoyage (en): Tokyo/Ginza"
+    }
+   ]
+  },
+  {
+   "name": "Shinbashi",
+   "kind": "viertel",
+   "lat": 35.66511,
+   "lon": 139.75612,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Geschäftsviertel mit großem Bahnknoten und günstigeren Hotels als Ginza.",
+   "goodFor": [
+    "Bahnanbindung",
+    "Günstigere Hotels als in Ginza",
+    "Bars rund um den Bahnhof"
+   ],
+   "watchOut": [
+    "Einige zwielichtige Lokale"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 6,
+     "why": "Viele Lokale rund um den Bahnhof, teils fragwürdig – „A large number of drinking establishments, some distinctly dodged, can be found around JR Shinbashi station“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "budget": {
+     "v": 6,
+     "why": "Günstiger als Ginza – „You can shave a fair bit off the price by heading around the corner to Shinbashi“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    },
+    "transit": {
+     "v": 9,
+     "why": "Großer Bahnknoten – „which is a major train hub“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Tokyo/Shinbashi",
+     "title": "Wikivoyage (en): Tokyo/Shinbashi"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Tokyo/Ginza",
+     "title": "Wikivoyage (en): Tokyo/Ginza"
+    }
+   ]
+  },
+  {
+   "name": "Akasaka",
+   "kind": "viertel",
+   "lat": 35.6723,
+   "lon": 139.7365,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Geschäftsviertel mit Konzernzentralen und Luxushotels nahe dem Kaiserpalast.",
+   "goodFor": [
+    "Luxushotels",
+    "Geschäftsreisen"
+   ],
+   "watchOut": [
+    "Hohe Preise für Hotels"
+   ],
+   "values": {
+    "budget": {
+     "v": 2,
+     "why": "Hotels sind teuer – „Akasaka's hotels are all in the business/luxury category and charge a premium for their location“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Tokyo/Akasaka",
+     "title": "Wikivoyage (en): Tokyo/Akasaka"
+    }
+   ]
+  },
+  {
+   "name": "Chiyoda",
+   "kind": "viertel",
+   "lat": 35.6854,
+   "lon": 139.75274,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Zentrum Tokios mit Kaiserpalast, Gärten und Verwaltungsbauten.",
+   "goodFor": [
+    "Kaiserpalast und Gärten",
+    "Büro- und Verwaltungsviertel"
+   ],
+   "watchOut": [
+    "Rechte Propagandafahrzeuge um Yasukuni",
+    "Rauchverbot auf Hauptstraßen"
+   ],
+   "values": {
+    "safety": {
+     "v": 5,
+     "why": "Einschüchternde, aber laut Text ungefährliche Gruppen – „foreigners may get baleful looks from the sunglassed toughs running the show, but they are not a real danger unless actively provoked“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "nature": {
+     "v": 7,
+     "why": "Kaiserpalast mit Gärten und Parks – „zum benachbarten Kaiserpalast mit den angrenzenden Gärten und Parks“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Tokyo/Chiyoda",
+     "title": "Wikivoyage (en): Tokyo/Chiyoda"
+    },
+    {
+     "url": "https://de.wikivoyage.org/wiki/Tokio/Chiyoda",
+     "title": "Wikivoyage (de): Tokio/Chiyoda"
+    }
+   ]
+  },
+  {
+   "name": "Sumida",
+   "kind": "viertel",
+   "lat": 35.7,
+   "lon": 139.8167,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Östlicher Bezirk mit Skytree-Umgebung, Sumida-Fluss und Sumō-Viertel Ryōgoku.",
+   "goodFor": [
+    "Skytree und Edo-Tokyo-Museum",
+    "Kirschblüten am Sumida-Fluss"
+   ],
+   "watchOut": [
+    "Wenige Unterkünfte"
+   ],
+   "values": {
+    "transit": {
+     "v": 8,
+     "why": "Mehrere U-Bahn-Linien, u. a. bis Oshiage – „Von der U-Bahn fährt die Asakusa-Linie (A) von West nach Ost bis Oshiage“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "nature": {
+     "v": 7,
+     "why": "Berühmter Kirschblütenbereich am Fluss – „It has a famous cherry blossom viewing area along the Sumida River near Asakusa Station in spring“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/Tokio/Sumida",
+     "title": "Wikivoyage (de): Tokio/Sumida"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Tokyo/Sumida",
+     "title": "Wikivoyage (en): Tokyo/Sumida"
+    }
+   ]
+  },
+  {
+   "name": "Taito",
+   "kind": "viertel",
+   "lat": 35.7126083,
+   "lon": 139.779994,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Östlicher Bezirk mit Ueno und Asakusa, günstig und volkstümlich.",
+   "goodFor": [
+    "Günstige Unterkünfte",
+    "Traditionelle Viertel"
+   ],
+   "watchOut": [
+    "Teile von San'ya gelten als heruntergekommen"
+   ],
+   "values": {
+    "budget": {
+     "v": 9,
+     "why": "Sehr gute Auswahl an günstigen Unterkünften – „Taito has Tokyo's best range of cheap to midrange accommodation“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Tokyo/Taito",
+     "title": "Wikivoyage (en): Tokyo/Taito"
+    }
+   ]
+  },
+  {
+   "name": "Bunkyō",
+   "kind": "viertel",
+   "lat": 35.716667,
+   "lon": 139.75,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Zentraler Bezirk mit Universität Tokio und historischen Parks und Villen.",
+   "goodFor": [
+    "Historische Parks und Villen",
+    "Universitätsgelände"
+   ],
+   "watchOut": [
+    "Keine Yamanote-Station im Bezirk"
+   ],
+   "values": {
+    "nature": {
+     "v": 7,
+     "why": "Mehrere historische Parks – „best known as the home of the sprawling University of Tokyo and a series of aristocratic parks and villas“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Tokyo/Bunkyo",
+     "title": "Wikivoyage (en): Tokyo/Bunkyo"
+    }
+   ]
+  }
+ ]
+}

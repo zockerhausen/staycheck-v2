@@ -1,0 +1,66 @@
+{
+ "v": 1,
+ "slug": "ubud",
+ "generated": "2026-11-07",
+ "model": "claude-haiku-5-5 (nur Wikivoyage-Text, Zitate geprüft)",
+ "areas": [
+  {
+   "name": "Ubud",
+   "kind": "viertel",
+   "lat": -8.496143,
+   "lon": 115.2622378,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Das kulturelle und künstlerische Zentrum Balis, in dem Ruhe und Atmosphäre eher im Umland als im Ortskern zu finden sind.",
+   "goodFor": [
+    "Kunst und Kultur",
+    "Reisende, die Ruhe und Atmosphäre suchen"
+   ],
+   "watchOut": [
+    "Starker Verkehr und Lärm im Zentrum",
+    "Affen im Monkey Forest",
+    "Geldwechsler mit Betrugsmasche"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 2,
+     "why": "Kaum Nachtleben, eher ruhige Getränke zum Abendessen – „Ubud is emphatically not party town: there are a few places for a quiet drink“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "quiet": {
+     "v": 3,
+     "why": "Im Zentrum laut und stickig durch viele Fahrzeuge – „everyone has to deal with the noise and smell from so many vehicles in a small area“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "safety": {
+     "v": 8,
+     "why": "Insgesamt als sicher beschrieben, mit wenigen Problemen – „Ubud is a safe town to visit and few problems will ever be encountered.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "nature": {
+     "v": 6,
+     "why": "Reisterrassen entlang der Flüsse, besonders außerhalb des Zentrums – „there are still terraced rice fields along the rivers“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Ubud",
+     "title": "Wikivoyage (en): Ubud"
+    }
+   ]
+  }
+ ]
+}

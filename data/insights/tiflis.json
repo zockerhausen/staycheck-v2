@@ -1,0 +1,171 @@
+{
+ "v": 1,
+ "slug": "tiflis",
+ "generated": "2026-11-07",
+ "model": "claude-haiku-5-5 (nur Wikivoyage-Text, Zitate geprüft)",
+ "areas": [
+  {
+   "name": "Kala",
+   "kind": "viertel",
+   "lat": 41.6932941,
+   "lon": 44.8054025,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Das mittelalterliche Stadtzentrum mit engen Gassen, alten Holzbalkonhäusern und vielen Kirchen, mit Nachtleben rund um die Markthallen.",
+   "goodFor": [
+    "Altstadt erkunden",
+    "Kirchen und Sehenswürdigkeiten",
+    "Bars und Cocktails"
+   ],
+   "watchOut": [
+    "Alte Häuser teils in schlechtem Zustand",
+    "Bei Regen können Gassen überflutet werden"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 8,
+     "why": "Cocktailbars, Clubs und Bars in der Altstadt. – „Die Hotspots des Nachtlebens befinden sich rund um die alten Markthallen in der Chardeni-Straße und in der Erekle II.Straße.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/Tiflis/Kala",
+     "title": "Wikivoyage (de): Tiflis/Kala"
+    }
+   ]
+  },
+  {
+   "name": "Tschughureti",
+   "kind": "viertel",
+   "lat": 41.709,
+   "lon": 44.8,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Die ehemalige deutsche Kolonie auf dem linken Mtkwari-Ufer mit alten Ziegelhäusern rund um die Aghmaschenebeli-Straße.",
+   "goodFor": [
+    "Historische Architektur",
+    "Günstige Unterkunft"
+   ],
+   "watchOut": [
+    "Alte Bausubstanz oft heruntergekommen",
+    "Sanierungen teils umstritten"
+   ],
+   "values": {
+    "budget": {
+     "v": 8,
+     "why": "Viele sehr günstige Hostels, Angebot wechselt häufig. – „In der Gegend gibt es dutzende Hostels (ab 5 Euro pro Nacht), die jedoch immer wieder zusperren, dafür sperren andere wieder auf.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/Tiflis/Tschughureti",
+     "title": "Wikivoyage (de): Tiflis/Tschughureti"
+    }
+   ]
+  },
+  {
+   "name": "Rike",
+   "kind": "viertel",
+   "lat": 41.69378,
+   "lon": 44.81024,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Der neu angelegte Park unterhalb von Avlabari, im Winter mit Neujahrsmarkt.",
+   "goodFor": [
+    "Grünfläche in der Stadtmitte",
+    "Spaziergänge am Fluss"
+   ],
+   "watchOut": [
+    "Im Winter oft voll mit Festtagsbesuchern"
+   ],
+   "values": {
+    "nature": {
+     "v": 8,
+     "why": "Neu angelegter Park nahe am Zentrum. – „Unterhalb, etwas nördlich von Awlabari, erstreckt sich der neu angelegte Rike-Park.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/Tiflis/Awlabari",
+     "title": "Wikivoyage (de): Tiflis/Awlabari"
+    }
+   ]
+  },
+  {
+   "name": "Vake",
+   "kind": "viertel",
+   "lat": 41.7096,
+   "lon": 44.7628,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Gehobenes Wohnviertel westlich des Zentrums mit großem Park und vielen Botschaften und NGOs.",
+   "goodFor": [
+    "Parks und Wald",
+    "Ruhige Wohngegend"
+   ],
+   "watchOut": [
+    "Teuer und vor allem von Wohlhabenden bewohnt"
+   ],
+   "values": {
+    "nature": {
+     "v": 9,
+     "why": "Einer der größten Parks der Stadt direkt im Viertel. – „abgegrenzt im Westen wird Vake durch den Vake-Park, einer der größten Parks der Stadt“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/Tiflis/Vake",
+     "title": "Wikivoyage (de): Tiflis/Vake"
+    }
+   ]
+  },
+  {
+   "name": "Didube",
+   "kind": "viertel",
+   "lat": 41.734,
+   "lon": 44.7841,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Ehemalige deutsche Siedlung Alexanderdorf, heute geprägt von Industrie, Wohnblöcken und großen Märkten.",
+   "goodFor": [
+    "Märkte für Obst und Gemüse",
+    "Alltagsleben abseits der Touristenzentren"
+   ],
+   "watchOut": [
+    "Viele Industrieanlagen und leerstehende Fabriken"
+   ],
+   "values": {
+    "food": {
+     "v": 5,
+     "why": "Märkte, aber keine Restaurants genannt. – „aber auch von großen Märkten, die von Baumaterial bis Obst und Gemüse fast alles verkaufen.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/Tiflis/Didube",
+     "title": "Wikivoyage (de): Tiflis/Didube"
+    }
+   ]
+  }
+ ]
+}

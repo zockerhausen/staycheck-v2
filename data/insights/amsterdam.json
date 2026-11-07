@@ -1,0 +1,440 @@
+{
+ "v": 1,
+ "slug": "amsterdam",
+ "generated": "2026-11-07",
+ "model": "claude-haiku-5-5 (nur Wikivoyage-Text, Zitate geprüft)",
+ "areas": [
+  {
+   "name": "Grachtengordel",
+   "kind": "viertel",
+   "lat": 52.3667342,
+   "lon": 4.885005,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Das UNESCO-Grachtenviertel aus dem 17. Jahrhundert mit Ausgehmeile rund um Leidseplein und Rembrandtplein.",
+   "goodFor": [
+    "Grachten",
+    "Nachtleben"
+   ],
+   "watchOut": [
+    "Teure Preise in den Ausgehvierteln"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 8,
+     "why": "Viele kleinere Bars und Kneipen zwischen den Plätzen – „In between these squares are plenty of smaller bars and pubs that are also fun in the daytime.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Amsterdam/Canal_District",
+     "title": "Wikivoyage (en): Amsterdam/Canal District"
+    }
+   ]
+  },
+  {
+   "name": "Leidseplein",
+   "kind": "viertel",
+   "lat": 52.36396,
+   "lon": 4.88276,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Einer der beiden wichtigsten Ausgehplätze der Stadt, mit vielen Touristenfallen.",
+   "goodFor": [
+    "Nachtleben",
+    "Clubs"
+   ],
+   "watchOut": [
+    "Hohe Preise",
+    "Abzocke"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 9,
+     "why": "Eines der Hauptzentren des Nachtlebens – „The Leidseplein and Rembrandtplein are the city's prime nightlife spots.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "budget": {
+     "v": 3,
+     "why": "Relativ hohe Preise – „They have relatively high prices with lots of scams.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "safety": {
+     "v": 3,
+     "why": "Viele Abzocken und hohe Preise – „Leidseplein and Rembrandtplein are the tourist traps of Amsterdam. They have relatively high prices with lots of scams.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Amsterdam",
+     "title": "Wikivoyage (en): Amsterdam"
+    }
+   ]
+  },
+  {
+   "name": "Rembrandtplein",
+   "kind": "viertel",
+   "lat": 52.36598,
+   "lon": 4.89661,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Zweites Ausgehzentrum der Stadt neben dem Leidseplein.",
+   "goodFor": [
+    "Nachtleben"
+   ],
+   "watchOut": [
+    "Hohe Preise",
+    "Abzocke"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 9,
+     "why": "Eines von zwei Clubzentren – „Nightclubs in Amsterdam are centered around two squares, Leidseplein and Rembrandtplein.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "budget": {
+     "v": 3,
+     "why": "Relativ hohe Preise – „They have relatively high prices with lots of scams.“",
+     "src": [
+      1
+     ],
+     "w": 1.0
+    },
+    "safety": {
+     "v": 3,
+     "why": "Viele Abzocken und hohe Preise – „Leidseplein and Rembrandtplein are the tourist traps of Amsterdam. They have relatively high prices with lots of scams.“",
+     "src": [
+      1
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Amsterdam/Canal_District",
+     "title": "Wikivoyage (en): Amsterdam/Canal District"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Amsterdam",
+     "title": "Wikivoyage (en): Amsterdam"
+    }
+   ]
+  },
+  {
+   "name": "Jordaan",
+   "kind": "viertel",
+   "lat": 52.3754157,
+   "lon": 4.8810958,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Ehemaliges Arbeiterviertel, heute mit Galerien, Boutiquen und Restaurants.",
+   "goodFor": [
+    "Galerien",
+    "Boutiquen",
+    "Restaurants"
+   ],
+   "watchOut": [
+    "Eher gehobene Preise"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 5,
+     "why": "Eher alternative Musik-Bars statt Mainstream-Clubs – „Unlike the mainstream bars and clubs in the Canal District, the Jordaan offers a different atmosphere with obscure rock, metal and alternative music.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "food": {
+     "v": 7,
+     "why": "Bekannt für Boutique-Restaurants – „known for its art galleries, speciality shops and boutique restaurants“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "budget": {
+     "v": 5,
+     "why": "Unterkünfte im mittleren Preisbereich – „The Jordaan is another area for hip boutique accommodations, slightly upmarket, but still for mid-range prices.“",
+     "src": [
+      1
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Amsterdam/Jordaan",
+     "title": "Wikivoyage (en): Amsterdam/Jordaan"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Amsterdam",
+     "title": "Wikivoyage (en): Amsterdam"
+    }
+   ]
+  },
+  {
+   "name": "Plantage",
+   "kind": "viertel",
+   "lat": 52.3657049,
+   "lon": 4.9136608,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Grünes, weitläufiges Viertel mit botanischem Garten und Zoo.",
+   "goodFor": [
+    "Grün",
+    "Botanischer Garten",
+    "Zoo"
+   ],
+   "watchOut": [],
+   "values": {
+    "nature": {
+     "v": 9,
+     "why": "Grün mit botanischem Garten und Zoo – „Plantage, a leafy and spacious area with botanical gardens and the zoo.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Amsterdam",
+     "title": "Wikivoyage (en): Amsterdam"
+    }
+   ]
+  },
+  {
+   "name": "Centrum",
+   "kind": "viertel",
+   "lat": 52.3682393,
+   "lon": 4.9006605,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Mittelalterliche Altstadt innerhalb der Singelgracht mit vielen Sehenswürdigkeiten und Gastronomie.",
+   "goodFor": [
+    "Sehenswürdigkeiten",
+    "Gastronomie",
+    "Nachtleben"
+   ],
+   "watchOut": [
+    "Taschendiebstahl",
+    "Offene Drogenszene"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 7,
+     "why": "Zentren des Nachtlebens in der Innenstadt – „Neben den Walletjes (Amsterdam/Rosse Buurt) sind vor allem das Rembrandtplein und das Leidseplein Zentren des städtischen Nachtlebens.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "food": {
+     "v": 8,
+     "why": "Gute asiatische Restaurants und Imbisse – „The Zeedijk particularly offers some great Asian restaurants and snack joints.“",
+     "src": [
+      1
+     ],
+     "w": 1.0
+    },
+    "safety": {
+     "v": 4,
+     "why": "Viel Kleinkriminalität wie Taschendiebstahl – „Vor allem in der Innenstadt gibt es nicht zuletzt wegen der offenen Drogenszene viel Kleinkriminalität wie etwa Taschendiebstahl.“",
+     "src": [
+      2
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://de.wikivoyage.org/wiki/Amsterdam/Centrum",
+     "title": "Wikivoyage (de): Amsterdam/Centrum"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Amsterdam/Binnenstad",
+     "title": "Wikivoyage (en): Amsterdam/Binnenstad"
+    },
+    {
+     "url": "https://de.wikivoyage.org/wiki/Amsterdam",
+     "title": "Wikivoyage (de): Amsterdam"
+    }
+   ]
+  },
+  {
+   "name": "Dam",
+   "kind": "viertel",
+   "lat": 52.37312,
+   "lon": 4.89235,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Zentraler Platz mit Königlichem Palast, aber teuren Bars.",
+   "goodFor": [
+    "Sehenswürdigkeiten"
+   ],
+   "watchOut": [
+    "Sehr teure Bars",
+    "Schlechte Atmosphäre"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 3,
+     "why": "Bars sehr teuer, daher wenig empfehlenswert – „Avoid all bars in and around the Dam Square area, they're among the most expensive in the country.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Amsterdam/Binnenstad",
+     "title": "Wikivoyage (en): Amsterdam/Binnenstad"
+    }
+   ]
+  },
+  {
+   "name": "Nieuwmarkt/Lastage",
+   "kind": "viertel",
+   "lat": 52.37218,
+   "lon": 4.90635,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Platz mit vielen Cafés, besser zum Ausgehen als der Dam.",
+   "goodFor": [
+    "Kneipen",
+    "Cafés"
+   ],
+   "watchOut": [],
+   "values": {
+    "nightlife": {
+     "v": 7,
+     "why": "Gute Kneipenlage – „Better pubbing areas are the Nieuwmarkt and the small streets (such as Handboogstraat) that border the Spui.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Amsterdam/Binnenstad",
+     "title": "Wikivoyage (en): Amsterdam/Binnenstad"
+    }
+   ]
+  },
+  {
+   "name": "Oost",
+   "kind": "viertel",
+   "lat": 52.35967,
+   "lon": 4.96239,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Großer, vielfältiger Wohnbezirk rund um den Oosterpark.",
+   "goodFor": [
+    "Parks",
+    "Märkte"
+   ],
+   "watchOut": [
+    "Einige Gebiete östlich des Oosterparks unangenehm"
+   ],
+   "values": {
+    "safety": {
+     "v": 6,
+     "why": "Größtenteils sicher, einige Bereiche problematisch – „Oost is largely safe, but there are some neighbourhoods east of Oosterpark where some travelers might not feel comfortable.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "nature": {
+     "v": 8,
+     "why": "Großer Park rund um den Oosterpark – „Directly south of the Plantage is the Oosterpark, the first large park financed by the municipality of Amsterdam, as it dates from 1891“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Amsterdam",
+     "title": "Wikivoyage (en): Amsterdam"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Amsterdam/Oost",
+     "title": "Wikivoyage (en): Amsterdam/Oost"
+    }
+   ]
+  },
+  {
+   "name": "De Pijp",
+   "kind": "viertel",
+   "lat": 52.3533455,
+   "lon": 4.8969623,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Lebendiges Viertel mit Albert-Cuyp-Markt und Studentenkneipen am Heinekenplein.",
+   "goodFor": [
+    "Märkte",
+    "Nachtleben",
+    "Studentenkneipen"
+   ],
+   "watchOut": [],
+   "values": {
+    "nightlife": {
+     "v": 8,
+     "why": "Ausgehviertel für Studenten und Bierfans – „the area around the Heinekenplein is Amsterdam's equivalent of Paris' Quartier Latin, a going-out area for students and beer lovers.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "food": {
+     "v": 7,
+     "why": "Bekannter Straßenmarkt – „The Albert Cuyp Market, a large working-class street market, is a nationally famous attraction“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "budget": {
+     "v": 7,
+     "why": "Günstige Schnäppchen auf dem Markt – „go hunt for bargains at the Albert Cuyp Market in multicultural De Pijp“",
+     "src": [
+      1
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Amsterdam/Zuid",
+     "title": "Wikivoyage (en): Amsterdam/Zuid"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Amsterdam",
+     "title": "Wikivoyage (en): Amsterdam"
+    }
+   ]
+  }
+ ]
+}

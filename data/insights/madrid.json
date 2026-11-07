@@ -1,0 +1,470 @@
+{
+ "v": 1,
+ "slug": "madrid",
+ "generated": "2026-11-07",
+ "model": "claude-haiku-5-5 (nur Wikivoyage-Text, Zitate geprüft)",
+ "areas": [
+  {
+   "name": "Barrio de las Letras",
+   "kind": "viertel",
+   "lat": 40.41527,
+   "lon": -3.70089,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Lebhaftes Viertel mit vielen Bars, Restaurants und Hotels rund um die Calle Huertas.",
+   "goodFor": [
+    "Ausgehen",
+    "Essen gehen",
+    "Bars und Kneipen"
+   ],
+   "watchOut": [
+    "Hotelzimmer zur Straße können nachts laut sein"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 9,
+     "why": "Beliebtes Ausgehviertel mit vielen Bars – „One of the best options to enjoy the nightlife is in the popular quarter Barrio de las Letras“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "food": {
+     "v": 8,
+     "why": "Hohe Dichte an Restaurants und Bars – „the writers' quarter with a high concentration of bars, pubs, restaurants and hotels“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "budget": {
+     "v": 6,
+     "why": "Viele günstige Budget-Hotels in der Gegend – „Many of them can be found in the Barrio de las Letras or Chueca district.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Madrid",
+     "title": "Wikivoyage (en): Madrid"
+    }
+   ]
+  },
+  {
+   "name": "Barrio de la Latina",
+   "kind": "viertel",
+   "lat": 40.41238,
+   "lon": -3.71106,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Altstadtviertel mit engen Gassen, bunten Häusern und typischen Tapas-Bars.",
+   "goodFor": [
+    "Tapas",
+    "Madrider Volkstraditionen",
+    "Flohmarkt El Rastro"
+   ],
+   "watchOut": [
+    "Enge Gassen, Lieferverkehr kann Staus verursachen"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 7,
+     "why": "Gute Auswahl an Bars – „A great choice of bars is also available in the more traditional La Latina area“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "food": {
+     "v": 9,
+     "why": "Typisch für Tapas, Sherry und Vermouth – „This is the place to go to experience Madrilene folk traditions, taste original tapas, sherry or vermouth on tap.“",
+     "src": [
+      1
+     ],
+     "w": 0.75
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Madrid",
+     "title": "Wikivoyage (en): Madrid"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Madrid/La_Latina-Austrias",
+     "title": "Wikivoyage (en): Madrid/La Latina-Austrias"
+    }
+   ]
+  },
+  {
+   "name": "Barrio de los Austrias",
+   "kind": "viertel",
+   "lat": 40.41534,
+   "lon": -3.70823,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Historisches Zentrum der Macht mit Königspalast, Plaza Mayor und vielen Sehenswürdigkeiten.",
+   "goodFor": [
+    "Sehenswürdigkeiten",
+    "Geschichte",
+    "Cafés"
+   ],
+   "watchOut": [
+    "Hohe Touristendichte"
+   ],
+   "values": {
+    "food": {
+     "v": 6,
+     "why": "Viele Cafés und Konditoreien – „but the highest concentration can be found around Puerta del Sol, barrio de las Austrias“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "budget": {
+     "v": 5,
+     "why": "Einfache Hostels mit moderaten Preisen – „There are also a bit more comfortable hostels offering single rooms for €30–40, doubles for €40–50, e.g. in Malasaña or the barrio de las Austrias.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Madrid",
+     "title": "Wikivoyage (en): Madrid"
+    }
+   ]
+  },
+  {
+   "name": "Plaza Mayor",
+   "kind": "viertel",
+   "lat": 40.41539,
+   "lon": -3.707,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Zentraler historischer Platz, der viele Touristen anzieht.",
+   "goodFor": [
+    "Sehenswürdigkeit",
+    "Spaziergang"
+   ],
+   "watchOut": [
+    "Viele Betrüger und Abzocke"
+   ],
+   "values": {
+    "safety": {
+     "v": 3,
+     "why": "Hohes Risiko für Betrug – „Plaza Mayor and Puerta del Sol might be beauties to look at, but they are Meccas for scams.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Madrid",
+     "title": "Wikivoyage (en): Madrid"
+    }
+   ]
+  },
+  {
+   "name": "Malasaña",
+   "kind": "viertel",
+   "lat": 40.42671,
+   "lon": -3.70423,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Hippes, alternatives Viertel mit Vintage-Läden, Cafés und Bars.",
+   "goodFor": [
+    "Ausgehen",
+    "Shopping",
+    "Cafés"
+   ],
+   "watchOut": [
+    "Nachts Lärm in den Straßen"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 8,
+     "why": "Viele Bars und Lokale am Abend – „At night, the pavements are occupied by tables of bars and restaurants as well as people just spending time with friends.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "food": {
+     "v": 7,
+     "why": "Tapas-Bars in der Gegend verbreitet – „but you will find them all over the city, including Malasaña and Chueca as well as the western districts“",
+     "src": [
+      1
+     ],
+     "w": 1.0
+    },
+    "budget": {
+     "v": 6,
+     "why": "Moderate Hostelpreise – „There are also a bit more comfortable hostels offering single rooms for €30–40, doubles for €40–50, e.g. in Malasaña or the barrio de las Austrias.“",
+     "src": [
+      1
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Madrid/Malasa%C3%B1a-Chueca",
+     "title": "Wikivoyage (en): Madrid/Malasaña-Chueca"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Madrid",
+     "title": "Wikivoyage (en): Madrid"
+    }
+   ]
+  },
+  {
+   "name": "Chueca",
+   "kind": "viertel",
+   "lat": 40.42274,
+   "lon": -3.69933,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Lebendiges Viertel, bekannt als Madrids Szene-Viertel mit trendigen Läden und Musik.",
+   "goodFor": [
+    "Ausgehen",
+    "Trendige Läden",
+    "Cafés"
+   ],
+   "watchOut": [
+    "Nachts lebhaft und laut"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 7,
+     "why": "Bars und Musik für junges Publikum – „in the younger and alternative-flavoured Malasaña and Chueca districts“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "food": {
+     "v": 7,
+     "why": "Tapas-Bars in der Gegend verbreitet – „but you will find them all over the city, including Malasaña and Chueca as well as the western districts“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "budget": {
+     "v": 6,
+     "why": "Viele Budget-Hotels in der Gegend – „Many of them can be found in the Barrio de las Letras or Chueca district.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Madrid",
+     "title": "Wikivoyage (en): Madrid"
+    }
+   ]
+  },
+  {
+   "name": "Salamanca",
+   "kind": "viertel",
+   "lat": 40.4270451,
+   "lon": -3.6806024,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Madrids teuerstes Viertel mit Luxusboutiquen und gehobenen Hotels.",
+   "goodFor": [
+    "Luxus-Shopping",
+    "Gehobene Hotels"
+   ],
+   "watchOut": [
+    "Sehr teuer"
+   ],
+   "values": {
+    "food": {
+     "v": 6,
+     "why": "Gehobene Restaurants vorhanden – „Branches of international luxury brands, upscale restaurants, nightlife venues and hotels are found here.“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "budget": {
+     "v": 2,
+     "why": "Sehr teuer – „Madrid's fanciest (and most expensive) neighbourhood“",
+     "src": [
+      1
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Madrid/Salamanca",
+     "title": "Wikivoyage (en): Madrid/Salamanca"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Madrid",
+     "title": "Wikivoyage (en): Madrid"
+    }
+   ]
+  },
+  {
+   "name": "Chamberí",
+   "kind": "viertel",
+   "lat": 40.4389621,
+   "lon": -3.705302,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Ruhiges Wohnviertel nördlich des Zentrums mit alltäglichem Madrider Leben.",
+   "goodFor": [
+    "Günstige Unterkunft",
+    "Alltagsleben der Madrider"
+   ],
+   "watchOut": [
+    "Wenig touristische Attraktionen"
+   ],
+   "values": {
+    "quiet": {
+     "v": 7,
+     "why": "Überwiegend Wohngegend, wenig Touristen – „It is mostly residential and little frequented by tourists“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "food": {
+     "v": 6,
+     "why": "Lokale Restaurants und Cafés – „with shops, restaurants and cafés that are mostly frequented by Madrilenians“",
+     "src": [
+      0
+     ],
+     "w": 0.75
+    },
+    "budget": {
+     "v": 7,
+     "why": "Günstige Unterkunft und Essen – „may be a reasonable choice for affordable lodging and dining close to the locals' everyday life“",
+     "src": [
+      1
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Madrid/Chamber%C3%AD-Castellana",
+     "title": "Wikivoyage (en): Madrid/Chamberí-Castellana"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Madrid",
+     "title": "Wikivoyage (en): Madrid"
+    }
+   ]
+  },
+  {
+   "name": "Retiro",
+   "kind": "viertel",
+   "lat": 40.4111495,
+   "lon": -3.6760566,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Östliches Zentrum mit dem großen Parque del Buen Retiro und Museen am Paseo del Arte.",
+   "goodFor": [
+    "Parks",
+    "Museen",
+    "Spaziergänge"
+   ],
+   "watchOut": [
+    "Teils Touristenandrang"
+   ],
+   "values": {
+    "nature": {
+     "v": 10,
+     "why": "Riesiger Stadtpark – „Parque del Buen Retiro is a huge urban park, one of the green lungs of Madrid“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Madrid",
+     "title": "Wikivoyage (en): Madrid"
+    }
+   ]
+  },
+  {
+   "name": "Moncloa",
+   "kind": "viertel",
+   "lat": 40.438,
+   "lon": -3.754,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Studentisches Viertel im Westen mit günstigen Bars und Discos.",
+   "goodFor": [
+    "Günstig ausgehen",
+    "Studentenleben"
+   ],
+   "watchOut": [
+    "Weniger Sehenswürdigkeiten"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 6,
+     "why": "Günstige Bars und Discos – „Moncloa is associated with students and a student lifestyle, with many cheap bars and discos“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Madrid",
+     "title": "Wikivoyage (en): Madrid"
+    }
+   ]
+  },
+  {
+   "name": "Arganzuela",
+   "kind": "viertel",
+   "lat": 40.3969535,
+   "lon": -3.6972891,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Früher Arbeiterviertel, heute geprägt von einem großen Grünstreifen am Fluss.",
+   "goodFor": [
+    "Parks am Fluss",
+    "Kultur"
+   ],
+   "watchOut": [
+    "Im Umbau"
+   ],
+   "values": {
+    "nature": {
+     "v": 8,
+     "why": "Lange Grünanlage an beiden Flussufern – „replaced a city motorway by a unique 6-km long public garden strip on both banks of Río Manzanares“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Madrid",
+     "title": "Wikivoyage (en): Madrid"
+    }
+   ]
+  }
+ ]
+}

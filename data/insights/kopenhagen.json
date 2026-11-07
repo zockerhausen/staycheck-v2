@@ -1,0 +1,382 @@
+{
+ "v": 1,
+ "slug": "kopenhagen",
+ "generated": "2026-11-07",
+ "model": "claude-haiku-5-5 (nur Wikivoyage-Text, Zitate geprüft)",
+ "areas": [
+  {
+   "name": "Indre By",
+   "kind": "viertel",
+   "lat": 55.6830868,
+   "lon": 12.583001,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Historisches Zentrum mit den meisten Sehenswürdigkeiten, Hotels und Ausgehmöglichkeiten.",
+   "goodFor": [
+    "Sehenswürdigkeiten",
+    "Shopping",
+    "Nachtleben"
+   ],
+   "watchOut": [
+    "Öffentlicher Verkehr nur eingeschränkt nützlich"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 6,
+     "why": "Viele Ausgehmöglichkeiten im Zentrum, genaue Qualität nicht beschrieben – „Referred to by locals simply as City, it is the home of most of Copenhagen's attractions, nightlife options, and hotels.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "transit": {
+     "v": 4,
+     "why": "Nur wenige Stationen am Rand, im Zentrum wenig Anbindung – „both the metro and the railway lines circle the Indre By with only two stations each.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "nature": {
+     "v": 7,
+     "why": "Viele Parks entlang der ehemaligen Wallanlagen – „are now a string of parks; Østre Anlæg, with the National gallery, the Botanical gardens, Ørsteds Parken and finally Tivoli.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Copenhagen/Indre_By",
+     "title": "Wikivoyage (en): Copenhagen/Indre By"
+    }
+   ]
+  },
+  {
+   "name": "Vesterbro",
+   "kind": "viertel",
+   "lat": 55.66603,
+   "lon": 12.55231,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Früher rau, heute beliebtes Viertel mit Cafés, Bars und Restaurants entlang Istedgade und Vesterbrogade.",
+   "goodFor": [
+    "Ausgehen",
+    "Essen",
+    "Trinken am Abend"
+   ],
+   "watchOut": [
+    "Drogenhandel und Prostitution rund um Istedgade und …"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 8,
+     "why": "Im Text als gute Gegend zum Trinken genannt – „Other good areas are Vesterbro west of the central station, along Vesterbrogade and Istedgade and in the meatpacking district.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "food": {
+     "v": 7,
+     "why": "Vielfältige Restaurants von günstig bis teuer – „The district is also home to an increasing number of restaurants, from budget to expensive“",
+     "src": [
+      1
+     ],
+     "w": 1.0
+    },
+    "budget": {
+     "v": 7,
+     "why": "Hinter dem Hauptbahnhof gibt es die günstigsten Hotels – „the area behind the Central station away from downtown and Tivoli, is where you find the city's cheapest hotel accommodation.“",
+     "src": [
+      1
+     ],
+     "w": 1.0
+    },
+    "safety": {
+     "v": 4,
+     "why": "Problemzonen bestehen, Polizei verbessert aber die Lage – „particularly on Istedgade and near Halmtorvet, increased police efforts have been focused on improving safety“",
+     "src": [
+      1
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Copenhagen",
+     "title": "Wikivoyage (en): Copenhagen"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Copenhagen/Vesterbro",
+     "title": "Wikivoyage (en): Copenhagen/Vesterbro"
+    }
+   ]
+  },
+  {
+   "name": "Nørrebro",
+   "kind": "viertel",
+   "lat": 55.69589,
+   "lon": 12.54496,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Multikulturelles, lebhaftes Viertel mit günstigen Essensangeboten und Nachtleben rund um Sankt Hans Torv.",
+   "goodFor": [
+    "Nachtleben",
+    "Günstiges Essen",
+    "Multikulturelle Atmosphäre"
+   ],
+   "watchOut": [
+    "Erhöhte Vorsicht empfohlen",
+    "Westliche Vororte ebenfalls heikel"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 9,
+     "why": "Sehr lebendiges Nachtleben, besonders im Süden – „the nightlife here is very vibrant - especially the southern part of the district near the Lakes, around Sankt Hans Torv“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "food": {
+     "v": 7,
+     "why": "Viele günstige Imbisse – „the multitude of cheap shawarma places offering a cheap bite of Middle Eastern cuisine“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "budget": {
+     "v": 7,
+     "why": "Zwei der günstigsten Unterkünfte der Stadt – „Two of the cheapest accommodation options of Copenhagen are here.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "safety": {
+     "v": 5,
+     "why": "Im Text wird zu erhöhter Vorsicht geraten – „extra precaution is advised in the neighbourhood of Nørrebro and in the western suburbs.“",
+     "src": [
+      1
+     ],
+     "w": 1.0
+    },
+    "transit": {
+     "v": 6,
+     "why": "Buslinien entlang der Hauptstraße – „Bus lines 5A and 350S runs the length of Nørrebrogade, the major artery, if your feet gives up on you.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Copenhagen/N%C3%B8rrebro",
+     "title": "Wikivoyage (en): Copenhagen/Nørrebro"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Copenhagen",
+     "title": "Wikivoyage (en): Copenhagen"
+    }
+   ]
+  },
+  {
+   "name": "Østerbro",
+   "kind": "viertel",
+   "lat": 55.7050841,
+   "lon": 12.5826141,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Ruhiges, wohlhabendes Wohnviertel nördlich des Zentrums mit Cafés, Läden und großem Park.",
+   "goodFor": [
+    "Ruhe",
+    "Cafés",
+    "Spaziergänge im Grünen"
+   ],
+   "watchOut": [
+    "Kaum Nachtleben",
+    "Wenig Hotels"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 2,
+     "why": "Kaum Ausgehmöglichkeiten – „Østerbro is not the place for raving nightlife, apart the Office and partly Café Bopa.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "quiet": {
+     "v": 8,
+     "why": "Ruhige Straßen mit Bäumen – „With its quiet cobblestone and tree lined streets, and its excellent shopping and cafe life“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "transit": {
+     "v": 6,
+     "why": "Bus 1A fährt alle 5 Minuten – „Bus 1A runs every 5 minutes and stops close to most attractions and places to eat and drink.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "nature": {
+     "v": 8,
+     "why": "Großer Park Fælledparken prägt das Viertel – „traces of which is still visible in the huge park; Fælledparken, dominating the area.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Copenhagen/%C3%98sterbro",
+     "title": "Wikivoyage (en): Copenhagen/Østerbro"
+    }
+   ]
+  },
+  {
+   "name": "Christianshavn",
+   "kind": "viertel",
+   "lat": 55.6723737,
+   "lon": 12.5885782,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Trendiges Viertel auf einer künstlichen Insel mit Kanälen, Cafés und alten Seemannskneipen.",
+   "goodFor": [
+    "Spaziergänge an Kanälen",
+    "Cafés",
+    "Kneipen"
+   ],
+   "watchOut": [
+    "Enge Straßen zum Radfahren"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 5,
+     "why": "Traditionelle Kneipen, Umfang nicht genauer beschrieben – „the century-old watering holes of sailors still handing out beers and snaps to thirsty passers by.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "quiet": {
+     "v": 7,
+     "why": "Kleine, ruhige Straßen – „Christianshavn's small, quiet streets are excellent for sightseeing on a bike“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "transit": {
+     "v": 6,
+     "why": "Buslinie ins Viertel, Citybikes verfügbar – „Bus line 9A enters Christianshavn over the Knippels bridge, from the city centre“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "nature": {
+     "v": 7,
+     "why": "Viele Kanäle prägen das Viertel – „A thriving area notable for its many canals and cozy cafes.“",
+     "src": [
+      1
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Copenhagen/Christianshavn",
+     "title": "Wikivoyage (en): Copenhagen/Christianshavn"
+    },
+    {
+     "url": "https://en.wikivoyage.org/wiki/Copenhagen",
+     "title": "Wikivoyage (en): Copenhagen"
+    }
+   ]
+  },
+  {
+   "name": "Christiania",
+   "kind": "viertel",
+   "lat": 55.6735889,
+   "lon": 12.5997111,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Selbstverwaltete Freistadt mit offenem Cannabishandel, die als eigene Welt mit besonderen Regeln gilt.",
+   "goodFor": [
+    "Besondere Atmosphäre",
+    "Kultur und Konzerte"
+   ],
+   "watchOut": [
+    "Offener Cannabishandel",
+    "Keine Fotos am Pusher Street",
+    "Organisierte Dealer mit Gangbezug"
+   ],
+   "values": {
+    "safety": {
+     "v": 3,
+     "why": "Dealer teils mit Gangs verbunden, Fotoverbot und Drohungen möglich – „Some of the cannabis sellers are employed by gangs.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Copenhagen/Christiania",
+     "title": "Wikivoyage (en): Copenhagen/Christiania"
+    }
+   ]
+  },
+  {
+   "name": "Frederiksberg",
+   "kind": "viertel",
+   "lat": 55.6667,
+   "lon": 12.5333,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Eigenständige Enklave innerhalb Kopenhagens mit Parks, Villen und breiten Alleen.",
+   "goodFor": [
+    "Parks",
+    "Ruhige Spaziergänge",
+    "Gepflegte Atmosphäre"
+   ],
+   "watchOut": [
+    "Wenig Nachtleben im Text beschrieben"
+   ],
+   "values": {
+    "transit": {
+     "v": 7,
+     "why": "Dichtes Busnetz mit Anschluss an Kopenhagen – „with frequent stops that connect to and supplement the bus system of Copenhagen.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    },
+    "nature": {
+     "v": 8,
+     "why": "Mehr Parks als im Rest der Stadt – „Frederiksberg still has more parks, big villas with gardens, wide avenues, etc.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Copenhagen/Frederiksberg",
+     "title": "Wikivoyage (en): Copenhagen/Frederiksberg"
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,168 @@
+{
+ "v": 1,
+ "slug": "valencia",
+ "generated": "2026-11-07",
+ "model": "claude-haiku-5-5 (nur Wikivoyage-Text, Zitate geprüft)",
+ "areas": [
+  {
+   "name": "Carrer dels Cavallers",
+   "kind": "viertel",
+   "lat": 39.4764115,
+   "lon": -0.3798995,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Straße im Barrio del Carmen mit viel Betrieb am Abend, vor allem für junge Leute.",
+   "goodFor": [
+    "Ausgehen",
+    "Bars und Tanzlokale"
+   ],
+   "watchOut": [
+    "Abends viel Trubel"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 8,
+     "why": "Hier konzentriert sich das junge Nachtleben des Carmen-Viertels. – „which tend to cater to a youngish crowd, in particular along Carrer dels Cavallers“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Valencia",
+     "title": "Wikivoyage (en): Valencia"
+    }
+   ]
+  },
+  {
+   "name": "Carrer de Campoamor",
+   "kind": "viertel",
+   "lat": 39.4725143,
+   "lon": -0.3529162,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Straße mit mehreren Pubs, die besonders am Wochenende viele junge Leute anziehen.",
+   "goodFor": [
+    "Tanzen",
+    "Pubs mit Rock, Indie und Pop"
+   ],
+   "watchOut": [
+    "Pubs schließen um 03:30 Uhr"
+   ],
+   "values": {
+    "nightlife": {
+     "v": 8,
+     "why": "Vier bekannte Pubs liegen dicht beieinander an dieser Straße. – „they are almost neighbors on the Carrer de Campoamor“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Valencia",
+     "title": "Wikivoyage (en): Valencia"
+    }
+   ]
+  },
+  {
+   "name": "Ciutat Jardí",
+   "kind": "viertel",
+   "lat": 39.47191,
+   "lon": -0.34549,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Östliches Viertel, in dem besondere Vorsicht angebracht ist.",
+   "goodFor": [
+    "Gewöhnliche Stadtteilerfahrung"
+   ],
+   "watchOut": [
+    "Nachts meist menschenleer",
+    "Überfälle kommen vor"
+   ],
+   "values": {
+    "safety": {
+     "v": 4,
+     "why": "Zu diesem Viertel wird extra Vorsicht empfohlen. – „The only neighborhoods that may warrant extra precaution are Ciutat Jardí, El Cabanyal, and Aiora, in the east of the city.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Valencia",
+     "title": "Wikivoyage (en): Valencia"
+    }
+   ]
+  },
+  {
+   "name": "Aiora",
+   "kind": "viertel",
+   "lat": 39.46582,
+   "lon": -0.34332,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Östliches Viertel, in dem besondere Vorsicht angebracht ist.",
+   "goodFor": [
+    "Gewöhnliche Stadtteilerfahrung"
+   ],
+   "watchOut": [
+    "Nachts meist menschenleer",
+    "Überfälle kommen vor"
+   ],
+   "values": {
+    "safety": {
+     "v": 4,
+     "why": "Zu diesem Viertel wird extra Vorsicht empfohlen. – „The only neighborhoods that may warrant extra precaution are Ciutat Jardí, El Cabanyal, and Aiora, in the east of the city.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Valencia",
+     "title": "Wikivoyage (en): Valencia"
+    }
+   ]
+  },
+  {
+   "name": "El Cabanyal",
+   "kind": "viertel",
+   "lat": 39.4691829,
+   "lon": -0.330973,
+   "checked": "2026-11-07",
+   "found": true,
+   "summary": "Östliches Viertel, in dem besondere Vorsicht angebracht ist.",
+   "goodFor": [
+    "Gewöhnliche Stadtteilerfahrung"
+   ],
+   "watchOut": [
+    "Nachts meist menschenleer",
+    "Überfälle kommen vor"
+   ],
+   "values": {
+    "safety": {
+     "v": 4,
+     "why": "Zu diesem Viertel wird extra Vorsicht empfohlen. – „The only neighborhoods that may warrant extra precaution are Ciutat Jardí, El Cabanyal, and Aiora, in the east of the city.“",
+     "src": [
+      0
+     ],
+     "w": 1.0
+    }
+   },
+   "sources": [
+    {
+     "url": "https://en.wikivoyage.org/wiki/Valencia",
+     "title": "Wikivoyage (en): Valencia"
+    }
+   ]
+  }
+ ]
+}
