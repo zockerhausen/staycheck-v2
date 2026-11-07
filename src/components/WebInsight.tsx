@@ -12,26 +12,28 @@ const LABEL: Record<string, string> = {
 };
 const host = (u: string) => u.replace(/^https?:\/\/(www\.)?/, "").split("/")[0];
 
-/** „Was Reiseseiten sagen“: Zusammenfassung seriöser Reisequellen zu einer Gegend, mit allen Quellen. */
+/** „Was Reiseführer sagen“: Zusammenfassung seriöser Reisequellen zu einer Gegend, mit allen Quellen. */
 export default function WebInsight({ insight }: { insight: AreaInsight | null }) {
   if (!insight) return null;
   const values = Object.entries(insight.values).filter(([, v]) => v);
-  const date = new Date(insight.checked).toLocaleDateString("de-DE", { month: "long", year: "numeric" });
+  const date = insight.checked ? new Date(insight.checked).toLocaleDateString("de-DE", { month: "long", year: "numeric" }) : "";
+  const goodFor = insight.goodFor ?? [];
+  const watchOut = insight.watchOut ?? [];
   return (
     <section className="card p-5">
       <h2 className="flex items-center gap-2 text-[1.35rem] font-extrabold tracking-[-0.03em]">
-        <Icon name="discover" size={22} className="text-sun" /> Was Reiseseiten sagen
+        <Icon name="discover" size={22} className="text-sun" /> Was Reiseführer sagen
       </h2>
       {insight.summary && <p className="mt-2 text-[16px] font-semibold leading-snug">{insight.summary}</p>}
 
-      {(insight.goodFor.length > 0 || insight.watchOut.length > 0) && (
+      {(goodFor.length > 0 || watchOut.length > 0) && (
         <div className="mt-3 flex flex-wrap gap-2">
-          {insight.goodFor.map((g) => (
+          {goodFor.map((g) => (
             <span key={g} className="rounded-full bg-good/10 px-3 py-1.5 text-[13px] font-extrabold text-good">
               {g}
             </span>
           ))}
-          {insight.watchOut.map((w) => (
+          {watchOut.map((w) => (
             <span key={w} className="rounded-full bg-warn/10 px-3 py-1.5 text-[13px] font-extrabold text-warn">
               {w}
             </span>

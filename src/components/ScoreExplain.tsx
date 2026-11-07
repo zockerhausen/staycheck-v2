@@ -120,13 +120,14 @@ export default function ScoreExplain({
                   </a>
                 )}
                 {d.web && (
-                  <div className="mt-3 rounded-2xl bg-tan p-3 text-[14px]">
+                  <div className="mt-3 rounded-[18px] bg-peach p-3 text-[14px]">
                     <p className="font-extrabold">
-                      Reiseseiten: {String(d.web.score).replace(".", ",")}/10
+                      Reiseführer: {String(d.web.score).replace(".", ",")}/10
                       {d.web.measured !== null && (
                         <span className="font-semibold text-muted">
                           {" "}
-                          (gemessen {String(d.web.measured).replace(".", ",")}, zusammen {String(d.score).replace(".", ",")})
+                          (Karte {String(d.web.measured).replace(".", ",")}, zusammen {String(d.score).replace(".", ",")}
+                          {d.web.share !== undefined && d.web.share < 1 ? `, Reiseführer zählt zu ${Math.round(d.web.share * 100)} %` : ""})
                         </span>
                       )}
                     </p>
@@ -138,9 +139,9 @@ export default function ScoreExplain({
                           href={src.url}
                           target="_blank"
                           rel="noopener noreferrer nofollow"
-                          className="max-w-full truncate rounded-full bg-sand px-2.5 py-1 text-[12px] font-bold text-ink"
+                          className="max-w-full truncate rounded-full bg-paper px-2.5 py-1 text-[12px] font-bold text-sun-soft"
                         >
-                          {src.url.replace(/^https?:\/\/(www\.)?/, "").split("/")[0]}
+                          {src.title || src.url.replace(/^https?:\/\/(www\.)?/, "").split("/")[0]}
                         </a>
                       ))}
                     </p>

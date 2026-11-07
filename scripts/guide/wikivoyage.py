@@ -10,7 +10,7 @@ für jeden Rasterpunkt der Stadt:
 Gewicht (0–1) je Wert: Artikel-Qualität (Stern/Reiseführer 1, brauchbar 0,75, Gliederung zählt nicht)
 und Alter der Einträge (seit mehr als 4 Jahren nicht geprüft = 0,6). Zu wenige Einträge in der Stadt = kein Wert.
 
-Aufruf: python3 wikivoyage.py <stadt.json.gz> <ausgabe.json>
+Aufruf: python3 wikivoyage.py <stadt.json.gz> <ausgabe.guide.json.gz>
 """
 
 import datetime as dt
@@ -299,7 +299,7 @@ def main():
         for x in xs:
             cnt[(x["l"], x["a"])] = cnt.get((x["l"], x["a"]), 0) + 1
         top = sorted(cnt.items(), key=lambda kv: -kv[1])[:3]
-        return [{"url": f"https://{l}.wikivoyage.org/wiki/{urllib.parse.quote(a.replace(' ', '_'), safe='/')}", "title": f"Wikivoyage: {a}"} for (l, a), _ in top]
+        return [{"url": f"https://{l}.wikivoyage.org/wiki/{urllib.parse.quote(a.replace(' ', '_'), safe='/')}", "title": f"Wikivoyage ({l}): {a}"} for (l, a), _ in top]
 
     def years(xs):
         ys = sorted(x["y"] for x in xs if x["y"])
@@ -307,7 +307,7 @@ def main():
 
     # Die größten Artikel der Stadt (Quelle, wenn in der Nähe nichts empfohlen wird)
     top_articles = sorted(articles.values(), key=lambda a: -a["n"])[:2]
-    city_src = [{"url": f"https://{a['lang']}.wikivoyage.org/wiki/{urllib.parse.quote(a['title'].replace(' ', '_'), safe='/')}", "title": f"Wikivoyage: {a['title']}"} for a in top_articles]
+    city_src = [{"url": f"https://{a['lang']}.wikivoyage.org/wiki/{urllib.parse.quote(a['title'].replace(' ', '_'), safe='/')}", "title": f"Wikivoyage ({a['lang']}): {a['title']}"} for a in top_articles]
 
     areas = []
     for z in zones:
@@ -318,10 +318,14 @@ def main():
             if weight_of[kind] < MIN_CITY[kind]:
                 continue
             xs = near(la, lo, kind, RADIUS[kind])
+            # Nichts empfohlen heißt nicht „nichts da“ (der Reiseführer ist nur eine Auswahl): dann kein Wert
+            if not xs:
+                continue
             n = sum(x["w"] for x in xs)
-            v = step(n, [(0, 2), (0.9, 4), (1.9, 6), (3.9, 7), (6.9, 8), (10.9, 9)], 10)
-            q = round(sum(x["w"] for x in xs) / len(xs), 2) if xs else 0.8
-            why = f"{len(xs)} vom Reiseführer empfohlene {word} in {RADIUS[kind]} m" + years(xs) if xs else f"Der Reiseführer empfiehlt hier keine {word} (in {RADIUS[kind]} m)"
+            v = step(n, [(0.9, 4), (1.9, 6), (3.9, 7), (6.9, 8), (10.9, 9)], 10)
+            # Gewicht: Qualität und Alter der Einträge, und wenige Einträge sind schwächere Belege
+            q = round(sum(x["w"] for x in xs) / len(xs) * min(1.0, len(xs) / 3), 2)
+            why = f"{len(xs)} vom Reiseführer empfohlene {word} in {RADIUS[kind]} m" + years(xs)
             values[key] = {"v": v, "why": why, "w": q}
             per_key[key] = src_of(xs)
         # Günstig: Preise der empfohlenen Unterkünfte im Vergleich zur Stadt
@@ -334,7 +338,7 @@ def main():
                 pct = round((1 - ratio) * 100)
                 cmp = f"{abs(pct)} % günstiger als" if pct > 0 else (f"{abs(pct)} % teurer als" if pct < 0 else "so teuer wie")
                 why = f"Unterkünfte laut Reiseführer hier im Schnitt {cmp} in der ganzen Stadt ({len(xs)} mit Preis{years(xs)})"
-                values["budget"] = {"v": v, "why": why, "w": round(sum(x["w"] for x in xs) / len(xs), 2)}
+                values["budget"] = {"v": v, "why": why, "w": round(sum(x["w"] for x in xs) / len(xs) * min(1.0, len(xs) / 6), 2)}
                 per_key["budget"] = src_of(xs)
         if not values:
             continue
@@ -352,10 +356,7 @@ def main():
         for v in values.values():
             if not v.get("src"):
                 v["src"] = list(range(len(uniq_src)))
-        areas.append({
-            "name": "Reiseführer", "kind": "raster", "lat": la, "lon": lo, "checked": dt.date.today().isoformat(), "found": True,
-            "summary": "", "goodFor": [], "watchOut": [], "values": values, "sources": uniq_src,
-        })
+        areas.append({"name": "Reiseführer", "kind": "raster", "lat": round(la, 5), "lon": round(lo, 5), "found": True, "values": values, "sources": uniq_src})
 
     res = {
         "v": 1, "slug": slug, "generated": dt.date.today().isoformat(), "model": "wikivoyage-listings",
@@ -363,7 +364,8 @@ def main():
                   "cityMedian": city_median, "statuses": sorted({a["status"] or "?" for a in articles.values()})},
         "areas": areas,
     }
-    json.dump(res, open(out_path, "w"), ensure_ascii=False, separators=(",", ":"))
+    with gzip.open(out_path, "wt", encoding="utf8") as f:
+        json.dump(res, f, ensure_ascii=False, separators=(",", ":"))
     print(f"{slug}: {len(articles)} Artikel, Einträge Essen {len(by['eat'])}, Trinken {len(by['drink'])}, Schlafen {len(by['sleep'])} "
           f"({len(priced)} mit Preis {main_cur or ''}, Mittel {city_median}), {len(areas)} Rasterpunkte mit Reiseführer-Werten")
 

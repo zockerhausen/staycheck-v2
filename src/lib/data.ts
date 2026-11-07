@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { cache } from "react";
 import { cleanExtras, decodeExtras, type Extras } from "@/lib/profile";
 import { precomputedBySlug } from "./precomputed";
+import { blendValue, insightsAt, loadInsights, webReason } from "./insights";
 import { createClient } from "@/lib/supabase/server";
 
 export type Criterion = {
@@ -34,7 +35,7 @@ export type District = {
   /** Warum dieser Wert? (z. B. „25 Bars und Clubs in 600 m“ oder Begründung mit Quelle) */
   reasons?: Record<string, string>;
   /** Woher der Wert kommt: aus Kartendaten berechnet, aus Quellen belegt oder nur geschätzt */
-  origin?: Record<string, "karte" | "quelle" | "schaetzung">;
+  origin?: Record<string, "karte" | "quelle" | "schaetzung" | "gemischt">;
   /** Link zur Quelle (nur bei „quelle“) */
   links?: Record<string, string>;
 };
@@ -108,12 +109,16 @@ export async function getDistricts(citySlug?: string): Promise<District[]> {
   const rows = (data ?? []) as unknown as DistrictRow[];
   // Kartenwerte aus der Vorberechnung (pro Stadt einmal laden)
   const pre = new Map<string, Awaited<ReturnType<typeof precomputedBySlug>>>();
-  for (const slug of new Set(rows.map((d) => d.cities.slug))) pre.set(slug, await precomputedBySlug(slug).catch(() => null));
+  const guide = new Map<string, Awaited<ReturnType<typeof loadInsights>>>();
+  for (const slug of new Set(rows.map((d) => d.cities.slug))) {
+    pre.set(slug, await precomputedBySlug(slug).catch(() => null));
+    guide.set(slug, await loadInsights(slug).catch(() => null));
+  }
 
   return rows.map((d) => {
     const scores: Record<string, number> = {};
     const reasons: Record<string, string> = {};
-    const origin: Record<string, "karte" | "quelle" | "schaetzung"> = {};
+    const origin: Record<string, "karte" | "quelle" | "schaetzung" | "gemischt"> = {};
     const links: Record<string, string> = {};
     for (const s of d.district_scores) {
       if (s.score != null) scores[s.criterion_key] = s.score;
@@ -130,6 +135,23 @@ export async function getDistricts(citySlug?: string): Promise<District[]> {
         reasons[k] = fixed.reasons[k];
         origin[k] = "karte";
         delete links[k];
+      }
+      // Reiseführer (Wikivoyage) zur Hälfte dazu, abgestuft nach Verlässlichkeit – wie bei Unterkünften und Ecken
+      if (d.lat != null && d.lng != null) {
+        const at = insightsAt(guide.get(d.cities.slug) ?? null, d.lat, d.lng);
+        for (const k of MAP_KEYS) {
+          const hit = at[k as keyof typeof at];
+          const v = fixed.scores[k];
+          if (!hit || typeof v !== "number") continue;
+          const mixed = blendValue(v, hit.val);
+          if (mixed == null) continue;
+          scores[k] = Math.max(1, Math.min(10, Math.round(mixed)));
+          const share = Math.round(0.5 * Math.max(0, Math.min(1, hit.val.w ?? 1)) * 100);
+          reasons[k] = `Karte: ${fixed.reasons[k]}. ${webReason({ score: hit.val.v, measured: v, why: hit.val.why, area: hit.area.name, sources: [], share: share / 100 })}`;
+          origin[k] = "gemischt";
+          const src = hit.val.src.map((i) => hit.area.sources[i]).find(Boolean);
+          if (src) links[k] = src.url;
+        }
       }
     }
     return {

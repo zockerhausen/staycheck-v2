@@ -260,7 +260,7 @@ async function main() {
         const a = queue.shift();
         if (!a) return;
         const prev = old?.areas.find((x) => norm(x.name) === norm(a.name));
-        if (prev && (Date.now() - Date.parse(prev.checked)) / 864e5 < FRESH_DAYS) {
+        if (prev && (Date.now() - Date.parse(prev.checked ?? "")) / 864e5 < FRESH_DAYS) {
           result.push(prev);
           continue;
         }

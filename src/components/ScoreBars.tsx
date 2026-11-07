@@ -2,7 +2,7 @@ import type { Criterion } from "@/lib/data";
 import { CRITERION_ICON } from "@/lib/icons";
 import Icon from "@/components/Icon";
 
-const ORIGIN_LABEL = { karte: "Aus Kartendaten berechnet", quelle: "Aus Quellen belegt", schaetzung: "Geschätzt, noch nicht belegt" } as const;
+const ORIGIN_LABEL = { karte: "Aus Kartendaten berechnet", quelle: "Aus Quellen belegt", schaetzung: "Geschätzt, noch nicht belegt", gemischt: "Kartendaten und Reiseführer (Wikivoyage)" } as const;
 
 /**
  * Viertel-Werte als Balken. Mit reasons/origin: jeder Wert lässt sich antippen und zeigt, woher er kommt.
@@ -18,7 +18,7 @@ export default function ScoreBars({
   criteria: Criterion[];
   scores: Record<string, number>;
   reasons?: Record<string, string>;
-  origin?: Record<string, "karte" | "quelle" | "schaetzung">;
+  origin?: Record<string, "karte" | "quelle" | "schaetzung" | "gemischt">;
   links?: Record<string, string>;
 }) {
   return (

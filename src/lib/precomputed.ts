@@ -6,7 +6,7 @@ import { gunzipSync } from "node:zlib";
 import path from "node:path";
 import { distance, type Coverage, type Detail, type Highlight, type ScoreResult, type Source } from "./score";
 import type { AutoCity } from "./geo";
-import { blendScores, blendValue, loadInsights, nearestArea, webReason } from "./insights";
+import { blendScores, blendValue, insightsAt, loadInsights, webReason } from "./insights";
 import { ZONE_KEYS } from "./zones";
 
 export type PreSight = { n: string; lat: number; lon: number; k: string; w: number };
@@ -143,22 +143,22 @@ async function withInsights(city: PreCity | null): Promise<PreCity | null> {
   if (!ins?.areas.length) return city;
 
   const zones = city.city.zones.map((z) => {
-    const a = nearestArea(ins, z.lat, z.lon);
-    if (!a) return z;
-    return { ...z, s: ZONE_KEYS.map((k, i) => blendValue(z.s[i], a.values[k]?.v) ?? z.s[i]) };
+    const at = insightsAt(ins, z.lat, z.lon);
+    if (!Object.keys(at).length) return z;
+    return { ...z, s: ZONE_KEYS.map((k, i) => blendValue(z.s[i], at[k]?.val) ?? z.s[i]) };
   });
 
   const districts = city.city.districts.map((d) => {
-    const { scores, web } = blendScores(d.scores, nearestArea(ins, d.lat, d.lon));
+    const { scores, web } = blendScores(d.scores, insightsAt(ins, d.lat, d.lon));
     const reasons = { ...d.reasons };
     for (const [k, w] of Object.entries(web)) if (w) reasons[k] = `${reasons[k] ? `${reasons[k]}. ` : ""}${webReason(w)}`;
     return { ...d, scores, reasons };
   });
 
   const hotels = city.hotels.map((h) => {
-    const area = nearestArea(ins, h.lat, h.lon);
-    if (!area) return h;
-    const { scores, web } = blendScores(h.scores, area);
+    const at = insightsAt(ins, h.lat, h.lon);
+    if (!Object.keys(at).length) return h;
+    const { scores, web } = blendScores(h.scores, at);
     let full = h.full;
     if (full) {
       const details = { ...full.details };

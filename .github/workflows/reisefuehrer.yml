@@ -1,6 +1,6 @@
 name: Reiseführer-Wissen (Wikivoyage)
 # Liest die Empfehlungen der Reisenden aus Wikivoyage (Lizenz CC BY-SA 4.0) für alle vorberechneten Städte:
-# empfohlene Bars, Restaurants und Unterkünfte mit Preis und Prüfdatum. Ergebnis: data/insights/<stadt>.guide.json.
+# empfohlene Bars, Restaurants und Unterkünfte mit Preis und Prüfdatum. Ergebnis: data/insights/<stadt>.guide.json.gz.
 # Die App rechnet diese Werte zur Hälfte in den Lage-Score ein (abgestuft nach Qualität und Alter) und nennt die Quelle.
 # Kostenlos, braucht keinen Schlüssel.
 on:
@@ -37,7 +37,7 @@ jobs:
           for f in data/cities/*.json.gz; do
             slug=$(basename "$f" .json.gz)
             if [ -n "$NUR" ] && ! echo ",$NUR," | tr -d ' ' | grep -q ",$slug,"; then continue; fi
-            python3 scripts/guide/wikivoyage.py "$f" "data/insights/$slug.guide.json" || echo "::warning title=$slug::Wikivoyage übersprungen"
+            python3 scripts/guide/wikivoyage.py "$f" "data/insights/$slug.guide.json.gz" || echo "::warning title=$slug::Wikivoyage übersprungen"
           done
       - name: Speichern
         run: |
