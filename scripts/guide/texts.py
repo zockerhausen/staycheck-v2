@@ -114,6 +114,8 @@ Aufgabe: Für jede Gegend der Stadt, über die der Text etwas Konkretes sagt, sc
 - nature: Parks, Wasser, Grün
 
 Für JEDEN Wert brauchst du ein wörtliches Zitat aus dem Text (genau so geschrieben, 5–25 Wörter, keine Auslassungen). Kein Zitat = kein Wert.
+Das Zitat muss sich ausdrücklich auf genau diese Gegend beziehen (nicht auf die ganze Stadt oder eine andere Gegend).
+budget nur nach Preisen für Unterkünfte oder Essen, nicht nach Mieten oder Immobilienpreisen.
 Höchstens 20 Gegenden, die wichtigsten für Reisende zuerst. Halte summary, why, goodFor und watchOut kurz.
 Bekannte Gegenden (nimm diese Namen, wenn sie passen): {known}
 Andere Gegenden nur, wenn der Text sie klar als Teil von {ort} beschreibt (z. B. ein Viertel, eine Straße, ein Ufer).
