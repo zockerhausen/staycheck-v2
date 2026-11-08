@@ -22,26 +22,30 @@ export function priceLink(o: {
   checkin?: string;
   checkout?: string;
   adults?: number;
+  /** Höchstpreis pro Nacht (EUR): Booking zeigt dann nur Zimmer bis zu diesem Preis, günstigste zuerst */
+  maxPrice?: number | null;
 }) {
-  if (!partnerOn) {
-    const ss = [o.hotel, o.address].filter(Boolean).join(", ");
-    const q = new URLSearchParams({ ss, lang: "de", group_adults: String(o.adults ?? 1), no_rooms: "1" });
-    if (o.checkin && o.checkout) {
-      q.set("checkin", o.checkin);
-      q.set("checkout", o.checkout);
-    }
-    return `https://www.booking.com/searchresults.html?${q}`;
+  // Booking-Suche: Name + Adresse, Reisedaten, Personen, Budget pro Nacht
+  const ss = [o.hotel, o.address].filter(Boolean).join(", ");
+  const q = new URLSearchParams({ lang: "de", selected_currency: "EUR", group_adults: String(o.adults ?? 1), no_rooms: "1", group_children: "0" });
+  if (ss) q.set("ss", ss);
+  else {
+    q.set("latitude", o.lat.toFixed(6));
+    q.set("longitude", o.lon.toFixed(6));
   }
-  const p = new URLSearchParams({ aid: STAY22_AID, lat: o.lat.toFixed(6), lng: o.lon.toFixed(6), campaign: campaignOf(o.campaign), lang: "de", currency: "EUR" });
-  if (o.hotel) p.set("hotelname", o.hotel.slice(0, 120));
   if (o.checkin && o.checkout) {
-    p.set("checkin", o.checkin);
-    p.set("checkout", o.checkout);
+    q.set("checkin", o.checkin);
+    q.set("checkout", o.checkout);
   }
-  if (o.adults) p.set("adults", String(o.adults));
-  if (o.address) p.set("address", o.address.slice(0, 160));
-  // Immer Booking.com: öffnet direkt die Seite. „roam“ wählt sonst oft Expedia, das auf dem Handy erst eine
-  // „App oder Website?“-Zwischenseite zeigt.
+  if (o.maxPrice) {
+    q.set("nflt", `price=EUR-0-${o.maxPrice}-1`);
+    q.set("order", "price");
+  }
+  const booking = `https://www.booking.com/searchresults.html?${q}`;
+  if (!partnerOn) return booking;
+  // Über Stay22 „Allez“ (Buchung zählt für uns), mit genau dieser Booking-Suche. Immer Booking.com: öffnet direkt die Seite
+  // („roam“ wählt sonst oft Expedia, das auf dem Handy erst eine „App oder Website?“-Zwischenseite zeigt).
+  const p = new URLSearchParams({ aid: STAY22_AID, link: booking, campaign: campaignOf(o.campaign) });
   return `https://www.stay22.com/allez/booking?${p}`;
 }
 
@@ -85,5 +89,5 @@ export function stayMapUrl(o: {
   return `https://www.stay22.com/embed/gm?${p}`;
 }
 
-/** Höchstpreis pro Nacht (EUR) aus dem Budget im Profil (1 = bis ca. 30 €, 2 = 30–80 €, 3 = egal) */
-export const maxPriceFor = (band: number | null | undefined) => (band === 1 ? 60 : band === 2 ? 120 : null);
+/** Höchstpreis pro Nacht (EUR) aus dem Budget im Profil (1 = bis ca. 30 €, 2 = 30–80 €, 3 = egal), solange keiner gewählt ist */
+export const maxPriceFor = (band: number | null | undefined) => (band === 1 ? 30 : band === 2 ? 80 : null);

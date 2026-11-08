@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Icon from "@/components/Icon";
+import { MAX_OPTIONS } from "@/lib/trip";
 
 const fmt = (s: string) => new Date(`${s}T12:00:00`).toLocaleDateString("de-DE", { day: "numeric", month: "short" });
 
@@ -10,7 +11,20 @@ const fmt = (s: string) => new Date(`${s}T12:00:00`).toLocaleDateString("de-DE",
  * Reisedaten für alle Preise auf der Seite: Anreise, Nächte, Personen.
  * Steht in der Adresse (an, n, p), damit Preis-Links und Karte dieselben Daten nutzen.
  */
-export default function TripBar({ checkin, checkout, nights, adults }: { checkin: string; checkout: string; nights: number; adults: number }) {
+export default function TripBar({
+  checkin,
+  checkout,
+  nights,
+  adults,
+  max,
+}: {
+  checkin: string;
+  checkout: string;
+  nights: number;
+  adults: number;
+  /** Höchstpreis pro Nacht (EUR) oder null = egal */
+  max: number | null;
+}) {
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
@@ -18,6 +32,7 @@ export default function TripBar({ checkin, checkout, nights, adults }: { checkin
   const [an, setAn] = useState(checkin);
   const [n, setN] = useState(nights);
   const [p, setP] = useState(adults);
+  const [m, setM] = useState<number>(max ?? 0);
   const [pending, start] = useTransition();
   const today = new Date().toISOString().slice(0, 10);
 
@@ -26,6 +41,7 @@ export default function TripBar({ checkin, checkout, nights, adults }: { checkin
     q.set("an", an);
     q.set("n", String(n));
     q.set("p", String(p));
+    q.set("max", String(m));
     setOpen(false);
     start(() => router.replace(`${pathname}?${q}`, { scroll: false }));
   }
@@ -42,7 +58,8 @@ export default function TripBar({ checkin, checkout, nights, adults }: { checkin
             {fmt(checkin)} – {fmt(checkout)}
           </span>
           <span className="block text-[13px] font-semibold text-muted">
-            {nights} {nights === 1 ? "Nacht" : "Nächte"} · {adults} {adults === 1 ? "Person" : "Personen"} · für alle Preise
+            {nights} {nights === 1 ? "Nacht" : "Nächte"} · {adults} {adults === 1 ? "Person" : "Personen"} ·{" "}
+            {max ? `bis ${max} € pro Nacht` : "jedes Budget"}
           </span>
         </span>
         <span className="text-[13px] font-extrabold text-sun-soft">{pending ? "…" : open ? "Fertig" : "Ändern"}</span>
@@ -71,6 +88,17 @@ export default function TripBar({ checkin, checkout, nights, adults }: { checkin
                   {x}
                 </option>
               ))}
+            </select>
+          </label>
+          <label className="col-span-3 block">
+            <span className="text-[12px] font-bold text-muted">Höchstens pro Nacht und Person</span>
+            <select value={m} onChange={(e) => setM(Number(e.target.value))} className={field}>
+              {MAX_OPTIONS.map((x) => (
+                <option key={x} value={x}>
+                  bis {x} €
+                </option>
+              ))}
+              <option value={0}>egal</option>
             </select>
           </label>
           <button type="button" onClick={apply} className="press col-span-3 mt-1 rounded-full bg-sun py-3 text-[15px] font-extrabold text-white">
