@@ -35,7 +35,7 @@ import { areaPhoto } from "@/lib/photos";
 import TipsSection from "@/components/TipsSection";
 import { getTipsForDistrict } from "@/lib/tips";
 import LiveStays from "@/components/LiveStays";
-import { maxPriceFor, priceLink } from "@/lib/partner";
+import { maxPriceFor, partnerOn, priceLink } from "@/lib/partner";
 import { classCap, parseTrip, tripQuery } from "@/lib/trip";
 import TripBar from "@/components/TripBar";
 
@@ -207,6 +207,17 @@ export default async function KiezPage({
               budget={Boolean(band)}
             />
           )}
+          <LiveStays
+            lat={district.lat!}
+            lon={district.lng!}
+            place={short}
+            campaign={`kiez_${district.slug}`}
+            checkin={trip.checkin}
+            checkout={trip.checkout}
+            adults={trip.adults}
+            maxPrice={maxNight}
+            pois={shown.slice(0, 15).map((h) => ({ lat: h.lat, lng: h.lon, name: `Lage ${h.match}`, desc: `${h.name} · ${KIND_LABEL[h.kind] ?? "Unterkunft"}` }))}
+          />
           <div className="mt-5 flex items-baseline justify-between">
             <h2 className="text-[1.35rem] font-extrabold tracking-[-0.03em]">Beste Lage im Viertel</h2>
             <span className="text-[14px] font-bold text-muted">{shown.length} gefunden</span>
@@ -234,6 +245,7 @@ export default async function KiezPage({
               />
             ))}
           </ol>
+          {!partnerOn && (
           <div className="mt-5">
             <KiezMap
               points={shown.slice(0, 25).map((h, i) => ({ slug: `h${i}`, name: h.name, lat: h.lat, lng: h.lon, match: h.match }))}
@@ -245,6 +257,7 @@ export default async function KiezPage({
             />
             <ZoneLegend personal={Boolean(resolved)} shown={zones.length > 0} />
           </div>
+          )}
           <p className="mt-3 text-[13px] font-semibold text-muted">
             Sortiert nach Lage (Unterkünfte und Umgebung aus OpenStreetMap). „Preis“ zeigt den echten Preis für deine Daten bei unserem Partner (Anzeige).
             {filter === "budget" && hiddenUnknown > 0 ? ` ${hiddenUnknown} Unterkünfte ohne bekannte Preisklasse sind ausgeblendet.` : ""}
@@ -252,16 +265,6 @@ export default async function KiezPage({
           </p>
         </>
       )}
-      <LiveStays
-        lat={district.lat!}
-        lon={district.lng!}
-        place={short}
-        campaign={`kiez_${district.slug}`}
-        checkin={trip.checkin}
-        checkout={trip.checkout}
-        adults={trip.adults}
-        maxPrice={maxNight}
-      />
     </section>
   );
 

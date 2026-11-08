@@ -62,13 +62,15 @@ export function stayMapUrl(o: {
   adults: number;
   maxPrice?: number | null;
   dark?: boolean;
+  /** Eigene Pins (unsere Lage-Werte) auf derselben Karte */
+  pois?: { lat: number; lng: number; name: string; desc?: string; url?: string }[];
 }) {
   if (!partnerOn) return null;
   const p = new URLSearchParams({
     aid: STAY22_AID,
     lat: o.lat.toFixed(6),
     lng: o.lon.toFixed(6),
-    zoom: "15",
+    zoom: "14",
     viewmode: "map",
     hotelsapi: "booking", // Klicks auf der Karte ebenfalls direkt zu Booking.com
     campaign: campaignOf(o.campaign),
@@ -86,6 +88,12 @@ export function stayMapUrl(o: {
   for (const h of ["searchbar", "filters", "checkinout", "guestpicker", "settings", "currency", "language", "brandlogo", "allezbutton", "modeswitcher", "enlargemap", "navbuttons"])
     p.set(`hide${h}`, "true");
   if (o.maxPrice) p.set("max", String(o.maxPrice));
+  if (o.pois?.length) {
+    p.set("poi", JSON.stringify(o.pois.slice(0, 15).map((x) => ({ ...x, lat: +x.lat.toFixed(5), lng: +x.lng.toFixed(5), size: "small" }))));
+    p.set("chpincolor", "5340f2");
+    p.set("chpinfontcolor", "ffffff");
+    p.set("hidemainmarker", "true");
+  }
   return `https://www.stay22.com/embed/gm?${p}`;
 }
 
