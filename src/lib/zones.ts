@@ -1,6 +1,6 @@
 // Zonen auf der Karte: feines Raster (ca. 350 m) mit Werten aus Kartendaten.
 // Läuft im Browser und auf dem Server.
-import { weightedMatch, type Weights } from "@/lib/profile";
+import { profileMatch, type NoGo, type Weights } from "@/lib/profile";
 
 export const ZONE_KEYS = ["transit", "nightlife", "food", "nature", "quiet", "budget"] as const;
 
@@ -13,11 +13,11 @@ export const ZONE_TOP = 0.06;
  * Nur die allerbesten Stellen der Stadt (beste ~6 %, mindestens 55 % Match), Ausreißer geglättet.
  * Wird genutzt, wo es keine Viertel gibt; sonst zeigt die Karte die besten Spots je Viertel (bestSpotsIn).
  */
-export function pickZones(zones: { lat: number; lon: number; s: number[] }[], weights: Weights): ZonePoint[] {
+export function pickZones(zones: { lat: number; lon: number; s: number[] }[], weights: Weights, nogo?: NoGo[]): ZonePoint[] {
   if (!zones.length) return [];
   const scored = zones.map((z) => {
     const scores = Object.fromEntries(ZONE_KEYS.map((k, i) => [k, z.s[i]]));
-    return { lat: z.lat, lon: z.lon, m: weightedMatch(scores, weights) };
+    return { lat: z.lat, lon: z.lon, m: profileMatch(scores, weights, nogo) };
   });
   const sorted = scored.map((z) => z.m).sort((a, b) => b - a);
   const cut = Math.max(55, sorted[Math.min(sorted.length - 1, Math.max(0, Math.ceil(sorted.length * ZONE_TOP) - 1))]);
@@ -98,11 +98,12 @@ export function findSpots(
   places: NamedPlace[] = [],
   step = 350,
   max = 8,
+  nogo?: NoGo[],
 ): Spot[] {
   if (zones.length < 4) return [];
   const cells = zones.map((z) => {
     const scores = Object.fromEntries(ZONE_KEYS.map((k, i) => [k, z.s[i]])) as Record<string, number>;
-    return { lat: z.lat, lon: z.lon, scores, m: weightedMatch(scores, weights) };
+    return { lat: z.lat, lon: z.lon, scores, m: profileMatch(scores, weights, nogo) };
   });
   const sorted = cells.map((c) => c.m).sort((a, b) => b - a);
   const cut = Math.max(58, sorted[Math.floor(sorted.length * 0.15)] ?? 0);
@@ -214,6 +215,7 @@ export function bestSpotsIn(
   districts: { slug: string; lat: number; lon: number }[],
   places: NamedPlace[] = [],
   step = 350,
+  nogo?: NoGo[],
 ): Map<string, DistrictSpot> {
   const out = new Map<string, DistrictSpot>();
   if (!zones.length || !districts.length) return out;
@@ -229,7 +231,7 @@ export function bestSpotsIn(
       }
     }
     if (!best) continue;
-    const m = weightedMatch(Object.fromEntries(ZONE_KEYS.map((k, i) => [k, z.s[i]])), weights);
+    const m = profileMatch(Object.fromEntries(ZONE_KEYS.map((k, i) => [k, z.s[i]])), weights, nogo);
     (groups.get(best) ?? groups.set(best, []).get(best)!).push({ lat: z.lat, lon: z.lon, m });
   }
   const finer = places.filter((p) => p.l >= 1);

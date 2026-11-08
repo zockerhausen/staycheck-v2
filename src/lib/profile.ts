@@ -6,9 +6,38 @@ export type Weights = Record<string, number>;
 export type TravelWith = "allein" | "paar" | "freunde" | "business";
 export type ExtraKey = "supermarkt" | "waschsalon" | "cafe" | "strand" | "fitness" | "sehenswert";
 export type PriceBand = 1 | 2 | 3; // 1 = bis ca. 30 €, 2 = 30–80 €, 3 = mehr ist okay
-export type Extras = { wer: TravelWith | null; items: ExtraKey[]; must: ExtraKey | null; preis?: PriceBand | null };
+export type NoGo = "partymeile" | "laut" | "abgelegen" | "unsicher";
+export type Extras = { wer: TravelWith | null; items: ExtraKey[]; must: ExtraKey | null; preis?: PriceBand | null; nogo?: NoGo[] };
 
-export const NO_EXTRAS: Extras = { wer: null, items: [], must: null, preis: null };
+export const NO_EXTRAS: Extras = { wer: null, items: [], must: null, preis: null, nogo: [] };
+
+const num = (v: number | null | undefined) => (typeof v === "number" && Number.isFinite(v) ? v : NaN);
+
+/**
+ * No-Gos: Ecken, die für jemanden gar nicht gehen. Trifft eins zu, ist der Match höchstens NOGO_CAP.
+ * Die Grenzen sind feste Werte unserer Skalen (gleich in jeder Stadt). Fehlen Daten, schließen wir nichts aus.
+ */
+export const NOGOS: { key: NoGo; label: string; sub: string; icon: IconName; hit: (s: Record<string, number | null | undefined>) => boolean }[] = [
+  { key: "partymeile", label: "Partymeile vor der Tür", sub: "Ausgehen 8,5 von 10 oder mehr", icon: "nightlife", hit: (s) => num(s.nightlife) >= 8.5 },
+  { key: "laut", label: "Laut die ganze Nacht", sub: "Ruhe 2,5 von 10 oder weniger", icon: "bus", hit: (s) => num(s.quiet) <= 2.5 },
+  { key: "abgelegen", label: "Weit draußen", sub: "kaum Bahn und wenig Essen in der Nähe", icon: "map", hit: (s) => num(s.transit) <= 2.5 && num(s.food) <= 4 },
+  { key: "unsicher", label: "Unsichere Gegend", sub: "Sicherheit 4 von 10 oder weniger", icon: "safety", hit: (s) => num(s.safety) <= 4 },
+];
+export const NOGO_LABEL: Record<string, string> = Object.fromEntries(NOGOS.map((n) => [n.key, n.label]));
+const NOGO_KEYS = new Set<string>(NOGOS.map((n) => n.key));
+export const NOGO_CAP = 45;
+
+/** Erstes No-Go, das an dieser Stelle zutrifft (oder null) */
+export function nogoHit(scores: Record<string, number | null | undefined>, nogo: NoGo[] | undefined): NoGo | null {
+  if (!nogo?.length) return null;
+  return NOGOS.find((n) => nogo.includes(n.key) && n.hit(scores))?.key ?? null;
+}
+
+/** Match für Viertel, Ecken und Rasterpunkte: gewichtet, ein No-Go deckelt ihn */
+export function profileMatch(scores: Record<string, number | null | undefined>, weights: Weights, nogo?: NoGo[]) {
+  const m = weightedMatch(scores, weights);
+  return nogoHit(scores, nogo) ? Math.min(m, NOGO_CAP) : m;
+}
 
 export const EXTRAS: { key: ExtraKey; label: string; icon: IconName }[] = [
   { key: "supermarkt", label: "Supermarkt", icon: "cart" },
@@ -30,10 +59,10 @@ export const MUST_CAP = 60;
 
 /** Cookie-Format: "w=allein;x=cafe.supermarkt;m=cafe" – alles wird beim Lesen streng geprüft. */
 export function encodeExtras(e: Extras) {
-  return [`w=${e.wer ?? ""}`, `x=${e.items.join(".")}`, `m=${e.must ?? ""}`, `p=${e.preis ?? ""}`].join(";");
+  return [`w=${e.wer ?? ""}`, `x=${e.items.join(".")}`, `m=${e.must ?? ""}`, `p=${e.preis ?? ""}`, `n=${(e.nogo ?? []).join(".")}`].join(";");
 }
 
-export function cleanExtras(input: { wer?: unknown; items?: unknown; must?: unknown; preis?: unknown } | null | undefined): Extras {
+export function cleanExtras(input: { wer?: unknown; items?: unknown; must?: unknown; preis?: unknown; nogo?: unknown } | null | undefined): Extras {
   const wer = typeof input?.wer === "string" && WER.has(input.wer) ? (input.wer as TravelWith) : null;
   const items = Array.isArray(input?.items)
     ? ([...new Set(input.items.filter((x): x is string => typeof x === "string" && EXTRA_KEYS.has(x)))] as ExtraKey[])
@@ -42,7 +71,10 @@ export function cleanExtras(input: { wer?: unknown; items?: unknown; must?: unkn
   if (must && !items.includes(must)) items.push(must);
   const p = Number(input?.preis);
   const preis = p === 1 || p === 2 || p === 3 ? (p as PriceBand) : null;
-  return { wer, items: items.slice(0, 6), must, preis };
+  const nogo = Array.isArray(input?.nogo)
+    ? ([...new Set(input.nogo.filter((x): x is string => typeof x === "string" && NOGO_KEYS.has(x)))] as NoGo[])
+    : [];
+  return { wer, items: items.slice(0, 6), must, preis, nogo };
 }
 
 export function decodeExtras(raw: string | undefined): Extras {
@@ -53,7 +85,13 @@ export function decodeExtras(raw: string | undefined): Extras {
       .split(";")
       .map((p) => p.split("=") as [string, string]),
   );
-  return cleanExtras({ wer: parts.w, items: (parts.x ?? "").split(".").filter(Boolean), must: parts.m, preis: parts.p });
+  return cleanExtras({
+    wer: parts.w,
+    items: (parts.x ?? "").split(".").filter(Boolean),
+    must: parts.m,
+    preis: parts.p,
+    nogo: (parts.n ?? "").split(".").filter(Boolean),
+  });
 }
 
 /** Gewichte inklusive Extras (für den persönlichen Match). */
@@ -84,14 +122,18 @@ export function weightedMatch(scores: Record<string, number | null | undefined>,
   return total ? Math.round((sum / total) ** 2 * 100) : 0;
 }
 
-export type PersonalMatch = { match: number; uncapped: number; mustMissing: ExtraKey | null };
+export type PersonalMatch = { match: number; uncapped: number; mustMissing: ExtraKey | null; nogo: NoGo | null };
 
-/** Persönlicher Match: gewichteter Durchschnitt, aber ein fehlendes Muss begrenzt ihn hart. */
+/** Persönlicher Match: gewichteter Durchschnitt, aber ein fehlendes Muss oder ein No-Go begrenzt ihn hart. */
 export function personalMatch(scores: Record<string, number | null | undefined>, weights: Weights, extras: Extras): PersonalMatch {
   const uncapped = weightedMatch(scores, fullWeights(weights, extras));
   const m = extras.must;
   const mustMissing = m && scores[m] !== null && scores[m] !== undefined && (scores[m] as number) <= 3 ? m : null;
-  return { match: mustMissing ? Math.min(uncapped, MUST_CAP) : uncapped, uncapped, mustMissing };
+  const nogo = nogoHit(scores, extras.nogo);
+  let match = uncapped;
+  if (mustMissing) match = Math.min(match, MUST_CAP);
+  if (nogo) match = Math.min(match, NOGO_CAP);
+  return { match, uncapped, mustMissing, nogo };
 }
 
 // ---------- Reise-Typ ----------

@@ -99,6 +99,11 @@ export default function MethodePage() {
             Match höchstens 60 – egal wie gut der Rest ist. Wir sagen dir dann genau, was fehlt.
           </li>
           <li>
+            <b>Deine No-Gos.</b> Trifft eins zu, ist dein Match höchstens 45: Partymeile vor der Tür (Ausgehen 8,5 von 10 oder mehr), laut die
+            ganze Nacht (Ruhe 2,5 oder weniger), weit draußen (Anbindung 2,5 oder weniger und Essen 4 oder weniger), unsichere Gegend (Sicherheit 4
+            oder weniger). Fehlen uns an einer Stelle Daten, schließen wir dort nichts aus.
+          </li>
+          <li>
             <b>3. Gewichten.</b> Dein Match ist der Durchschnitt der Werte, gewichtet nach deinem Reise-Profil. Was dir „sehr wichtig“ ist (5), zählt
             25-mal so viel wie „wenig wichtig“ (1): Die Wichtigkeit zählt im Quadrat. So entscheidet, was dir wirklich wichtig ist. Außerdem ziehen
             schwache Werte etwas stärker nach unten, als starke nach oben ziehen: Viel Mittelmaß gleicht eine echte Schwäche nicht aus. Sind alle

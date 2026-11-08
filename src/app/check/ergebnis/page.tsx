@@ -30,7 +30,7 @@ import BookBar from "@/components/BookBar";
 import { cityForPoint } from "@/lib/arrival";
 import { hubsNear } from "@/lib/arrival-hubs";
 import { getTipsNear } from "@/lib/tips";
-import { EXTRA_LABEL, MUST_CAP, NO_EXTRAS, fullWeights, personalMatch } from "@/lib/profile";
+import { EXTRA_LABEL, MUST_CAP, NO_EXTRAS, NOGO_CAP, NOGO_LABEL, NOGOS, fullWeights, personalMatch } from "@/lib/profile";
 
 // Dynamisch durch Cookies/Suchparameter; Kartendaten-Abfragen werden 1 Tag zwischengespeichert.
 export const fetchCache = "default-cache";
@@ -171,6 +171,17 @@ export default async function CheckErgebnisPage({
             </p>
           </div>
         )}
+        {pm?.nogo && (
+          <div className="mt-4 rounded-[18px] border border-bad/25 bg-bad/10 p-4 text-sm">
+            <b className="flex items-center gap-2 text-bad">
+              <Icon name="close" size={16} /> Dein No-Go trifft zu: {NOGO_LABEL[pm.nogo]}
+            </b>
+            <p className="mt-1 text-muted">
+              {NOGOS.find((n) => n.key === pm.nogo)?.sub}. Darum höchstens {NOGO_CAP} Punkte für dich
+              {pm.uncapped > NOGO_CAP ? ` (ohne No-Go wären es ${pm.uncapped})` : ""}.
+            </p>
+          </div>
+        )}
         {pm && extras.must && !pm.mustMissing && mustDetail && (
           <p className="mt-3 flex items-center justify-center gap-1.5 text-sm font-semibold text-good">
             <Icon name="check" size={16} /> Dein Muss passt: {mustDetail.reasons[0]}
@@ -230,7 +241,7 @@ export default async function CheckErgebnisPage({
         coverage={analysis.coverage}
         personal={Boolean(pm)}
         must={extras.must}
-        capped={pm?.mustMissing && pm.uncapped > MUST_CAP ? pm.uncapped : null}
+        capped={(pm?.mustMissing && pm.uncapped > MUST_CAP) || (pm?.nogo && pm.uncapped > NOGO_CAP) ? pm.uncapped : null}
       />
 
       <ArrivalCard hubs={hubs} lat={lat} lon={lon} nearestRail={analysis.nearestRail} />

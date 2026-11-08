@@ -6,6 +6,7 @@ import {
   getCity,
   getCriteria,
   getDistricts,
+  getExtras,
   getFavoriteIds,
   getLastCity,
   getUser,
@@ -36,18 +37,19 @@ export default async function ErgebnisPage({
   const wanted = typeof params.stadt === "string" ? params.stadt : await getLastCity();
   const city = (await getCity(wanted)) ?? (await getCity("berlin"));
   if (!city) redirect("/reise");
-  const [criteria, districts, favorites, user] = await Promise.all([
+  const [criteria, districts, favorites, user, extras] = await Promise.all([
     getCriteria(),
     getDistricts(city.slug),
     getFavoriteIds(),
     getUser(),
+    getExtras(),
   ]);
 
   const { weights, source } = await resolveWeights(params, criteria);
   // Bester Spot in jedem Viertel: nur diese kleinen Stellen leuchten auf der Karte
   const cd = await cityDataQuick(city.lat, city.lng, VERIFIED_RADIUS);
   const located = districts.filter((d) => d.lat !== null && d.lng !== null).map((d) => ({ slug: d.slug, lat: d.lat as number, lon: d.lng as number }));
-  const bestSpots = cd ? bestSpotsIn(cd.zones, weights ?? DEFAULT_WEIGHTS, located, cd.places, cd.step) : new Map();
+  const bestSpots = cd ? bestSpotsIn(cd.zones, weights ?? DEFAULT_WEIGHTS, located, cd.places, cd.step, weights ? extras.nogo : undefined) : new Map();
   const zones = spotGlow([...bestSpots.values()]);
   const explorer = (list: typeof districts, withMatch?: Record<string, number>) =>
     list.map((d) => {
@@ -94,7 +96,7 @@ export default async function ErgebnisPage({
     );
   }
 
-  const ranked = rankDistricts(districts, weights);
+  const ranked = rankDistricts(districts, weights, extras.nogo);
   const [top, ...rest] = ranked;
   if (!top) redirect("/");
 

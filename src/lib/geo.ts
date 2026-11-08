@@ -4,6 +4,7 @@
 // Funktioniert weltweit. Sicherheit kommt aus unseren Kiez-Bewertungen (nur dort, wo wir sie haben).
 
 import type { District, Weights } from "./data";
+import type { NoGo } from "./profile";
 import { unstable_cache } from "next/cache";
 import { after } from "next/server";
 import { pickZones, ZONE_KEYS, type ZonePoint } from "./zones";
@@ -705,9 +706,9 @@ export const autoDistrictsCached = (lat: number, lon: number) => autoCityCached(
  * Passende Zonen für die Karte. Wartet nur kurz: ist die Stadt noch nicht berechnet,
  * rechnet sie im Hintergrund weiter und die Karte zeigt beim nächsten Besuch die Zonen.
  */
-export async function cityZones(lat: number, lon: number, radius: number, weights: Weights, waitMs = 1200): Promise<ZonePoint[]> {
+export async function cityZones(lat: number, lon: number, radius: number, weights: Weights, waitMs = 1200, nogo?: NoGo[]): Promise<ZonePoint[]> {
   const r = await cityDataQuick(lat, lon, radius, waitMs);
-  return r ? pickZones(r.zones, weights) : [];
+  return r ? pickZones(r.zones, weights, nogo) : [];
 }
 
 /** Raster, Viertel und Namen einer Stadt – nur kurz warten, sonst im Hintergrund weiterrechnen (null). */

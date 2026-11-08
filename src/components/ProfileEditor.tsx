@@ -8,7 +8,7 @@ import { CRITERION_ICON } from "@/lib/icons";
 import Icon from "@/components/Icon";
 import { storeProfile } from "@/app/actions";
 import { BAND_TEXT } from "@/lib/price";
-import { EXTRAS, persona, type ExtraKey, type Extras, type TravelWith } from "@/lib/profile";
+import { EXTRAS, NOGOS, persona, type ExtraKey, type Extras, type NoGo, type TravelWith } from "@/lib/profile";
 
 const WER: { key: TravelWith; label: string; icon: "user" | "heart" | "users" | "briefcase" }[] = [
   { key: "allein", label: "Allein", icon: "user" },
@@ -36,11 +36,13 @@ export default function ProfileEditor({
   const [items, setItems] = useState<ExtraKey[]>(initialExtras.items);
   const [must, setMust] = useState<ExtraKey | null>(initialExtras.must);
   const [preis, setPreis] = useState<1 | 2 | 3 | null>(initialExtras.preis ?? null);
+  const [nogo, setNogo] = useState<NoGo[]>(initialExtras.nogo ?? []);
   const changed =
     criteria.some((c) => weights[c.key] !== initial[c.key]) ||
     wer !== initialExtras.wer ||
     must !== initialExtras.must ||
     preis !== (initialExtras.preis ?? null) ||
+    nogo.join() !== (initialExtras.nogo ?? []).join() ||
     items.join() !== initialExtras.items.join();
   const p = persona(weights, { wer, items, must });
 
@@ -131,6 +133,32 @@ export default function ProfileEditor({
         </div>
       </section>
 
+      <section className="rounded-2xl bg-paper p-4">
+        <p className="font-semibold">Geht gar nicht</p>
+        <p className="mb-3 mt-0.5 text-[13px] text-muted">Trifft ein No-Go zu, ist der Match höchstens 45.</p>
+        <div className="flex flex-wrap gap-2">
+          {NOGOS.map((n) => {
+            const on = nogo.includes(n.key);
+            return (
+              <button
+                key={n.key}
+                type="button"
+                aria-pressed={on}
+                onClick={() => {
+                  setSaved(false);
+                  setNogo((x) => (on ? x.filter((k) => k !== n.key) : [...x, n.key]));
+                }}
+                className={`press flex items-center gap-1.5 rounded-full border-[1.5px] px-3.5 py-2.5 text-sm font-semibold ${
+                  on ? "border-bad bg-bad/10 text-bad" : "border-tan bg-tan"
+                }`}
+              >
+                <Icon name={on ? "close" : n.icon} size={16} /> {n.label}
+              </button>
+            );
+          })}
+        </div>
+      </section>
+
       {criteria.map((c) => {
         const v = weights[c.key] ?? 0;
         return (
@@ -162,7 +190,7 @@ export default function ProfileEditor({
         disabled={pending || !changed}
         onClick={() =>
           startTransition(async () => {
-            await storeProfile(weights, undefined, { wer, items, must, preis });
+            await storeProfile(weights, undefined, { wer, items, must, preis, nogo });
             if ("vibrate" in navigator) navigator.vibrate(15);
             setSaved(true);
             router.refresh();

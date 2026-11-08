@@ -3,7 +3,7 @@ import Icon from "@/components/Icon";
 import { CRITERION_ICON } from "@/lib/icons";
 import type { Criterion } from "@/lib/data";
 import { matchBreakdown, type Coverage, type Detail, type Source } from "@/lib/score";
-import { EXTRA_LABEL, MUST_CAP } from "@/lib/profile";
+import { EXTRA_LABEL } from "@/lib/profile";
 import { safeHref } from "@/lib/safe-url";
 
 const SOURCE: Record<Source, string> = {
@@ -42,7 +42,7 @@ export default function ScoreExplain({
   coverage: Coverage;
   personal: boolean;
   must?: string | null;
-  capped?: number | null; // ungedeckelter Wert, wenn das Muss fehlt
+  capped?: number | null; // ungedeckelter Wert, wenn das Muss fehlt oder ein No-Go zutrifft
 }) {
   const scores = Object.fromEntries(Object.entries(details).map(([k, d]) => [k, d.score]));
   const { rows } = matchBreakdown(scores, weights);
@@ -74,7 +74,7 @@ export default function ScoreExplain({
         </p>
         {capped !== null && (
           <p className="pt-2 text-xs font-semibold text-warn">
-            Gerechnet wären es {capped}. Weil dein Muss fehlt, zählen höchstens {MUST_CAP}.
+            Gerechnet wären es {capped}. Weil dein Muss fehlt oder ein No-Go zutrifft, ist der Match gedeckelt.
           </p>
         )}
         {order.map((k) => {

@@ -1,16 +1,16 @@
 import type { District, Weights } from "./data";
-import { weightedMatch } from "./profile";
+import { profileMatch, type NoGo } from "./profile";
 
 export type RankedDistrict = District & { match: number };
 
 /** Match in Prozent, gleiche Rechnung wie überall in der App (siehe weightedMatch). */
-export function matchScore(district: District, weights: Weights): number {
-  return weightedMatch(district.scores, weights);
+export function matchScore(district: District, weights: Weights, nogo?: NoGo[]): number {
+  return profileMatch(district.scores, weights, nogo);
 }
 
-export function rankDistricts(districts: District[], weights: Weights): RankedDistrict[] {
+export function rankDistricts(districts: District[], weights: Weights, nogo?: NoGo[]): RankedDistrict[] {
   return districts
-    .map((d) => ({ ...d, match: matchScore(d, weights) }))
+    .map((d) => ({ ...d, match: matchScore(d, weights, nogo) }))
     .sort((a, b) => b.match - a.match);
 }
 

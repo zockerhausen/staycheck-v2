@@ -91,9 +91,9 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
   const [districts, cd] = await Promise.all([getDistricts(city.slug), cityDataQuick(city.lat, city.lng, VERIFIED_RADIUS)]);
   const w = weights ?? DEFAULT_WEIGHTS;
   // Kleine Ecken statt ganzer Bezirke (sobald das Raster der Stadt berechnet ist)
-  const spots = cd ? findSpots(cd.zones, w, cd.places, cd.step) : [];
+  const spots = cd ? findSpots(cd.zones, w, cd.places, cd.step, 8, extras.nogo) : [];
   // Auf der Karte leuchtet nur der Kern der gezeigten Ecken, nicht die halbe Stadt
-  const zones = spots.length ? spotGlow(spots) : cd ? pickZones(cd.zones, w) : [];
+  const zones = spots.length ? spotGlow(spots) : cd ? pickZones(cd.zones, w, extras.nogo) : [];
   const spotHref = (sp: (typeof spots)[number]) =>
     `/ziel/viertel?${zielQuery({ ort: city.name, land: city.country, lat: Number(city.lat.toFixed(4)), lon: Number(city.lng.toFixed(4)) })}&${new URLSearchParams({ name: sp.name, vlat: sp.lat.toFixed(5), vlon: sp.lon.toFixed(5), rad: String(VERIFIED_RADIUS) })}`;
   const topSpot = weights && spots[0] ? spots[0] : null;
@@ -103,7 +103,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
     city.name,
   );
   after(() => photosRest);
-  const ranked = weights ? rankDistricts(districts, weights) : null;
+  const ranked = weights ? rankDistricts(districts, weights, extras.nogo) : null;
   const top = ranked?.[0] ?? null;
   const tipDistrict = top ?? districts[0];
   const tip = tipDistrict ? (await getTipsForDistrict(tipDistrict.id).catch(() => []))[0] : undefined;

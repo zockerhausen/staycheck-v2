@@ -62,9 +62,9 @@ export default async function ZielPage({ searchParams }: { searchParams: Promise
   const slow = raced === "slow";
   const districts = slow ? [] : (raced?.districts ?? null);
   // Kleine Ecken statt ganzer Stadtteile
-  const spots = slow || !raced ? [] : findSpots(raced.zones, weights ?? DEFAULT_WEIGHTS, raced.places, raced.step);
+  const spots = slow || !raced ? [] : findSpots(raced.zones, weights ?? DEFAULT_WEIGHTS, raced.places, raced.step, 8, extras.nogo);
   // Auf der Karte leuchtet nur der Kern der gezeigten Ecken
-  const zones = slow || !raced ? [] : spots.length ? spotGlow(spots) : pickZones(raced.zones, weights ?? DEFAULT_WEIGHTS);
+  const zones = slow || !raced ? [] : spots.length ? spotGlow(spots) : pickZones(raced.zones, weights ?? DEFAULT_WEIGHTS, extras.nogo);
   const zq = zielQuery(ziel);
   const viertelHref = (d: AutoCity["districts"][number]) =>
     `/ziel/viertel?${zq}&${new URLSearchParams({ name: d.name.slice(0, 80), vlat: d.lat.toFixed(5), vlon: d.lon.toFixed(5) })}`;

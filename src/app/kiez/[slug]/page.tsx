@@ -85,9 +85,10 @@ export default async function KiezPage({
   const filter = typeof sp.typ === "string" && (sp.typ === "budget" || FILTERS.some((f) => f.key === sp.typ)) ? sp.typ : "alle";
 
   const cityRow = cities.find((c) => c.slug === district.city);
+  const kiezExtras = await getExtras();
   const [tips, zones] = await Promise.all([
     getTipsForDistrict(district.id),
-    cityRow ? cityZones(cityRow.lat, cityRow.lng, VERIFIED_RADIUS, weights) : Promise.resolve([]),
+    cityRow ? cityZones(cityRow.lat, cityRow.lng, VERIFIED_RADIUS, weights, 1200, kiezExtras.nogo) : Promise.resolve([]),
   ]);
 
   let hotels: HotelResult[] = [];
@@ -135,7 +136,7 @@ export default async function KiezPage({
   const checkUrl = (h: HotelResult) =>
     `/check/ergebnis?${new URLSearchParams({ lat: h.lat.toFixed(6), lon: h.lon.toFixed(6), name: h.name, sub: h.subtitle, kind: h.kind })}${amp}`;
 
-  const match = matchScore(district, weights);
+  const match = matchScore(district, weights, kiezExtras.nogo);
 
   const short = district.name.split(" (")[0];
   const webInsight = await insightNear(district.lat!, district.lng!, short).catch(() => null);
