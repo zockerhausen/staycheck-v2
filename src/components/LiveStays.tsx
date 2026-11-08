@@ -62,7 +62,7 @@ export default function LiveStays({
         </button>
       )}
       <p className="mt-2 text-[12px] font-semibold leading-snug text-muted">
-        Preise von Booking.com, Agoda, Expedia u. a. über Stay22. Buchst du darüber, bekommt StayCheck eine kleine Provision, dein Preis ändert sich nicht.
+        Preise von Booking.com über unseren Partner Stay22. Buchst du darüber, bekommt StayCheck eine kleine Provision, dein Preis ändert sich nicht.
       </p>
     </section>
   );

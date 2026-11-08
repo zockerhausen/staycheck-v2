@@ -11,7 +11,7 @@ const campaignOf = (c: string) => c.toLowerCase().replace(/[^a-z0-9]+/g, "_").re
 
 /**
  * Link zu Preisen für einen Ort oder eine bestimmte Unterkunft.
- * Mit Partner-ID: Stay22 „Allez“ (wählt die passende Buchungsseite, Buchung zählt für uns). Ohne: normale Booking-Suche.
+ * Mit Partner-ID: Stay22 „Allez“ zu Booking.com (Buchung zählt für uns). Ohne: normale Booking-Suche.
  */
 export function priceLink(o: {
   lat: number;
@@ -40,7 +40,9 @@ export function priceLink(o: {
   }
   if (o.adults) p.set("adults", String(o.adults));
   if (o.address) p.set("address", o.address.slice(0, 160));
-  return `https://www.stay22.com/allez/roam?${p}`;
+  // Immer Booking.com: öffnet direkt die Seite. „roam“ wählt sonst oft Expedia, das auf dem Handy erst eine
+  // „App oder Website?“-Zwischenseite zeigt.
+  return `https://www.stay22.com/allez/booking?${p}`;
 }
 
 /**
@@ -64,6 +66,7 @@ export function stayMapUrl(o: {
     lng: o.lon.toFixed(6),
     zoom: "15",
     viewmode: "map",
+    hotelsapi: "booking", // Klicks auf der Karte ebenfalls direkt zu Booking.com
     campaign: campaignOf(o.campaign),
     checkin: o.checkin,
     checkout: o.checkout,
