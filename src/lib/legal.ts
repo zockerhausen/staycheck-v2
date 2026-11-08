@@ -9,7 +9,7 @@ export const OPERATOR = {
   email2: "zockerhausen.77@web.de", // zweite Kontaktmöglichkeit
   phone: "0160 99745799", // optional, aber eine zweite schnelle Kontaktmöglichkeit ist Pflicht (E-Mail + Telefon oder Kontaktformular)
   vatId: "", // nur falls vorhanden (USt-IdNr.)
-  commercial: false, // true, sobald die App Geld verdient (Werbung, Affiliate-Links, Abo)
+  commercial: true, // true, sobald die App Geld verdient (Werbung, Affiliate-Links, Abo)
 };
 
 export const LEGAL_UPDATED = "24. Oktober 2026";
