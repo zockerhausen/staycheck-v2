@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import LegalPage, { Field, Section } from "@/components/LegalPage";
 import { LEGAL_UPDATED, OPERATOR } from "@/lib/legal";
+import { partnerOn } from "@/lib/partner";
 
 export const metadata: Metadata = { title: "Datenschutz – StayCheck", robots: { index: false } };
 
@@ -99,11 +100,27 @@ export default function DatenschutzPage() {
         </p>
       </Section>
 
-      <Section title="7. Externe Links">
-        <p>
-          Links zu Buchungsportalen oder Google Maps öffnen die Seiten dieser Anbieter. Erst dann gelten deren Datenschutzregeln. Wir bekommen dafür kein Geld
-          und geben keine Daten an sie weiter.
-        </p>
+      <Section title="7. Externe Links und Partner-Angebote">
+        {partnerOn ? (
+          <>
+            <p>
+              Links zu Buchungsportalen oder Google Maps öffnen die Seiten dieser Anbieter. Erst dann gelten deren Datenschutzregeln. Manche Links sind
+              Partner-Links unseres Partners Stay22 (Stay22 Technologies Inc., Kanada): Buchst du darüber, bekommen wir eine Provision. Dein Preis ändert
+              sich dadurch nicht. Beim Klick erfährt Stay22, von welcher Seite der Klick kam und welchen Ort du dir angesehen hast.
+            </p>
+            <p className="mt-2">
+              „Freie Zimmer mit Preis“ lädt eine Liste von Stay22 erst, wenn du auf „Preise und Bewertungen laden“ tippst. Erst dann verbindet sich dein
+              Browser mit Stay22; dabei werden deine IP-Adresse, der Ort der Liste und technische Angaben übertragen, und Stay22 kann Cookies setzen.
+              Rechtsgrundlage ist deine Einwilligung durch das Antippen (Art. 6 Abs. 1 lit. a DSGVO, § 25 Abs. 1 TDDDG). Mehr bei Stay22:
+              stay22.com/privacy.
+            </p>
+          </>
+        ) : (
+          <p>
+            Links zu Buchungsportalen oder Google Maps öffnen die Seiten dieser Anbieter. Erst dann gelten deren Datenschutzregeln. Wir bekommen dafür kein
+            Geld und geben keine Daten an sie weiter.
+          </p>
+        )}
       </Section>
 
       <Section title="8. Deine Rechte">

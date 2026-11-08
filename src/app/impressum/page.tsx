@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import LegalPage, { Field, Section } from "@/components/LegalPage";
 import { OPERATOR } from "@/lib/legal";
+import { partnerOn } from "@/lib/partner";
 
 export const metadata: Metadata = { title: "Impressum – StayCheck", robots: { index: false } };
 
@@ -78,6 +79,16 @@ export default function ImpressumPage() {
           ausschließlich deren Betreiber verantwortlich. Bei Bekanntwerden von Rechtsverletzungen entfernen wir solche Links umgehend.
         </p>
       </Section>
+
+      {partnerOn && (
+        <Section title="Werbung und Partner-Links">
+          <p>
+            StayCheck finanziert sich über Partner-Links. Links und Listen mit dem Hinweis „Anzeige“ oder „Partner-Link“ führen über unseren Partner
+            Stay22 zu Buchungsportalen wie Booking.com, Agoda oder Expedia. Buchst du darüber, erhalten wir eine Provision; dein Preis ändert sich nicht.
+            Unsere Lage-Bewertungen hängen davon nicht ab: Sie werden für alle Unterkünfte gleich berechnet, egal ob es dafür eine Provision gibt.
+          </p>
+        </Section>
+      )}
 
       <Section title="Kartendaten">
         <p>

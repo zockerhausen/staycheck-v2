@@ -34,6 +34,7 @@ import { insightNear } from "@/lib/insights";
 import { areaPhoto } from "@/lib/photos";
 import TipsSection from "@/components/TipsSection";
 import { getTipsForDistrict } from "@/lib/tips";
+import LiveStays from "@/components/LiveStays";
 
 // Dynamisch durch Cookies/Suchparameter; Kartendaten-Abfragen werden 1 Tag zwischengespeichert.
 export const fetchCache = "default-cache";
@@ -193,6 +194,7 @@ export default async function KiezPage({
               budget={Boolean(band)}
             />
           )}
+          <LiveStays lat={district.lat!} lon={district.lng!} place={short} campaign={`kiez_${district.slug}`} band={band} />
           <div className="mt-5 flex items-baseline justify-between">
             <h2 className="text-[1.35rem] font-extrabold tracking-[-0.03em]">Beste Lage im Viertel</h2>
             <span className="text-[14px] font-bold text-muted">{shown.length} gefunden</span>

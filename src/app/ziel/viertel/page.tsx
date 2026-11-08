@@ -33,6 +33,7 @@ import ViewTabs from "@/components/ViewTabs";
 import WebInsight from "@/components/WebInsight";
 import { insightNear } from "@/lib/insights";
 import { areaPhoto } from "@/lib/photos";
+import LiveStays from "@/components/LiveStays";
 
 export const fetchCache = "default-cache";
 export const maxDuration = 120; // erste Berechnung einer Stadt kann dauern (läuft nach der Antwort weiter)
@@ -200,6 +201,7 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
               budget={Boolean(band)}
             />
           )}
+          <LiveStays lat={vlat} lon={vlon} place={name} campaign={`spot_${ziel.ort}_${name}`} band={band} />
           <div className="mt-5 flex items-baseline justify-between">
             <h2 className="text-[1.35rem] font-extrabold tracking-[-0.03em]">Beste Lage im Viertel</h2>
             <span className="text-[14px] font-bold text-muted">{shown.length} gefunden</span>
