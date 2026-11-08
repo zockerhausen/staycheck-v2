@@ -34,6 +34,9 @@ import WebInsight from "@/components/WebInsight";
 import { insightNear } from "@/lib/insights";
 import { areaPhoto } from "@/lib/photos";
 import LiveStays from "@/components/LiveStays";
+import { maxPriceFor, priceLink } from "@/lib/partner";
+import { parseTrip, tripQuery } from "@/lib/trip";
+import TripBar from "@/components/TripBar";
 
 export const fetchCache = "default-cache";
 export const maxDuration = 120; // erste Berechnung einer Stadt kann dauern (läuft nach der Antwort weiter)
@@ -61,6 +64,8 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
   const rad = params.rad === String(VERIFIED_RADIUS) ? VERIFIED_RADIUS : CITY_RADIUS;
   const back = `/ziel?${zq}`;
   const filter = typeof params.typ === "string" && (params.typ === "budget" || FILTERS.some((f) => f.key === params.typ)) ? params.typ : "alle";
+  const trip = parseTrip(params);
+  const tq = tripQuery(trip);
   const self = `/ziel/viertel?${zq}&${new URLSearchParams({ name, vlat: vlat.toFixed(5), vlon: vlon.toFixed(5), ...(rad === VERIFIED_RADIUS ? { rad: String(VERIFIED_RADIUS) } : {}) })}`;
 
   if (!(await pageRateLimit("ziel-viertel", 15))) {
@@ -128,10 +133,11 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
     filter === "alle"
       ? hotels
       : filter === "budget"
-        ? hotels.filter((h) => inBudget(band, clsOf(h)) !== false)
+        ? hotels.filter((h) => inBudget(band, clsOf(h)) === true)
         : filter === "top"
           ? hotels.filter((h) => (revOf(h)?.fair ?? 0) >= TOP_FAIR)
           : hotels.filter((h) => h.kind === filter);
+  const hiddenUnknown = band ? hotels.filter((h) => inBudget(band, clsOf(h)) === null).length : 0;
   const filters = [
     ...(band ? [{ key: "budget", label: `Mein Budget ${PRICE_LABEL[band]}` }] : []),
     ...FILTERS.filter((f) => f.key !== "top" || rev.size > 0),
@@ -167,11 +173,12 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
 
   const staysTab = (
     <section id="unterkuenfte" className="scroll-mt-20">
+      <TripBar checkin={trip.checkin} checkout={trip.checkout} nights={trip.nights} adults={trip.adults} />
       <nav className="-mx-4 flex gap-2 overflow-x-auto px-4 [scrollbar-width:none]" aria-label="Unterkunftsart">
         {filters.map((f) => (
           <Link
             key={f.key}
-            href={`${self}&typ=${f.key}`}
+            href={`${self}&typ=${f.key}${tq}`}
             scroll={false}
             className={`press shrink-0 rounded-full border px-4 py-2.5 text-[14px] font-extrabold ${
               filter === f.key ? "border-sun bg-sun text-white" : "border-transparent bg-peach text-sun-soft"
@@ -201,7 +208,6 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
               budget={Boolean(band)}
             />
           )}
-          <LiveStays lat={vlat} lon={vlon} place={name} campaign={`spot_${ziel.ort}_${name}`} band={band} />
           <div className="mt-5 flex items-baseline justify-between">
             <h2 className="text-[1.35rem] font-extrabold tracking-[-0.03em]">Beste Lage im Viertel</h2>
             <span className="text-[14px] font-bold text-muted">{shown.length} gefunden</span>
@@ -219,6 +225,7 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
                 note={h.highlights[0]?.text ?? ""}
                 match={h.match}
                 reviews={revOf(h)}
+                priceHref={priceLink({ lat: h.lat, lon: h.lon, hotel: h.name, address: h.subtitle, campaign: `spot_${ziel.ort}_liste`, checkin: trip.checkin, checkout: trip.checkout, adults: trip.adults })}
                 save={{
                   place: { name: h.name, subtitle: h.subtitle, lat: h.lat, lon: h.lon, kind: h.kind, match: h.match },
                   initiallySaved: isSaved(h),
@@ -240,10 +247,22 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
             <ZoneLegend personal={Boolean(profile)} shown={zones.length > 0} />
           </div>
           <p className="mt-3 text-[13px] font-semibold text-muted">
-            Tippe auf eine Unterkunft für Details, Begründung und Preise.{demo ? " Gäste-Werte sind vorerst Beispieldaten." : ""}
+            Sortiert nach Lage. Tippe auf eine Unterkunft für Details; „Preis“ zeigt den echten Preis für deine Daten bei unserem Partner (Anzeige).
+            {filter === "budget" && hiddenUnknown > 0 ? ` ${hiddenUnknown} Unterkünfte ohne bekannte Preisklasse sind ausgeblendet.` : ""}
+            {demo ? " Gäste-Werte sind vorerst Beispieldaten." : ""}
           </p>
         </>
       )}
+      <LiveStays
+        lat={vlat}
+        lon={vlon}
+        place={name}
+        campaign={`spot_${ziel.ort}_${name}`}
+        checkin={trip.checkin}
+        checkout={trip.checkout}
+        adults={trip.adults}
+        maxPrice={filter === "budget" ? maxPriceFor(band) : null}
+      />
     </section>
   );
 

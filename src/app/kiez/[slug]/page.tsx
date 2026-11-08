@@ -35,6 +35,9 @@ import { areaPhoto } from "@/lib/photos";
 import TipsSection from "@/components/TipsSection";
 import { getTipsForDistrict } from "@/lib/tips";
 import LiveStays from "@/components/LiveStays";
+import { maxPriceFor, priceLink } from "@/lib/partner";
+import { parseTrip, tripQuery } from "@/lib/trip";
+import TripBar from "@/components/TripBar";
 
 // Dynamisch durch Cookies/Suchparameter; Kartendaten-Abfragen werden 1 Tag zwischengespeichert.
 export const fetchCache = "default-cache";
@@ -84,6 +87,8 @@ export default async function KiezPage({
   const query = source === "url" ? weightsToQuery(weights) : "";
   const amp = query ? `&${query}` : "";
   const filter = typeof sp.typ === "string" && (sp.typ === "budget" || FILTERS.some((f) => f.key === sp.typ)) ? sp.typ : "alle";
+  const trip = parseTrip(sp);
+  const tq = tripQuery(trip);
 
   const cityRow = cities.find((c) => c.slug === district.city);
   const kiezExtras = await getExtras();
@@ -120,10 +125,11 @@ export default async function KiezPage({
     filter === "alle"
       ? hotels
       : filter === "budget"
-        ? hotels.filter((h) => inBudget(band, clsOf(h)) !== false)
+        ? hotels.filter((h) => inBudget(band, clsOf(h)) === true)
         : filter === "top"
           ? hotels.filter((h) => (revOf(h)?.fair ?? 0) >= TOP_FAIR)
           : hotels.filter((h) => h.kind === filter);
+  const hiddenUnknown = band ? hotels.filter((h) => inBudget(band, clsOf(h)) === null).length : 0;
   const filters = [
     ...(band ? [{ key: "budget", label: `Mein Budget ${PRICE_LABEL[band]}` }] : []),
     ...FILTERS.filter((f) => f.key !== "top" || rev.size > 0),
@@ -160,11 +166,12 @@ export default async function KiezPage({
 
   const staysTab = (
     <section id="unterkuenfte" className="scroll-mt-20">
+      <TripBar checkin={trip.checkin} checkout={trip.checkout} nights={trip.nights} adults={trip.adults} />
       <nav className="-mx-4 flex gap-2 overflow-x-auto px-4 [scrollbar-width:none]" aria-label="Unterkunftsart">
         {filters.map((f) => (
           <Link
             key={f.key}
-            href={`/kiez/${slug}?stadt=${district.city}&typ=${f.key}${amp}`}
+            href={`/kiez/${slug}?stadt=${district.city}&typ=${f.key}${amp}${tq}`}
             scroll={false}
             className={`press shrink-0 rounded-full border px-4 py-2.5 text-[14px] font-extrabold ${
               filter === f.key ? "border-sun bg-sun text-white" : "border-transparent bg-peach text-sun-soft"
@@ -194,7 +201,6 @@ export default async function KiezPage({
               budget={Boolean(band)}
             />
           )}
-          <LiveStays lat={district.lat!} lon={district.lng!} place={short} campaign={`kiez_${district.slug}`} band={band} />
           <div className="mt-5 flex items-baseline justify-between">
             <h2 className="text-[1.35rem] font-extrabold tracking-[-0.03em]">Beste Lage im Viertel</h2>
             <span className="text-[14px] font-bold text-muted">{shown.length} gefunden</span>
@@ -212,6 +218,7 @@ export default async function KiezPage({
                 note={h.highlights[0]?.text ?? verdict(h.match).label}
                 match={h.match}
                 reviews={revOf(h)}
+                priceHref={priceLink({ lat: h.lat, lon: h.lon, hotel: h.name, address: h.subtitle, campaign: `kiez_${district.slug}_liste`, checkin: trip.checkin, checkout: trip.checkout, adults: trip.adults })}
                 save={{
                   place: { name: h.name, subtitle: h.subtitle, lat: h.lat, lon: h.lon, kind: h.kind, match: h.match },
                   initiallySaved: isSaved(h),
@@ -233,11 +240,22 @@ export default async function KiezPage({
             <ZoneLegend personal={Boolean(resolved)} shown={zones.length > 0} />
           </div>
           <p className="mt-3 text-[13px] font-semibold text-muted">
-            Unterkünfte und Umgebung aus OpenStreetMap. Tippe auf eine Unterkunft für Details, Anreise und Preise.
+            Sortiert nach Lage (Unterkünfte und Umgebung aus OpenStreetMap). „Preis“ zeigt den echten Preis für deine Daten bei unserem Partner (Anzeige).
+            {filter === "budget" && hiddenUnknown > 0 ? ` ${hiddenUnknown} Unterkünfte ohne bekannte Preisklasse sind ausgeblendet.` : ""}
             {demo ? " Gäste-Werte sind vorerst Beispieldaten." : ""}
           </p>
         </>
       )}
+      <LiveStays
+        lat={district.lat!}
+        lon={district.lng!}
+        place={short}
+        campaign={`kiez_${district.slug}`}
+        checkin={trip.checkin}
+        checkout={trip.checkout}
+        adults={trip.adults}
+        maxPrice={filter === "budget" ? maxPriceFor(band) : null}
+      />
     </section>
   );
 

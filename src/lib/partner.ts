@@ -13,13 +13,32 @@ const campaignOf = (c: string) => c.toLowerCase().replace(/[^a-z0-9]+/g, "_").re
  * Link zu Preisen für einen Ort oder eine bestimmte Unterkunft.
  * Mit Partner-ID: Stay22 „Allez“ (wählt die passende Buchungsseite, Buchung zählt für uns). Ohne: normale Booking-Suche.
  */
-export function priceLink(o: { lat: number; lon: number; hotel?: string; address?: string; campaign: string }) {
+export function priceLink(o: {
+  lat: number;
+  lon: number;
+  hotel?: string;
+  address?: string;
+  campaign: string;
+  checkin?: string;
+  checkout?: string;
+  adults?: number;
+}) {
   if (!partnerOn) {
     const ss = [o.hotel, o.address].filter(Boolean).join(", ");
-    return `https://www.booking.com/searchresults.html?${new URLSearchParams({ ss, lang: "de", group_adults: "1", no_rooms: "1" })}`;
+    const q = new URLSearchParams({ ss, lang: "de", group_adults: String(o.adults ?? 1), no_rooms: "1" });
+    if (o.checkin && o.checkout) {
+      q.set("checkin", o.checkin);
+      q.set("checkout", o.checkout);
+    }
+    return `https://www.booking.com/searchresults.html?${q}`;
   }
   const p = new URLSearchParams({ aid: STAY22_AID, lat: o.lat.toFixed(6), lng: o.lon.toFixed(6), campaign: campaignOf(o.campaign), lang: "de", currency: "EUR" });
   if (o.hotel) p.set("hotelname", o.hotel.slice(0, 120));
+  if (o.checkin && o.checkout) {
+    p.set("checkin", o.checkin);
+    p.set("checkout", o.checkout);
+  }
+  if (o.adults) p.set("adults", String(o.adults));
   if (o.address) p.set("address", o.address.slice(0, 160));
   return `https://www.stay22.com/allez/roam?${p}`;
 }
@@ -32,7 +51,6 @@ export function stayMapUrl(o: {
   lat: number;
   lon: number;
   campaign: string;
-  view: "map" | "listview";
   checkin: string;
   checkout: string;
   adults: number;
@@ -45,7 +63,7 @@ export function stayMapUrl(o: {
     lat: o.lat.toFixed(6),
     lng: o.lon.toFixed(6),
     zoom: "15",
-    viewmode: o.view,
+    viewmode: "map",
     campaign: campaignOf(o.campaign),
     checkin: o.checkin,
     checkout: o.checkout,

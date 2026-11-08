@@ -15,6 +15,7 @@ export default function StayRow({
   match,
   reviews,
   save,
+  priceHref,
 }: {
   id: string;
   href: string;
@@ -26,6 +27,8 @@ export default function StayRow({
   match: number;
   reviews?: StayReviews;
   save: React.ComponentProps<typeof PlaceSaveButton>;
+  /** Partner-Link zum echten Preis für die gewählten Reisedaten */
+  priceHref?: string;
 }) {
   return (
     <li id={id} className="flex items-center gap-3 border-b border-line py-3 last:border-0">
@@ -50,6 +53,17 @@ export default function StayRow({
           </span>
         </span>
       </Link>
+      {priceHref && (
+        <a
+          href={priceHref}
+          target="_blank"
+          rel="noopener noreferrer sponsored"
+          aria-label={`Preis für ${name} ansehen (Partner-Link)`}
+          className="press flex shrink-0 items-center gap-1 rounded-full bg-sun px-3 py-2 text-[13px] font-extrabold text-white"
+        >
+          Preis <Icon name="external" size={13} fill="transparent" />
+        </a>
+      )}
       <PlaceSaveButton compact {...save} />
     </li>
   );
