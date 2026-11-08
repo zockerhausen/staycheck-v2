@@ -24,31 +24,45 @@ export function priceLink(o: { lat: number; lon: number; hotel?: string; address
   return `https://www.stay22.com/allez/roam?${p}`;
 }
 
-/** Karte/Liste mit echten Unterkünften, Preisen und Gästebewertungen (Stay22) – nur mit Partner-ID */
-export function stayMapUrl(o: { lat: number; lon: number; campaign: string; maxPrice?: number | null; dark?: boolean }) {
+/**
+ * Karte/Liste mit echten Unterkünften, Preisen und Gästebewertungen (Stay22) – nur mit Partner-ID.
+ * Alles Bedienbare von Stay22 (Suche, Datum, Gäste, Filter, Extra-Knopf) ist ausgeblendet: Datum und Gäste wählt man bei uns.
+ */
+export function stayMapUrl(o: {
+  lat: number;
+  lon: number;
+  campaign: string;
+  view: "map" | "listview";
+  checkin: string;
+  checkout: string;
+  adults: number;
+  maxPrice?: number | null;
+  dark?: boolean;
+}) {
   if (!partnerOn) return null;
   const p = new URLSearchParams({
     aid: STAY22_AID,
     lat: o.lat.toFixed(6),
     lng: o.lon.toFixed(6),
     zoom: "15",
-    viewmode: "listview",
+    viewmode: o.view,
     campaign: campaignOf(o.campaign),
+    checkin: o.checkin,
+    checkout: o.checkout,
+    adults: String(Math.min(8, Math.max(1, o.adults))),
     maincolor: "5340f2",
     mapstyle: o.dark ? "dark" : "light",
     ljs: "de",
     currency: "EUR",
     unitsystem: "metric",
     priceper: "nightly",
-    minguestrating: "7",
     limit: "30",
-    hidebrandlogo: "true",
-    hidelanguage: "true",
-    hidecurrency: "true",
   });
+  for (const h of ["searchbar", "filters", "checkinout", "guestpicker", "settings", "currency", "language", "brandlogo", "allezbutton", "modeswitcher", "enlargemap", "navbuttons"])
+    p.set(`hide${h}`, "true");
   if (o.maxPrice) p.set("max", String(o.maxPrice));
   return `https://www.stay22.com/embed/gm?${p}`;
 }
 
 /** Höchstpreis pro Nacht (EUR) aus dem Budget im Profil (1 = bis ca. 30 €, 2 = 30–80 €, 3 = egal) */
-export const maxPriceFor = (band: number | null | undefined) => (band === 1 ? 45 : band === 2 ? 100 : null);
+export const maxPriceFor = (band: number | null | undefined) => (band === 1 ? 60 : band === 2 ? 120 : null);
