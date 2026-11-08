@@ -133,7 +133,9 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
     filter === "alle"
       ? hotels
       : filter === "budget"
-        ? hotels.filter((h) => inBudget(band, clsOf(h)) === true)
+        ? band
+          ? hotels.filter((h) => inBudget(band, clsOf(h)) === true)
+          : hotels // ohne Budget im Profil gibt es nichts zu filtern
         : filter === "top"
           ? hotels.filter((h) => (revOf(h)?.fair ?? 0) >= TOP_FAIR)
           : hotels.filter((h) => h.kind === filter);
