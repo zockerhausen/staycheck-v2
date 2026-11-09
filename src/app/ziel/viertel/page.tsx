@@ -216,6 +216,7 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
               budget={Boolean(band)}
             />
           )}
+          {!partnerOn && (
           <div className="mt-3">
             <KiezMap
               points={shown.slice(0, 25).map((h, i) => ({ slug: `h${i}`, name: h.name, lat: h.lat, lng: h.lon, match: h.match }))}
@@ -227,6 +228,7 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
             />
             <ZoneLegend personal={Boolean(profile)} shown={zones.length > 0} />
           </div>
+          )}
           <ol className="card mt-3 px-3.5 py-1">
             {shown.slice(0, 25).map((h, i) => (
               <StayRow
@@ -251,7 +253,7 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
             ))}
           </ol>
           <p className="mt-3 text-[13px] font-semibold text-muted">
-            Sortiert nach Lage. Tippe auf eine Unterkunft für Details; „Preise hier“ zeigt freie Zimmer in deinem Budget rund um die Unterkunft.
+            Sortiert nach Lage. Tippe auf eine Unterkunft für Details; „Auf Karte“ zeigt die Unterkunft auf der Preiskarte oben.
             {hiddenUnknown > 0 ? ` ${hiddenUnknown} Unterkünfte ohne bekannte Preisklasse sind ausgeblendet.` : ""}
             {demo ? " Gäste-Werte sind vorerst Beispieldaten." : ""}
           </p>

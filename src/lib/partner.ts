@@ -67,6 +67,8 @@ export function stayMapUrl(o: {
   /** Eigene Pins (unsere Lage-Werte) auf derselben Karte */
   pois?: { lat: number; lng: number; name: string; desc?: string; url?: string }[];
   zoom?: number;
+  /** Pin genau an dieser Stelle (z. B. die angetippte Unterkunft) */
+  pin?: boolean;
   /** Kreise um die besten Spots (als Linien auf der Karte) */
   circles?: { lat: number; lon: number; r: number }[];
   origin?: string;
@@ -98,13 +100,13 @@ export function stayMapUrl(o: {
     p.set("poi", JSON.stringify(o.pois.slice(0, 15).map((x) => ({ ...x, lat: +x.lat.toFixed(5), lng: +x.lng.toFixed(5), size: "small" }))));
     p.set("chpincolor", "5340f2");
     p.set("chpinfontcolor", "ffffff");
-    p.set("hidemainmarker", "true");
   }
+  if (!o.pin) p.set("hidemainmarker", "true");
   if (o.circles?.length && o.origin) {
     p.set("gpx", `${o.origin}/api/kreise?c=${o.circles.map((c) => `${c.lat},${c.lon},${c.r}`).join(";")}`);
-    p.set("gpxlinecolor", "8c7ff6");
-    p.set("gpxlinethickness", "4");
-    p.set("gpxlineopacity", "0.9");
+    p.set("gpxlinecolor", "5340f2");
+    p.set("gpxlinethickness", "9");
+    p.set("gpxlineopacity", "0.33");
   }
   return `https://www.stay22.com/embed/gm?${p}`;
 }
