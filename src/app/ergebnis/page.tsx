@@ -146,7 +146,7 @@ export default async function ErgebnisPage({
       </section>
 
       <div className="space-y-2.5">
-        <Link href={`/kiez/${top.slug}${q("?")}`} className="btn-chunky w-full">
+        <Link href={`/kiez/${top.slug}?stadt=${top.city}${q("&")}`} className="btn-chunky w-full">
           Unterkünfte in {top.name.split(" (")[0]}
         </Link>
         <div className="grid grid-cols-2 gap-2.5">
