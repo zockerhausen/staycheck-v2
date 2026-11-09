@@ -52,7 +52,7 @@ export default function StayList({
         <>
           <h3 className="px-0.5 text-[19px] font-extrabold tracking-[-0.02em]">{rings?.length ? "Top in der guten Lage" : "Top-Lage"}</h3>
           <p className="px-0.5 text-[13px] font-semibold text-muted">Beste Lage für dich{budget ? `, bis ${budget} € pro Nacht` : ""}</p>
-          <div className="-mx-4 mt-2.5 flex snap-x snap-mandatory gap-2.5 overflow-x-auto px-4 pb-1 [scrollbar-width:none]">
+          <div className="stagger -mx-4 mt-2.5 flex snap-x snap-mandatory gap-2.5 overflow-x-auto px-4 pb-1 [scrollbar-width:none]">
             {top.map((i, n) => (
               <article key={i.key} className="w-[min(78vw,280px)] shrink-0 snap-start overflow-hidden rounded-[24px] border border-line bg-paper">
                 <StaySelect n={idx(i)} label={`${i.name} auf der Karte zeigen`} className="press block w-full text-left">
@@ -105,9 +105,9 @@ export default function StayList({
       )}
 
       {(rest.length > 0 || out.length > 0) && (
-        <div className="card mt-4 px-3.5 py-1">
+        <div className="card scroll-in mt-4 px-3.5 py-1">
           {rest.length > 0 && <Label text={`${top.length ? "Weitere" : "Unterkünfte"}${rings?.length ? " in der guten Lage" : ""} · ${restAll.length}`} tone="sun" />}
-          <ol>
+          <ol className="stagger">
             {rest.map((i) => (
               <Row key={i.key} i={i} n={idx(i)} />
             ))}

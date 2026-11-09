@@ -56,7 +56,7 @@ export default async function FavoritenPage() {
           <h2 className="flex items-center gap-2 font-display text-[19px] font-extrabold">
             <Icon name="hotel" size={24} className="text-sun" /> Unterkünfte
           </h2>
-          <ul className="mt-3 space-y-2">
+          <ul className="stagger mt-3 space-y-2">
             {places.map((p) => (
               <li key={p.id} className="flex items-center gap-3 rounded-2xl bg-paper p-3">
                 <Link
@@ -95,7 +95,7 @@ export default async function FavoritenPage() {
           <h2 className="flex items-center gap-2 font-display text-[19px] font-extrabold">
             <Icon name="discover" size={24} className="text-sun" /> Kieze
           </h2>
-          <ul className="mt-3 space-y-4">
+          <ul className="stagger mt-3 space-y-4">
             {favs.map((d) => (
               <li key={d.id} className="card p-5">
                 <div className="flex items-start justify-between gap-2">

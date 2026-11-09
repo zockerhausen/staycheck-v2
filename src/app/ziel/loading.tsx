@@ -1,13 +1,5 @@
-import Icon from "@/components/Icon";
+import BrandLoader from "@/components/BrandLoader";
 
 export default function Loading() {
-  return (
-    <div className="flex min-h-[70dvh] flex-col items-center justify-center text-center">
-      <span className="animate-pulse text-sun">
-        <Icon name="map" size={56} />
-      </span>
-      <h1 className="mega mt-5 text-2xl">Wir erkunden die Stadt …</h1>
-      <p className="mt-2 max-w-xs text-sm text-muted">Stadtteile finden, Bahn, Bars, Essen und Parks zählen. Beim ersten Mal dauert das bis zu einer Minute.</p>
-    </div>
-  );
+  return <BrandLoader title="Wir erkunden die Stadt …" text="Stadtteile finden, Bahn, Bars, Essen und Parks zählen. Beim ersten Mal dauert das bis zu einer Minute." shape="list" />;
 }

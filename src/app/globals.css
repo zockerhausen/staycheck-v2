@@ -591,3 +591,275 @@ input[type="range"] {
   font-size: 14px;
   opacity: 1;
 }
+
+/* ---------- Startbildschirm (Splash) ---------- */
+#sc-splash {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(120% 80% at 30% 20%, #7d70ff 0%, #5340f2 45%, #3a27c9 100%);
+  color: #fff;
+  animation: sc-splash-out 380ms cubic-bezier(0.65, 0, 0.35, 1) 820ms forwards;
+}
+.sc-nosplash #sc-splash {
+  display: none;
+}
+.sc-splash-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  animation: sc-splash-zoom 380ms cubic-bezier(0.65, 0, 0.35, 1) 820ms forwards;
+}
+.sc-splash-mark {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.sc-splash-mark svg {
+  filter: drop-shadow(0 14px 22px rgba(20, 10, 110, 0.35));
+  animation: sc-pin-in 520ms cubic-bezier(0.34, 1.56, 0.64, 1) 40ms both;
+}
+.sc-splash-shadow {
+  width: 46px;
+  height: 9px;
+  margin-top: 4px;
+  border-radius: 50%;
+  background: rgba(20, 10, 110, 0.35);
+  filter: blur(3px);
+  animation: sc-shadow-in 520ms cubic-bezier(0.34, 1.56, 0.64, 1) 40ms both;
+}
+.sc-splash-check {
+  stroke-dasharray: 30;
+  stroke-dashoffset: 30;
+  animation: sc-check-draw 340ms cubic-bezier(0.22, 1, 0.36, 1) 330ms forwards;
+}
+.sc-splash-word {
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-weight: 800;
+  font-size: 34px;
+  letter-spacing: -0.04em;
+  animation: sc-word-in 380ms cubic-bezier(0.22, 1, 0.36, 1) 400ms both;
+}
+.sc-splash-word span {
+  color: rgba(255, 255, 255, 0.72);
+}
+@keyframes sc-pin-in {
+  from { opacity: 0; transform: translateY(-46px) scale(0.5); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes sc-shadow-in {
+  from { opacity: 0; transform: scaleX(0.2); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes sc-check-draw {
+  to { stroke-dashoffset: 0; }
+}
+@keyframes sc-word-in {
+  from { opacity: 0; transform: translateY(12px); filter: blur(4px); }
+  to { opacity: 1; transform: none; filter: none; }
+}
+@keyframes sc-splash-zoom {
+  to { opacity: 0; transform: scale(1.22); }
+}
+@keyframes sc-splash-out {
+  to { opacity: 0; visibility: hidden; pointer-events: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #sc-splash { animation: sc-splash-out 250ms ease 500ms forwards; }
+  .sc-splash-inner, .sc-splash-mark svg, .sc-splash-shadow, .sc-splash-word { animation: none; }
+  .sc-splash-check { animation: none; stroke-dashoffset: 0; }
+}
+
+/* ---------- Bewegung: kurz, weich, nur transform/opacity (flüssig auf dem Handy) ---------- */
+:root {
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+/* Seitenwechsel */
+@keyframes page-enter {
+  from { opacity: 0; transform: translateY(10px) scale(0.995); }
+  to { opacity: 1; transform: none; }
+}
+.page-enter {
+  animation: page-enter 340ms var(--ease-out) backwards; /* nichts bleibt hängen (fixierte Leisten bleiben fest) */
+}
+
+/* Listen: Einträge kommen kurz nacheinander (höchstens 10 gestaffelt, der Rest sofort) */
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+.stagger > * {
+  animation: rise-in 420ms var(--ease-out) backwards;
+}
+.stagger > *:nth-child(1) { animation-delay: 30ms; }
+.stagger > *:nth-child(2) { animation-delay: 70ms; }
+.stagger > *:nth-child(3) { animation-delay: 110ms; }
+.stagger > *:nth-child(4) { animation-delay: 150ms; }
+.stagger > *:nth-child(5) { animation-delay: 190ms; }
+.stagger > *:nth-child(6) { animation-delay: 230ms; }
+.stagger > *:nth-child(7) { animation-delay: 270ms; }
+.stagger > *:nth-child(8) { animation-delay: 310ms; }
+.stagger > *:nth-child(9) { animation-delay: 350ms; }
+.stagger > *:nth-child(n + 10) { animation-delay: 390ms; }
+
+/* Beim Scrollen weich hereinkommen (nur wo der Browser das kann, sonst einfach sichtbar) */
+@supports (animation-timeline: view()) {
+  .scroll-in {
+    animation: rise-in linear backwards;
+    animation-timeline: view();
+    animation-range: entry 0% entry 35%;
+  }
+}
+
+/* Lade-Platzhalter mit wanderndem Schimmer */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: var(--color-tan);
+  border-radius: 20px;
+}
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+:root[data-theme="dark"] .skeleton::after {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.07), transparent);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .skeleton::after {
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.07), transparent);
+  }
+}
+@keyframes shimmer {
+  to { transform: translateX(100%); }
+}
+
+/* Lade-Logo: der Pin hüpft, der Schatten atmet mit */
+.loader-pin {
+  animation: loader-hop 1.1s var(--ease-out) infinite;
+}
+.loader-shadow {
+  animation: loader-shadow 1.1s var(--ease-out) infinite;
+}
+@keyframes loader-hop {
+  0%, 100% { transform: translateY(0) scale(1, 1); }
+  12% { transform: translateY(0) scale(1.06, 0.94); }
+  45% { transform: translateY(-16px) scale(0.97, 1.03); }
+  80% { transform: translateY(0) scale(1.04, 0.96); }
+}
+@keyframes loader-shadow {
+  0%, 100% { transform: scaleX(1); opacity: 0.35; }
+  45% { transform: scaleX(0.6); opacity: 0.18; }
+}
+
+/* Untere Leiste: aktives Symbol federt, der pinke Punkt springt herein */
+.tab-icon-active {
+  animation: tab-pop 480ms var(--ease-spring);
+}
+@keyframes tab-pop {
+  0% { transform: scale(0.8) translateY(2px); }
+  60% { transform: scale(1.12) translateY(-2px); }
+  100% { transform: none; }
+}
+.dot-in {
+  animation: dot-in 420ms var(--ease-spring) 80ms backwards;
+}
+@keyframes dot-in {
+  from { transform: scale(0); opacity: 0; }
+}
+
+/* Merken: Herz mit kleinem Funkenkranz */
+.heart-burst {
+  position: relative;
+}
+.heart-burst::before,
+.heart-burst::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  pointer-events: none;
+}
+.heart-burst::before {
+  box-shadow: 0 0 0 2px var(--color-pink);
+  animation: burst-ring 520ms var(--ease-out) forwards;
+}
+.heart-burst::after {
+  margin: auto;
+  width: 4px;
+  height: 4px;
+  inset: 0;
+  background: transparent;
+  box-shadow:
+    0 -20px 0 0 var(--color-pink), 14px -14px 0 0 #8c7ff6, 20px 0 0 0 var(--color-pink), 14px 14px 0 0 #8c7ff6,
+    0 20px 0 0 var(--color-pink), -14px 14px 0 0 #8c7ff6, -20px 0 0 0 var(--color-pink), -14px -14px 0 0 #8c7ff6;
+  animation: burst-dots 560ms var(--ease-out) forwards;
+}
+@keyframes burst-ring {
+  from { transform: scale(0.7); opacity: 1; }
+  to { transform: scale(1.7); opacity: 0; }
+}
+@keyframes burst-dots {
+  from { transform: scale(0.4); opacity: 1; }
+  70% { opacity: 1; }
+  to { transform: scale(1.35); opacity: 0; }
+}
+
+/* Karten-Pins ploppen nacheinander auf („scale“ statt „transform“: die Karte setzt die Position per transform) */
+.pin-in {
+  animation: pin-in 460ms var(--ease-spring) backwards;
+}
+@keyframes pin-in {
+  from { scale: 0.2; opacity: 0; }
+  to { scale: 1; opacity: 1; }
+}
+
+/* Hell/Dunkel wechseln: neue Darstellung wächst als Kreis vom Knopf aus (View Transitions) */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-enter,
+  .stagger > *,
+  .scroll-in,
+  .loader-pin,
+  .loader-shadow,
+  .tab-icon-active,
+  .dot-in,
+  .heart-burst::before,
+  .heart-burst::after,
+  .pin-in,
+  .skeleton::after {
+    animation: none !important;
+  }
+}
+
+/* Nachgeladene Fotos blenden weich ein */
+.img-fade {
+  opacity: 0;
+  transform: scale(1.03);
+  transition: opacity 600ms var(--ease-out), transform 900ms var(--ease-out);
+}
+.img-fade.is-loaded {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .img-fade { opacity: 1; transform: none; transition: none; }
+}
+@media (scripting: none) {
+  .img-fade { opacity: 1; transform: none; }
+}

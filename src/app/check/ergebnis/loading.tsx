@@ -1,11 +1,5 @@
-import Icon from "@/components/Icon";
+import BrandLoader from "@/components/BrandLoader";
 
 export default function Loading() {
-  return (
-    <div className="flex min-h-[60dvh] flex-col items-center justify-center text-center">
-      <Icon name="check" size={64} className="animate-bounce text-sun" />
-      <p className="mt-4 font-display text-[22px] font-extrabold">Wir checken die Umgebung …</p>
-      <p className="mt-1 text-muted">Bahn, Bars, Essen, Parks</p>
-    </div>
-  );
+  return <BrandLoader title="Wir checken die Umgebung …" text="Bahn, Bars, Essen, Parks" shape="hero" />;
 }

@@ -16,7 +16,7 @@ export default function ThemeToggle({ className = "", onViolet = false }: { clas
   return (
     <button
       type="button"
-      onClick={() => applyTheme(isDarkNow() ? "light" : "dark")}
+      onClick={(e) => switchTheme(e.currentTarget)}
       aria-label={dark ? "Helle Darstellung" : "Dunkle Darstellung"}
       className={`press flex shrink-0 items-center justify-center rounded-full border ${onViolet ? "border-white/30 bg-white/15 text-white" : "glass border-[var(--sc-glass-line)] shadow-soft"} ${className}`}
     >
@@ -32,4 +32,27 @@ export default function ThemeToggle({ className = "", onViolet = false }: { clas
       </svg>
     </button>
   );
+}
+
+/** Neue Darstellung wächst als Kreis vom Knopf aus (wo der Browser es kann, sonst sofort) */
+function switchTheme(button: HTMLElement) {
+  const next = isDarkNow() ? "light" : "dark";
+  const doc = document as Document & { startViewTransition?: (cb: () => void) => { ready: Promise<void> } };
+  if (!doc.startViewTransition || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    applyTheme(next);
+    return;
+  }
+  const r = button.getBoundingClientRect();
+  const x = r.left + r.width / 2;
+  const y = r.top + r.height / 2;
+  const radius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+  const t = doc.startViewTransition(() => applyTheme(next));
+  t.ready
+    .then(() =>
+      document.documentElement.animate(
+        { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`] },
+        { duration: 560, easing: "cubic-bezier(0.22, 1, 0.36, 1)", pseudoElement: "::view-transition-new(root)" },
+      ),
+    )
+    .catch(() => undefined);
 }

@@ -21,6 +21,7 @@ export default function PlaceSaveButton({
   const router = useRouter();
   const [saved, setSaved] = useState(initiallySaved);
   const [pending, startTransition] = useTransition();
+  const [burst, setBurst] = useState(false);
 
   function click() {
     if (!loggedIn) {
@@ -28,7 +29,11 @@ export default function PlaceSaveButton({
       return;
     }
     startTransition(async () => {
-      if ("vibrate" in navigator) navigator.vibrate(10);
+      if ("vibrate" in navigator) navigator.vibrate(saved ? 8 : [10, 30, 14]);
+      if (!saved) {
+        setBurst(true);
+        setTimeout(() => setBurst(false), 650);
+      }
       setSaved(!saved);
       setSaved(await togglePlace(place, saved));
     });
@@ -42,7 +47,7 @@ export default function PlaceSaveButton({
         disabled={pending}
         aria-pressed={saved}
         aria-label={saved ? "Nicht mehr merken" : "Merken"}
-        className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full transition active:scale-90 ${
+        className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full transition active:scale-90 ${burst ? "heart-burst" : ""} ${
           saved ? "bg-sun text-white" : "bg-paper text-sun-soft shadow-[inset_0_0_0_2px_var(--color-raised)]"
         }`}
       >
@@ -57,7 +62,7 @@ export default function PlaceSaveButton({
       onClick={click}
       disabled={pending}
       aria-pressed={saved}
-      className={`press flex min-h-[3.85rem] w-full items-center justify-center gap-2 rounded-full font-extrabold ${saved ? "bg-sun text-white" : "bg-peach text-sun-soft"}`}
+      className={`press flex min-h-[3.85rem] w-full items-center justify-center gap-2 rounded-full font-extrabold ${burst ? "heart-burst" : ""} ${saved ? "bg-sun text-white" : "bg-peach text-sun-soft"}`}
     >
       <Icon name="heart" size={19} fill={saved ? "var(--color-pink)" : "transparent"} className={saved ? "heart-pop" : ""} />
       {saved ? "Gemerkt" : "Merken"}

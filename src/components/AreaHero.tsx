@@ -1,5 +1,6 @@
 import BackButton from "@/components/BackButton";
 import Icon from "@/components/Icon";
+import CountUp from "@/components/CountUp";
 import SafeImg from "@/components/SafeImg";
 import MapStage from "@/components/MapStage";
 import type { AreaPhoto } from "@/lib/photos";
@@ -81,7 +82,9 @@ export default function AreaHero({
         <div className="mt-4 grid grid-cols-3 gap-2">
           {tiles.map((t) => (
             <div key={t.label} className={`rounded-[24px] p-3 ${t.accent ? "shadow-primary bg-sun text-white" : "shadow-soft bg-paper"}`}>
-              <b className="block text-[1.6rem] font-extrabold leading-none tracking-[-0.04em] tabular-nums [overflow-wrap:anywhere]">{t.value}</b>
+              <b className="block text-[1.6rem] font-extrabold leading-none tracking-[-0.04em] tabular-nums [overflow-wrap:anywhere]">
+                <CountUp value={t.value} />
+              </b>
               <span className={`mt-1.5 block text-[12.5px] font-semibold leading-tight ${t.accent ? "text-white/85" : "text-muted"}`}>{t.label}</span>
             </div>
           ))}

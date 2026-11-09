@@ -22,16 +22,16 @@ export async function GET(request: Request) {
           height: "100%",
           display: "flex",
           flexDirection: "column",
-          background: "radial-gradient(circle at 50% 30%, #6a2c12 0%, #0c0c0e 60%)",
+          background: "radial-gradient(circle at 50% 30%, #3a27c9 0%, #0f0c24 62%)",
           color: "#f5f5f5",
           padding: "120px 90px",
           fontFamily: "sans-serif",
         }}
       >
-        <div style={{ display: "flex", fontSize: 56, fontWeight: 800, color: "#ff8a5c" }}>StayCheck</div>
-        <div style={{ display: "flex", marginTop: 260, fontSize: 52, color: "#ffb08f" }}>Mein Viertel in {stadt}</div>
+        <div style={{ display: "flex", fontSize: 56, fontWeight: 800, color: "#8c7ff6" }}>StayCheck</div>
+        <div style={{ display: "flex", marginTop: 260, fontSize: 52, color: "#c9c2ff" }}>Mein Viertel in {stadt}</div>
         <div style={{ display: "flex", fontSize: 150, fontWeight: 800, lineHeight: 1, marginTop: 20 }}>{kiez}</div>
-        <div style={{ display: "flex", alignItems: "flex-end", marginTop: 40, color: "#f2662f", fontWeight: 800 }}>
+        <div style={{ display: "flex", alignItems: "flex-end", marginTop: 40, color: "#8c7ff6", fontWeight: 800 }}>
           <span style={{ fontSize: 300, lineHeight: 1 }}>{match}</span>
           <span style={{ fontSize: 140, lineHeight: 1.4 }}>%</span>
         </div>
@@ -43,7 +43,7 @@ export async function GET(request: Request) {
               style={{
                 display: "flex",
                 background: "#2a1810",
-                color: "#ff8a5c",
+                color: "#8c7ff6",
                 fontSize: 46,
                 fontWeight: 700,
                 padding: "18px 40px",
@@ -59,7 +59,7 @@ export async function GET(request: Request) {
           style={{
             display: "flex",
             justifyContent: "center",
-            background: "#f2662f",
+            background: "#5340f2",
             color: "#fff",
             fontSize: 52,
             fontWeight: 800,

@@ -34,6 +34,15 @@ function TabSvg({ name, size = 24, filled = false }: { name: TabIcon; size?: num
   );
 }
 
+/** Kurzer, kaum spürbarer Tick beim Tippen (nur Android, iPhone ignoriert das) */
+const tick = () => {
+  try {
+    navigator.vibrate?.(6);
+  } catch {
+    /* egal */
+  }
+};
+
 type Item = { href: string; label: string; icon: TabIcon; match: (p: string) => boolean };
 
 export default function BottomNav({ loggedIn }: { loggedIn: boolean }) {
@@ -58,13 +67,14 @@ export default function BottomNav({ loggedIn }: { loggedIn: boolean }) {
         key={it.label}
         href={it.href}
         aria-current={active ? "page" : undefined}
-        className={`group relative flex flex-col items-center gap-[3px] text-[11.5px] font-bold transition-colors ${active ? "text-sun-soft" : "text-muted"}`}
+        onClick={tick}
+        className={`group relative flex flex-col items-center gap-[3px] text-[11.5px] font-bold transition-colors duration-300 ${active ? "text-sun-soft" : "text-muted"}`}
       >
-        <span className="flex h-[26px] items-center justify-center transition-transform duration-200 group-active:scale-90">
+        <span className={`flex h-[26px] items-center justify-center transition-transform duration-200 group-active:scale-90 ${active ? "tab-icon-active" : ""}`}>
           <TabSvg name={it.icon} filled={active} />
         </span>
         {it.label}
-        {active && <span aria-hidden className="dot-pink absolute -bottom-[9px] !h-[5px] !w-[5px]" />}
+        {active && <span aria-hidden className="dot-pink dot-in absolute -bottom-[9px] !h-[5px] !w-[5px]" />}
       </Link>
     );
   };
@@ -79,6 +89,7 @@ export default function BottomNav({ loggedIn }: { loggedIn: boolean }) {
           href="/check"
           aria-label="Lage-Check: Unterkunft prüfen"
           aria-current={checkActive ? "page" : undefined}
+          onClick={tick}
           className="group flex flex-col items-center"
         >
           <span

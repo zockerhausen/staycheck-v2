@@ -142,7 +142,7 @@ export default function DistrictExplorer({
           })}
         </div>
       ) : variant === "cards" ? (
-        <div className="-mx-4 mt-4 flex snap-x snap-mandatory scroll-px-4 gap-3 overflow-x-auto px-4 pb-1 [scrollbar-width:none]">
+        <div className="stagger -mx-4 mt-4 flex snap-x snap-mandatory scroll-px-4 gap-3 overflow-x-auto px-4 pb-1 [scrollbar-width:none]">
           {shown.map((d) => (
             <Link
               key={d.slug}
@@ -168,7 +168,7 @@ export default function DistrictExplorer({
           ))}
         </div>
       ) : (
-        <ol className="card mt-3 px-3.5 py-1">
+        <ol className="card stagger mt-3 px-3.5 py-1">
           {shown.map((d) => (
             <li key={d.slug} id={`kiez-${d.slug}`} className="border-b border-line last:border-0">
               <Link href={href(d)} className="press flex items-center gap-3 py-3">

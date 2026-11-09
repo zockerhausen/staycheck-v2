@@ -1,5 +1,6 @@
 import { VERIFIED_RADIUS } from "@/lib/popular";
 import Link from "next/link";
+import Logo from "@/components/Logo";
 import { getChosenCity, getChosenZiel, getCities, getCriteria, getDistricts, getExtras, getProfile, getUser } from "@/lib/data";
 import { rankDistricts } from "@/lib/matching";
 import { getTipsForDistrict, TIP_CATEGORIES } from "@/lib/tips";
@@ -52,7 +53,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
       {city ? (
         <CitySwitcher current={city.name} verified={verified} />
       ) : (
-        <span className="text-[18px] font-extrabold tracking-[-0.03em]">StayCheck<span className="text-pink">.</span></span>
+        <Logo size={18} />
       )}
       <ThemeToggle className="h-11 w-11" />
     </div>

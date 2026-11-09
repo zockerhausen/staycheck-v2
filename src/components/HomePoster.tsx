@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Logo from "@/components/Logo";
 import Icon from "@/components/Icon";
 import CitySwitcher from "@/components/CitySwitcher";
 import ThemeToggle from "@/components/ThemeToggle";
@@ -32,9 +33,7 @@ export default function HomePoster({
       {/* feiner Ring als Schmuck */}
       <span aria-hidden className="pointer-events-none absolute -right-24 top-[70px] h-[250px] w-[250px] rounded-full shadow-[inset_0_0_0_1.5px_rgba(140,127,246,.75)]" />
       <div className="relative flex items-center justify-between">
-        <span className="text-[18px] font-extrabold tracking-[-0.03em]">
-          StayCheck<span className="text-pink">.</span>
-        </span>
+        <Logo size={18} onViolet />
         <span className="flex gap-2">
           <ThemeToggle onViolet className="h-11 w-11" />
           <Link

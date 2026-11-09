@@ -98,7 +98,9 @@ export default function StayMap({
         el.type = "button";
         const r = rank.get(i) ?? 999;
         const tier = s.out ? "sc-pin sc-pin-dot sc-pin-out" : r < 3 ? "sc-pin sc-pin-best" : r < 10 ? "sc-pin sc-pin-mid" : "sc-pin sc-pin-dot";
-        el.className = tier;
+        el.className = `${tier} pin-in`;
+        // nacheinander aufploppen: die Besten zuerst
+        el.style.animationDelay = `${120 + Math.min(s.out ? 14 : r, 14) * 35}ms`;
         el.dataset.tier = tier;
         el.dataset.z = String(s.out ? 1 : r < 3 ? 40 - r : r < 10 ? 20 : 10);
         el.style.zIndex = el.dataset.z;
