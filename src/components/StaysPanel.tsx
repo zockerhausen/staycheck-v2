@@ -1,12 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState, useTransition } from "react";
-import { createPortal } from "react-dom";
 import Link from "next/link";
+import { createPortal } from "react-dom";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Icon from "@/components/Icon";
-import { isDarkNow } from "@/components/ThemeSwitch";
-import { partnerOn, stayMapUrl } from "@/lib/partner";
 import { MAX_OPTIONS } from "@/lib/trip";
 import StayMap, { type StayPin } from "@/components/StayMap";
 import type { ZonePoint } from "@/lib/zones";
@@ -14,12 +12,11 @@ import type { ZonePoint } from "@/lib/zones";
 type Chip = { key: string; label: string; href: string; active: boolean };
 
 const fmt = (s: string) => new Date(`${s}T12:00:00`).toLocaleDateString("de-DE", { day: "numeric", month: "short" });
-const CONSENT_KEY = "sc-stay22-ok";
 
 /**
- * Unterkünfte an einem Ort, aus einem Guss:
- * eine Suchzeile (Daten, Personen, Budget → Fenster von unten), Umschalter Liste | Karte, schlanke Filter.
- * Die Karte mit echten Preisen (Partner Stay22) lädt erst nach Zustimmung und belegt immer denselben Platz (kein Springen).
+ * Unterkünfte in einem Viertel, aus einem Guss – mit genau einer Karte:
+ * Suchzeile (Daten, Personen, Budget → Fenster von unten), die Karte mit dem markierten Viertel und allen Unterkünften darin,
+ * Filter, dann die Liste. Antippen (Liste oder Karte) zeigt nur diese eine Unterkunft; Preise öffnen sich bei Booking.com.
  */
 export default function StaysPanel({
   checkin,
@@ -28,7 +25,7 @@ export default function StaysPanel({
   adults,
   max,
   chips,
-  map,
+  area,
   stays,
   zones,
   children,
@@ -38,41 +35,27 @@ export default function StaysPanel({
   nights: number;
   adults: number;
   max: number | null;
-  count?: number;
   chips: Chip[];
-  map: { lat: number; lon: number; place: string; campaign: string; area?: string | null };
-  /** Unterkünfte aus der Liste (gleiche Reihenfolge) für unsere Karte */
+  /** Das Viertel: Mitte, Umkreis in Metern, Name */
+  area: { lat: number; lon: number; radius: number; name: string };
+  /** Alle Unterkünfte im Viertel (gleiche Reihenfolge wie die Liste) */
   stays: StayPin[];
   zones: ZonePoint[];
   children: React.ReactNode;
 }) {
-  const [mode, setMode] = useState<"ours" | "all">("ours"); // unsere Auswahl | alle Preise (Stay22)
-  const [sel, setSel] = useState<number | null>(null);
   const [sheet, setSheet] = useState(false);
-  const [big, setBig] = useState(false); // Preiskarte im Vollbild
-  const [consent, setConsent] = useState<boolean | null>(null);
-  const [origin, setOrigin] = useState("");
+  const [sel, setSel] = useState<number | null>(null);
   const mapRef = useRef<HTMLDivElement>(null);
   const [pending, start] = useTransition();
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
 
-  useEffect(() => {
-    setOrigin(window.location.origin);
-    try {
-      setConsent(localStorage.getItem(CONSENT_KEY) === "1");
-    } catch {
-      setConsent(false);
-    }
-  }, []);
-
-  // Antippen in der Liste: unsere Karte zeigt nur diese Unterkunft
+  // Antippen in der Liste: die Karte zeigt nur diese Unterkunft
   useEffect(() => {
     const on = (e: Event) => {
       const n = (e as CustomEvent<number>).detail;
       if (typeof n !== "number") return;
-      setMode("ours");
       setSel(n);
       mapRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
     };
@@ -91,31 +74,6 @@ export default function StaysPanel({
     setSheet(false);
     start(() => router.replace(`${pathname}?${q}`, { scroll: false }));
   }
-
-  function allow() {
-    setConsent(true);
-    try {
-      localStorage.setItem(CONSENT_KEY, "1");
-    } catch {
-      /* egal */
-    }
-  }
-
-  const url = origin
-    ? stayMapUrl({
-        lat: map.lat,
-        lon: map.lon,
-        zoom: 14,
-        campaign: map.campaign,
-        checkin,
-        checkout,
-        adults,
-        maxPrice: max,
-        dark: isDarkNow(),
-        area: map.area,
-        origin,
-      })
-    : null;
 
   return (
     <div>
@@ -138,76 +96,11 @@ export default function StaysPanel({
         <span className="shrink-0 text-[13px] font-extrabold text-sun-soft">{pending ? "…" : "Ändern"}</span>
       </button>
 
-      {/* Eine Karte, zwei Ansichten: unsere Auswahl (Liste unten, beste Lage violett) | alle freien Zimmer mit Preis (Stay22) */}
+      {/* Die eine Karte: Viertel markiert, alle Unterkünfte darin */}
       <div ref={mapRef} className="mt-3 scroll-mt-4">
-        {partnerOn && (
-          <div className="mb-2 grid grid-cols-2 gap-1 rounded-full bg-tan p-1" role="tablist" aria-label="Kartenansicht">
-            {(
-              [
-                ["ours", `Unsere Auswahl${stays.length ? ` (${stays.length})` : ""}`],
-                ["all", "Alle Preise"],
-              ] as const
-            ).map(([k, label]) => (
-              <button
-                key={k}
-                type="button"
-                role="tab"
-                aria-selected={mode === k}
-                onClick={() => setMode(k)}
-                className={`press rounded-full py-2 text-[13.5px] font-extrabold transition-colors ${mode === k ? "bg-paper text-ink shadow-soft" : "text-muted"}`}
-              >
-                {label}
-              </button>
-            ))}
-          </div>
-        )}
         <div className="relative h-[min(58dvh,480px)] overflow-hidden rounded-3xl bg-paper">
-          {mode === "ours" ? (
-            <StayMap stays={stays} zones={zones} center={{ lat: map.lat, lon: map.lon }} sel={sel} onSel={setSel} />
-          ) : (
-            <>
-              {consent && url && !big ? (
-                <iframe
-                  key={url}
-                  src={url}
-                  title={`Unterkünfte mit Preisen rund um ${map.place}`}
-                  className="absolute inset-0 h-full w-full border-0"
-                  referrerPolicy="strict-origin-when-cross-origin"
-                  sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-forms"
-                />
-              ) : consent === false ? (
-                <MapConsent onYes={allow} />
-              ) : null}
-              {consent && (
-                <button
-                  type="button"
-                  onClick={() => setBig(true)}
-                  aria-label="Karte groß machen"
-                  className="press glass absolute bottom-3 right-3 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-[var(--sc-glass-line)] shadow-soft"
-                >
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                    <path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7" />
-                  </svg>
-                </button>
-              )}
-            </>
-          )}
+          <StayMap stays={stays} zones={zones} area={area} sel={sel} onSel={setSel} />
         </div>
-        <p className="mt-2 flex items-center gap-2 px-1 text-[12.5px] font-bold text-muted">
-          {mode === "ours" ? (
-            <span className="min-w-0">Zahlen = Plätze in der Liste. Antippen zeigt nur diese Unterkunft.</span>
-          ) : (
-            <>
-              {map.area && (
-                <>
-                  <span className="h-[3px] w-5 shrink-0 rounded-full bg-[#8c7ff6]" aria-hidden />
-                  <span className="min-w-0 truncate">Innerhalb: beste Lage für dich</span>
-                </>
-              )}
-              <span className="ml-auto shrink-0 rounded-full bg-tan px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide">Anzeige</span>
-            </>
-          )}
-        </p>
       </div>
 
       {chips.length > 1 && (
@@ -227,76 +120,8 @@ export default function StaysPanel({
       )}
       {children}
 
-      {big && url && <PriceMap url={url} title={`Freie Zimmer · ${map.place}`} sub={`${fmt(checkin)} – ${fmt(checkout)} · ${max ? `bis ${max} € pro Nacht` : "jedes Budget"}`} onClose={() => setBig(false)} />}
       {sheet && <TripSheet initial={{ an: checkin, n: nights, p: adults, max: max ?? 0 }} onClose={() => setSheet(false)} onSave={save} />}
     </div>
-  );
-}
-
-/** Zustimmung, bevor die Karte unseres Partners lädt (einmalig, wird gemerkt) */
-function MapConsent({ onYes }: { onYes: () => void }) {
-  return (
-    <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 px-8 text-center">
-      <span className="flex h-16 w-16 items-center justify-center rounded-full bg-peach text-sun-soft">
-        <Icon name="map" size={30} />
-      </span>
-      <b className="text-[19px] font-extrabold">Preise und beste Lage auf einer Karte</b>
-      <p className="text-[14px] font-semibold text-muted">
-        Freie Zimmer mit Preis pro Nacht von Booking.com, dazu violett unsere beste Lage für dich. Die Karte kommt von unserem Partner Stay22, dabei
-        wird deine IP-Adresse übertragen.
-      </p>
-      <button type="button" onClick={onYes} className="press shadow-primary mt-1 rounded-full bg-sun px-6 py-3 text-[15px] font-extrabold text-white">
-        Karte laden
-      </button>
-    </div>
-  );
-}
-
-/** Dieselbe Preiskarte im Vollbild: zum bequemen Schieben, ohne dass die Seite mitscrollt */
-function PriceMap({ url, title, sub, onClose }: { url: string; title: string; sub: string; onClose: () => void }) {
-  const [shown, setShown] = useState(false);
-  useEffect(() => {
-    const t = requestAnimationFrame(() => setShown(true));
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
-    window.addEventListener("keydown", onKey);
-    return () => {
-      cancelAnimationFrame(t);
-      document.body.style.overflow = prev;
-      window.removeEventListener("keydown", onKey);
-    };
-  }, [onClose]);
-  return createPortal(
-    <div
-      className={`fixed inset-0 z-[100] flex flex-col bg-sand transition-[opacity,transform] duration-300 [transition-timing-function:cubic-bezier(.22,1,.36,1)] ${
-        shown ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
-      }`}
-      role="dialog"
-      aria-modal="true"
-      aria-label={title}
-    >
-      <div className="flex items-center gap-3 px-4 pb-3 pt-[max(0.9rem,env(safe-area-inset-top))]">
-        <button type="button" onClick={onClose} aria-label="Schließen" className="press flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-tan">
-          <Icon name="close" size={18} />
-        </button>
-        <span className="min-w-0 flex-1">
-          <b className="block truncate text-[16px] font-extrabold">{title}</b>
-          <span className="block truncate text-[12.5px] font-semibold text-muted">{sub}</span>
-        </span>
-        <span className="shrink-0 rounded-full bg-tan px-2 py-1 text-[10.5px] font-extrabold uppercase tracking-wide text-muted">Anzeige</span>
-      </div>
-      <div className="relative flex-1 overflow-hidden">
-        <iframe
-          src={url}
-          title={title}
-          className="absolute inset-0 h-full w-full border-0"
-          referrerPolicy="strict-origin-when-cross-origin"
-          sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-forms"
-        />
-      </div>
-    </div>,
-    document.body,
   );
 }
 

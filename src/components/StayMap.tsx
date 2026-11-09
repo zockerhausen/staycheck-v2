@@ -13,20 +13,20 @@ import type { ZonePoint } from "@/lib/zones";
 export type StayPin = { name: string; lat: number; lon: number; match: number; meta: string; rating?: string; href: string; booking?: string };
 
 /**
- * Unsere Karte zu den Unterkünften: alle aus der Liste als Nummern, dazu violett die beste Lage.
- * Eine Unterkunft gewählt (in der Liste oder auf der Karte): nur sie bleibt, die Karte fliegt hin, unten eine Karte mit Preis-Knopf.
- * Die violette Lage bleibt immer sichtbar.
+ * Die Karte zu den Unterkünften: das Viertel violett umrandet, darin alle Unterkünfte mit ihrem Lage-Wert,
+ * dazu leuchtend die besten Stellen im Viertel. Eine Unterkunft gewählt (Liste oder Karte): nur sie bleibt,
+ * die Karte fliegt hin, unten eine Karte mit Preis-Knopf. Viertel und Leuchten bleiben immer sichtbar.
  */
 export default function StayMap({
   stays,
-  zones,
-  center,
+  zones: allZones,
+  area,
   sel,
   onSel,
 }: {
   stays: StayPin[];
   zones: ZonePoint[];
-  center: { lat: number; lon: number };
+  area: { lat: number; lon: number; radius: number; name: string };
   sel: number | null;
   onSel: (i: number | null) => void;
 }) {
@@ -36,22 +36,20 @@ export default function StayMap({
   const onSelRef = useRef(onSel);
   onSelRef.current = onSel;
   const [ready, setReady] = useState(false);
+  const center = area;
+  // Leuchten nur im Viertel (sonst lenkt es zu Stellen, an denen wir gar nichts anbieten)
+  const zones = allZones.filter((z) => distM(z, area) <= area.radius);
 
-  // Ausschnitt mit allen Unterkünften (und dem Viertel)
+  // Ausschnitt: das ganze Viertel
   const fitAll = (m: import("maplibre-gl").Map, animate: boolean) => {
-    const pts = [...stays.map((s) => [s.lon, s.lat]), [center.lon, center.lat]];
-    const lons = pts.map((p) => p[0]);
-    const lats = pts.map((p) => p[1]);
-    if (pts.length < 2) {
-      m.easeTo({ center: [center.lon, center.lat], zoom: 14.5, duration: animate ? 600 : 0 });
-      return;
-    }
+    const dLat = area.radius / 111_320;
+    const dLon = dLat / Math.cos((area.lat * Math.PI) / 180);
     m.fitBounds(
       [
-        [Math.min(...lons), Math.min(...lats)],
-        [Math.max(...lons), Math.max(...lats)],
+        [area.lon - dLon, area.lat - dLat],
+        [area.lon + dLon, area.lat + dLat],
       ],
-      { padding: { top: 64, bottom: 48, left: 44, right: 44 }, maxZoom: 15.5, duration: animate ? 700 : 0 },
+      { padding: { top: 56, bottom: 24, left: 16, right: 16 }, duration: animate ? 700 : 0 },
     );
   };
 
@@ -86,14 +84,16 @@ export default function StayMap({
       m.on("remove", () => window.removeEventListener("sc-theme", onTheme));
       m.on("style.load", () => {
         applyStayCheckTheme(m, isDarkNow());
+        addArea(m, area);
         if (zones.length) addZones(m, zones, 350, center.lat);
       });
-      // Nummern wie in der Liste; die ersten drei kräftig
+      // Jede Unterkunft mit ihrem Lage-Wert; die drei besten kräftig, der Rest kleiner
+      const rank = new Map([...stays.keys()].sort((a, b) => stays[b].match - stays[a].match).map((i, r) => [i, r]));
       pinsRef.current = stays.map((s, i) => {
         const el = document.createElement("button");
         el.type = "button";
-        el.className = i < 3 ? "sc-pin sc-pin-good" : "sc-pin";
-        el.textContent = String(i + 1);
+        el.className = (rank.get(i) ?? 99) < 3 ? "sc-pin sc-pin-good" : "sc-pin sc-pin-dim";
+        el.textContent = String(s.match);
         el.setAttribute("aria-label", `${i + 1}. ${s.name}, Lage ${s.match}`);
         el.addEventListener("click", (e) => {
           e.stopPropagation();
@@ -112,7 +112,7 @@ export default function StayMap({
       map?.remove();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [stays, zones]);
+  }, [stays, allZones, area.lat, area.lon, area.radius]);
 
   // Auswahl: nur diese Unterkunft zeigen und hinfliegen; ohne Auswahl wieder alle
   useEffect(() => {
@@ -143,12 +143,14 @@ export default function StayMap({
           </button>
           <div className="glass absolute inset-x-3 bottom-3 z-10 rounded-[22px] border border-[var(--sc-glass-line)] p-3 shadow-soft">
             <div className="flex items-start gap-3">
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-sun text-[15px] font-extrabold text-white">{sel! + 1}</span>
+              <span className="flex h-10 w-10 shrink-0 flex-col items-center justify-center rounded-full bg-sun text-white">
+                <b className="text-[15px] font-extrabold leading-none">{s.match}</b>
+                <span className="text-[8px] font-extrabold uppercase leading-none tracking-wide opacity-80">Lage</span>
+              </span>
               <span className="min-w-0 flex-1">
                 <b className="block truncate text-[16px] font-extrabold leading-snug">{s.name}</b>
                 <span className="block truncate text-[13px] font-semibold text-muted">
-                  Lage {s.match}
-                  {s.rating ? ` · ★ ${s.rating}` : ""} · {s.meta}
+                  {[s.rating ? `★ ${s.rating}` : null, s.meta].filter(Boolean).join(" · ")}
                 </span>
               </span>
               <button type="button" onClick={() => onSel(null)} aria-label="Auswahl schließen" className="press -m-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-full">
@@ -173,13 +175,41 @@ export default function StayMap({
           </div>
         </>
       ) : (
-        zones.length > 0 && (
-          <span className="glass pointer-events-none absolute left-3 top-3 z-10 flex items-center gap-1.5 rounded-full border border-[var(--sc-glass-line)] px-3 py-[7px] text-[12.5px] font-extrabold shadow-soft">
-            <span className="h-3 w-3 shrink-0 rounded-full bg-[#5340f2]/60 blur-[1px]" />
-            Violett = beste Lage für dich
+        <span className="glass pointer-events-none absolute left-3 top-3 z-10 flex max-w-[calc(100%-1.5rem)] items-center gap-2 rounded-full border border-[var(--sc-glass-line)] px-3 py-[7px] text-[12.5px] font-extrabold shadow-soft">
+          <span className="h-3 w-3 shrink-0 rounded-full border-2 border-[#5340f2] bg-[#5340f2]/25" />
+          <span className="truncate">
+            {area.name} · {stays.length} {stays.length === 1 ? "Unterkunft" : "Unterkünfte"}
           </span>
-        )
+        </span>
       )}
     </div>
   );
+}
+
+const distM = (a: { lat: number; lon: number }, b: { lat: number; lon: number }) => {
+  const dy = (a.lat - b.lat) * 111_320;
+  const dx = (a.lon - b.lon) * 111_320 * Math.cos((b.lat * Math.PI) / 180);
+  return Math.hypot(dx, dy);
+};
+
+/** Das Viertel als Fläche: zart gefüllt, kräftig umrandet */
+function addArea(m: import("maplibre-gl").Map, area: { lat: number; lon: number; radius: number }) {
+  const ring: [number, number][] = [];
+  for (let k = 0; k <= 72; k++) {
+    const a = (k / 72) * 2 * Math.PI;
+    const dLat = (area.radius * Math.sin(a)) / 111_320;
+    const dLon = (area.radius * Math.cos(a)) / (111_320 * Math.cos((area.lat * Math.PI) / 180));
+    ring.push([area.lon + dLon, area.lat + dLat]);
+  }
+  const before = m.getStyle().layers?.find((l) => l.type === "symbol")?.id;
+  try {
+    m.addSource("sc-area", { type: "geojson", data: { type: "Feature", properties: {}, geometry: { type: "Polygon", coordinates: [ring] } } });
+    m.addLayer({ id: "sc-area-fill", type: "fill", source: "sc-area", paint: { "fill-color": "#5340f2", "fill-opacity": 0.07 } }, before);
+    m.addLayer(
+      { id: "sc-area-line", type: "line", source: "sc-area", paint: { "line-color": "#5340f2", "line-width": 2.5, "line-opacity": 0.85, "line-dasharray": [2, 1.5] } },
+      before,
+    );
+  } catch {
+    // ohne Fläche weiter
+  }
 }

@@ -108,12 +108,6 @@ export default function DatenschutzPage() {
               Partner-Links unseres Partners Stay22 (Stay22 Technologies Inc., Kanada): Buchst du darüber, bekommen wir eine Provision. Dein Preis ändert
               sich dadurch nicht. Beim Klick erfährt Stay22, von welcher Seite der Klick kam und welchen Ort du dir angesehen hast.
             </p>
-            <p className="mt-2">
-              „Freie Zimmer mit Preis“ lädt eine Liste von Stay22 erst, wenn du auf „Preise und Bewertungen laden“ tippst. Erst dann verbindet sich dein
-              Browser mit Stay22; dabei werden deine IP-Adresse, der Ort der Liste und technische Angaben übertragen, und Stay22 kann Cookies setzen.
-              Rechtsgrundlage ist deine Einwilligung durch das Antippen (Art. 6 Abs. 1 lit. a DSGVO, § 25 Abs. 1 TDDDG). Mehr bei Stay22:
-              stay22.com/privacy.
-            </p>
           </>
         ) : (
           <p>

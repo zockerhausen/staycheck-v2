@@ -34,7 +34,6 @@ import { areaPhoto } from "@/lib/photos";
 import { maxPriceFor, partnerOn, priceLink } from "@/lib/partner";
 import { classCap, parseTrip, tripQuery } from "@/lib/trip";
 import StaysPanel from "@/components/StaysPanel";
-import { areaCode } from "@/lib/zones";
 
 export const fetchCache = "default-cache";
 export const maxDuration = 120; // erste Berechnung einer Stadt kann dauern (läuft nach der Antwort weiter)
@@ -50,6 +49,9 @@ const FILTERS = [
 ];
 
 /** Ein automatisch gefundenes Viertel in einer Stadt ohne Handbewertung, mit Unterkünften nach Lage. */
+/** Umkreis des Viertels in Metern: so weit suchen wir Unterkünfte, genau so groß ist es auf der Karte markiert */
+const STAY_RADIUS = 800;
+
 export default async function AutoViertelPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const params = await searchParams;
   const ziel = parseZiel(params);
@@ -105,7 +107,7 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
 
   let hotels: HotelResult[] = [];
   let failed = false;
-  const work = hotelsNearCached({ lat: Number(vlat.toFixed(5)), lon: Number(vlon.toFixed(5)) }, null, weights, 800, name);
+  const work = hotelsNearCached({ lat: Number(vlat.toFixed(5)), lon: Number(vlon.toFixed(5)) }, null, weights, STAY_RADIUS, name);
   const raced = await withDeadline(work.catch(() => null), 9_000);
   const slow = raced === "slow";
   if (slow) after(() => work.catch(() => undefined));
@@ -176,7 +178,7 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
   const bookingOf = (h: HotelResult) =>
     partnerOn ? priceLink({ lat: h.lat, lon: h.lon, hotel: h.name, address: h.subtitle || undefined, campaign: `spot_${ziel.ort}_${name}`, checkin: trip.checkin, checkout: trip.checkout, adults: trip.adults }) : undefined;
   // Dieselben Unterkünfte wie in der Liste, gleiche Nummern
-  const stayPins = slow || failed ? [] : shown.slice(0, 25).map((h) => ({
+  const stayPins = slow || failed ? [] : shown.map((h) => ({
     name: h.name,
     lat: h.lat,
     lon: h.lon,
@@ -195,15 +197,8 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
         nights={trip.nights}
         adults={trip.adults}
         max={maxNight}
-        count={shown.length}
         chips={chips}
-        map={{
-          lat: vlat,
-          lon: vlon,
-          place: name,
-          campaign: `spot_${ziel.ort}_${name}`,
-          area: areaCode(zones, { lat: vlat, lon: vlon }),
-        }}
+        area={{ lat: vlat, lon: vlon, radius: STAY_RADIUS, name: name }}
         stays={stayPins}
         zones={zones}
       >
@@ -214,7 +209,7 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
         <p className="card mt-4 p-4 text-[15px] text-muted">Die Kartendaten sind gerade überlastet. Lade die Seite in einer Minute neu.</p>
       ) : shown.length === 0 ? (
         <p className="card mt-4 p-4 text-[15px] text-muted">
-          {maxNight ? `Keine Unterkunft hier passt sicher in ${maxNight} € pro Nacht. Schau auf der Karte nach echten Preisen oder erhöhe oben das Budget.` : "Hier haben wir keine passenden Unterkünfte gefunden."}
+          {maxNight ? `Keine Unterkunft hier passt sicher in ${maxNight} € pro Nacht. Erhöhe oben das Budget, dann zeigen wir mehr.` : "Hier haben wir keine passenden Unterkünfte gefunden."}
         </p>
       ) : (
         <>
@@ -230,7 +225,7 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
             />
           )}
           <ol className="card mt-3 px-3.5 py-1">
-            {shown.slice(0, 25).map((h, i) => (
+            {shown.map((h, i) => (
               <StayRow
                 key={`${h.lat}-${h.lon}`}
                 id={`kiez-h${i}`}

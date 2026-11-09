@@ -38,9 +38,8 @@ export default function StayRow({
   return (
     <li id={id} className="flex items-start gap-3 border-b border-line py-3 last:border-0">
       {select !== undefined ? (
-        <StaySelect n={select} label={`${name} auf der Karte zeigen`} className="press flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-[16px] bg-peach text-sun-soft">
-          <Icon name="locate" size={14} fill="transparent" />
-          <b className="text-[17px] font-extrabold leading-none">{select + 1}</b>
+        <StaySelect n={select} label={`${name} auf der Karte zeigen`} className="press flex h-14 w-14 shrink-0 items-center justify-center rounded-[16px] bg-peach text-sun-soft">
+          <Icon name="hotel" size={24} fill="transparent" />
         </StaySelect>
       ) : (
         <Link href={href} className="press flex h-14 w-14 shrink-0 items-center justify-center rounded-[16px] bg-peach text-sun-soft" aria-hidden tabIndex={-1}>

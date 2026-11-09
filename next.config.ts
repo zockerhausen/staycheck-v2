@@ -17,7 +17,7 @@ const securityHeaders = [
       "font-src 'self' data:",
       "connect-src 'self' https://yxwnkvvhwlnsvnjdxdle.supabase.co https://tiles.openfreemap.org",
       "worker-src 'self' blob:",
-      "frame-src https://www.stay22.com", // Unterkünfte mit Preisen (lädt erst nach Antippen)
+      "frame-src 'none'", // keine fremden Karten oder Fenster eingebettet
       "frame-ancestors 'none'",
       "base-uri 'self'",
       "form-action 'self'",

@@ -35,7 +35,6 @@ import { getTipsForDistrict } from "@/lib/tips";
 import { maxPriceFor, partnerOn, priceLink } from "@/lib/partner";
 import { classCap, parseTrip, tripQuery } from "@/lib/trip";
 import StaysPanel from "@/components/StaysPanel";
-import { areaCode } from "@/lib/zones";
 
 // Dynamisch durch Cookies/Suchparameter; Kartendaten-Abfragen werden 1 Tag zwischengespeichert.
 export const fetchCache = "default-cache";
@@ -55,6 +54,9 @@ const FILTERS = [
   { key: "guest_house", label: "Pensionen" },
   { key: "apartment", label: "Apartments" },
 ];
+
+/** Umkreis des Viertels in Metern: so weit suchen wir Unterkünfte, genau so groß ist es auf der Karte markiert */
+const STAY_RADIUS = 1000;
 
 export default async function KiezPage({
   params,
@@ -97,7 +99,7 @@ export default async function KiezPage({
 
   let hotels: HotelResult[] = [];
   let failed = false;
-  const work = hotelsNearCached({ lat: district.lat, lon: district.lng }, district, weights, 1000, district.name);
+  const work = hotelsNearCached({ lat: district.lat, lon: district.lng }, district, weights, STAY_RADIUS, district.name);
   const raced = await withDeadline(work.catch(() => null), 9_000);
   const slow = raced === "slow";
   if (slow) after(() => work.catch(() => undefined));
@@ -169,7 +171,7 @@ export default async function KiezPage({
   const bookingOf = (h: HotelResult) =>
     partnerOn ? priceLink({ lat: h.lat, lon: h.lon, hotel: h.name, address: h.subtitle || undefined, campaign: `kiez_${district.slug}`, checkin: trip.checkin, checkout: trip.checkout, adults: trip.adults }) : undefined;
   // Dieselben Unterkünfte wie in der Liste, gleiche Nummern
-  const stayPins = slow || failed ? [] : shown.slice(0, 25).map((h) => ({
+  const stayPins = slow || failed ? [] : shown.map((h) => ({
     name: h.name,
     lat: h.lat,
     lon: h.lon,
@@ -188,15 +190,8 @@ export default async function KiezPage({
         nights={trip.nights}
         adults={trip.adults}
         max={maxNight}
-        count={shown.length}
         chips={chips}
-        map={{
-          lat: district.lat!,
-          lon: district.lng!,
-          place: short,
-          campaign: `kiez_${district.slug}`,
-          area: areaCode(zones, { lat: district.lat!, lon: district.lng! }),
-        }}
+        area={{ lat: district.lat!, lon: district.lng!, radius: STAY_RADIUS, name: short }}
         stays={stayPins}
         zones={zones}
       >
@@ -207,7 +202,7 @@ export default async function KiezPage({
         <p className="card mt-4 p-4 text-[15px] text-muted">Die Kartendaten sind gerade überlastet. Lade die Seite in einer Minute neu.</p>
       ) : shown.length === 0 ? (
         <p className="card mt-4 p-4 text-[15px] text-muted">
-          {maxNight ? `Keine Unterkunft hier passt sicher in ${maxNight} € pro Nacht. Schau auf der Karte nach echten Preisen oder erhöhe oben das Budget.` : "Hier haben wir keine passenden Unterkünfte gefunden."}
+          {maxNight ? `Keine Unterkunft hier passt sicher in ${maxNight} € pro Nacht. Erhöhe oben das Budget, dann zeigen wir mehr.` : "Hier haben wir keine passenden Unterkünfte gefunden."}
         </p>
       ) : (
         <>
@@ -223,7 +218,7 @@ export default async function KiezPage({
             />
           )}
           <ol className="card mt-3 px-3.5 py-1">
-            {shown.slice(0, 25).map((h, i) => (
+            {shown.map((h, i) => (
               <StayRow
                 key={`${h.lat}-${h.lon}`}
                 id={`kiez-h${i}`}
@@ -247,7 +242,7 @@ export default async function KiezPage({
             ))}
           </ol>
           <p className="mt-3 text-[13px] font-semibold text-muted">
-            Sortiert nach Lage (Unterkünfte und Umgebung aus OpenStreetMap). „Preis“ öffnet genau diese Unterkunft bei Booking.com (Anzeige).
+            Alle Unterkünfte im markierten Viertel, sortiert nach Lage (Daten aus OpenStreetMap). Antippen zeigt sie auf der Karte, „Preis“ öffnet sie bei Booking.com (Anzeige).
             {hiddenUnknown > 0 ? ` ${hiddenUnknown} Unterkünfte ohne bekannte Preisklasse sind ausgeblendet.` : ""}
             {demo ? " Gäste-Werte sind vorerst Beispieldaten." : ""}
           </p>
