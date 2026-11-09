@@ -75,6 +75,7 @@ export default async function KiezPage({
   const query = source === "url" ? weightsToQuery(weights) : "";
   const amp = query ? `&${query}` : "";
   const filter = typeof sp.typ === "string" && STAY_FILTERS.some((f) => f.key === sp.typ) ? sp.typ : "alle";
+  const showAll = (typeof sp.mehr === "string" && sp.mehr === "1");
   const trip = parseTrip(sp);
   const tq = tripQuery(trip);
 
@@ -205,6 +206,8 @@ export default async function KiezPage({
             center={{ lat: district.lat!, lon: district.lng! }}
             radius={STAY_RADIUS}
             budget={maxNight}
+            limit={showAll ? Infinity : 40}
+            moreHref={`/kiez/${slug}?stadt=${district.city}&typ=${filter}${amp}${tq}&mehr=1`}
             href={(i) => checkUrl(i.hotel)}
             save={(i) => ({
               place: { name: i.name, subtitle: i.hotel.subtitle, lat: i.lat, lon: i.lon, kind: i.kind, match: i.match },

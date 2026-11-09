@@ -57,6 +57,7 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
   const rad = params.rad === String(VERIFIED_RADIUS) ? VERIFIED_RADIUS : CITY_RADIUS;
   const back = `/ziel?${zq}`;
   const filter = typeof params.typ === "string" && STAY_FILTERS.some((f) => f.key === params.typ) ? params.typ : "alle";
+  const showAll = (typeof params.mehr === "string" && params.mehr === "1");
   const trip = parseTrip(params);
   const tq = tripQuery(trip);
   const self = `/ziel/viertel?${zq}&${new URLSearchParams({ name, vlat: vlat.toFixed(5), vlon: vlon.toFixed(5), ...(rad === VERIFIED_RADIUS ? { rad: String(VERIFIED_RADIUS) } : {}) })}`;
@@ -216,6 +217,8 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
             center={{ lat: vlat, lon: vlon }}
             radius={STAY_RADIUS}
             budget={maxNight}
+            limit={showAll ? Infinity : 40}
+            moreHref={`${self}&typ=${filter}${tq}&mehr=1`}
             href={(i) => checkUrl(i.hotel)}
             save={(i) => ({
               place: { name: i.name, subtitle: i.hotel.subtitle, lat: i.lat, lon: i.lon, kind: i.kind, match: i.match },

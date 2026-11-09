@@ -19,7 +19,12 @@ export default function StayList({
   href,
   save,
   budget,
+  limit = Infinity,
+  moreHref,
 }: {
+  /** Höchstens so viele Zeilen in der Liste (die Karte zeigt immer alle); moreHref zeigt dann alle */
+  limit?: number;
+  moreHref?: string;
   items: StayItem[];
   /** Budget pro Nacht (für die Unterzeile), null = egal */
   budget?: number | null;
@@ -31,8 +36,13 @@ export default function StayList({
 }) {
   const inside = items.filter((i) => !i.out);
   const top = inside.slice(0, 3);
-  const rest = inside.slice(3);
-  const out = items.filter((i) => i.out);
+  const restAll = inside.slice(3);
+  const outAll = items.filter((i) => i.out);
+  // Lange Listen kürzen (schnelle Seite), Rest per Knopf
+  const room = Math.max(0, limit - top.length);
+  const rest = restAll.slice(0, room);
+  const out = outAll.slice(0, Math.max(0, room - rest.length));
+  const hidden = restAll.length + outAll.length - rest.length - out.length;
   const idx = (i: StayItem) => items.indexOf(i);
   const sources = [...new Set(items.flatMap((i) => i.reviews?.platforms.map((p) => p.platform) ?? []))];
 
@@ -96,18 +106,23 @@ export default function StayList({
 
       {(rest.length > 0 || out.length > 0) && (
         <div className="card mt-4 px-3.5 py-1">
-          {rest.length > 0 && <Label text={`${top.length ? "Weitere" : "Unterkünfte"}${rings?.length ? " in der guten Lage" : ""} · ${rest.length}`} tone="sun" />}
+          {rest.length > 0 && <Label text={`${top.length ? "Weitere" : "Unterkünfte"}${rings?.length ? " in der guten Lage" : ""} · ${restAll.length}`} tone="sun" />}
           <ol>
             {rest.map((i) => (
               <Row key={i.key} i={i} n={idx(i)} />
             ))}
           </ol>
-          {out.length > 0 && <Label text={`Knapp daneben · ${out.length}`} tone="muted" />}
+          {out.length > 0 && <Label text={`Knapp daneben · ${outAll.length}`} tone="muted" />}
           <ol>
             {out.map((i) => (
               <Row key={i.key} i={i} n={idx(i)} />
             ))}
           </ol>
+          {hidden > 0 && moreHref && (
+            <a href={moreHref} className="press my-2 flex items-center justify-center rounded-full bg-tan py-3 text-[14px] font-extrabold text-sun-soft">
+              Alle {items.length} zeigen (+{hidden})
+            </a>
+          )}
         </div>
       )}
 
