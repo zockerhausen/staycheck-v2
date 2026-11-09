@@ -592,7 +592,11 @@ input[type="range"] {
   opacity: 1;
 }
 
-/* ---------- Startbildschirm (Splash) ---------- */
+/* ---------- Startbildschirm (Splash) ----------
+   0–500 ms   Pin fällt, landet mit kleinem Federn; Welle läuft über den „Boden“
+   320–640 ms Haken zeichnet sich
+   420–800 ms Schriftzug kommt
+   860–1340 ms Violett zieht sich kreisförmig in den Pin zusammen, die App erscheint */
 #sc-splash {
   position: fixed;
   inset: 0;
@@ -602,77 +606,105 @@ input[type="range"] {
   justify-content: center;
   background: radial-gradient(120% 80% at 30% 20%, #7d70ff 0%, #5340f2 45%, #3a27c9 100%);
   color: #fff;
-  animation: sc-splash-out 380ms cubic-bezier(0.65, 0, 0.35, 1) 820ms forwards;
-}
-.sc-nosplash #sc-splash {
-  display: none;
+  clip-path: circle(150% at 50% 45%);
+  animation: sc-splash-out 480ms cubic-bezier(0.7, 0, 0.3, 1) 860ms forwards;
 }
 .sc-splash-inner {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 18px;
-  animation: sc-splash-zoom 380ms cubic-bezier(0.65, 0, 0.35, 1) 820ms forwards;
+  gap: 22px;
+  animation: sc-splash-shrink 480ms cubic-bezier(0.7, 0, 0.3, 1) 860ms forwards;
 }
 .sc-splash-mark {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  width: 96px;
+  height: 96px;
+}
+/* weiches Licht hinter dem Pin statt eines harten Schattens */
+.sc-splash-mark::before {
+  content: "";
+  position: absolute;
+  inset: -34px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0));
+  animation: sc-glow 900ms ease-out 200ms both;
 }
 .sc-splash-mark svg {
-  filter: drop-shadow(0 14px 22px rgba(20, 10, 110, 0.35));
-  animation: sc-pin-in 520ms cubic-bezier(0.34, 1.56, 0.64, 1) 40ms both;
+  position: relative;
+  display: block;
+  transform-origin: 50% 93%;
+  animation: sc-pin-drop 560ms cubic-bezier(0.22, 1, 0.36, 1) 30ms both;
 }
-.sc-splash-shadow {
-  width: 46px;
-  height: 9px;
-  margin-top: 4px;
+/* Welle am Boden, wo der Pin landet (wie ein Ping auf der Karte) */
+.sc-splash-ripple {
+  position: absolute;
+  left: 50%;
+  top: 89px;
+  width: 64px;
+  height: 18px;
+  margin: -9px 0 0 -32px;
   border-radius: 50%;
-  background: rgba(20, 10, 110, 0.35);
-  filter: blur(3px);
-  animation: sc-shadow-in 520ms cubic-bezier(0.34, 1.56, 0.64, 1) 40ms both;
+  border: 2px solid rgba(255, 255, 255, 0.7);
+  opacity: 0;
+  animation: sc-ripple 780ms cubic-bezier(0.22, 1, 0.36, 1) 380ms forwards;
+}
+.sc-splash-ripple.sc-r2 {
+  animation-delay: 520ms;
+  border-color: rgba(255, 255, 255, 0.45);
 }
 .sc-splash-check {
   stroke-dasharray: 30;
   stroke-dashoffset: 30;
-  animation: sc-check-draw 340ms cubic-bezier(0.22, 1, 0.36, 1) 330ms forwards;
+  animation: sc-check-draw 320ms cubic-bezier(0.65, 0, 0.35, 1) 320ms both; /* vorher unsichtbar (sonst ein Punkt von der runden Kappe) */
 }
 .sc-splash-word {
   font-family: var(--font-body), system-ui, sans-serif;
   font-weight: 800;
   font-size: 34px;
   letter-spacing: -0.04em;
-  animation: sc-word-in 380ms cubic-bezier(0.22, 1, 0.36, 1) 400ms both;
+  animation: sc-word-in 420ms cubic-bezier(0.22, 1, 0.36, 1) 420ms both;
 }
 .sc-splash-word span {
   color: rgba(255, 255, 255, 0.72);
 }
-@keyframes sc-pin-in {
-  from { opacity: 0; transform: translateY(-46px) scale(0.5); }
-  to { opacity: 1; transform: none; }
+@keyframes sc-pin-drop {
+  0% { opacity: 0; transform: translateY(-70px) scale(0.85, 1.08); }
+  55% { opacity: 1; transform: translateY(4px) scale(1.08, 0.9); }
+  75% { transform: translateY(-3px) scale(0.97, 1.03); }
+  100% { opacity: 1; transform: none; }
 }
-@keyframes sc-shadow-in {
-  from { opacity: 0; transform: scaleX(0.2); }
+@keyframes sc-ripple {
+  0% { opacity: 0.9; transform: scale(0.2); }
+  100% { opacity: 0; transform: scale(2.3); }
+}
+@keyframes sc-glow {
+  from { opacity: 0; transform: scale(0.6); }
   to { opacity: 1; transform: none; }
 }
 @keyframes sc-check-draw {
-  to { stroke-dashoffset: 0; }
+  0% { stroke-dashoffset: 30; opacity: 0; }
+  8% { opacity: 1; }
+  100% { stroke-dashoffset: 0; opacity: 1; }
 }
 @keyframes sc-word-in {
-  from { opacity: 0; transform: translateY(12px); filter: blur(4px); }
-  to { opacity: 1; transform: none; filter: none; }
+  from { opacity: 0; transform: translateY(10px); letter-spacing: 0.02em; filter: blur(5px); }
+  to { opacity: 1; transform: none; letter-spacing: -0.04em; filter: none; }
 }
-@keyframes sc-splash-zoom {
-  to { opacity: 0; transform: scale(1.22); }
+@keyframes sc-splash-shrink {
+  to { opacity: 0; transform: scale(0.82); }
 }
 @keyframes sc-splash-out {
-  to { opacity: 0; visibility: hidden; pointer-events: none; }
+  to { clip-path: circle(0px at 50% 45%); visibility: hidden; pointer-events: none; }
 }
 @media (prefers-reduced-motion: reduce) {
-  #sc-splash { animation: sc-splash-out 250ms ease 500ms forwards; }
-  .sc-splash-inner, .sc-splash-mark svg, .sc-splash-shadow, .sc-splash-word { animation: none; }
+  #sc-splash { animation: sc-fade-out 250ms ease 500ms forwards; clip-path: none; }
+  .sc-splash-inner, .sc-splash-mark svg, .sc-splash-mark::before, .sc-splash-word { animation: none; }
+  .sc-splash-ripple { display: none; }
   .sc-splash-check { animation: none; stroke-dashoffset: 0; }
+}
+@keyframes sc-fade-out {
+  to { opacity: 0; visibility: hidden; }
 }
 
 /* ---------- Bewegung: kurz, weich, nur transform/opacity (flüssig auf dem Handy) ---------- */
