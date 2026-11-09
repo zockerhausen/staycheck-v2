@@ -4,7 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getCities, getCriteria, getDistricts, getExtras, getFavoriteIds, getSavedPlaces, getUser, resolveWeights, weightsToQuery } from "@/lib/data";
 import { after } from "next/server";
-import { cityZones, DEFAULT_WEIGHTS, hotelsNearCached, verdict, withDeadline, type HotelResult } from "@/lib/geo";
+import { alignStays, cityZones, DEFAULT_WEIGHTS, hotelsNearCached, locationMatch, verdict, withDeadline, type HotelResult } from "@/lib/geo";
 import StillLoading from "@/components/StillLoading";
 import { matchScore } from "@/lib/matching";
 import FavoriteButton from "@/components/FavoriteButton";
@@ -105,14 +105,10 @@ export default async function KiezPage({
   if (slow) after(() => work.catch(() => undefined));
   else if (raced === null) failed = true;
   else hotels = raced;
-  // Persönlicher Match inkl. Extras und Muss (Liste neu sortieren)
-  if (resolved) {
+  // Gleiche Werte wie auf der Detailseite jeder Unterkunft (Sicherheit vom nächsten Viertel, gleiche Formel)
+  {
     const ex = await getExtras();
-    if (ex.items.length) {
-      hotels = hotels
-        .map((h) => ({ ...h, match: personalMatch(h.scores, weights, ex).match }))
-        .sort((a, b) => b.match - a.match);
-    }
+    hotels = alignStays(hotels, districts, (sc) => (resolved ? personalMatch(sc, weights, ex).match : locationMatch(sc, DEFAULT_WEIGHTS)));
   }
   // Budget aus dem Reise-Profil: eigener Filter, Preisklasse an jeder Unterkunft (geschätzt)
   const band = (await getExtras()).preis ?? null;
@@ -169,7 +165,7 @@ export default async function KiezPage({
   const hubs = await hubsNear(district.lat!, district.lng!, district.city);
 
   const bookingOf = (h: HotelResult) =>
-    partnerOn ? priceLink({ lat: h.lat, lon: h.lon, hotel: h.name, address: h.subtitle || undefined, campaign: `kiez_${district.slug}`, checkin: trip.checkin, checkout: trip.checkout, adults: trip.adults }) : undefined;
+    partnerOn ? priceLink({ lat: h.lat, lon: h.lon, hotel: h.name, address: cityName || undefined, campaign: `kiez_${district.slug}`, checkin: trip.checkin, checkout: trip.checkout, adults: trip.adults }) : undefined;
   // Dieselben Unterkünfte wie in der Liste, gleiche Nummern
   const stayPins = slow || failed ? [] : shown.map((h) => ({
     name: h.name,
@@ -242,7 +238,7 @@ export default async function KiezPage({
             ))}
           </ol>
           <p className="mt-3 text-[13px] font-semibold text-muted">
-            Alle Unterkünfte im markierten Viertel, sortiert nach Lage (Daten aus OpenStreetMap). Antippen zeigt sie auf der Karte, „Preis“ öffnet sie bei Booking.com (Anzeige).
+            Alle Unterkünfte im markierten Viertel, sortiert nach Lage (Daten aus OpenStreetMap). Antippen zeigt sie auf der Karte, „Preis“ sucht sie bei Booking.com (Anzeige). Ist sie dort nicht gelistet, zeigt Booking andere in der Nähe.
             {hiddenUnknown > 0 ? ` ${hiddenUnknown} Unterkünfte ohne bekannte Preisklasse sind ausgeblendet.` : ""}
             {demo ? " Gäste-Werte sind vorerst Beispieldaten." : ""}
           </p>

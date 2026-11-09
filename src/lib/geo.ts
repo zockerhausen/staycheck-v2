@@ -741,9 +741,8 @@ export const hotelsNearCached = async (
     const list: HotelResult[] = pre.hotels
       .filter((h) => distance(center.lat, center.lon, h.lat, h.lon) <= radius)
       .map((h) => {
-        // In geprüften Städten kommt die Sicherheit aus unserer Viertel-Bewertung
-        const scores = { ...h.scores, ...(district?.scores?.safety != null ? { safety: district.scores.safety } : {}) } as LocationScores;
-        return { ...h, subtitle: h.subtitle || areaName, scores, match: 0 };
+        // Sicherheit aus geprüften Vierteln setzt die Seite mit alignStays (wie auf der Detailseite: nächstes Viertel)
+        return { ...h, subtitle: h.subtitle || areaName, scores: h.scores as LocationScores, match: 0 };
       });
     return rankHotels(list, weights);
   }
@@ -752,6 +751,24 @@ export const hotelsNearCached = async (
     weights,
   );
 };
+
+/**
+ * Lage-Werte einer Liste genau so wie auf der Detailseite jeder Unterkunft (sonst zeigt die Liste 88 und die Detailseite 81):
+ * Sicherheit vom nächstgelegenen geprüften Viertel, Match mit derselben Formel (persönlich mit Profil, sonst allgemein).
+ */
+export function alignStays<T extends { lat: number; lon: number; scores: LocationScores; match: number }>(
+  list: T[],
+  districts: District[],
+  match: (scores: LocationScores) => number,
+): T[] {
+  return list
+    .map((h) => {
+      const d = districts.length ? nearestDistrict(h.lat, h.lon, districts) : null;
+      const scores = d ? ({ ...h.scores, safety: districtSafety(d).score } as LocationScores) : h.scores;
+      return { ...h, scores, match: match(scores) };
+    })
+    .sort((a, b) => b.match - a.match);
+}
 
 /** Wartet höchstens ms Millisekunden. Danach „slow“ – die Arbeit läuft weiter und landet im Zwischenspeicher. */
 export async function withDeadline<T>(work: Promise<T>, ms: number): Promise<T | "slow"> {

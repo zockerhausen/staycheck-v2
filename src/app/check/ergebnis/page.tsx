@@ -276,7 +276,8 @@ export default async function CheckErgebnisPage({
           lat,
           lon,
           hotel: isStay ? name : undefined,
-          address: sub || undefined,
+          // Name + Stadt findet die Unterkunft bei Booking am zuverlässigsten (Straße verwirrt die Suche oft)
+          address: isStay ? city?.name ?? (sub || undefined) : sub || undefined,
           campaign: isStay ? "check_unterkunft" : "check_ort",
           checkin: trip.checkin,
           checkout: trip.checkout,

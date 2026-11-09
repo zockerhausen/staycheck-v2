@@ -2,9 +2,9 @@ import BackButton from "@/components/BackButton";
 import { CITY_RADIUS, VERIFIED_RADIUS } from "@/lib/popular";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { getCriteria, getExtras, getProfile, getSavedPlaces, getUser } from "@/lib/data";
+import { getCriteria, getDistricts, getExtras, getProfile, getSavedPlaces, getUser } from "@/lib/data";
 import { after } from "next/server";
-import { autoCityCached, DEFAULT_WEIGHTS, distance, hotelsNearCached, locationMatch, withDeadline, type HotelResult } from "@/lib/geo";
+import { alignStays, autoCityCached, DEFAULT_WEIGHTS, distance, hotelsNearCached, locationMatch, withDeadline, type HotelResult } from "@/lib/geo";
 import StillLoading from "@/components/StillLoading";
 import { pickZones, ZONE_KEYS } from "@/lib/zones";
 import AskDistrict from "@/components/AskDistrict";
@@ -113,14 +113,10 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
   if (slow) after(() => work.catch(() => undefined));
   else if (raced === null) failed = true;
   else hotels = raced;
-  // Persönlicher Match inkl. Extras und Muss (Liste neu sortieren)
-  if (profile) {
-    const ex = await getExtras();
-    if (ex.items.length) {
-      hotels = hotels
-        .map((h) => ({ ...h, match: personalMatch(h.scores, weights, ex).match }))
-        .sort((a, b) => b.match - a.match);
-    }
+  // Gleiche Werte wie auf der Detailseite jeder Unterkunft (Sicherheit vom nächsten geprüften Viertel, gleiche Formel)
+  {
+    const [ex, dbDistricts] = await Promise.all([getExtras(), getDistricts()]);
+    hotels = alignStays(hotels, dbDistricts, (sc) => (profile ? personalMatch(sc, weights, ex).match : locationMatch(sc, DEFAULT_WEIGHTS)));
   }
   // Budget aus dem Reise-Profil: eigener Filter, Preisklasse an jeder Unterkunft (geschätzt)
   const band = (await getExtras()).preis ?? null;
@@ -176,7 +172,7 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
   const demo = revList.some((r) => r.demo);
 
   const bookingOf = (h: HotelResult) =>
-    partnerOn ? priceLink({ lat: h.lat, lon: h.lon, hotel: h.name, address: h.subtitle || undefined, campaign: `spot_${ziel.ort}_${name}`, checkin: trip.checkin, checkout: trip.checkout, adults: trip.adults }) : undefined;
+    partnerOn ? priceLink({ lat: h.lat, lon: h.lon, hotel: h.name, address: ziel.ort, campaign: `spot_${ziel.ort}_${name}`, checkin: trip.checkin, checkout: trip.checkout, adults: trip.adults }) : undefined;
   // Dieselben Unterkünfte wie in der Liste, gleiche Nummern
   const stayPins = slow || failed ? [] : shown.map((h) => ({
     name: h.name,

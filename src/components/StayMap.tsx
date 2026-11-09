@@ -173,6 +173,9 @@ export default function StayMap({
                 </a>
               )}
             </div>
+            {s.booking && (
+              <p className="mt-2 px-1 text-[11.5px] font-semibold leading-snug text-muted">Anzeige. Ist die Unterkunft nicht bei Booking, zeigt Booking andere in der Nähe.</p>
+            )}
           </div>
         </>
       ) : (
