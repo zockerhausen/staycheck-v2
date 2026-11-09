@@ -1,6 +1,7 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import Icon from "@/components/Icon";
 
 type Target =
@@ -34,13 +35,39 @@ function Rich({ text }: { text: string }) {
   );
 }
 
-/** „Frag das Viertel“: kurze Fragen, Antwort erscheint Wort für Wort, Quellen darunter. */
+/**
+ * „Frag das Viertel“, bewusst zurückhaltend: auf der Seite nur eine schlanke Frage-Zeile.
+ * Antippen öffnet den Chat von unten (Vorschläge, Antwort Wort für Wort, Quellen). Das Gespräch bleibt beim Schließen erhalten.
+ */
 export default function AskDistrict({ target, place, enabled }: { target: Target; place: string; enabled: boolean }) {
   const [msgs, setMsgs] = useState<Msg[]>([]);
   const [q, setQ] = useState("");
   const [busy, setBusy] = useState(false);
   const [searching, setSearching] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
+  const [open, setOpen] = useState(false);
+  const [shown, setShown] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Fenster: Einblenden, Seite festhalten, Esc schließt
+  useEffect(() => {
+    if (!open) return;
+    const r = requestAnimationFrame(() => setShown(true));
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && close();
+    window.addEventListener("keydown", onKey);
+    return () => {
+      cancelAnimationFrame(r);
+      document.body.style.overflow = prev;
+      window.removeEventListener("keydown", onKey);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
+  function close() {
+    setShown(false);
+    setTimeout(() => setOpen(false), 280);
+  }
 
   const city = target.art === "stadt";
   const suggestions = city
@@ -103,107 +130,157 @@ export default function AskDistrict({ target, place, enabled }: { target: Target
     }
   }
 
+  if (!enabled) return null; // ohne KI gar nichts zeigen (statt „bald verfügbar“)
+
+  const title = city ? `Frag StayCheck zu ${place}` : `Frag zu ${place}`;
   return (
-    <section className="glass-card overflow-hidden p-4">
-      <div className="flex items-center gap-3">
-        <span className="shadow-primary relative flex h-[2.9rem] w-[2.9rem] shrink-0 items-center justify-center rounded-[16px] bg-sun text-white">
-          <span aria-hidden className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full border-2 border-paper bg-pink" />
-          <svg width={24} height={24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-            <path d="M12 3l1.8 4.6L18.5 9l-4.7 1.6L12 15l-1.8-4.4L5.5 9l4.7-1.4z" />
-            <path d="M18.5 15.5l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z" />
-          </svg>
+    <>
+      {/* Auf der Seite: nur eine schlanke Zeile */}
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="press flex w-full items-center gap-2.5 rounded-full border border-line bg-paper py-1.5 pl-4 pr-1.5 text-left"
+        aria-haspopup="dialog"
+      >
+        <Spark className="shrink-0 text-sun-soft" size={19} />
+        <span className="min-w-0 flex-1 truncate text-[15px] font-semibold text-muted">
+          {msgs.length ? `Weiter fragen zu ${place} …` : city ? `Frag etwas zu ${place} …` : `Frag etwas zu ${place} …`}
         </span>
-        <div className="min-w-0">
-          <h2 className="text-[18px] font-extrabold leading-tight tracking-[-0.025em]">{city ? `Frag StayCheck zu ${place}` : `Frag zu ${place}`}</h2>
-          <p className="truncate text-[14px] font-semibold text-muted">Dein Reise-Assistent, mit Live-Suche im Internet</p>
-        </div>
-      </div>
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-tan text-sun-soft">
+          <Icon name="forward" size={16} />
+        </span>
+      </button>
 
-      {!enabled ? (
-        <p className="mt-4 rounded-2xl bg-peach px-3.5 py-3 text-sm text-muted">Bald verfügbar: Hier kannst du dann Fragen zu {place} stellen.</p>
-      ) : (
-        <>
-          {msgs.length > 0 && (
-            <div className="mt-4 space-y-3" aria-live="polite">
-              {msgs.map((m, i) =>
-                m.rolle === "du" ? (
-                  <p key={i} className="ml-auto w-fit max-w-[85%] rounded-2xl rounded-br-md bg-sun px-3.5 py-2.5 text-[15px] font-bold text-white">
-                    {m.text}
-                  </p>
-                ) : (
-                  <div key={i} className={`max-w-[95%] rounded-2xl rounded-bl-md px-3.5 py-3 text-[15px] leading-relaxed ${m.fehler ? "bg-peach text-peach-ink" : "bg-paper text-ink shadow-soft"}`}>
-                    {m.text ? (
-                      <Rich text={m.text} />
-                    ) : (
-                      <span className="flex items-center gap-2 text-muted">
-                        <span className="h-4 w-4 animate-spin rounded-full border-2 border-raised border-t-sun" />
-                        {searching && i === msgs.length - 1 ? "Suche im Internet …" : "Denkt nach …"}
-                      </span>
-                    )}
-                    {m.quellen && m.quellen.length > 0 && (
-                      <span className="mt-2.5 flex flex-wrap gap-1.5">
-                        {m.quellen.map((s) => (
-                          <a
-                            key={s.url}
-                            href={s.url}
-                            target="_blank"
-                            rel="noopener noreferrer nofollow"
-                            className="max-w-full truncate rounded-full bg-peach px-2.5 py-1 text-[11px] font-semibold text-muted"
-                          >
-                            {new URL(s.url).hostname.replace(/^www\./, "")}
-                          </a>
-                        ))}
-                      </span>
-                    )}
-                  </div>
-                ),
-              )}
-              <div ref={endRef} />
-            </div>
-          )}
-
-          {msgs.length === 0 && (
-            <div className="mt-4 flex flex-wrap gap-2">
-              {suggestions.slice(0, 4).map((s) => (
-                <button key={s} type="button" onClick={() => ask(s)} className="press min-h-[38px] rounded-full bg-peach px-3.5 py-2 text-left text-[14px] font-bold text-sun-soft">
-                  {s}
-                </button>
-              ))}
-            </div>
-          )}
-
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              void ask(q);
-            }}
-            className="mt-3 flex items-center gap-2 rounded-full border border-line bg-paper py-1.5 pl-4 pr-1.5 focus-within:border-sun"
-          >
-            <label htmlFor="frag-input" className="sr-only">
-              Deine Frage
-            </label>
-            <input
-              id="frag-input"
-              value={q}
-              onChange={(e) => setQ(e.target.value)}
-              maxLength={300}
-              placeholder={msgs.length ? "Noch eine Frage …" : city ? "Frag etwas zur Stadt …" : "Frag etwas zu diesem Viertel …"}
-              autoComplete="off"
-              enterKeyHint="send"
-              className="min-w-0 flex-1 bg-transparent py-2.5 text-[16px] outline-none placeholder:text-muted"
-            />
+      {open &&
+        createPortal(
+          <div className="fixed inset-0 z-[100]" role="dialog" aria-modal="true" aria-label={title}>
             <button
-              type="submit"
-              disabled={busy || q.trim().length < 2}
-              aria-label="Senden"
-              className="press flex h-[2.6rem] w-[2.6rem] shrink-0 items-center justify-center rounded-full bg-sun text-white disabled:opacity-40"
+              type="button"
+              aria-label="Schließen"
+              onClick={close}
+              className={`absolute inset-0 bg-black/55 backdrop-blur-sm transition-opacity duration-300 ${shown ? "opacity-100" : "opacity-0"}`}
+            />
+            <div
+              className={`absolute inset-x-0 bottom-0 mx-auto flex max-h-[88dvh] max-w-md flex-col rounded-t-[28px] border-t border-line bg-sand shadow-[0_-20px_60px_rgba(0,0,0,.3)] transition-transform duration-300 [transition-timing-function:cubic-bezier(.22,1,.36,1)] ${
+                shown ? "translate-y-0" : "translate-y-full"
+              }`}
             >
-              <Icon name="chevron" size={18} />
-            </button>
-          </form>
-          <p className="mt-2 px-1 text-[12px] font-semibold text-muted">KI kann sich irren. Wichtiges (Preise, Öffnungszeiten) bitte vor Ort prüfen.</p>
-        </>
-      )}
-    </section>
+              <div className="shrink-0 px-4 pt-3">
+                <div className="mx-auto mb-3 h-1.5 w-10 rounded-full bg-peach" />
+                <div className="flex items-center gap-3">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] bg-sun text-white">
+                    <Spark size={21} />
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <h2 className="truncate text-[17px] font-extrabold leading-tight tracking-[-0.025em]">{title}</h2>
+                    <p className="truncate text-[13px] font-semibold text-muted">Mit Live-Suche im Internet</p>
+                  </div>
+                  <button type="button" onClick={close} aria-label="Schließen" className="press flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-tan">
+                    <Icon name="close" size={16} />
+                  </button>
+                </div>
+              </div>
+              {/* Verlauf und Vorschläge: scrollt für sich */}
+              <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 pb-2 pt-4">
+                {msgs.length === 0 ? (
+                  <div className="flex flex-wrap gap-2">
+                    {suggestions.slice(0, 4).map((s) => (
+                      <button key={s} type="button" onClick={() => ask(s)} className="press min-h-[38px] rounded-full bg-peach px-3.5 py-2 text-left text-[14px] font-bold text-sun-soft">
+                        {s}
+                      </button>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="space-y-3" aria-live="polite">
+                    {msgs.map((m, i) =>
+                      m.rolle === "du" ? (
+                        <p key={i} className="fade-up ml-auto w-fit max-w-[85%] rounded-2xl rounded-br-md bg-sun px-3.5 py-2.5 text-[15px] font-bold text-white">
+                          {m.text}
+                        </p>
+                      ) : (
+                        <div
+                          key={i}
+                          className={`fade-up max-w-[95%] rounded-2xl rounded-bl-md px-3.5 py-3 text-[15px] leading-relaxed ${m.fehler ? "bg-peach text-peach-ink" : "bg-paper text-ink shadow-soft"}`}
+                        >
+                          {m.text ? (
+                            <Rich text={m.text} />
+                          ) : (
+                            <span className="flex items-center gap-2 text-muted">
+                              <span className="h-4 w-4 animate-spin rounded-full border-2 border-raised border-t-sun" />
+                              {searching && i === msgs.length - 1 ? "Suche im Internet …" : "Denkt nach …"}
+                            </span>
+                          )}
+                          {m.quellen && m.quellen.length > 0 && (
+                            <span className="mt-2.5 flex flex-wrap gap-1.5">
+                              {m.quellen.map((src) => (
+                                <a
+                                  key={src.url}
+                                  href={src.url}
+                                  target="_blank"
+                                  rel="noopener noreferrer nofollow"
+                                  className="max-w-full truncate rounded-full bg-peach px-2.5 py-1 text-[11px] font-semibold text-muted"
+                                >
+                                  {new URL(src.url).hostname.replace(/^www\./, "")}
+                                </a>
+                              ))}
+                            </span>
+                          )}
+                        </div>
+                      ),
+                    )}
+                    <div ref={endRef} />
+                  </div>
+                )}
+              </div>
+
+              {/* Eingabe: immer unten, über der Tastatur */}
+              <div className="shrink-0 border-t border-line px-4 pb-[max(0.9rem,env(safe-area-inset-bottom))] pt-3">
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    void ask(q);
+                  }}
+                  className="flex items-center gap-2 rounded-full border border-line bg-paper py-1.5 pl-4 pr-1.5 focus-within:border-sun"
+                >
+                  <label htmlFor="frag-input" className="sr-only">
+                    Deine Frage
+                  </label>
+                  <input
+                    ref={inputRef}
+                    id="frag-input"
+                    value={q}
+                    onChange={(e) => setQ(e.target.value)}
+                    maxLength={300}
+                    placeholder={msgs.length ? "Noch eine Frage …" : city ? "Frag etwas zur Stadt …" : "Frag etwas zu diesem Viertel …"}
+                    autoComplete="off"
+                    enterKeyHint="send"
+                    className="min-w-0 flex-1 bg-transparent py-2.5 text-[16px] outline-none placeholder:text-muted"
+                  />
+                  <button
+                    type="submit"
+                    disabled={busy || q.trim().length < 2}
+                    aria-label="Senden"
+                    className="press flex h-[2.6rem] w-[2.6rem] shrink-0 items-center justify-center rounded-full bg-sun text-white disabled:opacity-40"
+                  >
+                    <Icon name="chevron" size={18} />
+                  </button>
+                </form>
+                <p className="mt-2 px-1 text-[11.5px] font-semibold text-muted">KI kann sich irren. Wichtiges (Preise, Öffnungszeiten) bitte vor Ort prüfen.</p>
+              </div>
+            </div>
+          </div>,
+          document.body,
+        )}
+    </>
+  );
+}
+
+/** Funkel-Zeichen für die KI (klein und ruhig) */
+function Spark({ size = 20, className }: { size?: number; className?: string }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round" aria-hidden className={className}>
+      <path d="M12 3l1.8 4.6L18.5 9l-4.7 1.6L12 15l-1.8-4.4L5.5 9l4.7-1.4z" />
+      <path d="M18.5 15.5l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z" />
+    </svg>
   );
 }
