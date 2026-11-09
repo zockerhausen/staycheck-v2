@@ -29,7 +29,7 @@ export default function StayRow({
   match: number;
   reviews?: StayReviews;
   save: React.ComponentProps<typeof PlaceSaveButton>;
-  /** Link zu genau dieser Unterkunft bei Booking.com (über Stay22, mit Reisedaten) */
+  /** Link zu genau dieser Unterkunft beim passenden Anbieter (über Stay22, mit Reisedaten) */
   booking?: string;
   /** Platz in der Liste: Antippen zeigt die Unterkunft allein auf der Karte oben (statt die Detailseite zu öffnen) */
   select?: number;
@@ -75,7 +75,7 @@ export default function StayRow({
               href={booking}
               target="_blank"
               rel="sponsored noopener noreferrer"
-              aria-label={`Preis für ${name} bei Booking.com ansehen (Anzeige)`}
+              aria-label={`Preis für ${name} ansehen (Anzeige)`}
               className="press ml-auto flex shrink-0 items-center gap-1 rounded-full bg-sun px-3 py-1.5 text-[13px] font-extrabold text-white"
             >
               Preis <Icon name="external" size={13} fill="transparent" />

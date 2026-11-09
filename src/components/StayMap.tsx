@@ -174,7 +174,7 @@ export default function StayMap({
               )}
             </div>
             {s.booking && (
-              <p className="mt-2 px-1 text-[11.5px] font-semibold leading-snug text-muted">Anzeige. Ist die Unterkunft nicht bei Booking, zeigt Booking andere in der Nähe.</p>
+              <p className="mt-2 px-1 text-[11.5px] font-semibold leading-snug text-muted">Anzeige. Wir suchen sie bei Booking, Agoda, Expedia und Hotels.com und öffnen den passenden Anbieter.</p>
             )}
           </div>
         </>

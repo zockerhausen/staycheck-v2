@@ -51,5 +51,41 @@ export function priceLink(o: {
   return `https://www.stay22.com/allez/booking?${p}`;
 }
 
+/**
+ * Link zu genau einer Unterkunft – egal, bei welchem Anbieter sie gelistet ist.
+ * Mit Partner-ID: Stay22 sucht sie per Name bei Booking.com, Expedia, Hotels.com und Agoda und leitet direkt zu ihrer Seite
+ * (findet sich keine, Unterkünfte an dieser Stelle). Ohne Partner-ID: normale Booking-Suche.
+ */
+export function stayLink(o: {
+  name: string;
+  lat: number;
+  lon: number;
+  /** Stadt und Land, z. B. „Berlin, Deutschland“ (hilft der Zuordnung) */
+  place: string;
+  campaign: string;
+  checkin?: string;
+  checkout?: string;
+  adults?: number;
+}) {
+  if (!partnerOn) return priceLink({ lat: o.lat, lon: o.lon, hotel: o.name, address: o.place, campaign: o.campaign, checkin: o.checkin, checkout: o.checkout, adults: o.adults });
+  const p = new URLSearchParams({
+    aid: STAY22_AID,
+    campaign: campaignOf(o.campaign),
+    hotelname: o.name.slice(0, 120),
+    address: o.place.slice(0, 120),
+    lat: o.lat.toFixed(6),
+    lng: o.lon.toFixed(6),
+    adults: String(Math.min(8, Math.max(1, o.adults ?? 1))),
+    currency: "EUR",
+    lang: "de",
+    excludeproviders: "vrbo", // Ferienwohnungs-Portal, passt nicht zu Hotels und Hostels
+  });
+  if (o.checkin && o.checkout) {
+    p.set("checkin", o.checkin);
+    p.set("checkout", o.checkout);
+  }
+  return `https://www.stay22.com/allez/roam?${p}`;
+}
+
 /** Höchstpreis pro Nacht (EUR) aus dem Budget im Profil (1 = bis ca. 30 €, 2 = 30–80 €, 3 = egal), solange keiner gewählt ist */
 export const maxPriceFor = (band: number | null | undefined) => (band === 1 ? 30 : band === 2 ? 80 : null);

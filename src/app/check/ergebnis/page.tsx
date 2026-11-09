@@ -32,7 +32,7 @@ import { cityForPoint } from "@/lib/arrival";
 import { hubsNear } from "@/lib/arrival-hubs";
 import { getTipsNear } from "@/lib/tips";
 import { EXTRA_LABEL, MUST_CAP, NO_EXTRAS, NOGO_CAP, NOGO_LABEL, NOGOS, fullWeights, personalMatch } from "@/lib/profile";
-import { maxPriceFor, partnerOn, priceLink } from "@/lib/partner";
+import { maxPriceFor, partnerOn, priceLink, stayLink } from "@/lib/partner";
 import { parseTrip, tripQuery } from "@/lib/trip";
 
 // Dynamisch durch Cookies/Suchparameter; Kartendaten-Abfragen werden 1 Tag zwischengespeichert.
@@ -271,20 +271,21 @@ export default async function CheckErgebnisPage({
       <div className="h-20" aria-hidden />
       <BookBar
         title={reviews ? `Lage ${match}, Gäste ${fmtScore(reviews.fair)}` : `Lage ${match} von 100`}
-        sub={reviews?.demo ? "Gäste-Wert ist ein Beispiel" : partnerOn ? "Anzeige · Partner-Link" : isStay ? "Preise bei Booking" : "Unterkünfte in der Nähe"}
-        href={priceLink({
-          lat,
-          lon,
-          hotel: isStay ? name : undefined,
-          // Name + Stadt findet die Unterkunft bei Booking am zuverlässigsten (Straße verwirrt die Suche oft)
-          address: isStay ? city?.name ?? (sub || undefined) : sub || undefined,
-          campaign: isStay ? "check_unterkunft" : "check_ort",
-          checkin: trip.checkin,
-          checkout: trip.checkout,
-          adults: trip.adults,
-          // Bei einer bestimmten Unterkunft genau diese zeigen (Booking ignoriert dort den Preisfilter); sonst günstige in der Nähe
-          maxPrice: isStay ? null : trip.max !== undefined ? trip.max : maxPriceFor(extras.preis),
-        })}
+        sub={reviews?.demo ? "Gäste-Wert ist ein Beispiel" : partnerOn ? (isStay ? "Anzeige · Booking, Agoda, Expedia …" : "Anzeige · Partner-Link") : isStay ? "Preise bei Booking" : "Unterkünfte in der Nähe"}
+        href={
+          isStay
+            ? stayLink({ name, lat, lon, place: [city?.name, city?.country].filter(Boolean).join(", ") || sub, campaign: "check_unterkunft", checkin: trip.checkin, checkout: trip.checkout, adults: trip.adults })
+            : priceLink({
+                lat,
+                lon,
+                address: sub || undefined,
+                campaign: "check_ort",
+                checkin: trip.checkin,
+                checkout: trip.checkout,
+                adults: trip.adults,
+                maxPrice: trip.max !== undefined ? trip.max : maxPriceFor(extras.preis),
+              })
+        }
         label="Preise vergleichen"
       />
     </div>

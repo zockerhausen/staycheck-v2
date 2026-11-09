@@ -31,7 +31,7 @@ import ViewTabs from "@/components/ViewTabs";
 import WebInsight from "@/components/WebInsight";
 import { insightNear } from "@/lib/insights";
 import { areaPhoto } from "@/lib/photos";
-import { maxPriceFor, partnerOn, priceLink } from "@/lib/partner";
+import { maxPriceFor, partnerOn, stayLink } from "@/lib/partner";
 import { classCap, parseTrip, tripQuery } from "@/lib/trip";
 import StaysPanel from "@/components/StaysPanel";
 
@@ -171,8 +171,11 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
   const typicalPrice = classes.length ? PRICE_LABEL[classes[Math.floor(classes.length / 2)]] : null;
   const demo = revList.some((r) => r.demo);
 
+  const place = [ziel.ort, ziel.land].filter(Boolean).join(", ");
   const bookingOf = (h: HotelResult) =>
-    partnerOn ? priceLink({ lat: h.lat, lon: h.lon, hotel: h.name, address: ziel.ort, campaign: `spot_${ziel.ort}_${name}`, checkin: trip.checkin, checkout: trip.checkout, adults: trip.adults }) : undefined;
+    partnerOn
+      ? stayLink({ name: h.name, lat: h.lat, lon: h.lon, place, campaign: `spot_${ziel.ort}_${name}`, checkin: trip.checkin, checkout: trip.checkout, adults: trip.adults })
+      : undefined;
   // Dieselben Unterkünfte wie in der Liste, gleiche Nummern
   const stayPins = slow || failed ? [] : shown.map((h) => ({
     name: h.name,

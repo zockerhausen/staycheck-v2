@@ -32,7 +32,7 @@ import { insightNear } from "@/lib/insights";
 import { areaPhoto } from "@/lib/photos";
 import TipsSection from "@/components/TipsSection";
 import { getTipsForDistrict } from "@/lib/tips";
-import { maxPriceFor, partnerOn, priceLink } from "@/lib/partner";
+import { maxPriceFor, partnerOn, stayLink } from "@/lib/partner";
 import { classCap, parseTrip, tripQuery } from "@/lib/trip";
 import StaysPanel from "@/components/StaysPanel";
 
@@ -164,8 +164,11 @@ export default async function KiezPage({
   const self = `/kiez/${slug}?stadt=${district.city}${amp}`;
   const hubs = await hubsNear(district.lat!, district.lng!, district.city);
 
+  const place = [cityName, cityRow?.country].filter(Boolean).join(", ");
   const bookingOf = (h: HotelResult) =>
-    partnerOn ? priceLink({ lat: h.lat, lon: h.lon, hotel: h.name, address: cityName || undefined, campaign: `kiez_${district.slug}`, checkin: trip.checkin, checkout: trip.checkout, adults: trip.adults }) : undefined;
+    partnerOn
+      ? stayLink({ name: h.name, lat: h.lat, lon: h.lon, place, campaign: `kiez_${district.slug}`, checkin: trip.checkin, checkout: trip.checkout, adults: trip.adults })
+      : undefined;
   // Dieselben Unterkünfte wie in der Liste, gleiche Nummern
   const stayPins = slow || failed ? [] : shown.map((h) => ({
     name: h.name,
@@ -238,7 +241,7 @@ export default async function KiezPage({
             ))}
           </ol>
           <p className="mt-3 text-[13px] font-semibold text-muted">
-            Alle Unterkünfte im markierten Viertel, sortiert nach Lage (Daten aus OpenStreetMap). Antippen zeigt sie auf der Karte, „Preis“ sucht sie bei Booking.com (Anzeige). Ist sie dort nicht gelistet, zeigt Booking andere in der Nähe.
+            Alle Unterkünfte im markierten Viertel, sortiert nach Lage (Daten aus OpenStreetMap). Antippen zeigt sie auf der Karte, „Preis“ sucht sie bei Booking.com, Agoda, Expedia und Hotels.com und öffnet den passenden Anbieter (Anzeige).
             {hiddenUnknown > 0 ? ` ${hiddenUnknown} Unterkünfte ohne bekannte Preisklasse sind ausgeblendet.` : ""}
             {demo ? " Gäste-Werte sind vorerst Beispieldaten." : ""}
           </p>
