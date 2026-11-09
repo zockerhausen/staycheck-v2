@@ -13,12 +13,13 @@ import {
 } from "@/lib/data";
 import { after } from "next/server";
 import { precomputedCovering } from "@/lib/precomputed";
-import { analyzeLocation, DEFAULT_WEIGHTS, estimateLocation, locationMatch, verdict, withDeadline } from "@/lib/geo";
+import { analyzeLocation, cityZones, DEFAULT_WEIGHTS, estimateLocation, locationMatch, verdict, withDeadline } from "@/lib/geo";
 import StillLoading from "@/components/StillLoading";
 import { CRITERION_ICON } from "@/lib/icons";
 import Icon from "@/components/Icon";
 import Reveal from "@/components/Reveal";
 import KiezMap from "@/components/KiezMap";
+import { VERIFIED_RADIUS } from "@/lib/popular";
 import PlaceSaveButton from "@/components/PlaceSaveButton";
 import ArrivalCard from "@/components/ArrivalCard";
 import TipsSection from "@/components/TipsSection";
@@ -108,6 +109,8 @@ export default async function CheckErgebnisPage({
   // Zwei Zahlen: „Lage allgemein“ (für alle gleich) und – mit Reise-Profil – „Dein Match“ inkl. Extras und Muss
   const general = locationMatch(analysis.scores, DEFAULT_WEIGHTS);
   const extras = resolved ? await getExtras() : NO_EXTRAS;
+  // Violett die beste Lage der Stadt, wie auf der Viertel-Karte (nur kurz warten, sonst ohne)
+  const zones = city ? await cityZones(city.lat, city.lng, VERIFIED_RADIUS, weights, 1200, extras.nogo).catch(() => []) : [];
   const pm = resolved ? personalMatch(analysis.scores, weights, extras) : null;
   const match = pm ? pm.match : general;
   const usedWeights = resolved ? fullWeights(weights, extras) : DEFAULT_WEIGHTS;
@@ -210,6 +213,8 @@ export default async function CheckErgebnisPage({
         center={[lon, lat]}
         zoom={14.5}
         height="h-56"
+        zones={zones}
+        legend={zones.length ? "Violett = beste Lage für dich" : undefined}
       />
 
       <ul className="card px-4">

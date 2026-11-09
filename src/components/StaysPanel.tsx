@@ -8,6 +8,8 @@ import Icon from "@/components/Icon";
 import { isDarkNow } from "@/components/ThemeSwitch";
 import { partnerOn, stayMapUrl } from "@/lib/partner";
 import { MAX_OPTIONS } from "@/lib/trip";
+import StayMap, { type StayPin } from "@/components/StayMap";
+import type { ZonePoint } from "@/lib/zones";
 
 type Chip = { key: string; label: string; href: string; active: boolean };
 
@@ -27,6 +29,8 @@ export default function StaysPanel({
   max,
   chips,
   map,
+  stays,
+  zones,
   children,
 }: {
   checkin: string;
@@ -37,8 +41,13 @@ export default function StaysPanel({
   count?: number;
   chips: Chip[];
   map: { lat: number; lon: number; place: string; campaign: string; area?: string | null };
+  /** Unterkünfte aus der Liste (gleiche Reihenfolge) für unsere Karte */
+  stays: StayPin[];
+  zones: ZonePoint[];
   children: React.ReactNode;
 }) {
+  const [mode, setMode] = useState<"ours" | "all">("ours"); // unsere Auswahl | alle Preise (Stay22)
+  const [sel, setSel] = useState<number | null>(null);
   const [sheet, setSheet] = useState(false);
   const [big, setBig] = useState(false); // Preiskarte im Vollbild
   const [consent, setConsent] = useState<boolean | null>(null);
@@ -57,6 +66,20 @@ export default function StaysPanel({
       setConsent(false);
     }
   }, []);
+
+  // Antippen in der Liste: unsere Karte zeigt nur diese Unterkunft
+  useEffect(() => {
+    const on = (e: Event) => {
+      const n = (e as CustomEvent<number>).detail;
+      if (typeof n !== "number") return;
+      setMode("ours");
+      setSel(n);
+      mapRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    };
+    window.addEventListener("sc-stay-select", on);
+    return () => window.removeEventListener("sc-stay-select", on);
+  }, []);
+  useEffect(() => setSel(null), [stays]);
 
   function save(next: { an: string; n: number; p: number; max: number }) {
     const q = new URLSearchParams(params.toString());
@@ -115,46 +138,77 @@ export default function StaysPanel({
         <span className="shrink-0 text-[13px] font-extrabold text-sun-soft">{pending ? "…" : "Ändern"}</span>
       </button>
 
-      {/* Hauptkarte: echte Preise (Stay22) + unsere beste Lage in Violett */}
-      {partnerOn && (
-        <div ref={mapRef} className="mt-3 scroll-mt-4">
-          <div className="relative h-[min(58dvh,480px)] overflow-hidden rounded-3xl bg-paper">
-            {consent && url && !big ? (
-              <iframe
-                key={url}
-                src={url}
-                title={`Unterkünfte mit Preisen rund um ${map.place}`}
-                className="absolute inset-0 h-full w-full border-0"
-                referrerPolicy="strict-origin-when-cross-origin"
-                sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-forms"
-              />
-            ) : consent === false ? (
-              <MapConsent onYes={allow} />
-            ) : null}
-            {consent && (
+      {/* Eine Karte, zwei Ansichten: unsere Auswahl (Liste unten, beste Lage violett) | alle freien Zimmer mit Preis (Stay22) */}
+      <div ref={mapRef} className="mt-3 scroll-mt-4">
+        {partnerOn && (
+          <div className="mb-2 grid grid-cols-2 gap-1 rounded-full bg-tan p-1" role="tablist" aria-label="Kartenansicht">
+            {(
+              [
+                ["ours", `Unsere Auswahl${stays.length ? ` (${stays.length})` : ""}`],
+                ["all", "Alle Preise"],
+              ] as const
+            ).map(([k, label]) => (
               <button
+                key={k}
                 type="button"
-                onClick={() => setBig(true)}
-                aria-label="Karte groß machen"
-                className="press glass absolute bottom-3 right-3 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-[var(--sc-glass-line)] shadow-soft"
+                role="tab"
+                aria-selected={mode === k}
+                onClick={() => setMode(k)}
+                className={`press rounded-full py-2 text-[13.5px] font-extrabold transition-colors ${mode === k ? "bg-paper text-ink shadow-soft" : "text-muted"}`}
               >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7" />
-                </svg>
+                {label}
               </button>
-            )}
+            ))}
           </div>
-          <div className="mt-2 flex items-center gap-2 px-1 text-[12.5px] font-bold text-muted">
-            {map.area && (
-              <>
-                <span className="h-[3px] w-5 shrink-0 rounded-full bg-[#8c7ff6]" aria-hidden />
-                <span className="min-w-0 truncate">Innerhalb: beste Lage für dich</span>
-              </>
-            )}
-            <span className="ml-auto shrink-0 rounded-full bg-tan px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide">Anzeige</span>
-          </div>
+        )}
+        <div className="relative h-[min(58dvh,480px)] overflow-hidden rounded-3xl bg-paper">
+          {mode === "ours" ? (
+            <StayMap stays={stays} zones={zones} center={{ lat: map.lat, lon: map.lon }} sel={sel} onSel={setSel} />
+          ) : (
+            <>
+              {consent && url && !big ? (
+                <iframe
+                  key={url}
+                  src={url}
+                  title={`Unterkünfte mit Preisen rund um ${map.place}`}
+                  className="absolute inset-0 h-full w-full border-0"
+                  referrerPolicy="strict-origin-when-cross-origin"
+                  sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-forms"
+                />
+              ) : consent === false ? (
+                <MapConsent onYes={allow} />
+              ) : null}
+              {consent && (
+                <button
+                  type="button"
+                  onClick={() => setBig(true)}
+                  aria-label="Karte groß machen"
+                  className="press glass absolute bottom-3 right-3 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-[var(--sc-glass-line)] shadow-soft"
+                >
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7" />
+                  </svg>
+                </button>
+              )}
+            </>
+          )}
         </div>
-      )}
+        <p className="mt-2 flex items-center gap-2 px-1 text-[12.5px] font-bold text-muted">
+          {mode === "ours" ? (
+            <span className="min-w-0">Zahlen = Plätze in der Liste. Antippen zeigt nur diese Unterkunft.</span>
+          ) : (
+            <>
+              {map.area && (
+                <>
+                  <span className="h-[3px] w-5 shrink-0 rounded-full bg-[#8c7ff6]" aria-hidden />
+                  <span className="min-w-0 truncate">Innerhalb: beste Lage für dich</span>
+                </>
+              )}
+              <span className="ml-auto shrink-0 rounded-full bg-tan px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide">Anzeige</span>
+            </>
+          )}
+        </p>
+      </div>
 
       {chips.length > 1 && (
         <nav className="-mx-4 mt-4 flex gap-1.5 overflow-x-auto px-4 [scrollbar-width:none]" aria-label="Unterkunftsart">

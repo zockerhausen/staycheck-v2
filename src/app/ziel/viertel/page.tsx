@@ -7,7 +7,6 @@ import { after } from "next/server";
 import { autoCityCached, DEFAULT_WEIGHTS, distance, hotelsNearCached, locationMatch, withDeadline, type HotelResult } from "@/lib/geo";
 import StillLoading from "@/components/StillLoading";
 import { pickZones, ZONE_KEYS } from "@/lib/zones";
-import ZoneLegend from "@/components/ZoneLegend";
 import AskDistrict from "@/components/AskDistrict";
 import { dedupeStays } from "@/lib/geo";
 import { fmtScore, reviewsForMany, stayKey, TOP_FAIR } from "@/lib/reviews";
@@ -26,7 +25,6 @@ import { characterTint, traitsOf } from "@/lib/character";
 import { CRITERION_ICON } from "@/lib/icons";
 import { pageRateLimit } from "@/lib/ratelimit-page";
 import Icon from "@/components/Icon";
-import KiezMap from "@/components/KiezMap";
 import AreaHero from "@/components/AreaHero";
 import StayRow from "@/components/StayRow";
 import ViewTabs from "@/components/ViewTabs";
@@ -175,6 +173,20 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
   const typicalPrice = classes.length ? PRICE_LABEL[classes[Math.floor(classes.length / 2)]] : null;
   const demo = revList.some((r) => r.demo);
 
+  const bookingOf = (h: HotelResult) =>
+    partnerOn ? priceLink({ lat: h.lat, lon: h.lon, hotel: h.name, address: h.subtitle || undefined, campaign: `spot_${ziel.ort}_${name}`, checkin: trip.checkin, checkout: trip.checkout, adults: trip.adults }) : undefined;
+  // Dieselben Unterkünfte wie in der Liste, gleiche Nummern
+  const stayPins = slow || failed ? [] : shown.slice(0, 25).map((h) => ({
+    name: h.name,
+    lat: h.lat,
+    lon: h.lon,
+    match: h.match,
+    meta: [KIND_LABEL[h.kind] ?? "Unterkunft", clsOf(h) ? PRICE_LABEL[clsOf(h)!] : null].filter(Boolean).join(" · "),
+    rating: revOf(h) ? fmtScore(revOf(h)!.fair) : undefined,
+    href: checkUrl(h),
+    booking: bookingOf(h),
+  }));
+
   const staysTab = (
     <section id="unterkuenfte" className="scroll-mt-20">
       <StaysPanel
@@ -192,6 +204,8 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
           campaign: `spot_${ziel.ort}_${name}`,
           area: areaCode(zones, { lat: vlat, lon: vlon }),
         }}
+        stays={stayPins}
+        zones={zones}
       >
 
       {slow ? (
@@ -215,19 +229,6 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
               budget={Boolean(band)}
             />
           )}
-          {!partnerOn && (
-          <div className="mt-3">
-            <KiezMap
-              points={shown.slice(0, 25).map((h, i) => ({ slug: `h${i}`, name: h.name, lat: h.lat, lng: h.lon, match: h.match }))}
-              highlight="h0"
-              center={[vlon, vlat]}
-              zoom={14}
-              height="h-56"
-              zones={zones}
-            />
-            <ZoneLegend personal={Boolean(profile)} shown={zones.length > 0} />
-          </div>
-          )}
           <ol className="card mt-3 px-3.5 py-1">
             {shown.slice(0, 25).map((h, i) => (
               <StayRow
@@ -241,7 +242,8 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
                 note={h.highlights[0]?.text ?? ""}
                 match={h.match}
                 reviews={revOf(h)}
-                booking={partnerOn ? priceLink({ lat: h.lat, lon: h.lon, hotel: h.name, address: h.subtitle || undefined, campaign: `spot_${ziel.ort}_${name}`, checkin: trip.checkin, checkout: trip.checkout, adults: trip.adults }) : undefined}
+                booking={bookingOf(h)}
+                select={i}
                 save={{
                   place: { name: h.name, subtitle: h.subtitle, lat: h.lat, lon: h.lon, kind: h.kind, match: h.match },
                   initiallySaved: isSaved(h),

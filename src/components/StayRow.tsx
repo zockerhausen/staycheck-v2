@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Icon from "@/components/Icon";
 import PlaceSaveButton from "@/components/PlaceSaveButton";
+import StaySelect from "@/components/StaySelect";
 import { fmtScore, type StayReviews } from "@/lib/reviews";
 
 /** Eine Unterkunft in der Liste: Name, Art und Preis, Lage-Wert und (wenn da) Gäste-Wert. */
@@ -16,6 +17,7 @@ export default function StayRow({
   reviews,
   save,
   booking,
+  select,
 }: {
   id: string;
   href: string;
@@ -29,20 +31,35 @@ export default function StayRow({
   save: React.ComponentProps<typeof PlaceSaveButton>;
   /** Link zu genau dieser Unterkunft bei Booking.com (über Stay22, mit Reisedaten) */
   booking?: string;
+  /** Platz in der Liste: Antippen zeigt die Unterkunft allein auf der Karte oben (statt die Detailseite zu öffnen) */
+  select?: number;
 }) {
+  const meta = [kind, price, overBudget ? "über Budget" : null, note || null].filter(Boolean).join(" · ");
   return (
     <li id={id} className="flex items-start gap-3 border-b border-line py-3 last:border-0">
-      <Link href={href} className="press flex h-14 w-14 shrink-0 items-center justify-center rounded-[16px] bg-peach text-sun-soft" aria-hidden tabIndex={-1}>
-        <Icon name="hotel" size={24} fill="transparent" />
-      </Link>
+      {select !== undefined ? (
+        <StaySelect n={select} label={`${name} auf der Karte zeigen`} className="press flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-[16px] bg-peach text-sun-soft">
+          <Icon name="locate" size={14} fill="transparent" />
+          <b className="text-[17px] font-extrabold leading-none">{select + 1}</b>
+        </StaySelect>
+      ) : (
+        <Link href={href} className="press flex h-14 w-14 shrink-0 items-center justify-center rounded-[16px] bg-peach text-sun-soft" aria-hidden tabIndex={-1}>
+          <Icon name="hotel" size={24} fill="transparent" />
+        </Link>
+      )}
       <div className="min-w-0 flex-1">
         <div className="flex items-start gap-2">
-          <Link href={href} className="press min-w-0 flex-1">
-            <span className="line-clamp-2 text-[16px] font-bold leading-snug">{name}</span>
-            <span className="block truncate text-[13.5px] font-semibold text-muted">
-              {[kind, price, overBudget ? "über Budget" : null, note || null].filter(Boolean).join(" · ")}
-            </span>
-          </Link>
+          {select !== undefined ? (
+            <StaySelect n={select} label={`${name} auf der Karte zeigen`} className="press min-w-0 flex-1 text-left">
+              <span className="line-clamp-2 text-[16px] font-bold leading-snug">{name}</span>
+              <span className="block truncate text-[13.5px] font-semibold text-muted">{meta}</span>
+            </StaySelect>
+          ) : (
+            <Link href={href} className="press min-w-0 flex-1">
+              <span className="line-clamp-2 text-[16px] font-bold leading-snug">{name}</span>
+              <span className="block truncate text-[13.5px] font-semibold text-muted">{meta}</span>
+            </Link>
+          )}
           <PlaceSaveButton compact {...save} />
         </div>
         <div className="mt-2 flex items-center gap-2 whitespace-nowrap text-[13px] font-bold">

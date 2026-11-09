@@ -11,8 +11,6 @@ import FavoriteButton from "@/components/FavoriteButton";
 import { personalMatch } from "@/lib/profile";
 import { characterTint, traitsOf } from "@/lib/character";
 import Icon from "@/components/Icon";
-import KiezMap from "@/components/KiezMap";
-import ZoneLegend from "@/components/ZoneLegend";
 import AskDistrict from "@/components/AskDistrict";
 import { dedupeStays } from "@/lib/geo";
 import { fmtScore, reviewsForMany, stayKey, TOP_FAIR } from "@/lib/reviews";
@@ -168,6 +166,20 @@ export default async function KiezPage({
   const self = `/kiez/${slug}?stadt=${district.city}${amp}`;
   const hubs = await hubsNear(district.lat!, district.lng!, district.city);
 
+  const bookingOf = (h: HotelResult) =>
+    partnerOn ? priceLink({ lat: h.lat, lon: h.lon, hotel: h.name, address: h.subtitle || undefined, campaign: `kiez_${district.slug}`, checkin: trip.checkin, checkout: trip.checkout, adults: trip.adults }) : undefined;
+  // Dieselben Unterkünfte wie in der Liste, gleiche Nummern
+  const stayPins = slow || failed ? [] : shown.slice(0, 25).map((h) => ({
+    name: h.name,
+    lat: h.lat,
+    lon: h.lon,
+    match: h.match,
+    meta: [KIND_LABEL[h.kind] ?? "Unterkunft", clsOf(h) ? PRICE_LABEL[clsOf(h)!] : null].filter(Boolean).join(" · "),
+    rating: revOf(h) ? fmtScore(revOf(h)!.fair) : undefined,
+    href: checkUrl(h),
+    booking: bookingOf(h),
+  }));
+
   const staysTab = (
     <section id="unterkuenfte" className="scroll-mt-20">
       <StaysPanel
@@ -185,6 +197,8 @@ export default async function KiezPage({
           campaign: `kiez_${district.slug}`,
           area: areaCode(zones, { lat: district.lat!, lon: district.lng! }),
         }}
+        stays={stayPins}
+        zones={zones}
       >
 
       {slow ? (
@@ -208,19 +222,6 @@ export default async function KiezPage({
               budget={Boolean(band)}
             />
           )}
-          {!partnerOn && (
-          <div className="mt-3">
-            <KiezMap
-              points={shown.slice(0, 25).map((h, i) => ({ slug: `h${i}`, name: h.name, lat: h.lat, lng: h.lon, match: h.match }))}
-              highlight="h0"
-              center={[district.lng!, district.lat!]}
-              zoom={13.6}
-              height="h-56"
-              zones={zones}
-            />
-            <ZoneLegend personal={Boolean(resolved)} shown={zones.length > 0} />
-          </div>
-          )}
           <ol className="card mt-3 px-3.5 py-1">
             {shown.slice(0, 25).map((h, i) => (
               <StayRow
@@ -234,7 +235,8 @@ export default async function KiezPage({
                 note={h.highlights[0]?.text ?? verdict(h.match).label}
                 match={h.match}
                 reviews={revOf(h)}
-                booking={partnerOn ? priceLink({ lat: h.lat, lon: h.lon, hotel: h.name, address: h.subtitle || undefined, campaign: `kiez_${district.slug}`, checkin: trip.checkin, checkout: trip.checkout, adults: trip.adults }) : undefined}
+                booking={bookingOf(h)}
+                select={i}
                 save={{
                   place: { name: h.name, subtitle: h.subtitle, lat: h.lat, lon: h.lon, kind: h.kind, match: h.match },
                   initiallySaved: isSaved(h),

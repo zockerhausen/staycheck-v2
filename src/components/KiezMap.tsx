@@ -206,7 +206,7 @@ export default function KiezMap(props: KiezMapProps) {
  * Kleine leuchtende Spots: nur die allerbesten Rasterpunkte (siehe bestSpotsIn / spotGlow), weich gezeichnet.
  * Der Radius ist knapp über dem Rasterabstand: Nachbarn eines Spots verschmelzen, verschiedene Spots bleiben getrennt.
  */
-function addZones(m: import("maplibre-gl").Map, zones: ZonePoint[], step: number, lat: number) {
+export function addZones(m: import("maplibre-gl").Map, zones: ZonePoint[], step: number, lat: number) {
   const metersPerPx0 = 156543.03 * Math.cos((lat * Math.PI) / 180); // bei Zoom 0
   const px = (zoom: number) => (step * 2.2) / (metersPerPx0 / 2 ** zoom); // Punkte eines Spots verschmelzen zu einer Fläche
   const before = m.getStyle().layers?.find((l) => l.type === "symbol")?.id;
