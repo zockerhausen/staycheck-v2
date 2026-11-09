@@ -116,7 +116,7 @@ export default async function FavoritenPage() {
             ))}
           </ul>
           {favs.length >= 2 && (
-            <Link href={`/duell?a=${favs[0].slug}&b=${favs[1].slug}${query ? `&${query}` : ""}`} className="btn-chunky mt-6 w-full">
+            <Link href={`/duell?stadt=${favs[0].city}&a=v-${favs[0].slug}&b=v-${favs[1].slug}${query ? `&${query}` : ""}`} className="btn-chunky mt-6 w-full">
               <Icon name="duel" size={22} fill="#ffffff55" /> Kieze ins Duell schicken
             </Link>
           )}

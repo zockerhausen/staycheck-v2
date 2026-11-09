@@ -1,6 +1,6 @@
 import { CITY_RADIUS, VERIFIED_RADIUS } from "@/lib/popular";
 import Link from "next/link";
-import { getChosenCity, getChosenZiel, getCities, getCriteria, getDistricts, resolveWeights } from "@/lib/data";
+import { getChosenCity, getChosenZiel, getCities, getCriteria, getDistricts, getExtras, resolveWeights } from "@/lib/data";
 import DuelTabs from "@/components/DuelTabs";
 import CitySwitcher from "@/components/CitySwitcher";
 import StillLoading from "@/components/StillLoading";
@@ -8,7 +8,7 @@ import { CRITERION_ICON } from "@/lib/icons";
 import Icon from "@/components/Icon";
 import { cityDataQuick, DEFAULT_WEIGHTS } from "@/lib/geo";
 import { findSpots } from "@/lib/zones";
-import { weightedMatch } from "@/lib/profile";
+import { profileMatch } from "@/lib/profile";
 import { parseZiel, zielQuery, type Ziel } from "@/lib/ziel";
 
 export const dynamic = "force-dynamic";
@@ -26,8 +26,11 @@ export default async function DuellPage({ searchParams }: { searchParams: Promis
   const params = await searchParams;
   const [criteria, allCities, chosenCity, chosenZiel] = await Promise.all([getCriteria(), getCities(), getChosenCity(), getChosenZiel()]);
   const verified = allCities.filter((c) => c.districtCount > 0);
-  const { weights } = await resolveWeights(params, criteria);
+  const [{ weights }, extras] = await Promise.all([resolveWeights(params, criteria), getExtras()]);
   const w = weights ?? DEFAULT_WEIGHTS;
+  // Gleiche Rechnung wie beim Quiz-Ergebnis und auf der Startseite (inkl. No-Gos)
+  const nogo = weights ? extras.nogo : undefined;
+  const score = (sc: Record<string, number | null>) => profileMatch(sc, w, nogo);
 
   // Welche Stadt? Adresse > gewähltes Reiseziel > erste geprüfte Stadt
   const urlCity = typeof params.stadt === "string" ? verified.find((c) => c.slug === params.stadt) : undefined;
@@ -50,7 +53,7 @@ export default async function DuellPage({ searchParams }: { searchParams: Promis
   const spotHref = (name: string, la: number, lo: number) =>
     `/ziel/viertel?${zq}&${new URLSearchParams({ name, vlat: la.toFixed(5), vlon: lo.toFixed(5), ...(radius === VERIFIED_RADIUS ? { rad: String(VERIFIED_RADIUS) } : {}) })}`;
   const contestants: Contestant[] = [
-    ...(cd ? findSpots(cd.zones, w, cd.places, cd.step, 8) : []).map((s) => ({
+    ...(cd ? findSpots(cd.zones, w, cd.places, cd.step, 8, nogo) : []).map((s) => ({
       key: `e-${s.slug}`,
       name: s.name,
       kind: "Ecke" as const,
@@ -99,17 +102,25 @@ export default async function DuellPage({ searchParams }: { searchParams: Promis
     );
   }
 
-  const a = contestants.find((c) => c.key === params.a) ?? contestants[0];
-  const b = contestants.find((c) => c.key === params.b && c.key !== a.key) ?? contestants.find((c) => c.key !== a.key)!;
+  // Start ohne Auswahl: dein Quiz-Ergebnis (bestes Viertel) gegen das zweitbeste – wie auf der Ergebnis-Seite.
+  // In Städten ohne geprüfte Viertel: die zwei besten Gegenden überhaupt.
+  const byMatch = [...contestants].sort((x, y) => score(y.scores) - score(x.scores));
+  const viertel = byMatch.filter((c) => c.kind === "Viertel");
+  const pool = active && viertel.length >= 2 ? viertel : byMatch;
+  // Auch ältere Links mit reinem Viertel-Namen (ohne „v-“) verstehen
+  const pick = (p: unknown) => (typeof p === "string" ? contestants.find((c) => c.key === p || c.key === `v-${p}`) : undefined);
+  const a = pick(params.a) ?? pool[0];
+  const pb = pick(params.b);
+  const b = pb && pb.key !== a.key ? pb : pool.find((c) => c.key !== a.key)!;
 
   // Nur Runden, für die beide Seiten Daten haben
   const rounds = criteria.filter((c) => a.scores[c.key] != null && b.scores[c.key] != null);
   const winsA = rounds.filter((c) => (a.scores[c.key] as number) > (b.scores[c.key] as number)).length;
   const winsB = rounds.filter((c) => (b.scores[c.key] as number) > (a.scores[c.key] as number)).length;
-  const matchA = weightedMatch(a.scores, w);
-  const matchB = weightedMatch(b.scores, w);
+  const matchA = score(a.scores);
+  const matchB = score(b.scores);
   const winner = matchA === matchB ? null : matchA > matchB ? a : b;
-  const options = (["Ecke", "Viertel"] as const).map((kind) => ({ kind, list: contestants.filter((c) => c.kind === kind) })).filter((g) => g.list.length);
+  const options = (["Viertel", "Ecke"] as const).map((kind) => ({ kind, list: byMatch.filter((c) => c.kind === kind) })).filter((g) => g.list.length);
 
   return (
     <div className="pt-2">

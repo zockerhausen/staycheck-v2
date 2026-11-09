@@ -103,7 +103,7 @@ export default function DistrictExplorer({
                     <>
                       <SafeImg src={d.photo.url} eager={i < 2} className="absolute inset-0 h-full w-full object-cover" />
                       <span data-credit className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-black/0" />
-                      <span data-credit className="absolute bottom-2 right-3 max-w-[60%] truncate text-[10px] font-semibold text-white/80">
+                      <span data-credit className="absolute right-3 top-2 max-w-[45%] truncate text-[10px] font-semibold text-white/85 [text-shadow:0_1px_3px_rgba(0,0,0,.7)]">
                         Foto: {d.photo.credit}, {d.photo.license}
                       </span>
                     </>
@@ -116,7 +116,12 @@ export default function DistrictExplorer({
                       {topLabel}
                     </span>
                   )}
-                  <span className={`relative text-[15px] font-extrabold ${d.photo ? "on-photo text-white" : "text-ink/80"}`}>{characterOf(d.scores, pool)}</span>
+                  <span className={`relative min-w-0 flex-1 truncate text-[15px] font-extrabold ${d.photo ? "on-photo text-white" : "text-ink/80"}`}>{characterOf(d.scores, pool)}</span>
+                  {/* Zeigt: hier geht es weiter zu den Unterkünften */}
+                  <span className="glass relative ml-2 flex shrink-0 items-center gap-1 rounded-full border border-[var(--sc-glass-line)] py-1.5 pl-3 pr-2.5 text-[13px] font-extrabold text-ink shadow-soft">
+                    Unterkünfte
+                    <Icon name="forward" size={14} className={best ? "nudge-x text-sun-soft" : "text-sun-soft"} />
+                  </span>
                 </span>
                 <span className="mt-3 flex items-start justify-between gap-3">
                   <span className="min-w-0">
@@ -190,14 +195,13 @@ export default function DistrictExplorer({
                     </span>
                   )}
                 </span>
-                {d.match !== undefined ? (
+                {d.match !== undefined && (
                   <span className="shrink-0 text-right">
                     <span className="block text-[19px] font-extrabold leading-tight tabular-nums text-sun-soft">{d.match}</span>
                     {rankText(d) && <span className="block whitespace-nowrap text-[11.5px] font-bold text-muted">{rankText(d)}</span>}
                   </span>
-                ) : (
-                  <Icon name="chevron" size={16} className="text-faint" />
                 )}
+                <Icon name="chevron" size={16} className="shrink-0 text-faint" />
               </Link>
             </li>
           ))}

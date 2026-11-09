@@ -902,3 +902,17 @@ html,
 body {
   overflow-x: clip;
 }
+
+/* Kleiner Stups nach rechts: „hier geht es weiter“ (ruhig, mit Pause) */
+.nudge-x {
+  animation: nudge-x 2.2s var(--ease-out) 1s infinite;
+}
+@keyframes nudge-x {
+  0%, 55%, 100% { transform: none; }
+  20% { transform: translateX(4px); }
+  35% { transform: translateX(0); }
+  45% { transform: translateX(2px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nudge-x { animation: none; }
+}

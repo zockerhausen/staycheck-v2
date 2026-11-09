@@ -152,7 +152,7 @@ export default async function ErgebnisPage({
         <div className="grid grid-cols-2 gap-2.5">
           <ShareButton name={top.name} match={top.match} tags={reasons.map((k) => labelOf[k])} city={city.name} light />
           <Link
-            href={`/duell?stadt=${city.slug}&a=${top.slug}&b=${rest[0]?.slug ?? top.slug}${q("&")}`}
+            href={`/duell?stadt=${city.slug}&a=v-${top.slug}&b=v-${rest[0]?.slug ?? top.slug}${q("&")}`}
             className="press flex items-center justify-center gap-2 rounded-full bg-tan py-4 font-bold"
           >
             <Icon name="duel" size={18} /> Duell
