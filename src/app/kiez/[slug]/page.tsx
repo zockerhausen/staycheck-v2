@@ -34,7 +34,7 @@ import { insightNear } from "@/lib/insights";
 import { areaPhoto } from "@/lib/photos";
 import TipsSection from "@/components/TipsSection";
 import { getTipsForDistrict } from "@/lib/tips";
-import { maxPriceFor, partnerOn } from "@/lib/partner";
+import { maxPriceFor, partnerOn, priceLink } from "@/lib/partner";
 import { classCap, parseTrip, tripQuery } from "@/lib/trip";
 import StaysPanel from "@/components/StaysPanel";
 import { areaCode } from "@/lib/zones";
@@ -234,7 +234,7 @@ export default async function KiezPage({
                 note={h.highlights[0]?.text ?? verdict(h.match).label}
                 match={h.match}
                 reviews={revOf(h)}
-                focus={partnerOn ? { lat: h.lat, lon: h.lon } : undefined}
+                booking={partnerOn ? priceLink({ lat: h.lat, lon: h.lon, hotel: h.name, address: h.subtitle || undefined, campaign: `kiez_${district.slug}`, checkin: trip.checkin, checkout: trip.checkout, adults: trip.adults }) : undefined}
                 save={{
                   place: { name: h.name, subtitle: h.subtitle, lat: h.lat, lon: h.lon, kind: h.kind, match: h.match },
                   initiallySaved: isSaved(h),
@@ -245,7 +245,7 @@ export default async function KiezPage({
             ))}
           </ol>
           <p className="mt-3 text-[13px] font-semibold text-muted">
-            Sortiert nach Lage (Unterkünfte und Umgebung aus OpenStreetMap). „Auf Karte“ zeigt die Unterkunft auf der Preiskarte oben.
+            Sortiert nach Lage (Unterkünfte und Umgebung aus OpenStreetMap). „Preis“ öffnet genau diese Unterkunft bei Booking.com (Anzeige).
             {hiddenUnknown > 0 ? ` ${hiddenUnknown} Unterkünfte ohne bekannte Preisklasse sind ausgeblendet.` : ""}
             {demo ? " Gäste-Werte sind vorerst Beispieldaten." : ""}
           </p>

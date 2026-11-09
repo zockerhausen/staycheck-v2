@@ -41,7 +41,6 @@ export default function StaysPanel({
 }) {
   const [sheet, setSheet] = useState(false);
   const [big, setBig] = useState(false); // Preiskarte im Vollbild
-  const [focus, setFocus] = useState<{ lat: number; lon: number; name: string } | null>(null);
   const [consent, setConsent] = useState<boolean | null>(null);
   const [origin, setOrigin] = useState("");
   const mapRef = useRef<HTMLDivElement>(null);
@@ -57,16 +56,6 @@ export default function StaysPanel({
     } catch {
       setConsent(false);
     }
-  }, []);
-
-  // „Auf Karte“ an einer Unterkunft: dieselbe Karte springt dorthin, ein Pin zeigt die Unterkunft
-  useEffect(() => {
-    const on = (e: Event) => {
-      setFocus((e as CustomEvent<{ lat: number; lon: number; name: string }>).detail);
-      mapRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-    };
-    window.addEventListener("sc-stays-focus", on);
-    return () => window.removeEventListener("sc-stays-focus", on);
   }, []);
 
   function save(next: { an: string; n: number; p: number; max: number }) {
@@ -91,10 +80,9 @@ export default function StaysPanel({
 
   const url = origin
     ? stayMapUrl({
-        lat: focus?.lat ?? map.lat,
-        lon: focus?.lon ?? map.lon,
-        zoom: focus ? 16 : 14,
-        pin: Boolean(focus),
+        lat: map.lat,
+        lon: map.lon,
+        zoom: 14,
         campaign: map.campaign,
         checkin,
         checkout,
@@ -130,17 +118,6 @@ export default function StaysPanel({
       {/* Hauptkarte: echte Preise (Stay22) + unsere beste Lage in Violett */}
       {partnerOn && (
         <div ref={mapRef} className="mt-3 scroll-mt-4">
-          {focus && (
-            <button
-              type="button"
-              onClick={() => setFocus(null)}
-              className="press mb-2 flex w-full items-center gap-2 rounded-full bg-tan px-4 py-2.5 text-left text-[13.5px] font-bold"
-            >
-              <Icon name="locate" size={15} className="shrink-0 text-sun-soft" />
-              <span className="min-w-0 flex-1 truncate">Pin: {focus.name}</span>
-              <span className="shrink-0 text-sun-soft">Ganzes Viertel</span>
-            </button>
-          )}
           <div className="relative h-[min(58dvh,480px)] overflow-hidden rounded-3xl bg-paper">
             {consent && url && !big ? (
               <iframe
@@ -196,7 +173,7 @@ export default function StaysPanel({
       )}
       {children}
 
-      {big && url && <PriceMap url={url} title={focus ? focus.name : `Freie Zimmer · ${map.place}`} sub={`${fmt(checkin)} – ${fmt(checkout)} · ${max ? `bis ${max} € pro Nacht` : "jedes Budget"}`} onClose={() => setBig(false)} />}
+      {big && url && <PriceMap url={url} title={`Freie Zimmer · ${map.place}`} sub={`${fmt(checkin)} – ${fmt(checkout)} · ${max ? `bis ${max} € pro Nacht` : "jedes Budget"}`} onClose={() => setBig(false)} />}
       {sheet && <TripSheet initial={{ an: checkin, n: nights, p: adults, max: max ?? 0 }} onClose={() => setSheet(false)} onSave={save} />}
     </div>
   );

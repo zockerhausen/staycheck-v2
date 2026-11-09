@@ -1,7 +1,6 @@
 import Link from "next/link";
 import Icon from "@/components/Icon";
 import PlaceSaveButton from "@/components/PlaceSaveButton";
-import FocusPriceButton from "@/components/FocusPriceButton";
 import { fmtScore, type StayReviews } from "@/lib/reviews";
 
 /** Eine Unterkunft in der Liste: Name, Art und Preis, Lage-Wert und (wenn da) Gäste-Wert. */
@@ -16,7 +15,7 @@ export default function StayRow({
   match,
   reviews,
   save,
-  focus,
+  booking,
 }: {
   id: string;
   href: string;
@@ -28,8 +27,8 @@ export default function StayRow({
   match: number;
   reviews?: StayReviews;
   save: React.ComponentProps<typeof PlaceSaveButton>;
-  /** Ort für „Preise hier“ (öffnet die Preis-Karte genau dort) */
-  focus?: { lat: number; lon: number };
+  /** Link zu genau dieser Unterkunft bei Booking.com (über Stay22, mit Reisedaten) */
+  booking?: string;
 }) {
   return (
     <li id={id} className="flex items-start gap-3 border-b border-line py-3 last:border-0">
@@ -55,7 +54,17 @@ export default function StayRow({
               <span className="truncate font-semibold text-muted">({reviews.total.toLocaleString("de-DE")}{reviews.demo ? ", Beispiel" : ""})</span>
             </span>
           )}
-          {focus && <FocusPriceButton lat={focus.lat} lon={focus.lon} name={name} />}
+          {booking && (
+            <a
+              href={booking}
+              target="_blank"
+              rel="sponsored noopener noreferrer"
+              aria-label={`Preis für ${name} bei Booking.com ansehen (Anzeige)`}
+              className="press ml-auto flex shrink-0 items-center gap-1 rounded-full bg-sun px-3 py-1.5 text-[13px] font-extrabold text-white"
+            >
+              Preis <Icon name="external" size={13} fill="transparent" />
+            </a>
+          )}
         </div>
       </div>
     </li>

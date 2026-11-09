@@ -91,9 +91,9 @@ export function stayMapUrl(o: {
     currency: "EUR",
     unitsystem: "metric",
     priceper: "nightly",
-    limit: "30",
   });
-  for (const h of ["searchbar", "filters", "checkinout", "guestpicker", "settings", "currency", "language", "brandlogo", "allezbutton", "modeswitcher", "enlargemap", "navbuttons"])
+  // „Bereich durchsuchen“ und Zoom bleiben (sonst lädt die Karte beim Verschieben nichts nach)
+  for (const h of ["searchbar", "filters", "checkinout", "guestpicker", "settings", "currency", "language", "brandlogo", "allezbutton", "modeswitcher", "enlargemap"])
     p.set(`hide${h}`, "true");
   if (o.maxPrice) p.set("max", String(o.maxPrice));
   if (o.pois?.length) {
@@ -103,7 +103,8 @@ export function stayMapUrl(o: {
   }
   if (!o.pin) p.set("hidemainmarker", "true");
   if (o.area && o.origin) {
-    p.set("gpx", `${o.origin}/api/kreise?a=${encodeURIComponent(o.area)}`);
+    // Pfad endet auf .gpx (manche Karten erkennen das Format nur an der Endung)
+    p.set("gpx", `${o.origin}/api/lage/${btoa(o.area).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "")}.gpx`);
     p.set("gpxlinecolor", "8c7ff6");
     p.set("gpxlinethickness", "4");
     p.set("gpxlineopacity", "1");
