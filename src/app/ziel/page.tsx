@@ -2,7 +2,8 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getCities, getCriteria, getExtras, getProfile, getUser } from "@/lib/data";
 import { after } from "next/server";
-import { autoCityCached, DEFAULT_WEIGHTS, distance, locationMatch, withDeadline, type AutoCity } from "@/lib/geo";
+import { autoCityCached, DEFAULT_WEIGHTS, distance, withDeadline, type AutoCity } from "@/lib/geo";
+import { profileMatch } from "@/lib/profile";
 import { findSpots, pickZones, spotGlow } from "@/lib/zones";
 import StillLoading from "@/components/StillLoading";
 import { parseZiel, zielQuery } from "@/lib/ziel";
@@ -68,7 +69,7 @@ export default async function ZielPage({ searchParams }: { searchParams: Promise
   const zq = zielQuery(ziel);
   const viertelHref = (d: AutoCity["districts"][number]) =>
     `/ziel/viertel?${zq}&${new URLSearchParams({ name: d.name.slice(0, 80), vlat: d.lat.toFixed(5), vlon: d.lon.toFixed(5) })}`;
-  const list = (districts ?? []).map((d) => ({ ...d, match: weights ? locationMatch(d.scores, weights) : undefined }));
+  const list = (districts ?? []).map((d) => ({ ...d, match: weights ? profileMatch(d.scores, weights, extras.nogo) : undefined }));
   const sorted = weights ? [...list].sort((a, b) => (b.match ?? 0) - (a.match ?? 0)) : list;
   const top = weights ? sorted[0] : undefined;
   const spotHref = (sp: (typeof spots)[number]) =>

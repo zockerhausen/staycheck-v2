@@ -16,7 +16,7 @@ export const maxDuration = 120;
 
 const selectClass = "w-full appearance-none rounded-[18px] bg-paper px-3 py-3 text-center font-display text-base font-bold";
 
-type Contestant = { key: string; name: string; kind: "Ecke" | "Viertel"; scores: Record<string, number | null>; href: string };
+type Contestant = { key: string; name: string; kind: "Ecke" | "Viertel"; scores: Record<string, number | null>; href: string; match?: number };
 
 /**
  * Viertel-Duell für das aktuelle Reiseziel – jede Stadt, nicht nur die geprüften.
@@ -29,8 +29,9 @@ export default async function DuellPage({ searchParams }: { searchParams: Promis
   const [{ weights }, extras] = await Promise.all([resolveWeights(params, criteria), getExtras()]);
   const w = weights ?? DEFAULT_WEIGHTS;
   // Gleiche Rechnung wie beim Quiz-Ergebnis und auf der Startseite (inkl. No-Gos)
-  const nogo = weights ? extras.nogo : undefined;
-  const score = (sc: Record<string, number | null>) => profileMatch(sc, w, nogo);
+  const nogo = extras.nogo;
+  // Ecken: dieselbe Zahl wie auf der Karte der Startseite (Match der Ecke), Viertel: Match ihrer Werte
+  const score = (c: Pick<Contestant, "scores" | "match">) => c.match ?? profileMatch(c.scores, w, nogo);
 
   // Welche Stadt? Adresse > gewähltes Reiseziel > erste geprüfte Stadt
   const urlCity = typeof params.stadt === "string" ? verified.find((c) => c.slug === params.stadt) : undefined;
@@ -58,6 +59,7 @@ export default async function DuellPage({ searchParams }: { searchParams: Promis
       name: s.name,
       kind: "Ecke" as const,
       scores: s.scores,
+      match: s.match,
       href: spotHref(s.name, s.lat, s.lon),
     })),
     ...(active
@@ -104,7 +106,7 @@ export default async function DuellPage({ searchParams }: { searchParams: Promis
 
   // Start ohne Auswahl: dein Quiz-Ergebnis (bestes Viertel) gegen das zweitbeste – wie auf der Ergebnis-Seite.
   // In Städten ohne geprüfte Viertel: die zwei besten Gegenden überhaupt.
-  const byMatch = [...contestants].sort((x, y) => score(y.scores) - score(x.scores));
+  const byMatch = [...contestants].sort((x, y) => score(y) - score(x));
   const viertel = byMatch.filter((c) => c.kind === "Viertel");
   const pool = active && viertel.length >= 2 ? viertel : byMatch;
   // Auch ältere Links mit reinem Viertel-Namen (ohne „v-“) verstehen
@@ -117,8 +119,8 @@ export default async function DuellPage({ searchParams }: { searchParams: Promis
   const rounds = criteria.filter((c) => a.scores[c.key] != null && b.scores[c.key] != null);
   const winsA = rounds.filter((c) => (a.scores[c.key] as number) > (b.scores[c.key] as number)).length;
   const winsB = rounds.filter((c) => (b.scores[c.key] as number) > (a.scores[c.key] as number)).length;
-  const matchA = score(a.scores);
-  const matchB = score(b.scores);
+  const matchA = score(a);
+  const matchB = score(b);
   const winner = matchA === matchB ? null : matchA > matchB ? a : b;
   const options = (["Viertel", "Ecke"] as const).map((kind) => ({ kind, list: byMatch.filter((c) => c.kind === kind) })).filter((g) => g.list.length);
 

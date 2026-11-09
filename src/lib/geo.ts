@@ -7,7 +7,7 @@ import type { District, Weights } from "./data";
 import type { NoGo } from "./profile";
 import { unstable_cache } from "next/cache";
 import { after } from "next/server";
-import { pickZones, ZONE_KEYS, type ZonePoint } from "./zones";
+import { areaScoresAt, pickZones, ZONE_KEYS, type ZonePoint } from "./zones";
 import { precomputedCity, precomputedCovering, withGuideAt } from "./precomputed";
 import { distance, districtSafety, scoreFromData, type Highlight, type Line, type Poi, type ScoreResult } from "./score";
 
@@ -759,15 +759,27 @@ export const hotelsNearCached = async (
 export function alignStays<T extends { lat: number; lon: number; scores: LocationScores; match: number }>(
   list: T[],
   districts: District[],
-  match: (scores: LocationScores) => number,
+  match: (scores: LocationScores, nogoBasis: Record<string, number | null> | null) => number,
+  zones: { lat: number; lon: number; s: number[] }[] = [],
 ): T[] {
   return list
     .map((h) => {
       const d = districts.length ? nearestDistrict(h.lat, h.lon, districts) : null;
       const scores = d ? ({ ...h.scores, safety: districtSafety(d).score } as LocationScores) : h.scores;
-      return { ...h, scores, match: match(scores) };
+      return { ...h, scores, match: match(scores, nogoBasisAt(zones, h.lat, h.lon, scores)) };
     })
     .sort((a, b) => b.match - a.match);
+}
+
+/** No-Go-Prüfung an einer Stelle: Rasterwerte (wie Ecken/Karte), Sicherheit vom Viertel. Ohne Raster: null (dann die eigenen Werte). */
+export function nogoBasisAt(zones: { lat: number; lon: number; s: number[] }[], lat: number, lon: number, scores: Record<string, number | null>) {
+  const area = zones.length ? areaScoresAt(zones, lat, lon) : null;
+  return area ? { ...scores, ...area } : null;
+}
+
+/** Rasterpunkte der vorberechneten Stadt an dieser Stelle (leer, wenn nicht vorberechnet) */
+export async function zonesCovering(lat: number, lon: number) {
+  return (await precomputedCovering(lat, lon).catch(() => null))?.city.zones ?? [];
 }
 
 /** Wartet höchstens ms Millisekunden. Danach „slow“ – die Arbeit läuft weiter und landet im Zwischenspeicher. */

@@ -4,6 +4,27 @@ import { profileMatch, type NoGo, type Weights } from "@/lib/profile";
 
 export const ZONE_KEYS = ["transit", "nightlife", "food", "nature", "quiet", "budget"] as const;
 
+/**
+ * Werte des Rasterpunkts an dieser Stelle (nächster Punkt bis 300 m), oder null.
+ * Für No-Gos an einer Unterkunft: gleiche Skala wie Karte, Ecken und gute Fläche.
+ * Sonst wäre z. B. „Partymeile“ an einer Unterkunft fast überall erfüllt (Messung an der Adresse ist gröber gestuft).
+ */
+export function areaScoresAt(zones: { lat: number; lon: number; s: number[] }[], lat: number, lon: number): Record<string, number> | null {
+  let best: { s: number[] } | null = null;
+  let bd = 300;
+  const cos = Math.cos((lat * Math.PI) / 180);
+  for (const z of zones) {
+    const dLat = (z.lat - lat) * 110540;
+    const dLon = (z.lon - lon) * 111320 * cos;
+    const d = Math.sqrt(dLat * dLat + dLon * dLon);
+    if (d < bd) {
+      bd = d;
+      best = z;
+    }
+  }
+  return best ? (Object.fromEntries(ZONE_KEYS.map((k, i) => [k, best!.s[i]])) as Record<string, number>) : null;
+}
+
 export type ZonePoint = { lat: number; lon: number; w: number }; // w: 0–1, wie stark der Spot leuchtet
 
 /** Anteil der Stadt, der ohne Viertel-Spots auf der Karte leuchtet: nur die besten der besten */
@@ -173,7 +194,9 @@ export function findSpots(
     const big = nearest(coarse, center, 2500);
     // Kein Kiez direkt hier: gehört das Stück zu einer schon gefundenen Ecke in der Nähe, nicht doppelt zeigen
     if (!fine && spots.some((s) => dist(s, center) < 1500)) continue;
-    const name = fine?.n ?? (big ? `Rund um ${big.n}` : "Gute Ecke");
+    // Kein Name in der Nähe: nach dem nächsten bekannten Ort benennen (statt namenlos „Gute Ecke“)
+    const around = big ?? nearest(coarse, center, 5000) ?? nearest(places, center, 2500);
+    const name = fine?.n ?? (around ? `Rund um ${around.n}` : "Gute Ecke");
     if (spots.some((s) => s.name === name || s.slug === slugify(name))) continue; // gleicher Name = gleiche Gegend
     spots.push({
       slug: slugify(name),

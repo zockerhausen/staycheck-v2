@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { getCities, getCriteria, getDistricts, getExtras, resolveWeights } from "@/lib/data";
 import { NO_EXTRAS, personalMatch } from "@/lib/profile";
-import { analyzeLocation, DEFAULT_WEIGHTS, verdict, type Place } from "@/lib/geo";
+import { analyzeLocation, DEFAULT_WEIGHTS, nogoBasisAt, zonesCovering, verdict, type Place } from "@/lib/geo";
 import { HUBS, cityForPoint, estimateArrival } from "@/lib/arrival";
 import { CRITERION_ICON } from "@/lib/icons";
 import Icon from "@/components/Icon";
@@ -60,7 +60,8 @@ export default async function HotelDuellPage({
   const results: Result[] = await Promise.all(
     places.map(async (p) => {
       const analysis = await analyzeLocation(p.lat, p.lon, districts).catch(() => null);
-      return { place: p, analysis, match: analysis ? personalMatch(analysis.scores, weights, extras).match : null };
+      const basis = analysis ? nogoBasisAt(await zonesCovering(p.lat, p.lon), p.lat, p.lon, analysis.scores) : null;
+      return { place: p, analysis, match: analysis ? personalMatch(analysis.scores, weights, extras, basis).match : null };
     }),
   );
   const valid = results.filter((r) => r.analysis && r.match !== null);

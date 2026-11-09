@@ -4,9 +4,9 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getCriteria, getDistricts, getExtras, getProfile, getSavedPlaces, getUser } from "@/lib/data";
 import { after } from "next/server";
-import { alignStays, autoCityCached, DEFAULT_WEIGHTS, distance, hotelsNearCached, locationMatch, withDeadline, type HotelResult } from "@/lib/geo";
+import { alignStays, zonesCovering, autoCityCached, DEFAULT_WEIGHTS, distance, hotelsNearCached, locationMatch, withDeadline, type HotelResult } from "@/lib/geo";
 import StillLoading from "@/components/StillLoading";
-import { ZONE_KEYS } from "@/lib/zones";
+import { findSpots, ZONE_KEYS } from "@/lib/zones";
 import { goodArea } from "@/lib/good-area";
 import AskDistrict from "@/components/AskDistrict";
 import { dedupeStays } from "@/lib/geo";
@@ -19,7 +19,7 @@ import GuideCard from "@/components/GuideCard";
 import { guideNear } from "@/lib/wikivoyage";
 import { hubsNear } from "@/lib/arrival-hubs";
 import { assistantEnabled } from "@/lib/assistant";
-import { fullWeights, personalMatch } from "@/lib/profile";
+import { fullWeights, personalMatch, profileMatch } from "@/lib/profile";
 import { parseZiel, zielQuery } from "@/lib/ziel";
 import { characterTint, traitsOf } from "@/lib/character";
 import { CRITERION_ICON } from "@/lib/icons";
@@ -109,7 +109,12 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
   // Gleiche Werte wie auf der Detailseite jeder Unterkunft (Sicherheit vom nächsten geprüften Viertel, gleiche Formel)
   {
     const [ex, dbDistricts] = await Promise.all([getExtras(), getDistricts()]);
-    hotels = alignStays(hotels, dbDistricts, (sc) => (profile ? personalMatch(sc, weights, ex).match : locationMatch(sc, DEFAULT_WEIGHTS)));
+    hotels = alignStays(
+      hotels,
+      dbDistricts,
+      (sc, basis) => (profile ? personalMatch(sc, weights, ex, basis).match : locationMatch(sc, DEFAULT_WEIGHTS)),
+      cityData?.zones ?? (await zonesCovering(vlat, vlon)),
+    );
   }
   // Budget aus dem Reise-Profil: eigener Filter, Preisklasse an jeder Unterkunft (geschätzt)
   const band = (await getExtras()).preis ?? null;
@@ -166,7 +171,12 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
   const photoRaced = await withDeadline(photoWork, 2500);
   if (photoRaced === "slow") after(() => photoWork);
   const photo = photoRaced === "slow" ? null : photoRaced;
-  const lageValue = district ? (profile ? locationMatch(district.scores, profile) : locationMatch(district.scores, DEFAULT_WEIGHTS)) : null;
+  // Gleiche Zahl wie auf der Karte der Startseite: dieselbe Ecke (findSpots), sonst derselbe Match fürs Raster rundherum
+  const lageNogo = (await getExtras()).nogo;
+  const sameSpot = cityData
+    ? findSpots(cityData.zones, weights, cityData.places, cityData.step, 8, lageNogo).find((sp) => distance(sp.lat, sp.lon, vlat, vlon) < 200)
+    : undefined;
+  const lageValue = sameSpot ? sameSpot.match : district ? profileMatch(district.scores, weights, lageNogo) : null;
   const revList = shown.flatMap((i) => (i.reviews ? [i.reviews] : [])); // nur echte Bewertungen (Tripadvisor, Stay22)
   const guestAvg = revList.length ? revList.reduce((s, r) => s + r.fair, 0) / revList.length : null;
   const classes = hotels.map(clsOf).filter((c): c is NonNullable<ReturnType<typeof clsOf>> => c !== null).sort();

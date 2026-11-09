@@ -125,11 +125,20 @@ export function weightedMatch(scores: Record<string, number | null | undefined>,
 export type PersonalMatch = { match: number; uncapped: number; mustMissing: ExtraKey | null; nogo: NoGo | null };
 
 /** Persönlicher Match: gewichteter Durchschnitt, aber ein fehlendes Muss oder ein No-Go begrenzt ihn hart. */
-export function personalMatch(scores: Record<string, number | null | undefined>, weights: Weights, extras: Extras): PersonalMatch {
+/**
+ * nogoBasis: Werte, an denen No-Gos geprüft werden. Für Unterkünfte und Adressen die Rasterwerte der Stelle
+ * (gleiche Skala wie Ecken und Karte), damit eine empfohlene Ecke nicht lauter „No-Go“-Unterkünfte hat.
+ */
+export function personalMatch(
+  scores: Record<string, number | null | undefined>,
+  weights: Weights,
+  extras: Extras,
+  nogoBasis?: Record<string, number | null | undefined> | null,
+): PersonalMatch {
   const uncapped = weightedMatch(scores, fullWeights(weights, extras));
   const m = extras.must;
   const mustMissing = m && scores[m] !== null && scores[m] !== undefined && (scores[m] as number) <= 3 ? m : null;
-  const nogo = nogoHit(scores, extras.nogo);
+  const nogo = nogoHit(nogoBasis ?? scores, extras.nogo);
   let match = uncapped;
   if (mustMissing) match = Math.min(match, MUST_CAP);
   if (nogo) match = Math.min(match, NOGO_CAP);

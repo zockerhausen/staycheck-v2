@@ -13,7 +13,7 @@ import {
 } from "@/lib/data";
 import { after } from "next/server";
 import { precomputedCovering } from "@/lib/precomputed";
-import { analyzeLocation, cityZones, DEFAULT_WEIGHTS, estimateLocation, locationMatch, verdict, withDeadline } from "@/lib/geo";
+import { analyzeLocation, cityZones, nogoBasisAt, zonesCovering, DEFAULT_WEIGHTS, estimateLocation, locationMatch, verdict, withDeadline } from "@/lib/geo";
 import StillLoading from "@/components/StillLoading";
 import { CRITERION_ICON } from "@/lib/icons";
 import Icon from "@/components/Icon";
@@ -114,7 +114,9 @@ export default async function CheckErgebnisPage({
   const extras = resolved ? await getExtras() : NO_EXTRAS;
   // Violett die beste Lage der Stadt, wie auf der Viertel-Karte (nur kurz warten, sonst ohne)
   const zones = city ? await cityZones(city.lat, city.lng, VERIFIED_RADIUS, weights, 1200, extras.nogo).catch(() => []) : [];
-  const pm = resolved ? personalMatch(analysis.scores, weights, extras) : null;
+  // No-Gos auf derselben Skala wie Ecken und Karte prüfen (Rasterwerte an dieser Stelle)
+  const nogoBasis = resolved && extras.nogo?.length ? nogoBasisAt(await zonesCovering(lat, lon), lat, lon, analysis.scores) : null;
+  const pm = resolved ? personalMatch(analysis.scores, weights, extras, nogoBasis) : null;
   const match = pm ? pm.match : general;
   const usedWeights = resolved ? fullWeights(weights, extras) : DEFAULT_WEIGHTS;
   const usedKeys = Object.entries(usedWeights)
@@ -188,7 +190,8 @@ export default async function CheckErgebnisPage({
               <Icon name="close" size={16} /> Dein No-Go trifft zu: {NOGO_LABEL[pm.nogo]}
             </b>
             <p className="mt-1 text-muted">
-              {NOGOS.find((n) => n.key === pm.nogo)?.sub}. Darum höchstens {NOGO_CAP} Punkte für dich
+              {NOGOS.find((n) => n.key === pm.nogo)?.sub}
+              {nogoBasis && pm.nogo !== "unsicher" ? " (gemessen für die Umgebung, wie auf der Karte)" : ""}. Darum höchstens {NOGO_CAP} Punkte für dich
               {pm.uncapped > NOGO_CAP ? ` (ohne No-Go wären es ${pm.uncapped})` : ""}.
             </p>
           </div>

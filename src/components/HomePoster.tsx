@@ -73,11 +73,11 @@ export default function HomePoster({
               <span className="text-[13.5px] font-semibold opacity-85">{personal ? "Lage für dich" : "Lage"}</span>
             </div>
           </div>
-          <div className="mt-[18px] grid grid-cols-[1.2fr_1fr] gap-2">
-            <Link href={best.href} className="press flex min-h-[3.5rem] items-center justify-center whitespace-nowrap rounded-full bg-white px-2 text-center text-[15.5px] font-extrabold text-[#5340f2]">
+          <div className="mt-[18px] grid grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] gap-2">
+            <Link href={best.href} className="press flex min-h-[3.5rem] items-center justify-center rounded-full bg-white px-2 text-center text-[clamp(13px,4vw,15.5px)] leading-tight font-extrabold text-[#5340f2]">
               Unterkünfte ansehen
             </Link>
-            <a href="#ecken" className="press flex min-h-[3.5rem] items-center justify-center whitespace-nowrap rounded-full px-2 text-[15.5px] font-extrabold text-white shadow-[inset_0_0_0_2px_#fff]">
+            <a href="#ecken" className="press flex min-h-[3.5rem] items-center justify-center rounded-full px-2 text-center text-[clamp(13px,4vw,15.5px)] leading-tight font-extrabold text-white shadow-[inset_0_0_0_2px_#fff]">
               Alle Ecken
             </a>
           </div>

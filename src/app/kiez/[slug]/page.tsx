@@ -4,7 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getCities, getCriteria, getDistricts, getExtras, getFavoriteIds, getSavedPlaces, getUser, resolveWeights, weightsToQuery } from "@/lib/data";
 import { after } from "next/server";
-import { alignStays, cityDataQuick, DEFAULT_WEIGHTS, hotelsNearCached, locationMatch, verdict, withDeadline, type HotelResult } from "@/lib/geo";
+import { alignStays, zonesCovering, cityDataQuick, DEFAULT_WEIGHTS, hotelsNearCached, locationMatch, verdict, withDeadline, type HotelResult } from "@/lib/geo";
 import StillLoading from "@/components/StillLoading";
 import { matchScore } from "@/lib/matching";
 import FavoriteButton from "@/components/FavoriteButton";
@@ -97,7 +97,8 @@ export default async function KiezPage({
   // Gleiche Werte wie auf der Detailseite jeder Unterkunft (Sicherheit vom nächsten Viertel, gleiche Formel)
   {
     const ex = await getExtras();
-    hotels = alignStays(hotels, districts, (sc) => (resolved ? personalMatch(sc, weights, ex).match : locationMatch(sc, DEFAULT_WEIGHTS)));
+    const zones = cityRaw?.zones?.length ? cityRaw.zones : await zonesCovering(district.lat, district.lng);
+    hotels = alignStays(hotels, districts, (sc, basis) => (resolved ? personalMatch(sc, weights, ex, basis).match : locationMatch(sc, DEFAULT_WEIGHTS)), zones);
   }
   // Budget aus dem Reise-Profil: eigener Filter, Preisklasse an jeder Unterkunft (geschätzt)
   const band = (await getExtras()).preis ?? null;

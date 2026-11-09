@@ -111,7 +111,10 @@ export async function storeProfile(weights: Record<string, number>, city?: strin
   );
   const jar = await cookies();
   jar.set(PROFILE_COOKIE, encodeProfile(clean), { maxAge: YEAR, path: "/", sameSite: "lax", secure: true, httpOnly: true });
-  if (city && /^[a-z-]{2,40}$/.test(city)) jar.set(CITY_COOKIE, city, { maxAge: YEAR, path: "/", sameSite: "lax", secure: true, httpOnly: true });
+  if (city && /^[a-z-]{2,40}$/.test(city)) {
+    jar.set(CITY_COOKIE, city, { maxAge: YEAR, path: "/", sameSite: "lax", secure: true, httpOnly: true });
+    jar.delete(ZIEL_COOKIE); // es gibt immer nur ein aktuelles Reiseziel
+  }
   await savePreferences(clean);
   if (extrasInput !== undefined) await storeExtras(extrasInput);
   // Kein revalidatePath("/"): das würde alle gespeicherten Kartendaten für alle Nutzer löschen.
