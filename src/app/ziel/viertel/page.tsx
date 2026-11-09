@@ -78,8 +78,6 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
   const cityData = cityRaw === "slow" ? null : cityRaw;
   const weights = profile ?? DEFAULT_WEIGHTS;
   const districts = cityData?.districts ?? [];
-  // Die gute Lage rund um diese Stelle als Fläche (Karte und „drin / knapp außerhalb“ in der Liste)
-  const good = cityData ? goodArea(cityData.zones, { lat: vlat, lon: vlon }, STAY_RADIUS, weights, (await getExtras()).nogo) : null;
   // Ein bekanntes Viertel an dieser Stelle – sonst eine „Ecke“: Werte aus dem Raster rundherum (450 m)
   const near = (cityData?.zones ?? []).filter((z) => distance(z.lat, z.lon, vlat, vlon) <= 450);
   const district =
@@ -118,6 +116,8 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
   const clsOf = (h: HotelResult) => priceClass(h.kind, h.stars ?? 0);
   const maxNight = trip.max !== undefined ? trip.max : maxPriceFor(band);
   hotels = dedupeStays(hotels);
+  // Die gute Lage rund um diese Stelle als Fläche (Karte und „drin / knapp daneben“ in der Liste); gut gelegene Unterkünfte zählen mit
+  const good = cityData ? goodArea(cityData.zones, { lat: vlat, lon: vlon }, STAY_RADIUS, weights, (await getExtras()).nogo, hotels) : null;
   // Link genau zu einer Unterkunft (Stay22 sucht sie bei Booking, Agoda, Expedia, Hotels.com)
   const place = [ziel.ort, ziel.land].filter(Boolean).join(", ");
   const bookingOf = (h: HotelResult) =>

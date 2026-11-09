@@ -25,7 +25,18 @@ function gridStep(values: number[]) {
   return d;
 }
 
-export function goodArea(zones: RawZone[], center: { lat: number; lon: number }, radius: number, weights: Weights, nogo?: NoGo[]): GoodArea | null {
+/**
+ * stays: Unterkünfte mit ihrem genauen Lage-Wert. Wo eine Unterkunft mindestens so gut liegt wie die typischen in der Fläche,
+ * gehört ihre Stelle mit dazu (das Raster ist grob, 350 m; der Wert einer Unterkunft ist genauer).
+ */
+export function goodArea(
+  zones: RawZone[],
+  center: { lat: number; lon: number },
+  radius: number,
+  weights: Weights,
+  nogo?: NoGo[],
+  stays: { lat: number; lon: number; match: number }[] = [],
+): GoodArea | null {
   const near = zones.filter((z) => meters(z, center) <= radius * 1.1);
   if (near.length < 6) return null;
   const dLat = gridStep(near.map((z) => z.lat));
@@ -74,6 +85,12 @@ export function goodArea(zones: RawZone[], center: { lat: number; lon: number },
   let cells = grow(q(0.45));
   if (cells.size < 5) cells = grow(q(0.3));
   if (cells.size < 3) return null;
+
+  // Sehr gut gelegene Unterkünfte außerhalb: ihre Stelle kommt dazu (sonst „knapp daneben“ trotz Top-Wert)
+  const near2 = stays.filter((h) => meters(h, center) <= radius);
+  const insideMatches = near2.filter((h) => cells.has(key(...idx(h.lat, h.lon)))).map((h) => h.match).sort((a, b) => a - b);
+  const bar = insideMatches.length >= 3 ? insideMatches[Math.floor(insideMatches.length * 0.5)] : 80;
+  for (const h of near2) if (h.match >= bar) cells.add(key(...idx(h.lat, h.lon)));
 
   // Löcher füllen: alles, was von außen nicht erreichbar ist, gehört dazu (eine ruhige Fläche statt Schweizer Käse)
   const all = [...cells].map((k) => k.split(",").map(Number));

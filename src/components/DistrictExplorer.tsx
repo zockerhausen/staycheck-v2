@@ -88,7 +88,7 @@ export default function DistrictExplorer({
       )}
 
       {variant === "feed" ? (
-        <div className="mt-4 grid gap-6">
+        <div className="mt-4 grid grid-cols-1 gap-6">
           {shown.map((d, i) => {
             const traits = tr(d);
             const main = traits[0];

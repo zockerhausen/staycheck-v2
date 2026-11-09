@@ -85,8 +85,6 @@ export default async function KiezPage({
     getTipsForDistrict(district.id),
     cityRow ? cityDataQuick(cityRow.lat, cityRow.lng, VERIFIED_RADIUS, 1200) : Promise.resolve(null),
   ]);
-  // Die gute Lage rund um das Viertel als Fläche (Karte und „drin / knapp außerhalb“ in der Liste)
-  const good = cityRaw ? goodArea(cityRaw.zones, { lat: district.lat!, lon: district.lng! }, STAY_RADIUS, weights, kiezExtras.nogo) : null;
 
   let hotels: HotelResult[] = [];
   let failed = false;
@@ -106,6 +104,8 @@ export default async function KiezPage({
   const clsOf = (h: HotelResult) => priceClass(h.kind, h.stars ?? 0);
   const maxNight = trip.max !== undefined ? trip.max : maxPriceFor(band);
   hotels = dedupeStays(hotels);
+  // Die gute Lage rund um das Viertel als Fläche (Karte und „drin / knapp daneben“ in der Liste); gut gelegene Unterkünfte zählen mit
+  const good = cityRaw ? goodArea(cityRaw.zones, { lat: district.lat!, lon: district.lng! }, STAY_RADIUS, weights, kiezExtras.nogo, hotels) : null;
   // Link genau zu einer Unterkunft (Stay22 sucht sie bei Booking, Agoda, Expedia, Hotels.com)
   const place = [cityName, cityRow?.country].filter(Boolean).join(", ");
   const bookingOf = (h: HotelResult) =>

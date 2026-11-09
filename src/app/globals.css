@@ -385,10 +385,11 @@ input[type="range"] {
   font: 800 12px var(--font-body), system-ui, sans-serif;
   box-shadow: 0 6px 16px rgba(23, 19, 58, 0.18);
   cursor: pointer;
-  transition: transform 0.15s ease;
+  /* Nie „transform“ animieren: damit setzt die Karte die Position. Sonst hinken die Pins beim Zoomen hinterher. */
+  transition: scale 0.15s ease;
 }
 .sc-pin:active {
-  transform: scale(0.94);
+  scale: 0.94;
 }
 /* Platz 2 und 3 in der Stadt: kräftig violett */
 .sc-pin-good {
@@ -894,4 +895,10 @@ input[type="range"] {
 }
 @media (scripting: none) {
   .img-fade { opacity: 1; transform: none; }
+}
+
+/* Nichts darf die Seite seitlich verschieben (sonst wirkt der rechte Rand abgeschnitten) */
+html,
+body {
+  overflow-x: clip;
 }
