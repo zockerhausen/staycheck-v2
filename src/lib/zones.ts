@@ -299,3 +299,23 @@ export function glowCircles(zones: ZonePoint[], center: { lat: number; lon: numb
       return { lat: Math.round(lat * 1e5) / 1e5, lon: Math.round(lon * 1e5) / 1e5, r: Math.round(Math.min(600, spread + step * 0.6)) };
     });
 }
+
+/**
+ * Die leuchtenden Rasterpunkte in der Nähe als kompakter Text für /api/kreise:
+ * „lat0,lon0,dLat,dLon|i.j;i.j;…“ (Rasterindizes relativ zu lat0/lon0). Daraus wird dort der Umriss der besten Lage.
+ */
+export function areaCode(zones: ZonePoint[], center: { lat: number; lon: number }, maxDist = 2500): string | null {
+  const near = zones.filter((z) => dist(z, center) <= maxDist);
+  if (near.length < 2) return null;
+  const lats = [...new Set(near.map((c) => c.lat))].sort((a, b) => a - b);
+  const lons = [...new Set(near.map((c) => c.lon))].sort((a, b) => a - b);
+  let dLat = Infinity;
+  for (let i = 1; i < lats.length; i++) if (lats[i] - lats[i - 1] > 1e-6) dLat = Math.min(dLat, lats[i] - lats[i - 1]);
+  let dLon = Infinity;
+  for (let i = 1; i < lons.length; i++) if (lons[i] - lons[i - 1] > 1e-6) dLon = Math.min(dLon, lons[i] - lons[i - 1]);
+  if (!Number.isFinite(dLat) || !Number.isFinite(dLon)) return null;
+  const lat0 = lats[0];
+  const lon0 = lons[0];
+  const cells = near.slice(0, 400).map((c) => `${Math.round((c.lat - lat0) / dLat)}.${Math.round((c.lon - lon0) / dLon)}`);
+  return `${lat0.toFixed(5)},${lon0.toFixed(5)},${dLat.toFixed(6)},${dLon.toFixed(6)}|${cells.join(";")}`;
+}

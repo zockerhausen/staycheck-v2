@@ -36,7 +36,7 @@ import { areaPhoto } from "@/lib/photos";
 import { maxPriceFor, partnerOn } from "@/lib/partner";
 import { classCap, parseTrip, tripQuery } from "@/lib/trip";
 import StaysPanel from "@/components/StaysPanel";
-import { glowCircles } from "@/lib/zones";
+import { areaCode } from "@/lib/zones";
 
 export const fetchCache = "default-cache";
 export const maxDuration = 120; // erste Berechnung einer Stadt kann dauern (läuft nach der Antwort weiter)
@@ -190,8 +190,7 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
           lon: vlon,
           place: name,
           campaign: `spot_${ziel.ort}_${name}`,
-          circles: glowCircles(zones, { lat: vlat, lon: vlon }, 2500),
-          pois: shown.slice(0, 15).map((h) => ({ lat: h.lat, lng: h.lon, name: `Lage ${h.match}`, desc: `${h.name} · ${KIND_LABEL[h.kind] ?? "Unterkunft"}` })),
+          area: areaCode(zones, { lat: vlat, lon: vlon }),
         }}
       >
 

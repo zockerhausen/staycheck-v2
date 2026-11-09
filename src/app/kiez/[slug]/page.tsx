@@ -37,7 +37,7 @@ import { getTipsForDistrict } from "@/lib/tips";
 import { maxPriceFor, partnerOn } from "@/lib/partner";
 import { classCap, parseTrip, tripQuery } from "@/lib/trip";
 import StaysPanel from "@/components/StaysPanel";
-import { glowCircles } from "@/lib/zones";
+import { areaCode } from "@/lib/zones";
 
 // Dynamisch durch Cookies/Suchparameter; Kartendaten-Abfragen werden 1 Tag zwischengespeichert.
 export const fetchCache = "default-cache";
@@ -183,8 +183,7 @@ export default async function KiezPage({
           lon: district.lng!,
           place: short,
           campaign: `kiez_${district.slug}`,
-          circles: glowCircles(zones, { lat: district.lat!, lon: district.lng! }, 2500),
-          pois: shown.slice(0, 15).map((h) => ({ lat: h.lat, lng: h.lon, name: `Lage ${h.match}`, desc: `${h.name} · ${KIND_LABEL[h.kind] ?? "Unterkunft"}` })),
+          area: areaCode(zones, { lat: district.lat!, lon: district.lng! }),
         }}
       >
 

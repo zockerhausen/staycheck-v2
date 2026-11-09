@@ -9,7 +9,6 @@ import { isDarkNow } from "@/components/ThemeSwitch";
 import { partnerOn, stayMapUrl } from "@/lib/partner";
 import { MAX_OPTIONS } from "@/lib/trip";
 
-type Poi = { lat: number; lng: number; name: string; desc?: string };
 type Chip = { key: string; label: string; href: string; active: boolean };
 
 const fmt = (s: string) => new Date(`${s}T12:00:00`).toLocaleDateString("de-DE", { day: "numeric", month: "short" });
@@ -37,7 +36,7 @@ export default function StaysPanel({
   max: number | null;
   count?: number;
   chips: Chip[];
-  map: { lat: number; lon: number; place: string; campaign: string; pois: Poi[]; circles?: { lat: number; lon: number; r: number }[] };
+  map: { lat: number; lon: number; place: string; campaign: string; area?: string | null };
   children: React.ReactNode;
 }) {
   const [sheet, setSheet] = useState(false);
@@ -102,8 +101,7 @@ export default function StaysPanel({
         adults,
         maxPrice: max,
         dark: isDarkNow(),
-        pois: focus ? [] : map.pois,
-        circles: map.circles,
+        area: map.area,
         origin,
       })
     : null;
@@ -169,13 +167,15 @@ export default function StaysPanel({
               </button>
             )}
           </div>
-          <p className="mt-2 flex items-start gap-2 text-[12.5px] font-semibold leading-snug text-muted">
-            <span className="mt-0.5 shrink-0 rounded-full bg-tan px-2 py-0.5 text-[10.5px] font-extrabold uppercase tracking-wide">Anzeige</span>
-            <span>
-              Violett: beste Lage für dich. Pins: freie Zimmer {max ? `bis ${max} € ` : ""}pro Nacht bei Booking.com, antippen für Bewertung und Fotos.
-              Buchst du darüber, bekommt StayCheck eine kleine Provision.
-            </span>
-          </p>
+          <div className="mt-2 flex items-center gap-2 px-1 text-[12.5px] font-bold text-muted">
+            {map.area && (
+              <>
+                <span className="h-[3px] w-5 shrink-0 rounded-full bg-[#8c7ff6]" aria-hidden />
+                <span className="min-w-0 truncate">Innerhalb: beste Lage für dich</span>
+              </>
+            )}
+            <span className="ml-auto shrink-0 rounded-full bg-tan px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide">Anzeige</span>
+          </div>
         </div>
       )}
 
