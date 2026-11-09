@@ -131,7 +131,8 @@ export default function StayMap({
   const s = sel !== null ? stays[sel] : null;
   return (
     <div className="relative h-full w-full">
-      <div ref={ref} className="absolute inset-0" />
+      {/* Höhe direkt setzen: das Karten-CSS macht den Behälter „position: relative“, „absolute inset-0“ hätte dann Höhe 0 */}
+      <div ref={ref} className="h-full w-full" />
       {s ? (
         <>
           <button
