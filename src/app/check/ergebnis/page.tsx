@@ -31,7 +31,7 @@ import { cityForPoint } from "@/lib/arrival";
 import { hubsNear } from "@/lib/arrival-hubs";
 import { getTipsNear } from "@/lib/tips";
 import { EXTRA_LABEL, MUST_CAP, NO_EXTRAS, NOGO_CAP, NOGO_LABEL, NOGOS, fullWeights, personalMatch } from "@/lib/profile";
-import { partnerOn, priceLink } from "@/lib/partner";
+import { maxPriceFor, partnerOn, priceLink } from "@/lib/partner";
 
 // Dynamisch durch Cookies/Suchparameter; Kartendaten-Abfragen werden 1 Tag zwischengespeichert.
 export const fetchCache = "default-cache";
@@ -265,7 +265,7 @@ export default async function CheckErgebnisPage({
       <BookBar
         title={reviews ? `Lage ${match}, Gäste ${fmtScore(reviews.fair)}` : `Lage ${match} von 100`}
         sub={reviews?.demo ? "Gäste-Wert ist ein Beispiel" : partnerOn ? "Anzeige · Partner-Link" : isStay ? "Preise bei Booking" : "Unterkünfte in der Nähe"}
-        href={priceLink({ lat, lon, hotel: isStay ? name : undefined, address: sub || undefined, campaign: isStay ? "check_unterkunft" : "check_ort" })}
+        href={priceLink({ lat, lon, hotel: isStay ? name : undefined, address: sub || undefined, campaign: isStay ? "check_unterkunft" : "check_ort", maxPrice: maxPriceFor(extras.preis) })}
         label="Preise vergleichen"
       />
     </div>

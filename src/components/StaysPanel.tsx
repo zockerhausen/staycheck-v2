@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -41,7 +41,9 @@ export default function StaysPanel({
   map: { lat: number; lon: number; place: string; campaign: string; pois: Poi[] };
   children: React.ReactNode;
 }) {
-  const [view, setView] = useState<"liste" | "karte">("liste");
+  // Mit Partner zuerst die echten Preise (Stay22 filtert zuverlässig nach Budget), dann unsere Lage-Liste
+  const [view, setView] = useState<"liste" | "karte">(partnerOn ? "karte" : "liste");
+  const [focus, setFocus] = useState<{ lat: number; lon: number; name: string } | null>(null);
   const [sheet, setSheet] = useState(false);
   const [consent, setConsent] = useState(false);
   const [pending, start] = useTransition();
@@ -55,6 +57,19 @@ export default function StaysPanel({
     } catch {
       /* ohne Speicher: jedes Mal fragen */
     }
+  }, []);
+
+  // „Preise hier“ an einer Unterkunft: Karte genau dort öffnen
+  const top = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const on = (e: Event) => {
+      const d = (e as CustomEvent<{ lat: number; lon: number; name: string }>).detail;
+      setFocus(d);
+      setView("karte");
+      top.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    };
+    window.addEventListener("sc-stays-focus", on);
+    return () => window.removeEventListener("sc-stays-focus", on);
   }, []);
 
   function save(next: { an: string; n: number; p: number; max: number }) {
@@ -79,11 +94,22 @@ export default function StaysPanel({
 
   const src =
     partnerOn && view === "karte" && consent
-      ? stayMapUrl({ lat: map.lat, lon: map.lon, campaign: map.campaign, checkin, checkout, adults, maxPrice: max, dark: isDarkNow(), pois: map.pois })
+      ? stayMapUrl({
+          lat: focus?.lat ?? map.lat,
+          lon: focus?.lon ?? map.lon,
+          zoom: focus ? 16 : 14,
+          campaign: map.campaign,
+          checkin,
+          checkout,
+          adults,
+          maxPrice: max,
+          dark: isDarkNow(),
+          pois: map.pois,
+        })
       : null;
 
   return (
-    <div>
+    <div ref={top} className="scroll-mt-4">
       {/* Suchzeile */}
       <button
         type="button"
@@ -110,9 +136,9 @@ export default function StaysPanel({
             <span
               aria-hidden
               className="shadow-primary absolute bottom-1 left-1 top-1 w-[calc(50%-0.25rem)] rounded-full bg-sun transition-transform duration-300 [transition-timing-function:cubic-bezier(.22,1,.36,1)]"
-              style={{ transform: view === "karte" ? "translateX(100%)" : "translateX(0)" }}
+              style={{ transform: view === "liste" ? "translateX(100%)" : "translateX(0)" }}
             />
-            {(["liste", "karte"] as const).map((v) => (
+            {(["karte", "liste"] as const).map((v) => (
               <button
                 key={v}
                 type="button"
@@ -122,7 +148,7 @@ export default function StaysPanel({
                 className={`relative z-10 flex items-center justify-center gap-1.5 py-2.5 text-[14px] font-extrabold transition-colors ${view === v ? "text-white" : "text-sun-soft"}`}
               >
                 <Icon name={v === "liste" ? "hotel" : "map"} size={16} fill="transparent" />
-                {v === "liste" ? `Nach Lage (${count})` : "Mit Preisen"}
+                {v === "liste" ? `Beste Lage (${count})` : "Freie Zimmer"}
               </button>
             ))}
           </div>
@@ -152,6 +178,17 @@ export default function StaysPanel({
         </div>
       ) : (
         <div className="fade-up mt-3">
+          {focus && (
+            <button
+              type="button"
+              onClick={() => setFocus(null)}
+              className="press mb-2 flex w-full items-center gap-2 rounded-full bg-tan px-4 py-2.5 text-left text-[13.5px] font-bold"
+            >
+              <Icon name="locate" size={15} className="shrink-0 text-sun-soft" />
+              <span className="min-w-0 flex-1 truncate">Rund um {focus.name}</span>
+              <span className="shrink-0 text-sun-soft">Ganzes Viertel</span>
+            </button>
+          )}
           <div className="relative h-[min(68dvh,560px)] overflow-hidden rounded-3xl bg-paper">
             {src ? (
               <iframe
@@ -181,8 +218,8 @@ export default function StaysPanel({
           <p className="mt-2 flex items-start gap-2 text-[12.5px] font-semibold leading-snug text-muted">
             <span className="mt-0.5 shrink-0 rounded-full bg-tan px-2 py-0.5 text-[10.5px] font-extrabold uppercase tracking-wide">Anzeige</span>
             <span>
-              Weiße Pins: Preis pro Nacht bei Booking.com. Violette Pins: unser Lage-Wert. Buchst du über die Karte, bekommt StayCheck eine kleine
-              Provision, dein Preis ändert sich nicht.
+              Nur freie Zimmer {max ? `bis ${max} € pro Nacht` : ""} für deine Daten, Preise von Booking.com. Violette Pins: unser Lage-Wert. Buchst du
+              über die Karte, bekommt StayCheck eine kleine Provision, dein Preis ändert sich nicht.
             </span>
           </p>
         </div>

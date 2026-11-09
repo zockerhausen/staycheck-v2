@@ -26,12 +26,14 @@ export function priceLink(o: {
   maxPrice?: number | null;
 }) {
   // Booking-Suche: Name + Adresse, Reisedaten, Personen, Budget pro Nacht
-  const ss = [o.hotel, o.address].filter(Boolean).join(", ");
+  // Mit Budget: Suche im Umkreis statt nach einem Hotelnamen. Bei einem einzelnen Hotel ignoriert Booking den Preisfilter.
+  const ss = o.maxPrice ? "" : [o.hotel, o.address].filter(Boolean).join(", ");
   const q = new URLSearchParams({ lang: "de", selected_currency: "EUR", group_adults: String(o.adults ?? 1), no_rooms: "1", group_children: "0" });
   if (ss) q.set("ss", ss);
   else {
     q.set("latitude", o.lat.toFixed(6));
     q.set("longitude", o.lon.toFixed(6));
+    q.set("radius", "1");
   }
   if (o.checkin && o.checkout) {
     q.set("checkin", o.checkin);
@@ -64,13 +66,14 @@ export function stayMapUrl(o: {
   dark?: boolean;
   /** Eigene Pins (unsere Lage-Werte) auf derselben Karte */
   pois?: { lat: number; lng: number; name: string; desc?: string; url?: string }[];
+  zoom?: number;
 }) {
   if (!partnerOn) return null;
   const p = new URLSearchParams({
     aid: STAY22_AID,
     lat: o.lat.toFixed(6),
     lng: o.lon.toFixed(6),
-    zoom: "14",
+    zoom: String(o.zoom ?? 14),
     viewmode: "map",
     hotelsapi: "booking", // Klicks auf der Karte ebenfalls direkt zu Booking.com
     campaign: campaignOf(o.campaign),

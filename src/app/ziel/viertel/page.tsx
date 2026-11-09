@@ -33,7 +33,7 @@ import ViewTabs from "@/components/ViewTabs";
 import WebInsight from "@/components/WebInsight";
 import { insightNear } from "@/lib/insights";
 import { areaPhoto } from "@/lib/photos";
-import { maxPriceFor, partnerOn, priceLink } from "@/lib/partner";
+import { maxPriceFor, partnerOn } from "@/lib/partner";
 import { classCap, parseTrip, tripQuery } from "@/lib/trip";
 import StaysPanel from "@/components/StaysPanel";
 
@@ -227,7 +227,7 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
                 note={h.highlights[0]?.text ?? ""}
                 match={h.match}
                 reviews={revOf(h)}
-                priceHref={priceLink({ lat: h.lat, lon: h.lon, hotel: h.name, address: h.subtitle, campaign: `spot_${ziel.ort}_liste`, checkin: trip.checkin, checkout: trip.checkout, adults: trip.adults, maxPrice: maxNight })}
+                focus={partnerOn ? { lat: h.lat, lon: h.lon } : undefined}
                 save={{
                   place: { name: h.name, subtitle: h.subtitle, lat: h.lat, lon: h.lon, kind: h.kind, match: h.match },
                   initiallySaved: isSaved(h),
@@ -251,7 +251,7 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
           </div>
           )}
           <p className="mt-3 text-[13px] font-semibold text-muted">
-            Sortiert nach Lage. Tippe auf eine Unterkunft für Details; „Preis“ zeigt den echten Preis für deine Daten bei unserem Partner (Anzeige).
+            Sortiert nach Lage. Tippe auf eine Unterkunft für Details; „Preise hier“ zeigt freie Zimmer in deinem Budget rund um die Unterkunft.
             {hiddenUnknown > 0 ? ` ${hiddenUnknown} Unterkünfte ohne bekannte Preisklasse sind ausgeblendet.` : ""}
             {demo ? " Gäste-Werte sind vorerst Beispieldaten." : ""}
           </p>
