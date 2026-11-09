@@ -36,7 +36,11 @@ export default function ReviewSummary({ reviews }: { reviews: StayReviews }) {
           const meta = PLATFORM[p.platform];
           const row = (
             <>
-              <span className="w-[92px] shrink-0 truncate text-sm font-semibold">{meta.label}</span>
+              <span className="flex w-[92px] shrink-0 flex-col truncate text-sm font-semibold">
+                {meta.label}
+                {/* Quellenangabe so, wie die Plattform es verlangt (z. B. Tripadvisor-Bubbles) */}
+                {p.badge && <img src={p.badge} alt={`${meta.label}: ${fmtScore(p.raw)} von ${meta.scale}`} className="mt-0.5 h-3.5 w-auto self-start" loading="lazy" />}
+              </span>
               <span className="h-2 flex-1 overflow-hidden rounded-full bg-peach">
                 <span className="block h-full rounded-full bg-sun" style={{ width: `${Math.max(4, p.score * 10)}%` }} />
               </span>

@@ -34,6 +34,7 @@ import { getTipsNear } from "@/lib/tips";
 import { EXTRA_LABEL, MUST_CAP, NO_EXTRAS, NOGO_CAP, NOGO_LABEL, NOGOS, fullWeights, personalMatch } from "@/lib/profile";
 import { maxPriceFor, partnerOn, priceLink, stayLink } from "@/lib/partner";
 import { parseTrip, tripQuery } from "@/lib/trip";
+import { liveStaysNear, matchLive } from "@/lib/stay22-api";
 
 // Dynamisch durch Cookies/Suchparameter; Kartendaten-Abfragen werden 1 Tag zwischengespeichert.
 export const fetchCache = "default-cache";
@@ -126,7 +127,11 @@ export default async function CheckErgebnisPage({
   const amp = query ? `&${query}` : "";
   const district = analysis.district;
   const isStay = ["hotel", "hostel", "guest_house", "apartment", "motel"].includes(kind);
-  const reviews = isStay ? await reviewsFor({ name, lat, lon, kind }) : null;
+  // Nur echte Daten: buchbare Unterkunft bei Stay22 (Note, Preis, direkter Link) und Tripadvisor – ohne Schlüssel leer
+  const live = isStay ? await liveStaysNear({ lat, lon }, 300, trip, "check_unterkunft").then((l) => (l ? matchLive({ name, lat, lon }, l) : null)) : null;
+  const reviews = isStay
+    ? await reviewsFor({ name, lat, lon, kind }, live?.rating && live.count ? [{ platform: "stay22", raw: live.rating, score: live.rating, count: live.count }] : [])
+    : null;
   const isSaved = saved.some((p) => Math.abs(p.lat - lat) < 1e-6 && Math.abs(p.lon - lon) < 1e-6);
   const returnTo = `/check/ergebnis?${new URLSearchParams({ lat: String(lat), lon: String(lon), name, sub, kind })}${amp}${tripQuery(trip)}`;
 
@@ -271,9 +276,11 @@ export default async function CheckErgebnisPage({
       <div className="h-20" aria-hidden />
       <BookBar
         title={reviews ? `Lage ${match}, Gäste ${fmtScore(reviews.fair)}` : `Lage ${match} von 100`}
-        sub={reviews?.demo ? "Gäste-Wert ist ein Beispiel" : partnerOn ? (isStay ? "Anzeige · Booking, Agoda, Expedia …" : "Anzeige · Partner-Link") : isStay ? "Preise bei Booking" : "Unterkünfte in der Nähe"}
+        sub={live?.nightly != null ? `ca. ${live.nightly} € pro Nacht · Anzeige` : partnerOn ? (isStay ? "Anzeige · Booking, Agoda, Expedia …" : "Anzeige · Partner-Link") : isStay ? "Preise bei Booking" : "Unterkünfte in der Nähe"}
         href={
-          isStay
+          live
+            ? live.link
+            : isStay
             ? stayLink({ name, lat, lon, place: [city?.name, city?.country].filter(Boolean).join(", ") || sub, campaign: "check_unterkunft", checkin: trip.checkin, checkout: trip.checkout, adults: trip.adults })
             : priceLink({
                 lat,

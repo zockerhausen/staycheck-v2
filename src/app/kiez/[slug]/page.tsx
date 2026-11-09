@@ -8,14 +8,13 @@ import { alignStays, cityDataQuick, DEFAULT_WEIGHTS, hotelsNearCached, locationM
 import StillLoading from "@/components/StillLoading";
 import { matchScore } from "@/lib/matching";
 import FavoriteButton from "@/components/FavoriteButton";
-import { personalMatch } from "@/lib/profile";
+import { fullWeights, personalMatch } from "@/lib/profile";
 import { characterTint, traitsOf } from "@/lib/character";
 import Icon from "@/components/Icon";
 import AskDistrict from "@/components/AskDistrict";
 import { dedupeStays } from "@/lib/geo";
-import { fmtScore, reviewsForMany, stayKey, TOP_FAIR } from "@/lib/reviews";
-import StayTip from "@/components/StayTip";
-import { inBudget, PRICE_LABEL, priceClass } from "@/lib/price";
+import { fmtScore, reviewsForMany } from "@/lib/reviews";
+import { PRICE_LABEL, priceClass } from "@/lib/price";
 import DistrictVibe from "@/components/DistrictVibe";
 import NearbyFacts from "@/components/NearbyFacts";
 import ArrivalCard from "@/components/ArrivalCard";
@@ -25,7 +24,9 @@ import { hubsNear } from "@/lib/arrival-hubs";
 import { assistantEnabled } from "@/lib/assistant";
 import ScoreBars from "@/components/ScoreBars";
 import AreaHero from "@/components/AreaHero";
-import StayRow from "@/components/StayRow";
+import StayList from "@/components/StayList";
+import { buildStayList, STAY_FILTERS } from "@/lib/stay-list";
+import { liveStaysNear } from "@/lib/stay22-api";
 import ViewTabs from "@/components/ViewTabs";
 import WebInsight from "@/components/WebInsight";
 import { insightNear } from "@/lib/insights";
@@ -34,27 +35,13 @@ import TipsSection from "@/components/TipsSection";
 import { getTipsForDistrict } from "@/lib/tips";
 import { maxPriceFor, partnerOn, stayLink } from "@/lib/partner";
 import { goodArea } from "@/lib/good-area";
-import { classCap, parseTrip, tripQuery } from "@/lib/trip";
+import { parseTrip, tripQuery } from "@/lib/trip";
 import StaysPanel from "@/components/StaysPanel";
 
 // Dynamisch durch Cookies/Suchparameter; Kartendaten-Abfragen werden 1 Tag zwischengespeichert.
 export const fetchCache = "default-cache";
 export const maxDuration = 120; // Unterkünfte dürfen im Hintergrund fertig gerechnet werden
 
-const KIND_LABEL: Record<string, string> = {
-  hotel: "Hotel",
-  hostel: "Hostel",
-  guest_house: "Pension",
-  apartment: "Apartment",
-};
-const FILTERS = [
-  { key: "alle", label: "Alle" },
-  { key: "top", label: "Top bewertet" },
-  { key: "hostel", label: "Hostels" },
-  { key: "hotel", label: "Hotels" },
-  { key: "guest_house", label: "Pensionen" },
-  { key: "apartment", label: "Apartments" },
-];
 
 /** Umkreis des Viertels in Metern: so weit suchen wir Unterkünfte, genau so groß ist es auf der Karte markiert */
 const STAY_RADIUS = 1000;
@@ -87,7 +74,7 @@ export default async function KiezPage({
   const weights = resolved ?? DEFAULT_WEIGHTS;
   const query = source === "url" ? weightsToQuery(weights) : "";
   const amp = query ? `&${query}` : "";
-  const filter = typeof sp.typ === "string" && FILTERS.some((f) => f.key === sp.typ) ? sp.typ : "alle";
+  const filter = typeof sp.typ === "string" && STAY_FILTERS.some((f) => f.key === sp.typ) ? sp.typ : "alle";
   const trip = parseTrip(sp);
   const tq = tripQuery(trip);
 
@@ -117,34 +104,38 @@ export default async function KiezPage({
   const band = (await getExtras()).preis ?? null;
   const clsOf = (h: HotelResult) => priceClass(h.kind, h.stars ?? 0);
   const maxNight = trip.max !== undefined ? trip.max : maxPriceFor(band);
-  const cap = classCap(maxNight);
   hotels = dedupeStays(hotels);
-  // Bewertungen aller Plattformen (zusammengerechnet) für die besten Unterkünfte
-  const rev = await reviewsForMany(hotels.slice(0, 80).map((h) => ({ name: h.name, lat: h.lat, lon: h.lon, kind: h.kind })));
-  const revOf = (h: HotelResult) => rev.get(stayKey(h));
-  const byType =
-    filter === "alle"
-      ? hotels
-      : filter === "top"
-        ? hotels.filter((h) => (revOf(h)?.fair ?? 0) >= TOP_FAIR)
-        : hotels.filter((h) => h.kind === filter);
-  // Budget gilt immer, sobald eins gesetzt ist (geschätzte Preisklasse; echte Preise beim Tippen auf „Preis“)
-  const inBudgetList = maxNight ? byType.filter((h) => inBudget(cap, clsOf(h)) === true) : byType;
-  // Erst die Unterkünfte in der guten Lage, dann die knapp außerhalb (grau)
-  const isOut = (h: HotelResult) => (good ? !good.inside(h.lat, h.lon) : false);
-  const shown = [...inBudgetList.filter((h) => !isOut(h)), ...inBudgetList.filter(isOut)];
-  const hiddenUnknown = maxNight ? byType.filter((h) => inBudget(cap, clsOf(h)) === null).length : 0;
-  const chips = FILTERS.filter((f) => f.key !== "top" || rev.size > 0).map((f) => ({
+  // Link genau zu einer Unterkunft (Stay22 sucht sie bei Booking, Agoda, Expedia, Hotels.com)
+  const place = [cityName, cityRow?.country].filter(Boolean).join(", ");
+  const bookingOf = (h: HotelResult) =>
+    partnerOn
+      ? stayLink({ name: h.name, lat: h.lat, lon: h.lon, place, campaign: `kiez_${district.slug}`, checkin: trip.checkin, checkout: trip.checkout, adults: trip.adults })
+      : undefined;
+  // Nur echte Daten: Bewertungen (Tripadvisor) und buchbare Unterkünfte mit Preis (Stay22) – ohne Schlüssel bleibt beides leer
+  const [rev, live] = await Promise.all([
+    reviewsForMany(hotels.slice(0, 30).map((h) => ({ name: h.name, lat: h.lat, lon: h.lon, kind: h.kind }))),
+    slow || failed ? Promise.resolve(null) : liveStaysNear({ lat: district.lat!, lon: district.lng! }, STAY_RADIUS, trip, `kiez_${district.slug}`),
+  ]);
+  const listEx = await getExtras();
+  const list = buildStayList({
+    hotels,
+    weights: resolved ? fullWeights(weights, listEx) : weights,
+    good,
+    maxNight,
+    filter,
+    rev,
+    live,
+    booking: bookingOf,
+  });
+  const shown = list.items;
+  const hiddenUnknown = list.hiddenUnknown;
+  // Filter mit Anzahl; leere Filter weglassen (außer dem gerade gewählten)
+  const chips = STAY_FILTERS.filter((f) => (f.key === "alle" || f.key === filter || (list.counts[f.key] ?? 0) > 0) && (f.key !== "top" || list.anyReviews)).map((f) => ({
     key: f.key,
-    label: f.label,
+    label: `${f.label} ${list.counts[f.key] ?? 0}`,
     href: `/kiez/${slug}?stadt=${district.city}&typ=${f.key}${amp}${tq}`,
     active: filter === f.key,
   }));
-  // Unser Tipp: gute Lage + top bewertet + im Budget
-  const tipStay = shown
-    .filter((h) => !isOut(h) && (revOf(h)?.fair ?? 0) >= TOP_FAIR && (revOf(h)?.total ?? 0) >= 100 && (!maxNight || inBudget(cap, clsOf(h)) === true))
-    .map((h) => ({ h, value: h.match * 0.6 + (revOf(h)!.fair * 10) * 0.4 }))
-    .sort((a, b) => b.value - a.value)[0]?.h;
   const isSaved = (h: HotelResult) => saved.some((p) => Math.abs(p.lat - h.lat) < 1e-6 && Math.abs(p.lon - h.lon) < 1e-6);
   const checkUrl = (h: HotelResult) =>
     `/check/ergebnis?${new URLSearchParams({ lat: h.lat.toFixed(6), lon: h.lon.toFixed(6), name: h.name, sub: h.subtitle, kind: h.kind })}${amp}${tq}`;
@@ -162,7 +153,7 @@ export default async function KiezPage({
   const photoRaced = await withDeadline(photoWork, 2500);
   if (photoRaced === "slow") after(() => photoWork);
   const photo = photoRaced === "slow" ? null : photoRaced;
-  const revList = [...rev.values()];
+  const revList = shown.flatMap((i) => (i.reviews ? [i.reviews] : [])); // nur echte Bewertungen (Tripadvisor, Stay22)
   const guestAvg = revList.length ? revList.reduce((s2, r) => s2 + r.fair, 0) / revList.length : null;
   const classes = hotels.map(clsOf).filter((c): c is NonNullable<ReturnType<typeof clsOf>> => c !== null).sort();
   const typicalPrice = classes.length ? PRICE_LABEL[classes[Math.floor(classes.length / 2)]] : null;
@@ -170,23 +161,20 @@ export default async function KiezPage({
   const self = `/kiez/${slug}?stadt=${district.city}${amp}`;
   const hubs = await hubsNear(district.lat!, district.lng!, district.city);
 
-  const place = [cityName, cityRow?.country].filter(Boolean).join(", ");
-  const bookingOf = (h: HotelResult) =>
-    partnerOn
-      ? stayLink({ name: h.name, lat: h.lat, lon: h.lon, place, campaign: `kiez_${district.slug}`, checkin: trip.checkin, checkout: trip.checkout, adults: trip.adults })
-      : undefined;
-  // Dieselben Unterkünfte wie in der Liste, gleiche Nummern
-  const stayPins = slow || failed ? [] : shown.map((h) => ({
-    name: h.name,
-    lat: h.lat,
-    lon: h.lon,
-    match: h.match,
-    meta: [KIND_LABEL[h.kind] ?? "Unterkunft", clsOf(h) ? PRICE_LABEL[clsOf(h)!] : null].filter(Boolean).join(" · "),
-    rating: revOf(h) ? fmtScore(revOf(h)!.fair) : undefined,
-    href: checkUrl(h),
-    booking: bookingOf(h),
-    out: isOut(h),
-  }));
+  // Dieselben Unterkünfte wie in der Liste, gleiche Reihenfolge
+  const stayPins = slow || failed
+    ? []
+    : shown.map((i) => ({
+        name: i.name,
+        lat: i.lat,
+        lon: i.lon,
+        match: i.match,
+        meta: [i.kindLabel, i.price?.text].filter(Boolean).join(" · "),
+        rating: i.reviews ? fmtScore(i.reviews.fair) : undefined,
+        href: checkUrl(i.hotel),
+        booking: i.booking,
+        out: i.out,
+      }));
 
   const staysTab = (
     <section id="unterkuenfte" className="scroll-mt-20">
@@ -211,47 +199,21 @@ export default async function KiezPage({
         </p>
       ) : (
         <>
-          {tipStay && filter !== "top" && (
-            <StayTip
-              href={checkUrl(tipStay)}
-              name={tipStay.name}
-              kind={KIND_LABEL[tipStay.kind] ?? "Unterkunft"}
-              price={clsOf(tipStay) ? PRICE_LABEL[clsOf(tipStay)!] : null}
-              match={tipStay.match}
-              reviews={revOf(tipStay)!}
-              budget={Boolean(band)}
-            />
-          )}
-          <ol className="card mt-3 px-3.5 py-1">
-            {shown.map((h, i) => (
-              <StayRow
-                key={`${h.lat}-${h.lon}`}
-                id={`kiez-h${i}`}
-                href={checkUrl(h)}
-                name={h.name}
-                kind={KIND_LABEL[h.kind] ?? "Unterkunft"}
-                price={clsOf(h) ? PRICE_LABEL[clsOf(h)!] : null}
-                overBudget={maxNight ? inBudget(cap, clsOf(h)) === false : false}
-                note={h.highlights[0]?.text ?? verdict(h.match).label}
-                match={h.match}
-                reviews={revOf(h)}
-                booking={bookingOf(h)}
-                select={i}
-                out={isOut(h)}
-                save={{
-                  place: { name: h.name, subtitle: h.subtitle, lat: h.lat, lon: h.lon, kind: h.kind, match: h.match },
-                  initiallySaved: isSaved(h),
-                  loggedIn: Boolean(user),
-                  returnTo: self,
-                }}
-              />
-            ))}
-          </ol>
-          <p className="mt-3 text-[13px] font-semibold text-muted">
-            Erst die Unterkünfte in der markierten guten Lage, dann grau die knapp außerhalb, jeweils nach Lage sortiert (Daten aus OpenStreetMap). Antippen zeigt sie auf der Karte, „Preis“ sucht sie bei Booking.com, Agoda, Expedia und Hotels.com und öffnet den passenden Anbieter (Anzeige).
-            {hiddenUnknown > 0 ? ` ${hiddenUnknown} Unterkünfte ohne bekannte Preisklasse sind ausgeblendet.` : ""}
-            {demo ? " Gäste-Werte sind vorerst Beispieldaten." : ""}
-          </p>
+          <StayList
+            items={shown}
+            rings={good?.rings}
+            center={{ lat: district.lat!, lon: district.lng! }}
+            radius={STAY_RADIUS}
+            budget={maxNight}
+            href={(i) => checkUrl(i.hotel)}
+            save={(i) => ({
+              place: { name: i.name, subtitle: i.hotel.subtitle, lat: i.lat, lon: i.lon, kind: i.kind, match: i.match },
+              initiallySaved: isSaved(i.hotel),
+              loggedIn: Boolean(user),
+              returnTo: self,
+            })}
+          />
+          {hiddenUnknown > 0 && <p className="mt-2 px-0.5 text-[12.5px] font-semibold text-muted">{hiddenUnknown} Unterkünfte ohne bekannte Preisklasse sind bei deinem Budget ausgeblendet.</p>}
         </>
       )}
       </StaysPanel>

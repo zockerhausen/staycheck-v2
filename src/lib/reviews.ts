@@ -1,12 +1,11 @@
 // Bewertungen von mehreren Plattformen, auf eine gemeinsame Skala gebracht (0–10).
 //
-// STAND: Es sind noch KEINE echten Quellen angeschlossen. Bis dahin gibt es Beispieldaten,
-// aber nur auf der Vorschau (nie auf der Live-Seite) und immer deutlich als „Beispiel“ markiert.
-// Echte Quellen kommen später in `PROVIDERS` (z. B. Tripadvisor mit TRIPADVISOR_API_KEY).
-// Alles läuft nur auf dem Server.
+// Nur ECHTE Bewertungen: Tripadvisor (mit TRIPADVISOR_API_KEY) und Booking & Co. über Stay22 (mit STAY22_API_KEY, siehe stay22-api.ts).
+// Ohne Schlüssel gibt es keine Bewertungen – es wird nie etwas ausgedacht. Alles läuft nur auf dem Server.
+import { unstable_cache } from "next/cache";
 
 
-export type Platform = "booking" | "google" | "tripadvisor" | "agoda" | "hostelworld" | "expedia";
+export type Platform = "booking" | "google" | "tripadvisor" | "agoda" | "hostelworld" | "expedia" | "stay22";
 
 export const PLATFORM: Record<Platform, { label: string; scale: 5 | 10 }> = {
   booking: { label: "Booking.com", scale: 10 },
@@ -15,6 +14,7 @@ export const PLATFORM: Record<Platform, { label: string; scale: 5 | 10 }> = {
   agoda: { label: "Agoda", scale: 10 },
   hostelworld: { label: "Hostelworld", scale: 10 },
   expedia: { label: "Expedia", scale: 10 },
+  stay22: { label: "Booking & Co.", scale: 10 },
 };
 
 export type PlatformRating = {
@@ -25,6 +25,8 @@ export type PlatformRating = {
   score: number;
   count: number;
   url?: string;
+  /** Bild der Plattform für die Quellenangabe (z. B. Tripadvisor-Bubbles), nur von bekannten Adressen */
+  badge?: string;
 };
 
 export type ReviewSnippet = { platform: Platform; score: number; text: string; when: string };
@@ -37,7 +39,7 @@ export type StayReviews = {
   /** Wie einig sind sich die Plattformen? (größter Abstand in Punkten) */
   spread: number;
   snippets: ReviewSnippet[];
-  /** true = ausgedachte Beispieldaten, nicht echt */
+  /** immer false: es gibt keine ausgedachten Beispieldaten mehr (Feld bleibt für ältere Stellen) */
   demo: boolean;
 };
 
@@ -45,12 +47,6 @@ export type StayRef = { name: string; lat: number; lon: number; kind: string };
 
 /** Ab hier gilt eine Unterkunft als „top bewertet“ */
 export const TOP_FAIR = 8.5;
-
-/** Beispieldaten nur außerhalb der Live-Seite (Vorschau, lokal) – oder ausdrücklich per REVIEWS_DEMO=1 */
-export function demoEnabled() {
-  if (process.env.REVIEWS_DEMO === "0") return false;
-  return process.env.REVIEWS_DEMO === "1" || process.env.VERCEL_ENV !== "production";
-}
 
 /* ---------- Zusammenrechnen ---------- */
 
@@ -92,15 +88,103 @@ export function agreement(spread: number) {
   return { label: "Plattformen sind sich uneinig, genauer hinschauen", tone: "warn" as const };
 }
 
-/* ---------- Echte Quellen (später) ---------- */
+/* ---------- Echte Quellen ---------- */
 
 type Provider = (stay: StayRef) => Promise<{ ratings: PlatformRating[]; snippets: ReviewSnippet[] } | null>;
-const PROVIDERS: Provider[] = [
-  // tripadvisor,  ← kommt, sobald TRIPADVISOR_API_KEY gesetzt ist
-];
 
-export async function reviewsFor(stay: StayRef): Promise<StayReviews | null> {
-  const ratings: PlatformRating[] = [];
+// --- Tripadvisor (Content API): Hotel per Name + Ort finden, dann Note + Anzahl. Sparsam: 2 Abrufe pro Unterkunft,
+// danach aus dem Zwischenspeicher für alle Nutzer. Fehler (z. B. Tageslimit erreicht) werden NICHT gespeichert.
+const TA_KEY = (process.env.TRIPADVISOR_API_KEY ?? "").trim();
+const TA_DAYS = Math.min(30, Math.max(1, Number(process.env.TRIPADVISOR_CACHE_DAYS) || 7));
+const TA_BASE = "https://api.content.tripadvisor.com/api/v1";
+const SITE = process.env.NEXT_PUBLIC_SITE_URL || "https://staycheck.website";
+
+async function taGet(path: string, params: Record<string, string>) {
+  const q = new URLSearchParams({ key: TA_KEY, language: "de", ...params });
+  const r = await fetch(`${TA_BASE}${path}?${q}`, {
+    headers: { accept: "application/json", referer: SITE },
+    cache: "no-store", // Zwischenspeichern macht unstable_cache (ohne Schlüssel im Speicher-Namen)
+    signal: AbortSignal.timeout(6000),
+  });
+  if (!r.ok) throw new Error(`Tripadvisor ${r.status}`); // nicht speichern, später erneut versuchen
+  return r.json() as Promise<Record<string, unknown>>;
+}
+
+/**
+ * Ähnlichkeit zweier Unterkunfts-Namen (0–1), lieber zu streng als zu locker (eine falsche Bewertung ist schlimmer als keine):
+ * „Hostel“ gegen „Hotel“ zählt als verschieden, und das erste prägende Wort (z. B. „Kiez“, „Pegasus“) muss bei beiden vorkommen.
+ */
+export function nameSimilarity(a: string, b: string) {
+  const tokens = (s: string) =>
+    s
+      .toLowerCase()
+      .normalize("NFKD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-z0-9]+/g, " ")
+      .split(" ")
+      .filter((w) => w.length > 1);
+  const GENERIC = new Set(["hotel", "hostel", "the", "and", "und", "by", "inn", "guesthouse", "guest", "house", "pension", "apartments", "apartment", "rooms", "suites", "bb", "gasthaus", "boutique", "residence"]);
+  const ta = tokens(a);
+  const tb = tokens(b);
+  const kind = (t: string[]) => (t.includes("hostel") ? "hostel" : t.includes("hotel") ? "hotel" : null);
+  const ka = kind(ta);
+  const kb = kind(tb);
+  if (ka && kb && ka !== kb) return 0;
+  const A = ta.filter((w) => !GENERIC.has(w));
+  const B = tb.filter((w) => !GENERIC.has(w));
+  if (!A.length || !B.length) return ta.join(" ") === tb.join(" ") ? 1 : 0;
+  const setB = new Set(B);
+  const setA = new Set(A);
+  if (!setB.has(A[0]) && !setA.has(B[0])) return 0;
+  let same = 0;
+  for (const w of setA) if (setB.has(w)) same++;
+  return same / Math.min(setA.size, setB.size);
+}
+
+const taLocationId = unstable_cache(
+  async (name: string, lat: number, lon: number): Promise<string | null> => {
+    const j = await taGet("/location/search", { searchQuery: name.slice(0, 80), category: "hotels", latLong: `${lat},${lon}`, radius: "300", radiusUnit: "m" });
+    const list = Array.isArray(j.data) ? (j.data as { location_id?: string; name?: string }[]) : [];
+    const best = list
+      .filter((x) => x.location_id && x.name)
+      .map((x) => ({ id: String(x.location_id), sim: nameSimilarity(name, x.name!) }))
+      .sort((a, b) => b.sim - a.sim)[0];
+    return best && best.sim >= 0.6 ? best.id : null;
+  },
+  ["ta-id-v1"],
+  { revalidate: 30 * 86400 },
+);
+
+const taDetails = unstable_cache(
+  async (id: string): Promise<PlatformRating | null> => {
+    const j = await taGet(`/location/${encodeURIComponent(id)}/details`, { currency: "EUR" });
+    const raw = Number(j.rating);
+    const count = Number(j.num_reviews);
+    if (!Number.isFinite(raw) || !(count > 0)) return null;
+    const url = typeof j.web_url === "string" && /^https:\/\/([a-z0-9-]+\.)*tripadvisor\.[a-z.]+\//i.test(j.web_url) ? j.web_url : undefined;
+    const badge =
+      typeof j.rating_image_url === "string" && /^https:\/\/([a-z0-9-]+\.)*(tripadvisor\.[a-z.]+|tacdn\.com)\//i.test(j.rating_image_url) ? j.rating_image_url : undefined;
+    return { platform: "tripadvisor", raw, score: toTen(raw, 5), count, url, badge };
+  },
+  ["ta-details-v1"],
+  { revalidate: TA_DAYS * 86400 },
+);
+
+const tripadvisor: Provider = async (stay) => {
+  if (!TA_KEY) return null;
+  const id = await taLocationId(stay.name, Number(stay.lat.toFixed(4)), Number(stay.lon.toFixed(4)));
+  if (!id) return null;
+  const r = await taDetails(id);
+  return r ? { ratings: [r], snippets: [] } : null;
+};
+
+const PROVIDERS: Provider[] = [tripadvisor];
+
+/** Ist überhaupt eine echte Bewertungsquelle angeschlossen? */
+export const reviewsOn = Boolean(TA_KEY);
+
+export async function reviewsFor(stay: StayRef, extra: PlatformRating[] = []): Promise<StayReviews | null> {
+  const ratings: PlatformRating[] = [...extra];
   const snippets: ReviewSnippet[] = [];
   for (const p of PROVIDERS) {
     const r = await p(stay).catch(() => null);
@@ -109,85 +193,19 @@ export async function reviewsFor(stay: StayRef): Promise<StayReviews | null> {
       snippets.push(...r.snippets);
     }
   }
-  if (ratings.length) return combine(ratings, snippets, false);
-  return demoEnabled() ? demoReviews(stay) : null;
+  return ratings.length ? combine(ratings, snippets, false) : null;
 }
 
-/** Für Listen: mehrere Unterkünfte auf einmal (Schlüssel = lat,lon) */
-export async function reviewsForMany(stays: StayRef[]): Promise<Map<string, StayReviews>> {
+/** Für Listen: mehrere Unterkünfte auf einmal (Schlüssel = lat,lon). Höchstens `limit` werden bei den Quellen abgefragt (Abruf-Budget). */
+export async function reviewsForMany(stays: StayRef[], limit = 30): Promise<Map<string, StayReviews>> {
   const out = new Map<string, StayReviews>();
-  const res = await Promise.all(stays.map((s) => reviewsFor(s)));
-  stays.forEach((s, i) => {
+  if (!PROVIDERS.length || !reviewsOn) return out;
+  const list = stays.slice(0, limit);
+  const res = await Promise.all(list.map((s) => reviewsFor(s)));
+  list.forEach((s, i) => {
     const r = res[i];
     if (r) out.set(stayKey(s), r);
   });
   return out;
 }
 export const stayKey = (s: { lat: number; lon: number }) => `${s.lat.toFixed(5)},${s.lon.toFixed(5)}`;
-
-/* ---------- Beispieldaten (ausgedacht, nur Vorschau) ---------- */
-
-function seeded(seed: string) {
-  let h = 2166136261;
-  for (let i = 0; i < seed.length; i++) h = Math.imul(h ^ seed.charCodeAt(i), 16777619);
-  return () => {
-    h = Math.imul(h ^ (h >>> 15), 2246822507);
-    h = Math.imul(h ^ (h >>> 13), 3266489909);
-    return ((h ^= h >>> 16) >>> 0) / 4294967296;
-  };
-}
-
-const GOOD = [
-  "Super Lage, alles Wichtige zu Fuß erreichbar.",
-  "Sehr sauber, freundliches Personal, gerne wieder.",
-  "Ruhig geschlafen, obwohl es mitten in der Stadt liegt.",
-  "Tolles Frühstück und hilfsbereites Team an der Rezeption.",
-  "Preis-Leistung stimmt, Zimmer wie auf den Fotos.",
-  "Gute Anbindung, die Bahn ist gleich um die Ecke.",
-];
-const MID = [
-  "Zimmer etwas klein, aber für ein paar Nächte völlig okay.",
-  "Lage gut, WLAN war leider manchmal langsam.",
-  "Sauber und praktisch, nichts Besonderes.",
-  "Abends etwas laut von der Straße, sonst gut.",
-];
-const BAD = [
-  "Hellhörig, Ohrstöpsel mitnehmen.",
-  "Bad hätte eine Renovierung nötig.",
-  "Check-in hat lange gedauert.",
-];
-const WHEN = ["vor 2 Wochen", "vor 1 Monat", "vor 3 Wochen", "vor 2 Monaten", "vor 5 Tagen", "vor 6 Wochen"];
-
-export function demoReviews(stay: StayRef): StayReviews | null {
-  const r = seeded(`${stay.name}|${stay.lat.toFixed(5)}|${stay.lon.toFixed(5)}`);
-  const quality = 6.6 + r() * 2.9; // 6,6 bis 9,5
-  const size = stay.kind === "hostel" ? 0.8 : stay.kind === "apartment" ? 0.3 : 1;
-  const plats: Platform[] = ["booking", "google", "tripadvisor", "agoda", "expedia"];
-  if (stay.kind === "hostel") plats.splice(1, 0, "hostelworld");
-  const bias: Partial<Record<Platform, number>> = { google: 0.2, hostelworld: 0.1, expedia: 0.1 };
-
-  const ratings: PlatformRating[] = [];
-  for (const p of plats) {
-    if (p !== "booking" && r() < 0.18) continue; // nicht überall gelistet
-    const ten = Math.max(4, Math.min(9.9, quality + (bias[p] ?? 0) + (r() - 0.5) * 1.2));
-    const scale = PLATFORM[p].scale;
-    const raw = scale === 5 ? Math.round((ten / 2) * 10) / 10 : Math.round(ten * 10) / 10;
-    const count = Math.round((40 + Math.pow(r(), 2) * 3200) * size * (p === "booking" || p === "google" ? 1.6 : 0.6));
-    ratings.push({ platform: p, raw, score: toTen(raw, scale), count: Math.max(8, count) });
-  }
-
-  const pick = <T,>(list: T[]) => list[Math.floor(r() * list.length)];
-  const pool = quality >= 8.5 ? [GOOD, GOOD, MID] : quality >= 7.5 ? [GOOD, MID, BAD] : [MID, BAD, GOOD];
-  const used = new Set<string>();
-  const snippets: ReviewSnippet[] = [];
-  for (const list of pool) {
-    let t = pick(list);
-    for (let i = 0; i < 4 && used.has(t); i++) t = pick(list);
-    if (used.has(t)) continue;
-    used.add(t);
-    const rt = pick(ratings);
-    const s = list === GOOD ? 8.6 + r() * 1.3 : list === MID ? 6.8 + r() * 1.4 : 4.5 + r() * 1.8;
-    snippets.push({ platform: rt.platform, score: Math.round(s * 10) / 10, text: t, when: pick(WHEN) });
-  }
-  return combine(ratings, snippets, true);
-}
