@@ -916,3 +916,123 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .nudge-x { animation: none; }
 }
+
+/* ---------- Unterkunfts-Karte in 3D (StayMap): Schild, Stab, leuchtender Fußpunkt ----------
+   Nie „transform“ animieren (setzt die Karte), nur „scale“. */
+.sp {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  transform-origin: 50% 100%;
+  transition: scale 0.15s ease;
+}
+.sp:active {
+  scale: 0.94;
+}
+.sp-tag {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  border-radius: 12px;
+  padding: 4px 8px;
+  border: 1px solid rgba(83, 64, 242, 0.22);
+  background: var(--color-paper);
+  color: var(--color-sun-soft);
+  font: 800 12px var(--font-body), system-ui, sans-serif;
+  white-space: nowrap;
+  box-shadow: 0 6px 14px rgba(23, 19, 58, 0.2);
+}
+.sp-stick {
+  width: 2px;
+  height: 14px;
+  background: linear-gradient(rgba(83, 64, 242, 0.75), rgba(83, 64, 242, 0.12));
+}
+.sp-foot {
+  width: 8px;
+  height: 4px;
+  margin-top: -1px;
+  border-radius: 50%;
+  background: rgba(83, 64, 242, 0.6);
+  box-shadow: 0 0 8px 2px rgba(108, 92, 255, 0.45);
+}
+/* Die 3 besten: pink-violett, mit Platz-Nummer, höher */
+.sp-best .sp-tag {
+  padding: 5px 10px 5px 6px;
+  border: 0;
+  background: linear-gradient(135deg, #ff4fa3, #6d5cff);
+  color: #fff;
+  font-size: 14px;
+  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.35), 0 8px 20px rgba(255, 61, 154, 0.35);
+}
+.sp-best .sp-tag i {
+  font-style: normal;
+  font-size: 10.5px;
+  border-radius: 6px;
+  padding: 1px 5px;
+  background: rgba(255, 255, 255, 0.25);
+}
+.sp-best .sp-stick {
+  height: 26px;
+}
+/* Alle weiteren: kleiner Punkt, Zahl erst beim Hineinzoomen */
+.sp-dot .sp-tag {
+  width: 12px;
+  height: 12px;
+  padding: 0;
+  border-radius: 50%;
+  border: 2px solid var(--color-paper);
+  background: #8c7ff6;
+  color: transparent;
+  font-size: 0;
+}
+.sp-dot .sp-stick {
+  height: 8px;
+}
+.sc-zoomed .sp-dot .sp-tag {
+  width: auto;
+  height: auto;
+  padding: 3px 6px;
+  border-radius: 10px;
+  border: 1px solid var(--sc-glass-line);
+  background: var(--color-paper);
+  color: var(--color-muted);
+  font-size: 11px;
+}
+/* Knapp außerhalb der guten Lage: grau */
+.sp-out .sp-tag,
+.sc-zoomed .sp-out .sp-tag {
+  border: 0;
+  background: #8a87a3;
+  color: #fff;
+  opacity: 0.85;
+}
+.sp-out .sp-stick {
+  background: linear-gradient(rgba(138, 135, 163, 0.8), rgba(138, 135, 163, 0.1));
+}
+.sp-out .sp-foot {
+  background: rgba(138, 135, 163, 0.6);
+  box-shadow: none;
+}
+/* Gewählt: immer groß und deutlich */
+.sp.sp-sel .sp-tag {
+  width: auto;
+  height: auto;
+  padding: 6px 12px;
+  border: 0;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #ff4fa3, #5340f2);
+  color: #fff;
+  font-size: 15px;
+  opacity: 1;
+  box-shadow: 0 0 0 3px var(--color-paper), 0 10px 24px rgba(83, 64, 242, 0.45);
+}
+.sp.sp-sel.sp-out .sp-tag {
+  background: #8a87a3;
+}
+.sp.sp-sel .sp-stick {
+  height: 30px;
+}

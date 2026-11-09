@@ -32,6 +32,19 @@ export default function StayMap({
   const onSelRef = useRef(onSel);
   onSelRef.current = onSel;
   const [ready, setReady] = useState(false);
+  // 3D (schräg, echte Häuser aus OpenStreetMap) oder 2D (von oben); Wahl bleibt in diesem Browser gespeichert
+  const [is3d, setIs3d] = useState(true);
+  const is3dRef = useRef(true);
+  useEffect(() => {
+    try {
+      if (localStorage.getItem("sc-map-3d") === "0") {
+        is3dRef.current = false;
+        setIs3d(false);
+      }
+    } catch {
+      // ohne Speicher: 3D
+    }
+  }, []);
   const inside = stays.filter((s) => !s.out).length;
 
   // Ausschnitt: die ganze Fläche und alle Unterkünfte
@@ -43,13 +56,30 @@ export default function StayMap({
       pts.push([area.lon - dLon, area.lat - dLat], [area.lon + dLon, area.lat + dLat]);
     }
     if (pts.length < 2) pts.push([area.lon - 0.005, area.lat - 0.004], [area.lon + 0.005, area.lat + 0.004]);
-    m.fitBounds(
-      [
-        [Math.min(...pts.map((p) => p[0])), Math.min(...pts.map((p) => p[1]))],
-        [Math.max(...pts.map((p) => p[0])), Math.max(...pts.map((p) => p[1]))],
-      ],
-      { padding: { top: 64, bottom: 36, left: 28, right: 64 }, maxZoom: 16, duration: animate ? 700 : 0 },
-    );
+    // Ausschnitt selbst berechnen (wie von oben, mit Drehung), dann neigen. cameraForBounds rechnet die Neigung mit ein
+    // und zoomt dann so weit raus, dass die Fläche winzig wird.
+    const tilt = is3dRef.current;
+    const bearing = tilt ? BEARING : 0;
+    const merc = (lon: number, lat: number) => {
+      const s = Math.sin((lat * Math.PI) / 180);
+      return [(lon + 180) / 360, 0.5 - Math.log((1 + s) / (1 - s)) / (4 * Math.PI)];
+    };
+    const b = (bearing * Math.PI) / 180;
+    const rot = ([x, y]: number[], dir: number) => [x * Math.cos(dir * b) - y * Math.sin(dir * b), x * Math.sin(dir * b) + y * Math.cos(dir * b)];
+    const r = pts.map((p) => rot(merc(p[0], p[1]), 1));
+    const minX = Math.min(...r.map((p) => p[0])), maxX = Math.max(...r.map((p) => p[0]));
+    const minY = Math.min(...r.map((p) => p[1])), maxY = Math.max(...r.map((p) => p[1]));
+    const [cx, cy] = rot([(minX + maxX) / 2, (minY + maxY) / 2], -1);
+    const lon = cx * 360 - 180;
+    const lat = (Math.atan(Math.sinh(Math.PI * (1 - 2 * cy))) * 180) / Math.PI;
+    const el = m.getContainer();
+    const w = Math.max(100, el.clientWidth - 28 - 28);
+    const h = Math.max(100, el.clientHeight - 70 - 40);
+    const fit = Math.log2(Math.min(w / ((maxX - minX) * 512 || 1e-9), h / ((maxY - minY) * 512 || 1e-9)));
+    const zoom = Math.min(16, fit);
+    const target = { center: [lon, lat] as [number, number], zoom, pitch: tilt ? PITCH : 0, bearing };
+    if (animate) m.easeTo({ ...target, duration: 800 });
+    else m.jumpTo(target);
   };
 
   useEffect(() => {
@@ -64,6 +94,9 @@ export default function StayMap({
         style: isDarkNow() ? MAP_STYLE.dark : MAP_STYLE.light,
         center: [area.lon, area.lat],
         zoom: 14,
+        pitch: is3dRef.current ? PITCH : 0,
+        bearing: is3dRef.current ? BEARING : 0,
+        maxPitch: 65,
         attributionControl: { compact: true },
         dragRotate: false,
         cooperativeGestures: true,
@@ -89,6 +122,7 @@ export default function StayMap({
       m.on("style.load", () => {
         applyStayCheckTheme(m, isDarkNow());
         addArea(m, area);
+        add3d(m, isDarkNow(), area.rings ?? []);
       });
       // Rangfolge fürs Auge: die 3 besten groß und kräftig, die nächsten 7 klein mit Zahl, der Rest als blasse Punkte
       // (Zahl erst beim Hineinzoomen), knapp außerhalb als graue Punkte. Wichtige liegen immer obenauf.
@@ -97,20 +131,31 @@ export default function StayMap({
         const el = document.createElement("button");
         el.type = "button";
         const r = rank.get(i) ?? 999;
-        const tier = s.out ? "sc-pin sc-pin-dot sc-pin-out" : r < 3 ? "sc-pin sc-pin-best" : r < 10 ? "sc-pin sc-pin-mid" : "sc-pin sc-pin-dot";
+        const tier = s.out ? "sp sp-dot sp-out" : r < 3 ? "sp sp-best" : r < 10 ? "sp sp-mid" : "sp sp-dot";
         el.className = `${tier} pin-in`;
         // nacheinander aufploppen: die Besten zuerst
         el.style.animationDelay = `${120 + Math.min(s.out ? 14 : r, 14) * 35}ms`;
-        el.dataset.tier = tier;
         el.dataset.z = String(s.out ? 1 : r < 3 ? 40 - r : r < 10 ? 20 : 10);
         el.style.zIndex = el.dataset.z;
-        el.textContent = String(s.match);
+        const tag = document.createElement("span");
+        tag.className = "sp-tag";
+        if (!s.out && r < 3) {
+          const no = document.createElement("i");
+          no.textContent = `#${r + 1}`;
+          tag.append(no);
+        }
+        tag.append(String(s.match));
+        const stick = document.createElement("span");
+        stick.className = "sp-stick";
+        const foot = document.createElement("span");
+        foot.className = "sp-foot";
+        el.append(tag, stick, foot);
         el.setAttribute("aria-label", `${s.name}, Lage ${s.match}${s.out ? ", knapp außerhalb der guten Lage" : ""}`);
         el.addEventListener("click", (e) => {
           e.stopPropagation();
           onSelRef.current(i);
         });
-        new maplibregl.Marker({ element: el }).setLngLat([s.lon, s.lat]).addTo(m);
+        new maplibregl.Marker({ element: el, anchor: "bottom" }).setLngLat([s.lon, s.lat]).addTo(m);
         return el;
       });
       setReady(true);
@@ -131,21 +176,53 @@ export default function StayMap({
     if (!m || !ready) return;
     pinsRef.current.forEach((el, i) => {
       el.style.display = sel === null || sel === i ? "" : "none";
-      el.classList.toggle("sc-pin-top", sel === i);
+      el.classList.toggle("sp-sel", sel === i);
       if (sel === i) el.style.zIndex = "60";
       else if (el.dataset.z) el.style.zIndex = el.dataset.z;
     });
     const s = sel !== null ? stays[sel] : null;
-    if (s) m.flyTo({ center: [s.lon, s.lat], zoom: 16, padding: { top: 40, bottom: 150, left: 0, right: 0 }, duration: 900 });
+    if (s)
+      m.flyTo({
+        center: [s.lon, s.lat],
+        zoom: 16.3,
+        pitch: is3dRef.current ? PITCH : 0,
+        bearing: is3dRef.current ? BEARING : 0,
+        padding: { top: 40, bottom: 150, left: 0, right: 0 },
+        duration: 1000,
+      });
     else fitAll(m, true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sel, ready]);
+
+  const toggle3d = (on: boolean) => {
+    is3dRef.current = on;
+    setIs3d(on);
+    try {
+      localStorage.setItem("sc-map-3d", on ? "1" : "0");
+    } catch {
+      // egal
+    }
+    mapRef.current?.easeTo({ pitch: on ? PITCH : 0, bearing: on ? BEARING : 0, duration: 700 });
+  };
 
   const s = sel !== null ? stays[sel] : null;
   return (
     <div className="relative h-full w-full">
       {/* Höhe direkt setzen: das Karten-CSS macht den Behälter „position: relative“, „absolute inset-0“ hätte dann Höhe 0 */}
       <div ref={ref} className="h-full w-full" />
+      <div className="glass absolute right-3 top-3 z-10 flex rounded-full border border-[var(--sc-glass-line)] p-[3px] shadow-soft" role="group" aria-label="Kartenansicht">
+        {([true, false] as const).map((on) => (
+          <button
+            key={String(on)}
+            type="button"
+            aria-pressed={is3d === on}
+            onClick={() => toggle3d(on)}
+            className={`press rounded-full px-2.5 py-[5px] text-[12px] font-extrabold transition-colors ${is3d === on ? "bg-sun text-white" : "text-muted"}`}
+          >
+            {on ? "3D" : "2D"}
+          </button>
+        ))}
+      </div>
       {s ? (
         <>
           <button
@@ -192,7 +269,7 @@ export default function StayMap({
           </div>
         </>
       ) : (
-        <span className="glass pointer-events-none absolute left-3 top-3 z-10 flex max-w-[calc(100%-1.5rem)] items-center gap-2 rounded-full border border-[var(--sc-glass-line)] px-3 py-[7px] text-[12.5px] font-extrabold shadow-soft">
+        <span className="glass pointer-events-none absolute left-3 top-3 z-10 flex max-w-[calc(100%-6.5rem)] items-center gap-2 rounded-full border border-[var(--sc-glass-line)] px-3 py-[7px] text-[12.5px] font-extrabold shadow-soft">
           <span className="h-3 w-3 shrink-0 rounded-full border-2 border-[#5340f2] bg-[#5340f2]/25" />
           <span className="truncate">
             {area.name} · {area.rings?.length ? `${inside} drin${stays.length > inside ? `, ${stays.length - inside} knapp daneben` : ""}` : `${stays.length} ${stays.length === 1 ? "Unterkunft" : "Unterkünfte"}`}
@@ -203,6 +280,82 @@ export default function StayMap({
   );
 }
 
+
+const PITCH = 52;
+const BEARING = -14;
+
+/**
+ * Echte Häuser in 3D (Umrisse und Höhen aus OpenStreetMap, ohne Höhenangabe ca. 8 m) und ein leuchtender Zaun
+ * um die gute Lage, damit man sie auch hinter Häusern sieht.
+ */
+function add3d(m: import("maplibre-gl").Map, dark: boolean, rings: [number, number][][]) {
+  if (!m.getSource("openmaptiles")) return;
+  try {
+    if (m.getLayer("sc-3d")) m.setLayoutProperty("sc-3d", "visibility", "none"); // allgemeine 3D-Ebene erst ab Zoom 15
+    const before = m.getStyle().layers?.find((l) => l.type === "symbol")?.id;
+    const h: import("maplibre-gl").ExpressionSpecification = ["coalesce", ["get", "render_height"], 8];
+    m.setLight({ anchor: "viewport", color: "#ffffff", intensity: dark ? 0.25 : 0.28, position: [1.2, 200, 35] });
+    if (!m.getLayer("sc-stay-3d"))
+      m.addLayer(
+        {
+          id: "sc-stay-3d",
+          type: "fill-extrusion",
+          source: "openmaptiles",
+          "source-layer": "building",
+          minzoom: 13,
+          paint: {
+            "fill-extrusion-color": dark
+              ? ["interpolate", ["linear"], h, 0, "#221d4f", 40, "#342c7a"]
+              : ["interpolate", ["linear"], h, 0, "#f8f7fd", 40, "#e3defa"],
+            "fill-extrusion-height": h,
+            "fill-extrusion-base": ["coalesce", ["get", "render_min_height"], 0],
+            "fill-extrusion-opacity": ["interpolate", ["linear"], ["zoom"], 13, 0.6, 14.5, 0.95],
+            "fill-extrusion-vertical-gradient": true,
+          },
+        },
+        before,
+      );
+    if (rings.length && !m.getLayer("sc-area-wall")) {
+      m.addSource("sc-area-wall", { type: "geojson", data: wallOf(rings) });
+      m.addLayer(
+        {
+          id: "sc-area-wall",
+          type: "fill-extrusion",
+          source: "sc-area-wall",
+          paint: { "fill-extrusion-color": "#6d5cff", "fill-extrusion-height": 26, "fill-extrusion-opacity": dark ? 0.5 : 0.42 },
+        },
+        before,
+      );
+    }
+  } catch {
+    // ohne 3D weiter
+  }
+}
+
+/** Schmale Streifen entlang des Umrisses (ca. 4 m breit), als Zaun hochgezogen */
+function wallOf(rings: [number, number][][]): GeoJSON.FeatureCollection {
+  const features: GeoJSON.Feature[] = [];
+  for (const ring of rings) {
+    for (let k = 0; k < ring.length - 1; k++) {
+      const [x1, y1] = ring[k];
+      const [x2, y2] = ring[k + 1];
+      const mx = 111_320 * Math.cos((y1 * Math.PI) / 180);
+      const my = 110_540;
+      const dx = (x2 - x1) * mx;
+      const dy = (y2 - y1) * my;
+      const len = Math.hypot(dx, dy);
+      if (len < 0.5) continue;
+      const ox = ((-dy / len) * 2) / mx;
+      const oy = ((dx / len) * 2) / my;
+      features.push({
+        type: "Feature",
+        properties: {},
+        geometry: { type: "Polygon", coordinates: [[[x1 + ox, y1 + oy], [x2 + ox, y2 + oy], [x2 - ox, y2 - oy], [x1 - ox, y1 - oy], [x1 + ox, y1 + oy]]] },
+      });
+    }
+  }
+  return { type: "FeatureCollection", features };
+}
 
 /** Die gute Lage als Fläche: zart gefüllt, kräftig umrandet. Ohne Umriss: der Suchkreis, gestrichelt. */
 function addArea(m: import("maplibre-gl").Map, area: { lat: number; lon: number; radius: number; rings?: [number, number][][] }) {
