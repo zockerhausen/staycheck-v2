@@ -8,7 +8,6 @@ import Icon from "@/components/Icon";
 import { MAX_OPTIONS } from "@/lib/trip";
 import { markReplace } from "@/components/BackButton";
 import StayMap, { type StayPin } from "@/components/StayMap";
-import type { ZonePoint } from "@/lib/zones";
 
 type Chip = { key: string; label: string; href: string; active: boolean };
 
@@ -28,7 +27,6 @@ export default function StaysPanel({
   chips,
   area,
   stays,
-  zones,
   children,
 }: {
   checkin: string;
@@ -37,11 +35,10 @@ export default function StaysPanel({
   adults: number;
   max: number | null;
   chips: Chip[];
-  /** Das Viertel: Mitte, Umkreis in Metern, Name */
-  area: { lat: number; lon: number; radius: number; name: string };
+  /** Das Viertel: Mitte, Umkreis in Metern, Name, Umriss der guten Lage (fehlt er, zeigen wir den Suchkreis) */
+  area: { lat: number; lon: number; radius: number; name: string; rings?: [number, number][][] };
   /** Alle Unterkünfte im Viertel (gleiche Reihenfolge wie die Liste) */
   stays: StayPin[];
-  zones: ZonePoint[];
   children: React.ReactNode;
 }) {
   const [sheet, setSheet] = useState(false);
@@ -118,7 +115,7 @@ export default function StaysPanel({
       {/* Die eine Karte: Viertel markiert, alle Unterkünfte darin */}
       <div ref={mapRef} className="mt-3 scroll-mt-4">
         <div className="relative h-[min(58dvh,480px)] overflow-hidden rounded-3xl bg-paper">
-          <StayMap stays={stays} zones={zones} area={area} sel={sel} onSel={setSel} />
+          <StayMap stays={stays} area={area} sel={sel} onSel={setSel} />
         </div>
       </div>
 

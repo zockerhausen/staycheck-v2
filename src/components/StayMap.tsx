@@ -4,29 +4,25 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import "maplibre-gl/dist/maplibre-gl.css";
 import Icon from "@/components/Icon";
-import { addZones } from "@/components/KiezMap";
 import { applyStayCheckTheme, MAP_STYLE } from "@/lib/mapTheme";
 import { isDarkNow } from "@/components/ThemeSwitch";
-import type { ZonePoint } from "@/lib/zones";
 
 /** Eine Unterkunft aus der Liste, so wie sie auf der Karte erscheint (Nummer = Platz in der Liste) */
-export type StayPin = { name: string; lat: number; lon: number; match: number; meta: string; rating?: string; href: string; booking?: string };
+export type StayPin = { name: string; lat: number; lon: number; match: number; meta: string; rating?: string; href: string; booking?: string; /** knapp außerhalb der guten Lage (grau) */ out?: boolean };
 
 /**
- * Die Karte zu den Unterkünften: das Viertel violett umrandet, darin alle Unterkünfte mit ihrem Lage-Wert,
- * dazu leuchtend die besten Stellen im Viertel. Eine Unterkunft gewählt (Liste oder Karte): nur sie bleibt,
- * die Karte fliegt hin, unten eine Karte mit Preis-Knopf. Viertel und Leuchten bleiben immer sichtbar.
+ * Die Karte zu den Unterkünften: die gute Lage rund um den Ort als violette Fläche (echte Form, kein Kreis),
+ * darin die Unterkünfte violett mit Lage-Wert, knapp außerhalb grau. Eine Unterkunft gewählt (Liste oder Karte):
+ * nur sie bleibt, die Karte fliegt hin, unten eine Karte mit Preis-Knopf. Die Fläche bleibt immer sichtbar.
  */
 export default function StayMap({
   stays,
-  zones: allZones,
   area,
   sel,
   onSel,
 }: {
   stays: StayPin[];
-  zones: ZonePoint[];
-  area: { lat: number; lon: number; radius: number; name: string };
+  area: { lat: number; lon: number; radius: number; name: string; rings?: [number, number][][] };
   sel: number | null;
   onSel: (i: number | null) => void;
 }) {
@@ -36,20 +32,23 @@ export default function StayMap({
   const onSelRef = useRef(onSel);
   onSelRef.current = onSel;
   const [ready, setReady] = useState(false);
-  const center = area;
-  // Leuchten nur im Viertel (sonst lenkt es zu Stellen, an denen wir gar nichts anbieten)
-  const zones = allZones.filter((z) => distM(z, area) <= area.radius);
+  const inside = stays.filter((s) => !s.out).length;
 
-  // Ausschnitt: das ganze Viertel
+  // Ausschnitt: die ganze Fläche und alle Unterkünfte
   const fitAll = (m: import("maplibre-gl").Map, animate: boolean) => {
-    const dLat = area.radius / 111_320;
-    const dLon = dLat / Math.cos((area.lat * Math.PI) / 180);
+    const pts: number[][] = [...(area.rings ?? []).flat(), ...stays.map((s) => [s.lon, s.lat])];
+    if (!area.rings?.length) {
+      const dLat = area.radius / 111_320;
+      const dLon = dLat / Math.cos((area.lat * Math.PI) / 180);
+      pts.push([area.lon - dLon, area.lat - dLat], [area.lon + dLon, area.lat + dLat]);
+    }
+    if (pts.length < 2) pts.push([area.lon - 0.005, area.lat - 0.004], [area.lon + 0.005, area.lat + 0.004]);
     m.fitBounds(
       [
-        [area.lon - dLon, area.lat - dLat],
-        [area.lon + dLon, area.lat + dLat],
+        [Math.min(...pts.map((p) => p[0])), Math.min(...pts.map((p) => p[1]))],
+        [Math.max(...pts.map((p) => p[0])), Math.max(...pts.map((p) => p[1]))],
       ],
-      { padding: { top: 56, bottom: 24, left: 16, right: 16 }, duration: animate ? 700 : 0 },
+      { padding: { top: 64, bottom: 36, left: 28, right: 64 }, maxZoom: 16, duration: animate ? 700 : 0 },
     );
   };
 
@@ -63,7 +62,7 @@ export default function StayMap({
       const m = new maplibregl.Map({
         container: ref.current,
         style: isDarkNow() ? MAP_STYLE.dark : MAP_STYLE.light,
-        center: [center.lon, center.lat],
+        center: [area.lon, area.lat],
         zoom: 14,
         attributionControl: { compact: true },
         dragRotate: false,
@@ -85,16 +84,15 @@ export default function StayMap({
       m.on("style.load", () => {
         applyStayCheckTheme(m, isDarkNow());
         addArea(m, area);
-        if (zones.length) addZones(m, zones, 350, center.lat);
       });
-      // Jede Unterkunft mit ihrem Lage-Wert; die drei besten kräftig, der Rest kleiner
-      const rank = new Map([...stays.keys()].sort((a, b) => stays[b].match - stays[a].match).map((i, r) => [i, r]));
+      // Jede Unterkunft mit ihrem Lage-Wert: in der guten Lage violett (die drei besten kräftig), knapp außerhalb grau
+      const rank = new Map([...stays.keys()].filter((i) => !stays[i].out).sort((a, b) => stays[b].match - stays[a].match).map((i, r) => [i, r]));
       pinsRef.current = stays.map((s, i) => {
         const el = document.createElement("button");
         el.type = "button";
-        el.className = (rank.get(i) ?? 99) < 3 ? "sc-pin sc-pin-good" : "sc-pin sc-pin-dim";
+        el.className = s.out ? "sc-pin sc-pin-out" : (rank.get(i) ?? 99) < 3 ? "sc-pin sc-pin-good" : "sc-pin";
         el.textContent = String(s.match);
-        el.setAttribute("aria-label", `${i + 1}. ${s.name}, Lage ${s.match}`);
+        el.setAttribute("aria-label", `${s.name}, Lage ${s.match}${s.out ? ", knapp außerhalb der guten Lage" : ""}`);
         el.addEventListener("click", (e) => {
           e.stopPropagation();
           onSelRef.current(i);
@@ -112,7 +110,7 @@ export default function StayMap({
       map?.remove();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [stays, allZones, area.lat, area.lon, area.radius]);
+  }, [stays, area.lat, area.lon, area.radius, area.rings]);
 
   // Auswahl: nur diese Unterkunft zeigen und hinfliegen; ohne Auswahl wieder alle
   useEffect(() => {
@@ -144,14 +142,14 @@ export default function StayMap({
           </button>
           <div className="glass absolute inset-x-3 bottom-3 z-10 rounded-[22px] border border-[var(--sc-glass-line)] p-3 shadow-soft">
             <div className="flex items-start gap-3">
-              <span className="flex h-10 w-10 shrink-0 flex-col items-center justify-center rounded-full bg-sun text-white">
+              <span className={`flex h-10 w-10 shrink-0 flex-col items-center justify-center rounded-full text-white ${s.out ? "bg-[#8a87a3]" : "bg-sun"}`}>
                 <b className="text-[15px] font-extrabold leading-none">{s.match}</b>
                 <span className="text-[8px] font-extrabold uppercase leading-none tracking-wide opacity-80">Lage</span>
               </span>
               <span className="min-w-0 flex-1">
                 <b className="block truncate text-[16px] font-extrabold leading-snug">{s.name}</b>
                 <span className="block truncate text-[13px] font-semibold text-muted">
-                  {[s.rating ? `★ ${s.rating}` : null, s.meta].filter(Boolean).join(" · ")}
+                  {[s.out ? "Knapp außerhalb" : null, s.rating ? `★ ${s.rating}` : null, s.meta].filter(Boolean).join(" · ")}
                 </span>
               </span>
               <button type="button" onClick={() => onSel(null)} aria-label="Auswahl schließen" className="press -m-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-full">
@@ -182,7 +180,7 @@ export default function StayMap({
         <span className="glass pointer-events-none absolute left-3 top-3 z-10 flex max-w-[calc(100%-1.5rem)] items-center gap-2 rounded-full border border-[var(--sc-glass-line)] px-3 py-[7px] text-[12.5px] font-extrabold shadow-soft">
           <span className="h-3 w-3 shrink-0 rounded-full border-2 border-[#5340f2] bg-[#5340f2]/25" />
           <span className="truncate">
-            {area.name} · {stays.length} {stays.length === 1 ? "Unterkunft" : "Unterkünfte"}
+            {area.name} · {area.rings?.length ? `${inside} drin${stays.length > inside ? `, ${stays.length - inside} knapp daneben` : ""}` : `${stays.length} ${stays.length === 1 ? "Unterkunft" : "Unterkünfte"}`}
           </span>
         </span>
       )}
@@ -190,27 +188,36 @@ export default function StayMap({
   );
 }
 
-const distM = (a: { lat: number; lon: number }, b: { lat: number; lon: number }) => {
-  const dy = (a.lat - b.lat) * 111_320;
-  const dx = (a.lon - b.lon) * 111_320 * Math.cos((b.lat * Math.PI) / 180);
-  return Math.hypot(dx, dy);
-};
 
-/** Das Viertel als Fläche: zart gefüllt, kräftig umrandet */
-function addArea(m: import("maplibre-gl").Map, area: { lat: number; lon: number; radius: number }) {
-  const ring: [number, number][] = [];
-  for (let k = 0; k <= 72; k++) {
-    const a = (k / 72) * 2 * Math.PI;
-    const dLat = (area.radius * Math.sin(a)) / 111_320;
-    const dLon = (area.radius * Math.cos(a)) / (111_320 * Math.cos((area.lat * Math.PI) / 180));
-    ring.push([area.lon + dLon, area.lat + dLat]);
+/** Die gute Lage als Fläche: zart gefüllt, kräftig umrandet. Ohne Umriss: der Suchkreis, gestrichelt. */
+function addArea(m: import("maplibre-gl").Map, area: { lat: number; lon: number; radius: number; rings?: [number, number][][] }) {
+  let rings: [number, number][][] = area.rings ?? [];
+  const circle = !rings.length;
+  if (circle) {
+    const ring: [number, number][] = [];
+    for (let k = 0; k <= 72; k++) {
+      const a = (k / 72) * 2 * Math.PI;
+      const dLat = (area.radius * Math.sin(a)) / 111_320;
+      const dLon = (area.radius * Math.cos(a)) / (111_320 * Math.cos((area.lat * Math.PI) / 180));
+      ring.push([area.lon + dLon, area.lat + dLat]);
+    }
+    rings = [ring];
   }
   const before = m.getStyle().layers?.find((l) => l.type === "symbol")?.id;
   try {
-    m.addSource("sc-area", { type: "geojson", data: { type: "Feature", properties: {}, geometry: { type: "Polygon", coordinates: [ring] } } });
-    m.addLayer({ id: "sc-area-fill", type: "fill", source: "sc-area", paint: { "fill-color": "#5340f2", "fill-opacity": 0.07 } }, before);
+    m.addSource("sc-area", {
+      type: "geojson",
+      data: { type: "Feature", properties: {}, geometry: { type: "MultiPolygon", coordinates: rings.map((r) => [r]) } },
+    });
+    m.addLayer({ id: "sc-area-fill", type: "fill", source: "sc-area", paint: { "fill-color": "#5340f2", "fill-opacity": circle ? 0.06 : 0.16 } }, before);
     m.addLayer(
-      { id: "sc-area-line", type: "line", source: "sc-area", paint: { "line-color": "#5340f2", "line-width": 2.5, "line-opacity": 0.85, "line-dasharray": [2, 1.5] } },
+      {
+        id: "sc-area-line",
+        type: "line",
+        source: "sc-area",
+        layout: { "line-join": "round" },
+        paint: { "line-color": "#6d5cff", "line-width": circle ? 2 : 3, "line-opacity": 0.9, ...(circle ? { "line-dasharray": [2, 1.5] } : {}) },
+      },
       before,
     );
   } catch {

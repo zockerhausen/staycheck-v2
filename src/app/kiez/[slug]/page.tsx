@@ -4,7 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getCities, getCriteria, getDistricts, getExtras, getFavoriteIds, getSavedPlaces, getUser, resolveWeights, weightsToQuery } from "@/lib/data";
 import { after } from "next/server";
-import { alignStays, cityZones, DEFAULT_WEIGHTS, hotelsNearCached, locationMatch, verdict, withDeadline, type HotelResult } from "@/lib/geo";
+import { alignStays, cityDataQuick, DEFAULT_WEIGHTS, hotelsNearCached, locationMatch, verdict, withDeadline, type HotelResult } from "@/lib/geo";
 import StillLoading from "@/components/StillLoading";
 import { matchScore } from "@/lib/matching";
 import FavoriteButton from "@/components/FavoriteButton";
@@ -33,6 +33,7 @@ import { areaPhoto } from "@/lib/photos";
 import TipsSection from "@/components/TipsSection";
 import { getTipsForDistrict } from "@/lib/tips";
 import { maxPriceFor, partnerOn, stayLink } from "@/lib/partner";
+import { goodArea } from "@/lib/good-area";
 import { classCap, parseTrip, tripQuery } from "@/lib/trip";
 import StaysPanel from "@/components/StaysPanel";
 
@@ -92,10 +93,12 @@ export default async function KiezPage({
 
   const cityRow = cities.find((c) => c.slug === district.city);
   const kiezExtras = await getExtras();
-  const [tips, zones] = await Promise.all([
+  const [tips, cityRaw] = await Promise.all([
     getTipsForDistrict(district.id),
-    cityRow ? cityZones(cityRow.lat, cityRow.lng, VERIFIED_RADIUS, weights, 1200, kiezExtras.nogo) : Promise.resolve([]),
+    cityRow ? cityDataQuick(cityRow.lat, cityRow.lng, VERIFIED_RADIUS, 1200) : Promise.resolve(null),
   ]);
+  // Die gute Lage rund um das Viertel als Fläche (Karte und „drin / knapp außerhalb“ in der Liste)
+  const good = cityRaw ? goodArea(cityRaw.zones, { lat: district.lat!, lon: district.lng! }, STAY_RADIUS, weights, kiezExtras.nogo) : null;
 
   let hotels: HotelResult[] = [];
   let failed = false;
@@ -126,7 +129,10 @@ export default async function KiezPage({
         ? hotels.filter((h) => (revOf(h)?.fair ?? 0) >= TOP_FAIR)
         : hotels.filter((h) => h.kind === filter);
   // Budget gilt immer, sobald eins gesetzt ist (geschätzte Preisklasse; echte Preise beim Tippen auf „Preis“)
-  const shown = maxNight ? byType.filter((h) => inBudget(cap, clsOf(h)) === true) : byType;
+  const inBudgetList = maxNight ? byType.filter((h) => inBudget(cap, clsOf(h)) === true) : byType;
+  // Erst die Unterkünfte in der guten Lage, dann die knapp außerhalb (grau)
+  const isOut = (h: HotelResult) => (good ? !good.inside(h.lat, h.lon) : false);
+  const shown = [...inBudgetList.filter((h) => !isOut(h)), ...inBudgetList.filter(isOut)];
   const hiddenUnknown = maxNight ? byType.filter((h) => inBudget(cap, clsOf(h)) === null).length : 0;
   const chips = FILTERS.filter((f) => f.key !== "top" || rev.size > 0).map((f) => ({
     key: f.key,
@@ -136,7 +142,7 @@ export default async function KiezPage({
   }));
   // Unser Tipp: gute Lage + top bewertet + im Budget
   const tipStay = shown
-    .filter((h) => (revOf(h)?.fair ?? 0) >= TOP_FAIR && (revOf(h)?.total ?? 0) >= 100 && (!maxNight || inBudget(cap, clsOf(h)) === true))
+    .filter((h) => !isOut(h) && (revOf(h)?.fair ?? 0) >= TOP_FAIR && (revOf(h)?.total ?? 0) >= 100 && (!maxNight || inBudget(cap, clsOf(h)) === true))
     .map((h) => ({ h, value: h.match * 0.6 + (revOf(h)!.fair * 10) * 0.4 }))
     .sort((a, b) => b.value - a.value)[0]?.h;
   const isSaved = (h: HotelResult) => saved.some((p) => Math.abs(p.lat - h.lat) < 1e-6 && Math.abs(p.lon - h.lon) < 1e-6);
@@ -179,6 +185,7 @@ export default async function KiezPage({
     rating: revOf(h) ? fmtScore(revOf(h)!.fair) : undefined,
     href: checkUrl(h),
     booking: bookingOf(h),
+    out: isOut(h),
   }));
 
   const staysTab = (
@@ -190,9 +197,8 @@ export default async function KiezPage({
         adults={trip.adults}
         max={maxNight}
         chips={chips}
-        area={{ lat: district.lat!, lon: district.lng!, radius: STAY_RADIUS, name: short }}
+        area={{ lat: district.lat!, lon: district.lng!, radius: STAY_RADIUS, name: short, rings: good?.rings }}
         stays={stayPins}
-        zones={zones}
       >
 
       {slow ? (
@@ -231,6 +237,7 @@ export default async function KiezPage({
                 reviews={revOf(h)}
                 booking={bookingOf(h)}
                 select={i}
+                out={isOut(h)}
                 save={{
                   place: { name: h.name, subtitle: h.subtitle, lat: h.lat, lon: h.lon, kind: h.kind, match: h.match },
                   initiallySaved: isSaved(h),
@@ -241,7 +248,7 @@ export default async function KiezPage({
             ))}
           </ol>
           <p className="mt-3 text-[13px] font-semibold text-muted">
-            Alle Unterkünfte im markierten Viertel, sortiert nach Lage (Daten aus OpenStreetMap). Antippen zeigt sie auf der Karte, „Preis“ sucht sie bei Booking.com, Agoda, Expedia und Hotels.com und öffnet den passenden Anbieter (Anzeige).
+            Erst die Unterkünfte in der markierten guten Lage, dann grau die knapp außerhalb, jeweils nach Lage sortiert (Daten aus OpenStreetMap). Antippen zeigt sie auf der Karte, „Preis“ sucht sie bei Booking.com, Agoda, Expedia und Hotels.com und öffnet den passenden Anbieter (Anzeige).
             {hiddenUnknown > 0 ? ` ${hiddenUnknown} Unterkünfte ohne bekannte Preisklasse sind ausgeblendet.` : ""}
             {demo ? " Gäste-Werte sind vorerst Beispieldaten." : ""}
           </p>

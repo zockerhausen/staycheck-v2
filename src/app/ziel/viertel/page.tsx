@@ -6,7 +6,8 @@ import { getCriteria, getDistricts, getExtras, getProfile, getSavedPlaces, getUs
 import { after } from "next/server";
 import { alignStays, autoCityCached, DEFAULT_WEIGHTS, distance, hotelsNearCached, locationMatch, withDeadline, type HotelResult } from "@/lib/geo";
 import StillLoading from "@/components/StillLoading";
-import { pickZones, ZONE_KEYS } from "@/lib/zones";
+import { ZONE_KEYS } from "@/lib/zones";
+import { goodArea } from "@/lib/good-area";
 import AskDistrict from "@/components/AskDistrict";
 import { dedupeStays } from "@/lib/geo";
 import { fmtScore, reviewsForMany, stayKey, TOP_FAIR } from "@/lib/reviews";
@@ -84,7 +85,8 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
   const cityData = cityRaw === "slow" ? null : cityRaw;
   const weights = profile ?? DEFAULT_WEIGHTS;
   const districts = cityData?.districts ?? [];
-  const zones = cityData ? pickZones(cityData.zones, weights) : [];
+  // Die gute Lage rund um diese Stelle als Fläche (Karte und „drin / knapp außerhalb“ in der Liste)
+  const good = cityData ? goodArea(cityData.zones, { lat: vlat, lon: vlon }, STAY_RADIUS, weights, (await getExtras()).nogo) : null;
   // Ein bekanntes Viertel an dieser Stelle – sonst eine „Ecke“: Werte aus dem Raster rundherum (450 m)
   const near = (cityData?.zones ?? []).filter((z) => distance(z.lat, z.lon, vlat, vlon) <= 450);
   const district =
@@ -134,7 +136,10 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
         ? hotels.filter((h) => (revOf(h)?.fair ?? 0) >= TOP_FAIR)
         : hotels.filter((h) => h.kind === filter);
   // Budget gilt immer, sobald eins gesetzt ist (geschätzte Preisklasse; echte Preise beim Tippen auf „Preis“)
-  const shown = maxNight ? byType.filter((h) => inBudget(cap, clsOf(h)) === true) : byType;
+  const inBudgetList = maxNight ? byType.filter((h) => inBudget(cap, clsOf(h)) === true) : byType;
+  // Erst die Unterkünfte in der guten Lage, dann die knapp außerhalb (grau)
+  const isOut = (h: HotelResult) => (good ? !good.inside(h.lat, h.lon) : false);
+  const shown = [...inBudgetList.filter((h) => !isOut(h)), ...inBudgetList.filter(isOut)];
   const hiddenUnknown = maxNight ? byType.filter((h) => inBudget(cap, clsOf(h)) === null).length : 0;
   const chips = FILTERS.filter((f) => f.key !== "top" || rev.size > 0).map((f) => ({
     key: f.key,
@@ -144,7 +149,7 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
   }));
   // Unser Tipp: gute Lage + top bewertet + im Budget
   const tipStay = shown
-    .filter((h) => (revOf(h)?.fair ?? 0) >= TOP_FAIR && (revOf(h)?.total ?? 0) >= 100 && (!maxNight || inBudget(cap, clsOf(h)) === true))
+    .filter((h) => !isOut(h) && (revOf(h)?.fair ?? 0) >= TOP_FAIR && (revOf(h)?.total ?? 0) >= 100 && (!maxNight || inBudget(cap, clsOf(h)) === true))
     .map((h) => ({ h, value: h.match * 0.6 + (revOf(h)!.fair * 10) * 0.4 }))
     .sort((a, b) => b.value - a.value)[0]?.h;
   const isSaved = (h: HotelResult) => saved.some((p) => Math.abs(p.lat - h.lat) < 1e-6 && Math.abs(p.lon - h.lon) < 1e-6);
@@ -186,6 +191,7 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
     rating: revOf(h) ? fmtScore(revOf(h)!.fair) : undefined,
     href: checkUrl(h),
     booking: bookingOf(h),
+    out: isOut(h),
   }));
 
   const staysTab = (
@@ -197,9 +203,8 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
         adults={trip.adults}
         max={maxNight}
         chips={chips}
-        area={{ lat: vlat, lon: vlon, radius: STAY_RADIUS, name: name }}
+        area={{ lat: vlat, lon: vlon, radius: STAY_RADIUS, name: name, rings: good?.rings }}
         stays={stayPins}
-        zones={zones}
       >
 
       {slow ? (
@@ -238,6 +243,7 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
                 reviews={revOf(h)}
                 booking={bookingOf(h)}
                 select={i}
+                out={isOut(h)}
                 save={{
                   place: { name: h.name, subtitle: h.subtitle, lat: h.lat, lon: h.lon, kind: h.kind, match: h.match },
                   initiallySaved: isSaved(h),

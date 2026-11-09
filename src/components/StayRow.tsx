@@ -18,6 +18,7 @@ export default function StayRow({
   save,
   booking,
   select,
+  out,
 }: {
   id: string;
   href: string;
@@ -33,12 +34,14 @@ export default function StayRow({
   booking?: string;
   /** Platz in der Liste: Antippen zeigt die Unterkunft allein auf der Karte oben (statt die Detailseite zu öffnen) */
   select?: number;
+  /** knapp außerhalb der guten Lage: grau */
+  out?: boolean;
 }) {
   const meta = [kind, price, overBudget ? "über Budget" : null, note || null].filter(Boolean).join(" · ");
   return (
-    <li id={id} className="flex items-start gap-3 border-b border-line py-3 last:border-0">
+    <li id={id} className={`flex items-start gap-3 border-b border-line py-3 last:border-0 ${out ? "opacity-70" : ""}`}>
       {select !== undefined ? (
-        <StaySelect n={select} label={`${name} auf der Karte zeigen`} className="press flex h-14 w-14 shrink-0 items-center justify-center rounded-[16px] bg-peach text-sun-soft">
+        <StaySelect n={select} label={`${name} auf der Karte zeigen`} className={`press flex h-14 w-14 shrink-0 items-center justify-center rounded-[16px] ${out ? "bg-tan text-muted" : "bg-peach text-sun-soft"}`}>
           <Icon name="hotel" size={24} fill="transparent" />
         </StaySelect>
       ) : (
@@ -62,7 +65,10 @@ export default function StayRow({
           <PlaceSaveButton compact {...save} />
         </div>
         <div className="mt-2 flex items-center gap-2 whitespace-nowrap text-[13px] font-bold">
-          <span className="shrink-0 rounded-full bg-peach px-[9px] py-0.5 font-extrabold text-sun-soft">Lage {match}</span>
+          <span className={`shrink-0 rounded-full px-[9px] py-0.5 font-extrabold ${out ? "bg-tan text-muted" : "bg-peach text-sun-soft"}`}>
+            Lage {match}
+            {out ? " · knapp außerhalb" : ""}
+          </span>
           {reviews && (
             <span className="flex min-w-0 items-center gap-1">
               <Icon name="star" size={14} fill="currentColor" className="shrink-0" />
