@@ -77,6 +77,11 @@ export default function StayMap({
       mapRef.current = m;
       fitAll(m, false);
       m.addControl(new maplibregl.NavigationControl({ showCompass: false }), "bottom-right");
+      // Zahlen an den kleinen Punkten, sobald man etwa eine Stufe näher ist als die Startansicht (oder sowieso nah dran)
+      const base = m.getZoom();
+      const onZoom = () => m.getContainer().classList.toggle("sc-zoomed", m.getZoom() >= Math.min(base + 0.9, 15.5));
+      m.on("zoom", onZoom);
+      m.once("load", onZoom);
       m.once("load", () => ref.current?.querySelector(".maplibregl-ctrl-attrib")?.classList.remove("maplibregl-compact-show"));
       const onTheme = () => m.setStyle(isDarkNow() ? MAP_STYLE.dark : MAP_STYLE.light);
       window.addEventListener("sc-theme", onTheme);
@@ -85,12 +90,18 @@ export default function StayMap({
         applyStayCheckTheme(m, isDarkNow());
         addArea(m, area);
       });
-      // Jede Unterkunft mit ihrem Lage-Wert: in der guten Lage violett (die drei besten kräftig), knapp außerhalb grau
+      // Rangfolge fürs Auge: die 3 besten groß und kräftig, die nächsten 7 klein mit Zahl, der Rest als blasse Punkte
+      // (Zahl erst beim Hineinzoomen), knapp außerhalb als graue Punkte. Wichtige liegen immer obenauf.
       const rank = new Map([...stays.keys()].filter((i) => !stays[i].out).sort((a, b) => stays[b].match - stays[a].match).map((i, r) => [i, r]));
       pinsRef.current = stays.map((s, i) => {
         const el = document.createElement("button");
         el.type = "button";
-        el.className = s.out ? "sc-pin sc-pin-out" : (rank.get(i) ?? 99) < 3 ? "sc-pin sc-pin-good" : "sc-pin";
+        const r = rank.get(i) ?? 999;
+        const tier = s.out ? "sc-pin sc-pin-dot sc-pin-out" : r < 3 ? "sc-pin sc-pin-best" : r < 10 ? "sc-pin sc-pin-mid" : "sc-pin sc-pin-dot";
+        el.className = tier;
+        el.dataset.tier = tier;
+        el.dataset.z = String(s.out ? 1 : r < 3 ? 40 - r : r < 10 ? 20 : 10);
+        el.style.zIndex = el.dataset.z;
         el.textContent = String(s.match);
         el.setAttribute("aria-label", `${s.name}, Lage ${s.match}${s.out ? ", knapp außerhalb der guten Lage" : ""}`);
         el.addEventListener("click", (e) => {
@@ -119,6 +130,8 @@ export default function StayMap({
     pinsRef.current.forEach((el, i) => {
       el.style.display = sel === null || sel === i ? "" : "none";
       el.classList.toggle("sc-pin-top", sel === i);
+      if (sel === i) el.style.zIndex = "60";
+      else if (el.dataset.z) el.style.zIndex = el.dataset.z;
     });
     const s = sel !== null ? stays[sel] : null;
     if (s) m.flyTo({ center: [s.lon, s.lat], zoom: 16, padding: { top: 40, bottom: 150, left: 0, right: 0 }, duration: 900 });
