@@ -261,3 +261,41 @@ export function bestSpotsIn(
   }
   return out;
 }
+
+// ---------- Leuchtende Stellen als Kreise (für fremde Karten, die keine Flächen können) ----------
+
+/**
+ * Fasst die leuchtenden Rasterpunkte in der Nähe zu wenigen Kreisen zusammen (benachbarte Punkte = eine Gruppe).
+ * Ergebnis: Mittelpunkt und Radius in Metern, die größten Gruppen zuerst.
+ */
+export function glowCircles(zones: ZonePoint[], center: { lat: number; lon: number }, maxDist = 2500, step = 350, max = 12) {
+  const near = zones.filter((z) => dist(z, center) <= maxDist);
+  const groups: ZonePoint[][] = [];
+  const seen = new Set<number>();
+  for (let i = 0; i < near.length; i++) {
+    if (seen.has(i)) continue;
+    const g: ZonePoint[] = [];
+    const queue = [i];
+    seen.add(i);
+    while (queue.length) {
+      const j = queue.pop()!;
+      g.push(near[j]);
+      for (let k = 0; k < near.length; k++) {
+        if (!seen.has(k) && dist(near[j], near[k]) <= step * 1.5) {
+          seen.add(k);
+          queue.push(k);
+        }
+      }
+    }
+    groups.push(g);
+  }
+  return groups
+    .sort((a, b) => b.length - a.length)
+    .slice(0, max)
+    .map((g) => {
+      const lat = g.reduce((s, c) => s + c.lat, 0) / g.length;
+      const lon = g.reduce((s, c) => s + c.lon, 0) / g.length;
+      const spread = Math.max(...g.map((c) => dist(c, { lat, lon })));
+      return { lat: Math.round(lat * 1e5) / 1e5, lon: Math.round(lon * 1e5) / 1e5, r: Math.round(Math.min(600, spread + step * 0.6)) };
+    });
+}

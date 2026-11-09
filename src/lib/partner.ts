@@ -67,6 +67,9 @@ export function stayMapUrl(o: {
   /** Eigene Pins (unsere Lage-Werte) auf derselben Karte */
   pois?: { lat: number; lng: number; name: string; desc?: string; url?: string }[];
   zoom?: number;
+  /** Kreise um die besten Spots (als Linien auf der Karte) */
+  circles?: { lat: number; lon: number; r: number }[];
+  origin?: string;
 }) {
   if (!partnerOn) return null;
   const p = new URLSearchParams({
@@ -96,6 +99,12 @@ export function stayMapUrl(o: {
     p.set("chpincolor", "5340f2");
     p.set("chpinfontcolor", "ffffff");
     p.set("hidemainmarker", "true");
+  }
+  if (o.circles?.length && o.origin) {
+    p.set("gpx", `${o.origin}/api/kreise?c=${o.circles.map((c) => `${c.lat},${c.lon},${c.r}`).join(";")}`);
+    p.set("gpxlinecolor", "8c7ff6");
+    p.set("gpxlinethickness", "4");
+    p.set("gpxlineopacity", "0.9");
   }
   return `https://www.stay22.com/embed/gm?${p}`;
 }

@@ -37,6 +37,7 @@ import { getTipsForDistrict } from "@/lib/tips";
 import { maxPriceFor, partnerOn } from "@/lib/partner";
 import { classCap, parseTrip, tripQuery } from "@/lib/trip";
 import StaysPanel from "@/components/StaysPanel";
+import { glowCircles } from "@/lib/zones";
 
 // Dynamisch durch Cookies/Suchparameter; Kartendaten-Abfragen werden 1 Tag zwischengespeichert.
 export const fetchCache = "default-cache";
@@ -182,6 +183,7 @@ export default async function KiezPage({
           lon: district.lng!,
           place: short,
           campaign: `kiez_${district.slug}`,
+          circles: glowCircles(zones, { lat: district.lat!, lon: district.lng! }, 2500),
           pois: shown.slice(0, 15).map((h) => ({ lat: h.lat, lng: h.lon, name: `Lage ${h.match}`, desc: `${h.name} · ${KIND_LABEL[h.kind] ?? "Unterkunft"}` })),
         }}
       >
@@ -207,6 +209,17 @@ export default async function KiezPage({
               budget={Boolean(band)}
             />
           )}
+          <div className="mt-3">
+            <KiezMap
+              points={shown.slice(0, 25).map((h, i) => ({ slug: `h${i}`, name: h.name, lat: h.lat, lng: h.lon, match: h.match }))}
+              highlight="h0"
+              center={[district.lng!, district.lat!]}
+              zoom={13.6}
+              height="h-56"
+              zones={zones}
+            />
+            <ZoneLegend personal={Boolean(resolved)} shown={zones.length > 0} />
+          </div>
           <ol className="card mt-3 px-3.5 py-1">
             {shown.slice(0, 25).map((h, i) => (
               <StayRow
@@ -230,19 +243,6 @@ export default async function KiezPage({
               />
             ))}
           </ol>
-          {!partnerOn && (
-          <div className="mt-5">
-            <KiezMap
-              points={shown.slice(0, 25).map((h, i) => ({ slug: `h${i}`, name: h.name, lat: h.lat, lng: h.lon, match: h.match }))}
-              highlight="h0"
-              center={[district.lng!, district.lat!]}
-              zoom={13.6}
-              height="h-64"
-              zones={zones}
-            />
-            <ZoneLegend personal={Boolean(resolved)} shown={zones.length > 0} />
-          </div>
-          )}
           <p className="mt-3 text-[13px] font-semibold text-muted">
             Sortiert nach Lage (Unterkünfte und Umgebung aus OpenStreetMap). „Preise hier“ zeigt freie Zimmer in deinem Budget rund um die Unterkunft.
             {hiddenUnknown > 0 ? ` ${hiddenUnknown} Unterkünfte ohne bekannte Preisklasse sind ausgeblendet.` : ""}

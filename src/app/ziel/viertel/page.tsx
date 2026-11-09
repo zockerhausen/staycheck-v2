@@ -36,6 +36,7 @@ import { areaPhoto } from "@/lib/photos";
 import { maxPriceFor, partnerOn } from "@/lib/partner";
 import { classCap, parseTrip, tripQuery } from "@/lib/trip";
 import StaysPanel from "@/components/StaysPanel";
+import { glowCircles } from "@/lib/zones";
 
 export const fetchCache = "default-cache";
 export const maxDuration = 120; // erste Berechnung einer Stadt kann dauern (läuft nach der Antwort weiter)
@@ -189,6 +190,7 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
           lon: vlon,
           place: name,
           campaign: `spot_${ziel.ort}_${name}`,
+          circles: glowCircles(zones, { lat: vlat, lon: vlon }, 2500),
           pois: shown.slice(0, 15).map((h) => ({ lat: h.lat, lng: h.lon, name: `Lage ${h.match}`, desc: `${h.name} · ${KIND_LABEL[h.kind] ?? "Unterkunft"}` })),
         }}
       >
@@ -214,6 +216,17 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
               budget={Boolean(band)}
             />
           )}
+          <div className="mt-3">
+            <KiezMap
+              points={shown.slice(0, 25).map((h, i) => ({ slug: `h${i}`, name: h.name, lat: h.lat, lng: h.lon, match: h.match }))}
+              highlight="h0"
+              center={[vlon, vlat]}
+              zoom={14}
+              height="h-56"
+              zones={zones}
+            />
+            <ZoneLegend personal={Boolean(profile)} shown={zones.length > 0} />
+          </div>
           <ol className="card mt-3 px-3.5 py-1">
             {shown.slice(0, 25).map((h, i) => (
               <StayRow
@@ -237,19 +250,6 @@ export default async function AutoViertelPage({ searchParams }: { searchParams: 
               />
             ))}
           </ol>
-          {!partnerOn && (
-          <div className="mt-5">
-            <KiezMap
-              points={shown.slice(0, 25).map((h, i) => ({ slug: `h${i}`, name: h.name, lat: h.lat, lng: h.lon, match: h.match }))}
-              highlight="h0"
-              center={[vlon, vlat]}
-              zoom={14}
-              height="h-64"
-              zones={zones}
-            />
-            <ZoneLegend personal={Boolean(profile)} shown={zones.length > 0} />
-          </div>
-          )}
           <p className="mt-3 text-[13px] font-semibold text-muted">
             Sortiert nach Lage. Tippe auf eine Unterkunft für Details; „Preise hier“ zeigt freie Zimmer in deinem Budget rund um die Unterkunft.
             {hiddenUnknown > 0 ? ` ${hiddenUnknown} Unterkünfte ohne bekannte Preisklasse sind ausgeblendet.` : ""}
