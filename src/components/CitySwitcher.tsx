@@ -119,7 +119,8 @@ export default function CitySwitcher({
               onClick={async () => {
                 close();
                 await clearTrip();
-                router.push("/");
+                router.replace("/");
+                router.refresh();
               }}
               className="mt-6 w-full py-2 text-center text-sm font-semibold text-faint"
             >

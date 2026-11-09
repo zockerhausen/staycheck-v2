@@ -7,6 +7,7 @@ import { getUser } from "@/lib/data";
 import Splash from "@/components/Splash";
 import InstallHint from "@/components/InstallHint";
 import PwaRegister from "@/components/PwaRegister";
+import AppStart from "@/components/AppStart";
 import "./globals.css";
 
 // Eine Schrift für alles: Geist – klar, modern, in kräftigen Schnitten (nie dünn)
@@ -53,6 +54,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <BottomNav loggedIn={Boolean(user)} />
         <InstallHint />
         <PwaRegister />
+        <AppStart />
       </body>
     </html>
   );
