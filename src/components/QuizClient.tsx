@@ -1,5 +1,6 @@
 "use client";
 
+import { canGoBack } from "@/components/BackButton";
 import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -120,7 +121,7 @@ export default function QuizClient({
     clearTimeout(timer.current);
     setHint("");
     setPicked([]);
-    if (step === 0) return router.back();
+    if (step === 0) return canGoBack() ? router.back() : router.push("/");
     // Antwort der vorigen (und der gerade angetippten) Frage zurücksetzen
     const prev = steps[Math.min(step - 1, total - 1)];
     setAnswers((a) => {

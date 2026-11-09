@@ -6,6 +6,7 @@ import { createPortal } from "react-dom";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Icon from "@/components/Icon";
 import { MAX_OPTIONS } from "@/lib/trip";
+import { markReplace } from "@/components/BackButton";
 import StayMap, { type StayPin } from "@/components/StayMap";
 import type { ZonePoint } from "@/lib/zones";
 
@@ -44,12 +45,29 @@ export default function StaysPanel({
   children: React.ReactNode;
 }) {
   const [sheet, setSheet] = useState(false);
-  const [sel, setSel] = useState<number | null>(null);
   const mapRef = useRef<HTMLDivElement>(null);
   const [pending, start] = useTransition();
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
+  // Gewählte Unterkunft steht in der Adresse (?wahl=…), ohne neuen Schritt im Verlauf: zurückkommen = gleiche Ansicht
+  const w = Number(params.get("wahl") ?? NaN);
+  const [sel, setSelState] = useState<number | null>(Number.isInteger(w) && w >= 0 && w < stays.length ? w : null);
+  function setSel(i: number | null) {
+    setSelState(i);
+    const u = new URL(window.location.href);
+    if (i === null) u.searchParams.delete("wahl");
+    else u.searchParams.set("wahl", String(i));
+    markReplace();
+    window.history.replaceState(window.history.state, "", u);
+  }
+  // Andere Liste (Filter, Reisedaten): Auswahl aufheben
+  const shownStays = useRef(stays);
+  useEffect(() => {
+    if (shownStays.current === stays) return;
+    shownStays.current = stays;
+    setSelState(null);
+  }, [stays]);
 
   // Antippen in der Liste: die Karte zeigt nur diese Unterkunft
   useEffect(() => {
@@ -62,7 +80,6 @@ export default function StaysPanel({
     window.addEventListener("sc-stay-select", on);
     return () => window.removeEventListener("sc-stay-select", on);
   }, []);
-  useEffect(() => setSel(null), [stays]);
 
   function save(next: { an: string; n: number; p: number; max: number }) {
     const q = new URLSearchParams(params.toString());
@@ -71,7 +88,9 @@ export default function StaysPanel({
     q.set("p", String(next.p));
     q.set("max", String(next.max));
     q.delete("typ");
+    q.delete("wahl");
     setSheet(false);
+    markReplace();
     start(() => router.replace(`${pathname}?${q}`, { scroll: false }));
   }
 
@@ -110,6 +129,8 @@ export default function StaysPanel({
               key={c.key}
               href={c.href}
               scroll={false}
+              replace
+              onClick={markReplace}
               aria-current={c.active ? "true" : undefined}
               className={`press shrink-0 rounded-full px-3.5 py-2 text-[13.5px] font-extrabold transition-colors ${c.active ? "bg-ink text-sand" : "bg-tan text-muted"}`}
             >

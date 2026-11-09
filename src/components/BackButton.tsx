@@ -27,18 +27,47 @@ function writeStack(s: string[]) {
   }
 }
 
+// Wie kam die nächste Adresse zustande? Zurück/Vor im Browser (popstate) oder nur ersetzt (Filter, Reiter, Reisedaten)
+let popped = false;
+let replacing = false;
+/** Vor einem Wechsel aufrufen, der keinen neuen Schritt im Verlauf anlegt (router.replace, history.replaceState) */
+export function markReplace() {
+  replacing = true;
+}
+
 function Tracker() {
   const pathname = usePathname();
   const search = useSearchParams().toString();
   useEffect(() => {
+    const on = () => (popped = true);
+    window.addEventListener("popstate", on);
+    return () => window.removeEventListener("popstate", on);
+  }, []);
+  useEffect(() => {
     const url = search ? `${pathname}?${search}` : pathname;
     const s = readStack();
-    if (s[s.length - 1] === url) return;
-    if (s[s.length - 2] === url) s.pop(); // Schritt zurück
-    else s.push(url);
+    if (popped) {
+      // Zurück (oder Vor): bis zu dieser Seite kürzen; unbekannt = Vor
+      popped = false;
+      const i = s.lastIndexOf(url);
+      if (i >= 0) s.length = i + 1;
+      else s.push(url);
+    } else if (replacing || s[s.length - 1] === url) {
+      replacing = false;
+      if (s.length) s[s.length - 1] = url;
+      else s.push(url);
+    } else s.push(url);
     writeStack(s);
   }, [pathname, search]);
   return null;
+}
+
+/** Gibt es in diesem Tab eine vorherige Seite unserer App? (sonst würde „Zurück“ die App verlassen) */
+export function canGoBack(): boolean {
+  // Moderne Browser: echte Antwort vom Browser (nur Seiten derselben Website zählen)
+  const nav = (window as unknown as { navigation?: { currentEntry?: { index: number } } }).navigation;
+  if (nav?.currentEntry && typeof nav.currentEntry.index === "number") return nav.currentEntry.index > 0;
+  return readStack().length >= 2;
 }
 
 export function NavTracker() {
@@ -68,7 +97,7 @@ export default function BackButton({
       className={className}
       onClick={(e) => {
         if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
-        if (readStack().length >= 2) {
+        if (canGoBack()) {
           e.preventDefault();
           router.back();
         }

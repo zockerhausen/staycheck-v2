@@ -1,10 +1,25 @@
 "use client";
 
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { markReplace } from "@/components/BackButton";
 
-/** Reiter mit gleitendem Knopf (wie bei Revolut). Inhalte kommen fertig vom Server, hier wird nur umgeschaltet. */
+/**
+ * Reiter mit gleitendem Knopf (wie bei Revolut). Inhalte kommen fertig vom Server, hier wird nur umgeschaltet.
+ * Der gewählte Reiter steht in der Adresse (?ansicht=…), ohne neuen Schritt im Verlauf: Wer zurückkommt, landet im selben Reiter.
+ */
 export default function ViewTabs({ tabs }: { tabs: { key: string; label: string; content: React.ReactNode }[] }) {
-  const [active, setActive] = useState(0);
+  const params = useSearchParams();
+  const fromUrl = tabs.findIndex((t) => t.key === params.get("ansicht"));
+  const [active, setActive] = useState(fromUrl >= 0 ? fromUrl : 0);
+  function choose(i: number) {
+    setActive(i);
+    const u = new URL(window.location.href);
+    if (i === 0) u.searchParams.delete("ansicht");
+    else u.searchParams.set("ansicht", tabs[i].key);
+    markReplace();
+    window.history.replaceState(window.history.state, "", u);
+  }
   return (
     <div>
       <div className="sticky top-0 z-10 -mx-4 mt-[22px] bg-sand/90 px-4 py-2.5 backdrop-blur-xl">
@@ -21,7 +36,7 @@ export default function ViewTabs({ tabs }: { tabs: { key: string; label: string;
               role="tab"
               aria-selected={active === i}
               onClick={() => {
-                setActive(i);
+                choose(i);
                 try {
                   navigator.vibrate?.(8);
                 } catch {
