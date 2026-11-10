@@ -14,5 +14,5 @@ export async function GET(request: Request) {
     if (!error) await syncProfileFromCookie();
     if (!error) return NextResponse.redirect(`${origin}${/^\/(?![\/\\])[^\s\\]*$/.test(next) ? next : "/"}`);
   }
-  return NextResponse.redirect(`${origin}/login?fehler=bestaetigung`);
+  return NextResponse.redirect(`${origin}/login?fehler=${next === "/passwort" ? "link" : "bestaetigung"}`);
 }

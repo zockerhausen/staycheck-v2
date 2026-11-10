@@ -25,12 +25,56 @@ export async function login(_prev: FormState, formData: FormData): Promise<FormS
   redirect(safeNext(formData.get("next")));
 }
 
-export async function signup(_prev: FormState, formData: FormData): Promise<FormState> {
-  const supabase = await createClient();
-  // Nicht den „Origin“-Header nehmen (von außen fälschbar), sondern die Adresse, unter der die App läuft
+/** Adresse, unter der die App läuft. Nicht der „Origin“-Header (von außen fälschbar). */
+async function appOrigin() {
   const h = await headers();
   const host = h.get("x-forwarded-host") ?? h.get("host") ?? "";
-  const origin = /^[a-z0-9.-]+(:\d+)?$/i.test(host) ? `https://${host}` : "";
+  return /^[a-z0-9.-]+(:\d+)?$/i.test(host) ? `https://${host}` : "";
+}
+
+/** Anmelden mit Google oder Apple: leitet zum Anbieter weiter, zurück geht es über /auth/callback. */
+export async function oauthLogin(formData: FormData) {
+  const provider = String(formData.get("provider") ?? "");
+  if (provider !== "google" && provider !== "apple") redirect("/login");
+  const supabase = await createClient();
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider,
+    options: { redirectTo: `${await appOrigin()}/auth/callback?next=${encodeURIComponent(safeNext(formData.get("next")))}` },
+  });
+  if (error || !data.url) redirect("/login?fehler=anbieter");
+  redirect(data.url);
+}
+
+/** Passwort vergessen: Link per E-Mail. Die Antwort ist immer gleich, damit niemand prüfen kann, welche Adressen ein Konto haben. */
+export async function requestPasswordReset(_prev: FormState, formData: FormData): Promise<FormState> {
+  const email = String(formData.get("email") ?? "").trim();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 200) return { error: "Gib deine E-Mail-Adresse ein." };
+  const supabase = await createClient();
+  await supabase.auth.resetPasswordForEmail(email, { redirectTo: `${await appOrigin()}/auth/callback?next=/passwort` }).catch(() => undefined);
+  return { message: "Falls es ein Konto mit dieser Adresse gibt, ist eine E-Mail mit einem Link unterwegs. Schau auch im Spam-Ordner nach." };
+}
+
+/** Neues Passwort setzen (nach dem Link aus der E-Mail oder angemeldet im Konto). */
+export async function setNewPassword(_prev: FormState, formData: FormData): Promise<FormState> {
+  const password = String(formData.get("password") ?? "");
+  if (password.length < 8) return { error: "Das Passwort braucht mindestens 8 Zeichen." };
+  if (password !== String(formData.get("password2") ?? "")) return { error: "Die beiden Passwörter sind nicht gleich." };
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/login?fehler=link");
+  const { error } = await supabase.auth.updateUser({ password });
+  if (error) {
+    if (/different|same/i.test(error.message)) return { error: "Nimm ein anderes Passwort als bisher." };
+    return { error: "Das Passwort ist zu schwach. Nimm mindestens 8 Zeichen mit Zahlen oder Sonderzeichen." };
+  }
+  redirect("/konto?passwort=neu");
+}
+
+export async function signup(_prev: FormState, formData: FormData): Promise<FormState> {
+  const supabase = await createClient();
+  const origin = await appOrigin();
   const password = String(formData.get("password") ?? "");
   if (password.length < 8) return { error: "Das Passwort braucht mindestens 8 Zeichen." };
   // Konto erst ab 16 (DSGVO Art. 8, in Deutschland 16 Jahre)

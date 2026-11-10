@@ -9,7 +9,8 @@ import LegalLinks from "@/components/LegalLinks";
 
 export const dynamic = "force-dynamic";
 
-export default async function KontoPage() {
+export default async function KontoPage({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
+  const changed = (await searchParams).passwort === "neu";
   const user = await getUser();
   if (!user) redirect("/login?next=/konto");
 
@@ -19,7 +20,12 @@ export default async function KontoPage() {
         <Icon name="user" size={30} />
       </span>
       <h1 className="mega mt-3 text-[2.1rem]">Dein Konto</h1>
-      <p className="mt-1 text-muted">{user.email}</p>
+      <p className="mt-1 text-muted [overflow-wrap:anywhere]">{user.email}</p>
+      {changed && (
+        <p className="mt-4 rounded-2xl bg-tan p-3 text-sm font-semibold" role="status">
+          Dein neues Passwort ist gespeichert.
+        </p>
+      )}
 
       <section className="mt-6">
         <h2 className="mb-2 text-sm font-extrabold text-muted">Darstellung</h2>
@@ -35,6 +41,9 @@ export default async function KontoPage() {
         </Link>
         <Link href="/hilfe" className="btn-chunky btn-chunky-light w-full">
           <Icon name="tip" size={22} /> Hilfe und Kontakt
+        </Link>
+        <Link href="/passwort" className="btn-chunky btn-chunky-light w-full">
+          <Icon name="safety" size={22} /> Passwort ändern
         </Link>
         <form action={signout}>
           <button className="w-full py-3 text-sm font-semibold text-muted">Abmelden</button>

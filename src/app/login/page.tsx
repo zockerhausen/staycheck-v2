@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { getUser } from "@/lib/data";
 import AuthForm from "@/components/AuthForm";
+import { enabledProviders } from "@/lib/auth-providers";
 import Icon from "@/components/Icon";
 import Link from "next/link";
 import ThemeSwitch from "@/components/ThemeSwitch";
@@ -16,6 +17,7 @@ export default async function LoginPage({
   const params = await searchParams;
   const next = params.next && /^\/(?![\/\\])[^\s\\]*$/.test(params.next) ? params.next : "/";
   if (await getUser()) redirect(next);
+  const providers = await enabledProviders();
 
   return (
     <div className="pt-4">
@@ -29,7 +31,12 @@ export default async function LoginPage({
           Der Bestätigungslink hat nicht funktioniert. Melde dich an oder registriere dich erneut.
         </p>
       )}
-      <AuthForm next={next} defaultMode={params.next ? "signup" : "login"} />
+      {(params.fehler === "anbieter" || params.fehler === "link") && (
+        <p className="mt-4 rounded-2xl bg-peach p-3 text-sm font-semibold text-peach-ink">
+          {params.fehler === "link" ? "Der Link ist abgelaufen oder wurde schon benutzt. Fordere einen neuen an." : "Die Anmeldung beim Anbieter hat nicht geklappt. Versuch es nochmal oder nimm E-Mail und Passwort."}
+        </p>
+      )}
+      <AuthForm next={next} defaultMode={params.next ? "signup" : "login"} providers={providers} />
       <p className="mt-5 text-center text-xs leading-relaxed text-muted">
         Mit dem Konto gelten unsere{" "}
         <Link href="/nutzungsbedingungen" className="underline">

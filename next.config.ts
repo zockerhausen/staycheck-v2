@@ -20,7 +20,7 @@ const securityHeaders = [
       "frame-src 'none'", // keine fremden Karten oder Fenster eingebettet
       "frame-ancestors 'none'",
       "base-uri 'self'",
-      "form-action 'self'",
+      "form-action 'self' https://yxwnkvvhwlnsvnjdxdle.supabase.co https://accounts.google.com https://appleid.apple.com",
     ].join("; "),
   },
 ];
