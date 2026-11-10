@@ -201,7 +201,7 @@ export default function ProfileEditor({
         {pending ? "Speichere …" : saved ? "Gespeichert" : "Profil speichern"}
       </button>
       <Link href="/quiz" className="flex items-center justify-center gap-1.5 py-2 text-sm font-semibold text-muted">
-        <Icon name="refresh" size={16} /> Lieber das Quiz nochmal machen
+        <Icon name="refresh" size={16} /> Reisetyp neu wählen
       </Link>
     </div>
   );

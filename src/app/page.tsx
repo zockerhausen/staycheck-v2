@@ -12,7 +12,7 @@ import LegalLinks from "@/components/LegalLinks";
 import CitySwitcher from "@/components/CitySwitcher";
 import KiezMap from "@/components/KiezMap";
 import ThemeToggle from "@/components/ThemeToggle";
-import ProfileBar from "@/components/ProfileBar";
+import ProfileTuner from "@/components/ProfileTuner";
 import HomePoster from "@/components/HomePoster";
 import { traitsOf } from "@/lib/character";
 import MapStage from "@/components/MapStage";
@@ -147,7 +147,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
   return (
     <div className="fade-up">
       <HomePoster city={city.name} verified={verified} loggedIn={Boolean(user)} best={best} personal={Boolean(weights)} />
-      <ProfileBar weights={weights} extras={extras} quizHref={`/quiz?stadt=${city.slug}`} />
+      <ProfileTuner weights={weights} base={DEFAULT_WEIGHTS} extras={extras} quizHref={`/quiz?stadt=${city.slug}`} />
 
       <h1 className="mt-6 text-[22px] font-extrabold leading-tight tracking-[-0.03em] [overflow-wrap:anywhere]">Wo schläfst du in {city.name}?</h1>
       <MapStage id="karte">

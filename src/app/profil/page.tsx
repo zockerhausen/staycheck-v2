@@ -33,9 +33,9 @@ export default async function ProfilPage() {
         <div className="mt-8 rounded-3xl border border-dashed border-raised p-8 text-center">
           <Icon name="star" size={48} className="mx-auto text-sun" />
           <p className="mt-2 font-semibold">Noch kein Profil</p>
-          <p className="mt-1 text-sm text-muted">Mach einmal das Quiz, dann kannst du es hier anpassen.</p>
+          <p className="mt-1 text-sm text-muted">Wähl einmal deinen Reisetyp, dann kannst du hier alles anpassen.</p>
           <Link href="/quiz" className="btn-chunky mt-5 w-full">
-            Quiz starten
+            Reisetyp wählen
           </Link>
         </div>
       )}

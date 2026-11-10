@@ -215,7 +215,7 @@ export default async function DuellPage({ searchParams }: { searchParams: Promis
         <p className="mt-4 text-center text-sm text-muted">
           Tipp:{" "}
           <Link href={active ? `/quiz?stadt=${active.slug}` : `/quiz?${zq}`} className="font-semibold text-sun-soft underline underline-offset-4">
-            Mach zuerst das Quiz
+            Wähl zuerst deinen Reisetyp
           </Link>
           , dann entscheidet dein persönlicher Match das Duell.
         </p>

@@ -36,7 +36,7 @@ export default async function CheckPage({
           </span>
           <span className="min-w-0 flex-1">
             <span className="block text-[15px] font-bold">Noch persönlicher?</span>
-            <span className="block text-[13px] text-muted">Mach das kurze Quiz, dann bewerten wir nach deinen Wünschen.</span>
+            <span className="block text-[13px] text-muted">Wähl kurz deinen Reisetyp, dann bewerten wir nach deinen Wünschen.</span>
           </span>
           <Icon name="chevron" size={16} className="text-faint" />
         </Link>

@@ -60,7 +60,7 @@ export default function DatenschutzPage() {
         <p>Wir setzen nur Cookies, die für die Funktionen nötig sind, die du selbst nutzt. Deshalb gibt es kein Cookie-Banner (§ 25 Abs. 2 TDDDG).</p>
         <ul className="list-disc space-y-1.5 pl-5">
           <li>
-            <b className="text-ink">sc_profil, sc_extra, sc_stadt, sc_ziel:</b> dein Reise-Profil aus dem Quiz und dein gewähltes Reiseziel, damit der Match für
+            <b className="text-ink">sc_profil, sc_extra, sc_stadt, sc_ziel:</b> dein Reise-Profil (Reisetyp und Regler) und dein gewähltes Reiseziel, damit der Match für
             dich stimmt. Bis zu 1 Jahr.
           </li>
           <li>
@@ -126,7 +126,7 @@ export default function DatenschutzPage() {
       </Section>
 
       <Section title="9. Keine Pflicht">
-        <p>Du musst uns keine Daten geben. Ohne Konto funktionieren Suche, Quiz und Lage-Check trotzdem, nur Merken auf mehreren Geräten geht dann nicht.</p>
+        <p>Du musst uns keine Daten geben. Ohne Konto funktionieren Suche, Reise-Profil und Lage-Check trotzdem, nur Merken auf mehreren Geräten geht dann nicht.</p>
       </Section>
     </LegalPage>
   );

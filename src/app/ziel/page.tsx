@@ -12,7 +12,7 @@ import { pageRateLimit } from "@/lib/ratelimit-page";
 import Icon from "@/components/Icon";
 import DistrictExplorer from "@/components/DistrictExplorer";
 import KiezMap from "@/components/KiezMap";
-import ProfileBar from "@/components/ProfileBar";
+import ProfileTuner from "@/components/ProfileTuner";
 import HomePoster, { type PosterBest } from "@/components/HomePoster";
 import { traitsOf } from "@/lib/character";
 import MapStage from "@/components/MapStage";
@@ -140,7 +140,7 @@ export default async function ZielPage({ searchParams }: { searchParams: Promise
         </div>
       ) : (
         <>
-          <ProfileBar weights={weights} extras={extras} quizHref={`/quiz?${zq}`} />
+          <ProfileTuner weights={weights} base={DEFAULT_WEIGHTS} extras={extras} quizHref={`/quiz?${zq}`} />
 
           <h1 className="mt-6 text-[22px] font-extrabold leading-tight tracking-[-0.03em] [overflow-wrap:anywhere]">Wo schläfst du in {ziel.ort}?</h1>
           <MapStage id="karte">

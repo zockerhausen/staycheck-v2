@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { applyStayCheckTheme, MAP_STYLE } from "@/lib/mapTheme";
@@ -44,6 +44,66 @@ function MapCanvas({
   const ref = useRef<HTMLDivElement>(null);
   const onSelectRef = useRef(onSelect);
   onSelectRef.current = onSelect;
+  // Daten getrennt von der Karte: ändern sich Punkte oder Spots (z. B. beim Nachjustieren des Profils),
+  // wird nur neu gezeichnet. Die Karte selbst bleibt stehen, nichts flackert.
+  const dataRef = useRef({ points, highlight, zones });
+  dataRef.current = { points, highlight, zones };
+  const dataKey = useMemo(() => JSON.stringify([points, highlight, zones]), [points, highlight, zones]);
+  const live = useRef<{ map: import("maplibre-gl").Map; lib: typeof import("maplibre-gl"); markers: import("maplibre-gl").Marker[]; styled: boolean } | null>(null);
+
+  const select = (slug: string) => {
+    if (onSelectRef.current) onSelectRef.current(slug);
+    else document.getElementById(`kiez-${slug}`)?.scrollIntoView({ behavior: "smooth", inline: "start", block: "nearest" });
+  };
+
+  const bounds = (pts: MapPoint[]): [[number, number], [number, number]] => [
+    [Math.min(...pts.map((p) => p.lng)), Math.min(...pts.map((p) => p.lat))],
+    [Math.max(...pts.map((p) => p.lng)), Math.max(...pts.map((p) => p.lat))],
+  ];
+  const fitPadding = { top: flush ? 70 : 50, bottom: flush ? 80 : 50, left: 50, right: 50 };
+
+  /** Leuchtende Spots und Namen (Kartenebenen) neu zeichnen */
+  const drawLayers = () => {
+    const l = live.current;
+    if (!l) return;
+    const m = l.map;
+    const d = dataRef.current;
+    try {
+      for (const id of ["sc-zones", "sc-label-dots", "sc-label-text"]) if (m.getLayer(id)) m.removeLayer(id);
+      for (const id of ["sc-zones", "sc-labels"]) if (m.getSource(id)) m.removeSource(id);
+    } catch {
+      // weiter
+    }
+    if (d.zones?.length) addZones(m, d.zones, zoneStep, center[1]);
+    // Namen (Viertel-Übersicht) als Kartenbeschriftung: überlappende Namen blendet die Karte selbst aus,
+    // statt dass sich Kästchen stapeln. Zahlen (Match) bleiben Knöpfe.
+    addLabels(m, d.points.filter((p) => p.label && p.slug !== d.highlight), select);
+  };
+
+  /** Knöpfe mit Zahl (Match) neu setzen */
+  const drawMarkers = () => {
+    const l = live.current;
+    if (!l) return;
+    const d = dataRef.current;
+    for (const mk of l.markers) mk.remove();
+    l.markers = [];
+    const max = Math.max(...d.points.map((p) => p.match), 1);
+    const min = Math.min(...d.points.map((p) => p.match), max);
+    // Rang in der Stadt: die besten 3 kräftig, der Rest dezent (statt vieler fast gleicher Zahlen)
+    const rankOf = new Map([...d.points].filter((p) => !p.label || p.slug === d.highlight).sort((a, b) => b.match - a.match).map((p, i) => [p.slug, i]));
+    for (const p of d.points) {
+      if (p.label && p.slug !== d.highlight) continue;
+      const isTop = p.slug === d.highlight;
+      const rank = rankOf.get(p.slug) ?? 99;
+      const el = document.createElement("button");
+      el.type = "button";
+      el.setAttribute("aria-label", p.label ? p.name : `${p.name}, Platz ${rank + 1}, ${p.match}% Match`);
+      el.className = isTop ? "sc-pin sc-pin-top" : rank < 3 && max > min ? "sc-pin sc-pin-good" : max > min ? "sc-pin sc-pin-dim" : "sc-pin";
+      el.textContent = p.label ?? `${p.match}`;
+      el.addEventListener("click", () => select(p.slug));
+      l.markers.push(new l.lib.Marker({ element: el }).setLngLat([p.lng, p.lat]).addTo(l.map));
+    }
+  };
 
   useEffect(() => {
     if (!ref.current) return;
@@ -74,17 +134,9 @@ function MapCanvas({
         maxPitch: 60,
       });
       map = m;
-      if (fit && points.length > 1) {
-        const lons = points.map((p) => p.lng);
-        const lats = points.map((p) => p.lat);
-        m.fitBounds(
-          [
-            [Math.min(...lons), Math.min(...lats)],
-            [Math.max(...lons), Math.max(...lats)],
-          ],
-          { padding: { top: flush ? 70 : 50, bottom: flush ? 80 : 50, left: 50, right: 50 }, duration: 0, maxZoom: 12.6 },
-        );
-      }
+      live.current = { map: m, lib: maplibregl, markers: [], styled: false };
+      const pts = dataRef.current.points;
+      if (fit && pts.length > 1) m.fitBounds(bounds(pts), { padding: fitPadding, duration: 0, maxZoom: 12.6 });
       if (full) m.addControl(new maplibregl.NavigationControl({ showCompass: false }), "bottom-right");
       // Quellenangabe als kleines „i“ statt eines breiten Balkens über der Karte (antippen zeigt den Text)
       m.once("load", () => ref.current?.querySelector(".maplibregl-ctrl-attrib")?.classList.remove("maplibregl-compact-show"));
@@ -94,43 +146,33 @@ function MapCanvas({
       m.on("remove", () => window.removeEventListener("sc-theme", onTheme));
       m.on("style.load", () => {
         applyStayCheckTheme(m, isDarkNow());
-        if (zones?.length) addZones(m, zones, zoneStep, center[1]);
+        if (live.current?.map === m) live.current.styled = true;
+        drawLayers();
       });
-
-      const max = Math.max(...points.map((p) => p.match), 1);
-      const min = Math.min(...points.map((p) => p.match), max);
-
-      const select = (slug: string) => {
-        if (onSelectRef.current) onSelectRef.current(slug);
-        else document.getElementById(`kiez-${slug}`)?.scrollIntoView({ behavior: "smooth", inline: "start", block: "nearest" });
-      };
-      // Namen (Viertel-Übersicht) als Kartenbeschriftung: überlappende Namen blendet die Karte selbst aus,
-      // statt dass sich Kästchen stapeln. Zahlen (Match) bleiben Knöpfe.
-      const labeled = points.filter((p) => p.label && p.slug !== highlight);
-      m.on("style.load", () => addLabels(m, labeled, select));
-
-      // Rang in der Stadt: die besten 3 kräftig, der Rest dezent (statt vieler fast gleicher Zahlen)
-      const rankOf = new Map([...points].filter((p) => !p.label || p.slug === highlight).sort((a, b) => b.match - a.match).map((p, i) => [p.slug, i]));
-      for (const p of points) {
-        if (p.label && p.slug !== highlight) continue;
-        const isTop = p.slug === highlight;
-        const rank = rankOf.get(p.slug) ?? 99;
-        const el = document.createElement("button");
-        el.type = "button";
-        el.setAttribute("aria-label", p.label ? p.name : `${p.name}, Platz ${rank + 1}, ${p.match}% Match`);
-        el.className = isTop ? "sc-pin sc-pin-top" : rank < 3 && max > min ? "sc-pin sc-pin-good" : max > min ? "sc-pin sc-pin-dim" : "sc-pin";
-        el.textContent = p.label ?? `${p.match}`;
-        el.addEventListener("click", () => select(p.slug));
-        new maplibregl.Marker({ element: el }).setLngLat([p.lng, p.lat]).addTo(m);
-      }
+      drawMarkers();
     });
 
     return () => {
       cancelled = true;
+      live.current = null;
       map?.remove();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [points, highlight, zones, full, fit]);
+  }, [full]);
+
+  // Neue Daten: nur neu zeichnen und sanft auf den neuen Ausschnitt fahren
+  const firstKey = useRef(dataKey);
+  useEffect(() => {
+    if (firstKey.current === dataKey) return;
+    firstKey.current = dataKey;
+    const l = live.current;
+    if (!l) return;
+    drawMarkers();
+    if (l.styled) drawLayers();
+    const pts = dataRef.current.points;
+    if (fit && pts.length > 1) l.map.fitBounds(bounds(pts), { padding: fitPadding, duration: 700, maxZoom: 12.6 });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dataKey]);
 
   return <div ref={ref} className={`${height} w-full overflow-hidden bg-paper ${flush ? "sc-flush" : ""} ${full || flush ? "" : "rounded-3xl"}`} />;
 }
@@ -246,6 +288,8 @@ export function addZones(m: import("maplibre-gl").Map, zones: ZonePoint[], step:
   }
 }
 
+const labelHandlers = new WeakSet<object>();
+
 function addLabels(m: import("maplibre-gl").Map, points: MapPoint[], select: (slug: string) => void) {
   if (!points.length) return;
   try {
@@ -281,6 +325,9 @@ function addLabels(m: import("maplibre-gl").Map, points: MapPoint[], select: (sl
       },
       paint: { "text-color": isDarkNow() ? "#f3f1ff" : "#17133a", "text-halo-color": isDarkNow() ? "#0f0c24" : "#ffffff", "text-halo-width": 2 },
     });
+    // Nur einmal je Karte anmelden (die Ebenen werden beim Nachjustieren neu gezeichnet)
+    if (labelHandlers.has(m)) return;
+    labelHandlers.add(m);
     for (const id of ["sc-label-dots", "sc-label-text"]) {
       m.on("click", id, (e) => {
         const slug = e.features?.[0]?.properties?.slug;

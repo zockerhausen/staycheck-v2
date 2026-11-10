@@ -152,12 +152,14 @@ export type Persona = { name: string; text: string; icon: IconName };
 export function persona(weights: Weights, extras: Extras): Persona {
   const w = (k: string) => weights[k] ?? 0;
   // Hauptwort: stärkster Zug
+  const nomad = extras.items.includes("cafe") && w("quiet") >= 4 && w("food") >= 4 && w("nightlife") <= 2;
   const mains: { ok: boolean; name: string; text: string; icon: IconName; score: number }[] = [
+    { ok: nomad, name: "Digital Nomad", text: "Du arbeitest unterwegs", icon: "cup", score: 6 },
     { ok: w("nightlife") >= 4, name: "Nachteule", text: "Du willst abends raus", icon: "nightlife", score: w("nightlife") + 0.3 },
     { ok: w("food") >= 5, name: "Foodie", text: "Du reist fürs Essen", icon: "food", score: w("food") },
     { ok: w("nature") >= 4, name: "Naturkind", text: "Du brauchst Grün und Wasser", icon: "nature", score: w("nature") },
     { ok: w("quiet") >= 4 && w("nightlife") <= 2, name: "Ruhesucher:in", text: "Du willst gut schlafen", icon: "quiet", score: w("quiet") },
-    { ok: w("transit") >= 5, name: "Stadtentdecker:in", text: "Du willst schnell überall hin", icon: "transit", score: w("transit") - 0.2 },
+    { ok: w("transit") >= 5, name: "Entdecker:in", text: "Du willst schnell überall hin", icon: "transit", score: w("transit") - 0.2 },
     { ok: w("budget") >= 5, name: "Sparfuchs", text: "Du willst wenig zahlen", icon: "budget", score: w("budget") - 0.3 },
     { ok: w("safety") >= 5, name: "Auf-Nummer-sicher-Typ", text: "Du willst dich sicher fühlen", icon: "safety", score: w("safety") - 0.5 },
   ];
@@ -175,13 +177,13 @@ export function persona(weights: Weights, extras: Extras): Persona {
   };
   const werMod: Record<TravelWith, string> = { allein: "auf Solo-Tour", paar: "zu zweit", freunde: "mit Crew", business: "auf Geschäftsreise" };
   const ordered = [extras.must, ...extras.items].filter((k): k is ExtraKey => Boolean(k && extraMod[k]));
-  const mod = (ordered[0] && extraMod[ordered[0]]) || (extras.wer ? werMod[extras.wer] : "");
+  const mod = main.name === "Digital Nomad" ? (extras.wer ? werMod[extras.wer] : "") : (ordered[0] && extraMod[ordered[0]]) || (extras.wer ? werMod[extras.wer] : "");
   // Was sonst noch zählt, als kurze Satzteile
   const also: string[] = [];
   if (main.name !== "Sparfuchs" && w("budget") >= 4) also.push("zahlst nicht gern viel");
   if (main.name !== "Ruhesucher:in" && w("quiet") >= 4) also.push("schläfst gern ruhig");
-  if (extras.items.includes("cafe")) also.push("arbeitest tagsüber gern im Café");
-  if (main.name !== "Stadtentdecker:in" && w("transit") >= 4) also.push("bist gern schnell mit der Bahn unterwegs");
+  if (main.name !== "Digital Nomad" && extras.items.includes("cafe")) also.push("arbeitest tagsüber gern im Café");
+  if (main.name !== "Entdecker:in" && w("transit") >= 4) also.push("bist gern schnell mit der Bahn unterwegs");
   const parts = also.slice(0, 2);
   const text = parts.length === 0 ? `${main.text}.` : parts.length === 1 ? `${main.text} und ${parts[0]}.` : `${main.text}, ${parts[0]} und ${parts[1]}.`;
   return { name: mod ? `${main.name} ${mod}` : main.name, text, icon: main.icon };

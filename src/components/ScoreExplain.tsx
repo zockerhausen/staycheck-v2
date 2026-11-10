@@ -69,7 +69,7 @@ export default function ScoreExplain({
         <p className="pb-1 pt-3 text-[14px] font-semibold leading-relaxed text-muted">
           {personal
             ? "Der Score ist der Durchschnitt aller Werte, gewichtet nach deinem Reise-Profil. Was dir wichtig ist, zählt mehr."
-            : "Der Score ist der Durchschnitt aller Werte mit einer Standard-Gewichtung. Mit dem Quiz rechnen wir nach deinen Wünschen."}
+            : "Der Score ist der Durchschnitt aller Werte mit einer Standard-Gewichtung. Wähl deinen Reisetyp, dann rechnen wir nach deinen Wünschen."}
           {Object.values(details).some((d) => d.web) && " Wo der Reiseführer Wikivoyage etwas dazu sagt, zählt er höchstens zur Hälfte mit. Tippe auf einen Wert für die Quellen."}
         </p>
         {capped !== null && (

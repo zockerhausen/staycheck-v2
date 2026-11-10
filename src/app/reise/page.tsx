@@ -24,7 +24,7 @@ export default async function ReisePage() {
         <p className="mt-2 text-muted">
           {weights
             ? "Wir nutzen dein gespeichertes Reise-Profil. Wähl einfach die Stadt."
-            : "Wähl deine Stadt. Danach kommt ein kurzes Quiz, das du nur einmal machst."}
+            : "Wähl deine Stadt. Danach wählst du kurz deinen Reisetyp, das machst du nur einmal."}
         </p>
       </div>
 
@@ -72,7 +72,7 @@ export default async function ReisePage() {
             ))}
           </ul>
           <Link href="/quiz" className="mt-4 flex items-center justify-center gap-1.5 text-sm font-semibold text-muted">
-            <Icon name="refresh" size={16} /> Quiz nochmal machen
+            <Icon name="refresh" size={16} /> Reisetyp neu wählen
           </Link>
         </section>
       )}

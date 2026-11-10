@@ -244,7 +244,7 @@ export default async function KiezPage({
           <Link href={`/quiz?stadt=${district.city}`} className="press card flex items-center justify-between gap-3 !rounded-[24px] px-4 py-3.5 text-[15px] font-extrabold">
             Passt das zu mir?
             <span className="flex items-center gap-1 text-sun-soft">
-              Quiz in 30 Sek. <Icon name="chevron" size={14} />
+              Reisetyp wählen <Icon name="chevron" size={14} />
             </span>
           </Link>
         )}
