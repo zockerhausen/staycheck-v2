@@ -7,6 +7,7 @@ import type { Criterion, Weights } from "@/lib/data";
 import { CRITERION_ICON } from "@/lib/icons";
 import Icon from "@/components/Icon";
 import { storeProfile } from "@/app/actions";
+import SmoothSlider from "@/components/SmoothSlider";
 import { BAND_TEXT } from "@/lib/price";
 import { EXTRAS, NOGOS, persona, type ExtraKey, type Extras, type NoGo, type TravelWith } from "@/lib/profile";
 
@@ -162,26 +163,22 @@ export default function ProfileEditor({
       {criteria.map((c) => {
         const v = weights[c.key] ?? 0;
         return (
-          <label key={c.key} className="block rounded-2xl bg-paper p-4">
+          <div key={c.key} className="rounded-2xl bg-paper px-4 pb-1.5 pt-4">
             <span className="flex items-center gap-3">
               <Icon name={CRITERION_ICON[c.key]} size={22} />
               <span className="flex-1 font-semibold">{c.label}</span>
               <span className={`text-sm font-semibold ${v === 0 ? "text-faint" : "text-muted"}`}>{LEVELS[v]}</span>
             </span>
-            <input
-              type="range"
-              min={0}
-              max={5}
-              step={1}
+            <SmoothSlider
               value={v}
-              aria-label={c.label}
-              onChange={(e) => {
+              label={c.label}
+              valueText={(x) => LEVELS[x]}
+              onChange={(x) => {
                 setSaved(false);
-                setWeights((w) => ({ ...w, [c.key]: Number(e.target.value) }));
+                setWeights((w) => ({ ...w, [c.key]: x }));
               }}
-              className="mt-3 w-full"
             />
-          </label>
+          </div>
         );
       })}
 

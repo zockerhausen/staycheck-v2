@@ -1036,3 +1036,84 @@ body {
 .sp.sp-sel .sp-stick {
   height: 30px;
 }
+
+/* ---------- Weicher Regler (SmoothSlider): folgt dem Finger, rastet federnd ein ---------- */
+.sc-slider {
+  --thumb: 28px;
+  position: relative;
+  height: 44px; /* Tippfläche wie von Apple empfohlen */
+  width: 100%;
+  cursor: grab;
+  touch-action: pan-y; /* hoch/runter scrollt die Seite, seitlich schiebt den Regler */
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+}
+.sc-slider-track {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 6px;
+  margin-top: -3px;
+  border-radius: 999px;
+  background: var(--color-peach);
+}
+.sc-slider-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: calc(var(--thumb) / 2 + (100% - var(--thumb)) * var(--f));
+  border-radius: 999px;
+  background: linear-gradient(90deg, #7a6cff, var(--color-sun));
+}
+.sc-slider-dot {
+  position: absolute;
+  top: 50%;
+  width: 3px;
+  height: 3px;
+  margin: -1.5px 0 0 -1.5px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--color-sun) 35%, transparent);
+}
+.sc-slider-dot[data-on="true"] {
+  background: rgba(255, 255, 255, 0.7);
+}
+.sc-slider-thumb {
+  position: absolute;
+  top: 50%;
+  left: calc((100% - var(--thumb)) * var(--f));
+  width: var(--thumb);
+  height: var(--thumb);
+  margin-top: calc(var(--thumb) / -2);
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0.5px 4px rgba(23, 19, 58, 0.14), 0 6px 13px rgba(23, 19, 58, 0.16);
+  scale: 1;
+}
+/* Losgelassen: federnd auf die Stufe gleiten. Beim Schieben: ohne Verzögerung dem Finger folgen. */
+.sc-slider[data-dragging="false"] .sc-slider-thumb {
+  transition: left 0.42s cubic-bezier(0.3, 1.45, 0.5, 1), scale 0.25s ease, box-shadow 0.25s ease;
+}
+.sc-slider[data-dragging="false"] .sc-slider-fill {
+  transition: width 0.42s cubic-bezier(0.3, 1.45, 0.5, 1);
+}
+.sc-slider[data-dragging="true"] {
+  cursor: grabbing;
+}
+.sc-slider[data-dragging="true"] .sc-slider-thumb {
+  scale: 1.18;
+  box-shadow: 0 0 0 8px color-mix(in srgb, var(--color-sun) 14%, transparent), 0 8px 18px rgba(23, 19, 58, 0.22);
+  transition: scale 0.18s ease, box-shadow 0.18s ease;
+}
+.sc-slider:focus-visible .sc-slider-thumb {
+  box-shadow: 0 0 0 3px var(--color-sun), 0 6px 13px rgba(23, 19, 58, 0.16);
+}
+@media (prefers-reduced-motion: reduce) {
+  .sc-slider .sc-slider-thumb,
+  .sc-slider .sc-slider-fill {
+    transition: none !important;
+  }
+}

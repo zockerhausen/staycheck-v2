@@ -8,6 +8,7 @@ import { CRITERION_ICON } from "@/lib/icons";
 import { persona, type Extras, type Weights } from "@/lib/profile";
 import { LEVELS, topOf, TUNE_KEYS, TUNE_LABEL } from "@/lib/travel-types";
 import { storeProfile } from "@/app/actions";
+import SmoothSlider from "@/components/SmoothSlider";
 
 /**
  * Nachjustieren direkt über der Karte: kurzes Briefing (was am meisten zählt) und Regler.
@@ -31,6 +32,7 @@ export default function ProfileTuner({
   const [own, setOwn] = useState(Boolean(weights));
   const [open, setOpen] = useState(false);
   const [note, setNote] = useState("");
+  const [live, setLive] = useState<{ key: string; v: number } | null>(null);
   const [pending, startTransition] = useTransition();
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const queue = useRef<Promise<unknown>>(Promise.resolve());
@@ -97,26 +99,25 @@ export default function ProfileTuner({
       </div>
 
       {open && (
-        <div className="fade-up mt-3.5 space-y-1.5">
+        <div className="fade-up mt-4 space-y-0.5">
           {TUNE_KEYS.map((k) => {
             const v = w[k] ?? 0;
+            const shown = live?.key === k ? live.v : v;
             return (
-              <label key={k} className="flex items-center gap-2.5 py-1">
-                <Icon name={CRITERION_ICON[k]} size={18} className="shrink-0 text-sun-soft" />
-                <span className="w-[76px] shrink-0 text-[14px] font-bold">{TUNE_LABEL[k]}</span>
-                <input
-                  type="range"
-                  min={0}
-                  max={5}
-                  step={1}
+              <div key={k}>
+                <div className="flex items-center gap-2">
+                  <Icon name={CRITERION_ICON[k]} size={18} className="shrink-0 text-sun-soft" />
+                  <span className="flex-1 text-[15px] font-bold">{TUNE_LABEL[k]}</span>
+                  <span key={shown} className={`fade-up text-[13px] font-bold ${shown === 0 ? "text-faint" : shown >= 4 ? "text-sun-soft" : "text-muted"}`}>{LEVELS[shown]}</span>
+                </div>
+                <SmoothSlider
                   value={v}
-                  aria-label={TUNE_LABEL[k]}
-                  aria-valuetext={LEVELS[v]}
-                  onChange={(e) => change(k, Number(e.target.value))}
-                  className="min-w-0 flex-1"
+                  label={TUNE_LABEL[k]}
+                  valueText={(x) => LEVELS[x]}
+                  onLive={(x) => setLive(x === null ? null : { key: k, v: x })}
+                  onChange={(x) => change(k, x)}
                 />
-                <span className={`w-[86px] shrink-0 text-right text-[12.5px] font-bold ${v === 0 ? "text-faint" : "text-muted"}`}>{LEVELS[v]}</span>
-              </label>
+              </div>
             );
           })}
           <Link href="/profil" className="flex items-center gap-1 pt-1.5 text-[13px] font-bold text-sun-soft">
