@@ -6,11 +6,11 @@ import Link from "next/link";
 import Icon from "@/components/Icon";
 import { CRITERION_ICON } from "@/lib/icons";
 import { persona, type Extras, type Weights } from "@/lib/profile";
-import { LEVELS, TUNE_KEYS, TUNE_LABEL, TUNE_MORE } from "@/lib/travel-types";
+import { LEVELS, topOf, TUNE_KEYS, TUNE_LABEL } from "@/lib/travel-types";
 import { storeProfile } from "@/app/actions";
 
 /**
- * Nachjustieren direkt über der Karte: Schnell-Knöpfe („Ruhiger“, „Mehr Nachtleben“ …) und Regler.
+ * Nachjustieren direkt über der Karte: kurzes Briefing (was am meisten zählt) und Regler.
  * Jede Änderung wird gespeichert und Karte und Liste darunter sortieren sich neu, man sieht sofort, was sie bewirkt.
  * Ohne Profil zeigt die Seite die besten Ecken für die meisten Reisenden; der erste Tipp macht daraus ein eigenes Profil.
  */
@@ -57,49 +57,47 @@ export default function ProfileTuner({
 
   const p = own ? persona(w, extras) : null;
 
+  const top = topOf(w);
   return (
-    <section className="glass-card mt-[18px] !rounded-[24px] px-3.5 py-3" aria-label="Reise-Profil anpassen">
+    <section className="glass-card mt-[18px] !rounded-[24px] p-4" aria-label="Reise-Profil anpassen">
       <div className="flex items-center gap-3">
-        <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] ${p ? "bg-peach text-sun-soft" : "shadow-primary bg-sun text-white"}`}>
-          <Icon name={p ? p.icon : "discover"} size={21} fill={p ? undefined : "transparent"} />
+        <span className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-[14px] ${p ? "bg-peach text-sun-soft" : "shadow-primary bg-sun text-white"}`}>
+          <Icon name={p ? p.icon : "discover"} size={22} fill={p ? undefined : "transparent"} />
         </span>
         <span className="min-w-0 flex-1 leading-tight">
-          <span className="block text-[13px] font-semibold text-muted">{p ? "Dein Reise-Profil" : "Ohne Profil"}</span>
-          <b className={`block text-[16.5px] font-extrabold tracking-[-0.025em] ${p ? "truncate" : ""}`}>{p ? p.name : "Beste Ecken"}</b>
+          <span className="block text-[13px] font-semibold text-muted">{p ? "Dein Reise-Profil" : "Noch ohne Profil"}</span>
+          <b className="block text-[17px] font-extrabold tracking-[-0.025em] [overflow-wrap:anywhere]">{p ? p.name : "Beste Ecken für die meisten"}</b>
         </span>
-        <Link href={quizHref} className="press shrink-0 rounded-full bg-peach px-3 py-2 text-[13px] font-extrabold text-sun-soft">
-          {p ? "Typ wechseln" : "Typ wählen"}
-        </Link>
       </div>
 
-      {/* Schnell-Knöpfe: einmal tippen = eine Stufe wichtiger */}
-      <div className="-mx-3.5 mt-3 flex gap-2 overflow-x-auto px-3.5 pb-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      {/* Kurz-Briefing: was gerade am meisten zählt */}
+      <p className="mt-3 text-[14.5px] leading-snug text-muted">
+        {top.length ? (
+          <>
+            Am meisten zählt{p ? " bei dir" : ""}: <b className="text-ink">{top.join(", ")}</b>.
+          </>
+        ) : (
+          "Gerade zählt alles etwa gleich viel."
+        )}{" "}
+        Passt nicht ganz? Stell es mit den Reglern genau ein.
+      </p>
+
+      <div className="mt-3 flex gap-2">
         <button
           type="button"
           aria-expanded={open}
           onClick={() => setOpen(!open)}
-          className={`press flex shrink-0 items-center gap-1.5 rounded-full px-3.5 py-2.5 text-[13.5px] font-extrabold ${open ? "bg-ink text-sand" : "bg-sun text-white"}`}
+          className={`press flex min-w-0 flex-1 items-center justify-center gap-2 whitespace-nowrap rounded-full px-4 py-3 text-[15px] font-extrabold ${open ? "bg-ink text-sand" : "shadow-primary bg-sun text-white"}`}
         >
-          <Icon name={open ? "close" : "sliders"} size={15} /> Regler
+          <Icon name={open ? "close" : "sliders"} size={17} /> {open ? "Regler schließen" : "Regler anpassen"}
         </button>
-        {TUNE_KEYS.map((k) => {
-          const max = (w[k] ?? 0) >= 5;
-          return (
-            <button
-              key={k}
-              type="button"
-              disabled={max}
-              onClick={() => change(k, (w[k] ?? 0) + 1)}
-              className="press flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full bg-tan px-3.5 py-2.5 text-[13.5px] font-bold disabled:opacity-45"
-            >
-              <Icon name={CRITERION_ICON[k]} size={15} /> {max ? `${TUNE_LABEL[k]}: voll` : TUNE_MORE[k]}
-            </button>
-          );
-        })}
+        <Link href={quizHref} className="press flex shrink-0 items-center rounded-full bg-peach px-4 py-3 text-[14px] font-extrabold text-sun-soft">
+          {p ? "Typ wechseln" : "Typ wählen"}
+        </Link>
       </div>
 
       {open && (
-        <div className="fade-up mt-3 space-y-1">
+        <div className="fade-up mt-3.5 space-y-1.5">
           {TUNE_KEYS.map((k) => {
             const v = w[k] ?? 0;
             return (
@@ -127,19 +125,19 @@ export default function ProfileTuner({
         </div>
       )}
 
-      <p className="mt-2.5 flex min-h-[18px] items-center gap-1.5 text-[12.5px] font-semibold text-muted" role="status" aria-live="polite">
-        {pending ? (
-          <>
-            <span className="h-2 w-2 animate-pulse rounded-full bg-sun" /> Karte und Liste werden neu sortiert …
-          </>
-        ) : note ? (
-          <>
-            <Icon name="check" size={13} className="shrink-0 text-good" /> {note} Karte und Liste sind neu sortiert.
-          </>
-        ) : (
-          "Tippe an, was dir wichtiger ist. Karte und Liste sortieren sich sofort neu."
-        )}
-      </p>
+      {(pending || note) && (
+        <p className="mt-3 flex items-center gap-1.5 text-[12.5px] font-semibold text-muted" role="status" aria-live="polite">
+          {pending ? (
+            <>
+              <span className="h-2 w-2 animate-pulse rounded-full bg-sun" /> Karte und Liste werden neu sortiert …
+            </>
+          ) : (
+            <>
+              <Icon name="check" size={13} className="shrink-0 text-good" /> {note} Karte und Liste sind neu sortiert.
+            </>
+          )}
+        </p>
+      )}
     </section>
   );
 }

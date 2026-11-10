@@ -70,15 +70,6 @@ export const TUNE_LABEL: Record<string, string> = {
   nature: "Grün",
   safety: "Sicherheit",
 };
-/** Schnell-Knöpfe: einmal tippen = eine Stufe wichtiger */
-export const TUNE_MORE: Record<string, string> = {
-  nightlife: "Mehr Nachtleben",
-  quiet: "Ruhiger",
-  budget: "Günstiger",
-  food: "Besseres Essen",
-  transit: "Näher an der Bahn",
-  nature: "Mehr Grün",
-};
 export const LEVELS = ["egal", "kaum", "etwas", "wichtig", "sehr wichtig", "unverzichtbar"];
 
 /** Die 2 bis 3 Dinge, die bei diesem Profil am meisten zählen (für die Erklärung auf der Karte) */
