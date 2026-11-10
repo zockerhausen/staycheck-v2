@@ -2,6 +2,7 @@
 
 import { useActionState, useState } from "react";
 import Link from "next/link";
+import Icon from "@/components/Icon";
 import { login, oauthLogin, signup } from "@/app/actions";
 import { OAUTH_LABEL, type OAuthProvider } from "@/lib/auth-providers";
 
@@ -22,9 +23,38 @@ export default function AuthForm({
   const [loginState, loginAction, loginPending] = useActionState(login, undefined);
   const [signupState, signupAction, signupPending] = useActionState(signup, undefined);
 
+  const [email, setEmail] = useState("");
+  const [dismissed, setDismissed] = useState<unknown>(null); // welche Bestätigung schon weggeklickt wurde
   const isLogin = mode === "login";
   const state = isLogin ? loginState : signupState;
   const pending = isLogin ? loginPending : signupPending;
+
+  // Registrierung abgeschickt: statt des Formulars eine deutliche Bestätigung (vorher ging der Hinweis leicht unter)
+  if (!isLogin && signupState?.message && signupState !== dismissed) {
+    return (
+      <div className="pop-in mt-8 rounded-[26px] bg-paper p-5 text-center" role="status">
+        <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-sun text-white"><Icon name="check" size={26} /></span>
+        <h2 className="mega mt-4 text-[1.6rem]">Schau in dein Postfach.</h2>
+        <p className="mt-2 text-[15px] leading-relaxed text-muted">
+          Wir haben eine E-Mail an <b className="text-ink [overflow-wrap:anywhere]">{email || "deine Adresse"}</b> geschickt. Tippe dort auf den Link, dann ist dein Konto aktiv.
+        </p>
+        <p className="mt-3 text-[13px] leading-relaxed text-muted">Nichts da? Schau im Spam-Ordner nach. Die Mail kommt von Supabase Auth und braucht manchmal ein paar Minuten. Hast du schon ein Konto mit dieser Adresse, kommt keine Mail: melde dich dann einfach an.</p>
+        <button
+          type="button"
+          onClick={() => {
+            setDismissed(signupState);
+            setMode("login");
+          }}
+          className="btn-chunky mt-5 w-full"
+        >
+          Zur Anmeldung
+        </button>
+        <button type="button" onClick={() => setDismissed(signupState)} className="mt-3 text-sm font-semibold text-muted">
+          Andere E-Mail-Adresse nehmen
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="mt-8">
@@ -67,7 +97,7 @@ export default function AuthForm({
         <input type="hidden" name="next" value={next} />
         <label className="block">
           <span className="text-sm font-semibold">E-Mail</span>
-          <input name="email" type="email" required autoComplete="email" placeholder="du@beispiel.de" className={inputClass} />
+          <input name="email" type="email" required autoComplete="email" placeholder="du@beispiel.de" value={email} onChange={(e) => setEmail(e.target.value)} className={inputClass} />
         </label>
         <label className="block">
           <span className="text-sm font-semibold">Passwort</span>
@@ -90,7 +120,6 @@ export default function AuthForm({
         )}
 
         {state?.error && <p className="rounded-2xl bg-peach p-3 text-sm font-semibold text-peach-ink">{state.error}</p>}
-        {state?.message && <p className="rounded-2xl bg-tan p-3 text-sm font-semibold">{state.message}</p>}
 
         <button disabled={pending} className="btn-chunky w-full">
           {pending ? "Einen Moment…" : isLogin ? "Anmelden" : "Konto erstellen"}

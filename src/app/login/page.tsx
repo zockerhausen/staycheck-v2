@@ -29,7 +29,7 @@ export default async function LoginPage({
       <p className="mt-2 text-muted">Reise-Profil, gemerkte Viertel und Unterkünfte auf jedem Gerät.</p>
       {params.fehler === "bestaetigung" && (
         <p className="mt-4 rounded-2xl bg-peach p-3 text-sm font-semibold text-peach-ink">
-          Der Bestätigungslink hat nicht funktioniert. Melde dich an oder registriere dich erneut.
+          Fast geschafft: Melde dich jetzt mit deiner E-Mail und deinem Passwort an. Der Link wurde wohl in einem anderen Browser geöffnet als dem, in dem du dich registriert hast. Klappt die Anmeldung nicht, registriere dich bitte erneut.
         </p>
       )}
       {(params.fehler === "anbieter" || params.fehler === "link") && (
@@ -37,7 +37,7 @@ export default async function LoginPage({
           {params.fehler === "link" ? "Der Link ist abgelaufen oder wurde schon benutzt. Fordere einen neuen an." : "Die Anmeldung beim Anbieter hat nicht geklappt. Versuch es nochmal oder nimm E-Mail und Passwort."}
         </p>
       )}
-      <AuthForm next={next} defaultMode={params.next ? "signup" : "login"} providers={providers} />
+      <AuthForm next={next} defaultMode={params.next && !params.fehler ? "signup" : "login"} providers={providers} />
       <p className="mt-5 text-center text-xs leading-relaxed text-muted">
         Mit dem Konto gelten unsere{" "}
         <Link href="/nutzungsbedingungen" className="underline">
