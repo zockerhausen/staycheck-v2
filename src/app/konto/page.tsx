@@ -6,6 +6,7 @@ import Icon from "@/components/Icon";
 import ThemeSwitch from "@/components/ThemeSwitch";
 import DeleteAccount from "@/components/DeleteAccount";
 import LegalLinks from "@/components/LegalLinks";
+import { TourReplay } from "@/components/Tour";
 
 export const dynamic = "force-dynamic";
 
@@ -39,6 +40,7 @@ export default async function KontoPage({ searchParams }: { searchParams: Promis
         <Link href="/profil" className="btn-chunky btn-chunky-light w-full">
           <Icon name="star" size={22} /> Mein Reise-Profil
         </Link>
+        <TourReplay className="btn-chunky btn-chunky-light w-full" />
         <Link href="/hilfe" className="btn-chunky btn-chunky-light w-full">
           <Icon name="tip" size={22} /> Hilfe und Kontakt
         </Link>

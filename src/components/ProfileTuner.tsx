@@ -61,7 +61,7 @@ export default function ProfileTuner({
 
   const top = topOf(w);
   return (
-    <section className="glass-card mt-[18px] !rounded-[24px] p-4" aria-label="Reise-Profil anpassen">
+    <section data-tour="profil" className="glass-card mt-[18px] !rounded-[24px] p-4" aria-label="Reise-Profil anpassen">
       <div className="flex items-center gap-3">
         <span className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-[14px] ${p ? "bg-peach text-sun-soft" : "shadow-primary bg-sun text-white"}`}>
           <Icon name={p ? p.icon : "discover"} size={22} fill={p ? undefined : "transparent"} />

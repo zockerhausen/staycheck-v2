@@ -24,6 +24,7 @@ export default function InstallHint() {
       window.matchMedia("(display-mode: standalone)").matches || (navigator as unknown as { standalone?: boolean }).standalone === true;
     if (standalone) return;
     try {
+      if (localStorage.getItem("sc-tour") !== "done") return; // erst der Rundgang, der Hinweis kommt beim nächsten Besuch
       const t = Number(localStorage.getItem(KEY) ?? 0);
       if (t && Date.now() - t < PAUSE_DAYS * 86_400_000) return;
     } catch {

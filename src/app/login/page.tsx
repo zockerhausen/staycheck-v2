@@ -5,6 +5,7 @@ import { enabledProviders } from "@/lib/auth-providers";
 import Icon from "@/components/Icon";
 import Link from "next/link";
 import ThemeSwitch from "@/components/ThemeSwitch";
+import { TourReplay } from "@/components/Tour";
 import LegalLinks from "@/components/LegalLinks";
 
 export const dynamic = "force-dynamic";
@@ -52,6 +53,7 @@ export default async function LoginPage({
         <h2 className="mb-2 text-sm font-extrabold text-muted">Darstellung</h2>
         <ThemeSwitch />
       </section>
+      <TourReplay className="press mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-tan py-3.5 text-[15px] font-extrabold" />
       <LegalLinks className="mt-10" />
     </div>
   );
